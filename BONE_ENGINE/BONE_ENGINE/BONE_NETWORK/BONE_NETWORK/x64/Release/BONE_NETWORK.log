@@ -1,0 +1,4 @@
+﻿  CCircularQueue.cpp
+C:\Program Files (x86)\Windows Kits\8.1\Include\um\dbghelp.h(1544): warning C4091: 'typedef ': 변수를 선언하지 않으면 '' 왼쪽은 무시됩니다.
+C:\Program Files (x86)\Windows Kits\8.1\Include\um\dbghelp.h(3190): warning C4091: 'typedef ': 변수를 선언하지 않으면 '' 왼쪽은 무시됩니다.
+  BONE_NETWORK.vcxproj -> C:\Users\Bonerogrammer\OneDrive\사진\문서\Visual Studio 2015\Projects\BONE_ENGINE\BONE_ENGINE\x64\Release\BONE_NETWORK.lib
