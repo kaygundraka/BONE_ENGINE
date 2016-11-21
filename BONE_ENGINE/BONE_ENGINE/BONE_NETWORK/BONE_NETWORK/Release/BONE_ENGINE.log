@@ -1,8 +1,0 @@
-﻿  CService.cpp
-  Program.cpp
-  코드를 생성하고 있습니다.
-c:\users\bonerogrammer\onedrive\사진\문서\visual studio 2015\projects\bone_engine\bone_engine\cservice.cpp(79): warning C4715: 'BONE_NETWORK::CService::Uninstall': 모든 제어 경로에서 값을 반환하지는 않습니다.
-  All 21 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  코드를 생성했습니다.
-  BONE_ENGINE.vcxproj -> C:\Users\Bonerogrammer\onedrive\사진\문서\visual studio 2015\Projects\BONE_ENGINE\Release\BONE_ENGINE.exe
-  BONE_ENGINE.vcxproj -> C:\Users\Bonerogrammer\onedrive\사진\문서\visual studio 2015\Projects\BONE_ENGINE\Release\BONE_ENGINE.pdb (Full PDB)

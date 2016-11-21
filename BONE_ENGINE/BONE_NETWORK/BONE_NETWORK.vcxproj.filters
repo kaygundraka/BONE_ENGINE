@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\Network">
+      <UniqueIdentifier>{3e21960e-f1c3-4f76-a43b-32319411f817}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Network\Client">
+      <UniqueIdentifier>{077b70aa-f547-4e40-8938-db9b9599c5fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\System">
+      <UniqueIdentifier>{29187475-b66c-41cf-9290-381f3cb6dae7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Network\Server">
+      <UniqueIdentifier>{f18a9675-58b0-49a4-a1c7-009b9052bf10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Network\Packet">
+      <UniqueIdentifier>{383d18ae-934c-458a-9a14-fbd66617cd0f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ClientSession.cpp">
+      <Filter>소스 파일\Network\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="EventSelect.cpp">
+      <Filter>소스 파일\Network\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketSession.cpp">
+      <Filter>소스 파일\Network\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Stream.cpp">
+      <Filter>소스 파일\Network\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="IOCP.cpp">
+      <Filter>소스 파일\Network\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkSession.cpp">
+      <Filter>소스 파일\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="CircularQueue.cpp">
+      <Filter>소스 파일\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Crypt.cpp">
+      <Filter>소스 파일\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Service.cpp">
+      <Filter>소스 파일\System</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSession.h">
+      <Filter>소스 파일\Network\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="EventSelect.h">
+      <Filter>소스 파일\Network\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketSession.h">
+      <Filter>소스 파일\Network\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Stream.h">
+      <Filter>소스 파일\Network\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="IOCP.h">
+      <Filter>소스 파일\Network\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkSession.h">
+      <Filter>소스 파일\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="CircularQueue.h">
+      <Filter>소스 파일\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Crypt.h">
+      <Filter>소스 파일\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Service.h">
+      <Filter>소스 파일\System</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,6 +1,0 @@
-﻿  Program.cpp
-c:\program files (x86)\windows kits\8.1\include\um\dbghelp.h(1544): warning C4091: 'typedef ': 변수를 선언하지 않으면 '' 왼쪽은 무시됩니다.
-c:\program files (x86)\windows kits\8.1\include\um\dbghelp.h(3190): warning C4091: 'typedef ': 변수를 선언하지 않으면 '' 왼쪽은 무시됩니다.
-c:\users\bonerogrammer\onedrive\사진\문서\visual studio 2015\projects\bone_engine\bone_engine\bone_client\protocol.h(67): warning C4091: 'typedef ': 변수를 선언하지 않으면 '_PROTOCOL' 왼쪽은 무시됩니다.
-  BONE_CLIENT.vcxproj -> C:\Users\Bonerogrammer\OneDrive\사진\문서\Visual Studio 2015\Projects\BONE_ENGINE\BONE_ENGINE\Debug\BONE_CLIENT.exe
-  BONE_CLIENT.vcxproj -> C:\Users\Bonerogrammer\OneDrive\사진\문서\Visual Studio 2015\Projects\BONE_ENGINE\BONE_ENGINE\Debug\BONE_CLIENT.pdb (Full PDB)
