@@ -1,20 +1,16 @@
 #include "Common.h"
 #include "LogManager.h"
 #include "RenderManager.h"
-#include <ctime>
-#pragma warning(disable:4996)
 
 namespace BONE_GRAPHICS
 {
-	//LogManager* LogManager::pInst = NULL;
-
 	string GetTime()
 	{
 		string Time;
 
 		time_t timer;
 		struct tm *t;
-		timer = time(NULL);
+		timer = time(nullptr);
 		t = localtime(&timer);
 		char TempStr[20];
 		itoa(t->tm_year + 1900, TempStr, 10);
@@ -36,7 +32,7 @@ namespace BONE_GRAPHICS
 
 	void LogManager::AddLogToFile(int _type, string _log)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		TiXmlDocument doc;
 		doc.LoadFile(logFileName.c_str());
@@ -89,7 +85,7 @@ namespace BONE_GRAPHICS
 
 	void LogManager::InitializeMembers(bool outputLog)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		index = 0;
 		logMessage = new char[100];
@@ -101,7 +97,7 @@ namespace BONE_GRAPHICS
 
 	void LogManager::ShowMessage(int _type, char* _log)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (strlen(_log) < MAX_PATH)
 		{
@@ -142,7 +138,7 @@ namespace BONE_GRAPHICS
 
 	void LogManager::ShowMessage(int _type, char* _log, float _value)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (strlen(_log) < MAX_PATH)
 		{
@@ -182,7 +178,7 @@ namespace BONE_GRAPHICS
 
 	void LogManager::ShowMessage(int _type, char* _log, char* _value)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (strlen(_log) < MAX_PATH)
 		{
@@ -221,7 +217,7 @@ namespace BONE_GRAPHICS
 
 	void LogManager::SaveLog(bool _bFlag)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		IsSave = _bFlag;
 
@@ -267,7 +263,7 @@ namespace BONE_GRAPHICS
 
 	void LogManager::ReleaseMembers()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		FreeConsole();
 

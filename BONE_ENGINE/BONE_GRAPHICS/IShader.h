@@ -7,7 +7,7 @@ using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class IShader : public Component, public CMultiThreadSync<IShader>
+	class IShader : public Component, public MultiThreadSync<IShader>
 	{
 	protected:
 		LPD3DXEFFECT* shader;

@@ -4,18 +4,18 @@
 
 namespace BONE_SYSTEM
 {
-	CIniFile::CIniFile(VOID)
+	IniFile::IniFile(VOID)
 	{
 		ZeroMemory(fileName, sizeof(fileName));
 	}
 
-	CIniFile::~CIniFile(VOID)
+	IniFile::~IniFile(VOID)
 	{
 
 	}
 
 	
-	BOOL CIniFile::Open(LPCTSTR _fileName)
+	BOOL IniFile::Open(LPCTSTR _fileName)
 	{
 		if (!_fileName)
 			return FALSE;
@@ -25,13 +25,13 @@ namespace BONE_SYSTEM
 		return TRUE;
 	}
 
-	BOOL CIniFile::Close(VOID)
+	BOOL IniFile::Close(VOID)
 	{
 		return TRUE;
 	}
 
 
-	BOOL CIniFile::SetValue(LPCTSTR _keyName, LPCTSTR _valueName, LPCTSTR _value)
+	BOOL IniFile::SetValue(LPCTSTR _keyName, LPCTSTR _valueName, LPCTSTR _value)
 	{
 		if (!_keyName || !_valueName || !_value)
 			return FALSE;
@@ -41,7 +41,7 @@ namespace BONE_SYSTEM
 		return TRUE;
 	}
 
-	BOOL CIniFile::SetValue(LPCTSTR _keyName, LPCTSTR _valueName, DWORD _value)
+	BOOL IniFile::SetValue(LPCTSTR _keyName, LPCTSTR _valueName, DWORD _value)
 	{
 		if (!_keyName || !_valueName || !_value)
 			return FALSE;
@@ -54,7 +54,7 @@ namespace BONE_SYSTEM
 		return TRUE;
 	}
 
-	BOOL CIniFile::SetValue(LPCTSTR _keyName, LPCTSTR _valueName, FLOAT _value)
+	BOOL IniFile::SetValue(LPCTSTR _keyName, LPCTSTR _valueName, FLOAT _value)
 	{
 		if (!_keyName || !_valueName || !_value)
 			return FALSE;
@@ -68,7 +68,7 @@ namespace BONE_SYSTEM
 	}
 
 
-	BOOL CIniFile::GetValue(LPCTSTR _keyName, LPCTSTR _valueName, LPTSTR _value, LPDWORD _bufferLength)
+	BOOL IniFile::GetValue(LPCTSTR _keyName, LPCTSTR _valueName, LPTSTR _value, LPDWORD _bufferLength)
 	{
 		if (!_keyName || !_valueName || !_value)
 			return FALSE;
@@ -78,7 +78,7 @@ namespace BONE_SYSTEM
 		return TRUE;
 	}
 
-	BOOL CIniFile::GetValue(LPCTSTR _keyName, LPCTSTR _valueName, LPDWORD _value)
+	BOOL IniFile::GetValue(LPCTSTR _keyName, LPCTSTR _valueName, LPDWORD _value)
 	{
 		if (!_keyName || !_valueName || !_value)
 			return FALSE;
@@ -86,7 +86,7 @@ namespace BONE_SYSTEM
 		*_value = GetPrivateProfileInt(_keyName, _valueName, 0, fileName);
 	}
 
-	BOOL CIniFile::GetValue(LPCTSTR _keyName, LPCTSTR _valueName, FLOAT *_value)
+	BOOL IniFile::GetValue(LPCTSTR _keyName, LPCTSTR _valueName, FLOAT *_value)
 	{
 		if (!_keyName || !_valueName || !_value)
 			return FALSE;

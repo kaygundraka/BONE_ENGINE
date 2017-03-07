@@ -19,7 +19,7 @@ namespace BONE_GRAPHICS
 		float curLiveTime;
 	};
 
-	class TrailRenderer: public Component, public CMultiThreadSync<TrailRenderer>
+	class TrailRenderer: public Component, public MultiThreadSync<TrailRenderer>
 	{
 	private:
 		IDirect3DVertexBuffer9* vertexBuffer;

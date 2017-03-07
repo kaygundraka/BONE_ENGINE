@@ -6,16 +6,16 @@
 
 namespace BONE_GRAPHICS
 {
-	struct MeshInfo {
-		DWORD _numMaterials;
-		LPD3DXBUFFER _buffer;
-		LPD3DXMESH _mesh;
-	};
+	typedef struct _MESH_INFO {
+		int numMaterials;
+		LPD3DXBUFFER buffer;
+        Mesh mesh;
+	} MESH_INFO;
 
-	class ResourceManager : public ISingleton <ResourceManager>, public BONE_SYSTEM::CMultiThreadSync<ResourceManager>
+	class ResourceManager : public ISingleton <ResourceManager>, public BONE_SYSTEM::MultiThreadSync<ResourceManager>
 	{
 	private:
-		std::map<string, MeshInfo>				staticMeshList;
+		std::map<string, MESH_INFO>				staticMeshList;
 		std::map<string, LPDIRECT3DTEXTURE9>	textureList;
 		std::map<string, LPD3DXEFFECT>			shaderList;
 
@@ -28,18 +28,20 @@ namespace BONE_GRAPHICS
 		virtual void ReleaseMembers();
 
 	public:
-		MeshInfo*			 LoadMesh(string _address);
-		MeshInfo*			 FindMesh(string _address);
-		LPDIRECT3DTEXTURE9	 LoadTexture(string _address);
-		LPD3DXEFFECT		 LoadEffect(string _address);
+        bool ExistFile(std::string name, std::string* full_path);
 
-		void ReleaseMesh(string _address);
-		void ReleaseTexture(string _address);
-		void ReleaseEffect(string _address);
+		MESH_INFO*			 LoadMesh(string name);
+		MESH_INFO*			 FindMesh(string name);
+		LPDIRECT3DTEXTURE9	 LoadTexture(string name);
+		LPD3DXEFFECT		 LoadEffect(string name);
 
-		void ReleaseMesh(MeshInfo* _meshInfo);
-		void ReleaseTexture(LPDIRECT3DTEXTURE9 _texture);
-		void ReleaseEffect(LPD3DXEFFECT _address);
+		void ReleaseMesh(string name);
+		void ReleaseTexture(string name);
+		void ReleaseEffect(string name);
+
+		void ReleaseMesh(MESH_INFO* meshInfo);
+		void ReleaseTexture(LPDIRECT3DTEXTURE9 texture);
+		void ReleaseEffect(LPD3DXEFFECT name);
 
 	};
 }

@@ -2,12 +2,11 @@
 #include <MultiThreadSync.h>
 #include "ISingleton.h"
 #include "Common.h"
-#include <map>
 #include "Scene.h"
 
 namespace BONE_GRAPHICS 
 {
-	class SceneManager : public ISingleton <SceneManager>, public BONE_SYSTEM::CMultiThreadSync<SceneManager>
+	class SceneManager : public ISingleton <SceneManager>, public BONE_SYSTEM::MultiThreadSync<SceneManager>
 	{
 	private:
 		float loadingBarValue;
@@ -32,12 +31,12 @@ namespace BONE_GRAPHICS
 	public:
 		void LoadingRender();
 
-		void AddScene(string _name, Scene* _scene);
+		void AddScene(string name, Scene* scene);
 
-		bool StartScene(string _name);
-		void SetLoadingScene(string _name);
+		bool StartScene(string name);
+		void SetLoadingScene(string name);
 		Scene* GetLoadScene();
-		void EndScene(string _name);
+		void EndScene(string name);
 
 		int GetFrame();
 		double GetTimeDelta();

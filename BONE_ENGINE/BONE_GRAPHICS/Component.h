@@ -1,5 +1,4 @@
 #pragma once
-#include "SmartPointer.h"
 
 namespace BONE_GRAPHICS
 {

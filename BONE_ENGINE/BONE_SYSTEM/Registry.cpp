@@ -3,19 +3,19 @@
 
 namespace BONE_SYSTEM
 {
-	CRegistry::CRegistry(VOID)
+	Registry::Registry(VOID)
 	{
 		rootKey = NULL;
 		IsOpened = FALSE;
 	}
 	
-	CRegistry::~CRegistry(VOID)
+	Registry::~Registry(VOID)
 	{
 
 	}
 
 
-	BOOL CRegistry::Open(HKEY _rootKey, LPCTSTR _subkey)
+	BOOL Registry::Open(HKEY _rootKey, LPCTSTR _subkey)
 	{
 		if (!_subkey)
 			return FALSE;
@@ -31,7 +31,7 @@ namespace BONE_SYSTEM
 		return TRUE;
 	}
 
-	BOOL CRegistry::Close(VOID)
+	BOOL Registry::Close(VOID)
 	{
 		if (RegCloseKey(rootKey) != ERROR_SUCCESS)
 			return FALSE;
@@ -41,7 +41,7 @@ namespace BONE_SYSTEM
 		return TRUE;
 	}
 
-	BOOL CRegistry::CreateKey(HKEY _rootKey, LPCTSTR _subkey)
+	BOOL Registry::CreateKey(HKEY _rootKey, LPCTSTR _subkey)
 	{
 		if (!_subkey)
 			return FALSE;
@@ -57,7 +57,7 @@ namespace BONE_SYSTEM
 		return TRUE;
 	}
 	
-	BOOL CRegistry::DeleteKey(HKEY _rootKey, LPCTSTR _subkey)
+	BOOL Registry::DeleteKey(HKEY _rootKey, LPCTSTR _subkey)
 	{
 		if (!_subkey)
 			return FALSE;
@@ -68,7 +68,7 @@ namespace BONE_SYSTEM
 		return TRUE;
 	}
 
-	BOOL CRegistry::SetValue(LPCTSTR _valueName, LPCTSTR _value)
+	BOOL Registry::SetValue(LPCTSTR _valueName, LPCTSTR _value)
 	{
 		if (!_valueName || !_value)
 			return FALSE;
@@ -87,7 +87,7 @@ namespace BONE_SYSTEM
 		return TRUE;
 	}
 
-	BOOL CRegistry::SetValue(LPCTSTR _valueName, DWORD _value)
+	BOOL Registry::SetValue(LPCTSTR _valueName, DWORD _value)
 	{
 		if (!_valueName)
 			return FALSE;
@@ -105,7 +105,7 @@ namespace BONE_SYSTEM
 		return TRUE;
 	}
 	
-	BOOL CRegistry::SetValueForMultiSz(LPCTSTR _valueName, LPCTSTR _value, DWORD _byteLength)
+	BOOL Registry::SetValueForMultiSz(LPCTSTR _valueName, LPCTSTR _value, DWORD _byteLength)
 	{
 		if (!_valueName || !_value)
 			return FALSE;
@@ -123,7 +123,7 @@ namespace BONE_SYSTEM
 		return TRUE;
 	}
 
-	BOOL CRegistry::GetValue(LPCTSTR _valueName, LPCTSTR _value, LPDWORD _bufferLength)
+	BOOL Registry::GetValue(LPCTSTR _valueName, LPCTSTR _value, LPDWORD _bufferLength)
 	{
 		DWORD ValueType = 0;
 
@@ -140,7 +140,7 @@ namespace BONE_SYSTEM
 		return TRUE;
 	}
 
-	BOOL CRegistry::GetValue(LPCTSTR _valueName, LPDWORD _value)
+	BOOL Registry::GetValue(LPCTSTR _valueName, LPDWORD _value)
 	{
 		DWORD ValueType = 0;
 		DWORD BufferLength = sizeof(DWORD);
@@ -158,7 +158,7 @@ namespace BONE_SYSTEM
 		return TRUE;
 	}
 
-	BOOL CRegistry::DeleteValue(LPCTSTR _valueName)
+	BOOL Registry::DeleteValue(LPCTSTR _valueName)
 	{
 		if (!_valueName)
 			return FALSE;

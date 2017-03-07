@@ -11,7 +11,7 @@ namespace BONE_GRAPHICS
 
 		for (i = 0; i < 4; i++)
 		{
-			m_pChild[i] = NULL;
+			m_pChild[i] = nullptr;
 		}
 
 		m_nCorner[CORNER_TL] = 0;
@@ -33,7 +33,7 @@ namespace BONE_GRAPHICS
 		m_nCenter = 0;
 		for (i = 0; i < 4; i++)
 		{
-			m_pChild[i] = NULL;
+			m_pChild[i] = nullptr;
 			m_nCorner[i] = 0;
 		}
 
@@ -387,7 +387,7 @@ namespace BONE_GRAPHICS
 	// 쿼드트리를 검색해서 4개 코너값과 일치하는 노드를 찾는다.
 	ZQuadTree* ZQuadTree::_FindNode(VERTEX* pHeightMap, int _0, int _1, int _2, int _3)
 	{
-		ZQuadTree*      p = NULL;
+		ZQuadTree*      p = nullptr;
 
 		// 일치하는 노드라면 노드값을 리턴
 		if ((m_nCorner[0] == _0) && (m_nCorner[1] == _1) && (m_nCorner[2] == _2)
@@ -441,7 +441,7 @@ namespace BONE_GRAPHICS
 
 		} ///자식검색끝 , 자식에 없으면 널을 리턴
 
-		return NULL;
+		return nullptr;
 	}
 
 	// 이웃노드를 만든다.(삼각형 찢어짐 방지용)

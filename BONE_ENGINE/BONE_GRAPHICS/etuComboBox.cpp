@@ -19,7 +19,7 @@ namespace BONE_GRAPHICS
 
 		m_rItemHeight = m_rItem.bottom - m_rItem.top;
 		
-		if (!BasicSetInformation(p_sName, _vec3Position, 154, 35, NULL))
+		if (!BasicSetInformation(p_sName, _vec3Position, 154, 35, nullptr))
 			return false;
 
 		Is_Show = true;
@@ -119,7 +119,7 @@ namespace BONE_GRAPHICS
 		{
 			D3DXMatrixIdentity(&m_TransformMatrix);
 			D3DXMatrixTransformation2D(&m_TransformMatrix, &D3DXVECTOR2(m_vec3Position.x + m_vec3ParentPosition.x, m_vec3Position.y + m_vec3ParentPosition.y),
-				NULL, &D3DXVECTOR2(m_fScaleX, m_fScaleY), NULL, 0.0f, NULL);
+				nullptr, &D3DXVECTOR2(m_fScaleX, m_fScaleY), nullptr, 0.0f, nullptr);
 
 			m_pSprite->SetTransform(&m_TransformMatrix);
 
@@ -127,7 +127,7 @@ namespace BONE_GRAPHICS
 
 			if (Is_Clicked)
 			{
-				m_pSprite->Draw(m_pTextures, &m_rClicked, NULL, &(m_vec3ParentPosition + m_vec3Position), 0xffffffff);
+				m_pSprite->Draw(m_pTextures, &m_rClicked, nullptr, &(m_vec3ParentPosition + m_vec3Position), 0xffffffff);
 
 				D3DXVECTOR3 ItemsPosition(0, 0, 0);
 
@@ -137,16 +137,16 @@ namespace BONE_GRAPHICS
 
 					if (m_pItems.size() - i == 1)
 					{
-						m_pSprite->Draw(m_pTextures, &m_rItemLast, NULL, &(m_vec3ParentPosition + m_vec3Position + ItemsPosition), 0xffffffff);
+						m_pSprite->Draw(m_pTextures, &m_rItemLast, nullptr, &(m_vec3ParentPosition + m_vec3Position + ItemsPosition), 0xffffffff);
 					}
 					else
 					{
-						m_pSprite->Draw(m_pTextures, &m_rItem, NULL, &(m_vec3ParentPosition + m_vec3Position + ItemsPosition), 0xffffffff);
+						m_pSprite->Draw(m_pTextures, &m_rItem, nullptr, &(m_vec3ParentPosition + m_vec3Position + ItemsPosition), 0xffffffff);
 					}
 				}
 			}
 			else
-				m_pSprite->Draw(m_pTextures, &m_rImageRect, NULL, &(m_vec3ParentPosition + m_vec3Position), 0xffffffff);
+				m_pSprite->Draw(m_pTextures, &m_rImageRect, nullptr, &(m_vec3ParentPosition + m_vec3Position), 0xffffffff);
 
 			m_pSprite->End();
 
@@ -161,7 +161,7 @@ namespace BONE_GRAPHICS
 				m_vec3ParentPosition.y + m_vec3Position.y + m_iHeight * m_fScaleY + SelectItemSize.cy / 2,
 			};
 
-			m_pFont->DrawText(NULL, m_sSelectItem.c_str(), -1, &SelectItemTextPosition, 0, 0xFFFFFFFF);
+			m_pFont->DrawText(nullptr, m_sSelectItem.c_str(), -1, &SelectItemTextPosition, 0, 0xFFFFFFFF);
 
 
 			if (Is_Clicked)
@@ -183,7 +183,7 @@ namespace BONE_GRAPHICS
 						m_vec3ParentPosition.y + m_vec3Position.y + ItemsPosition.y + m_iHeight * m_fScaleY + ItemTextSize.cy / 2,
 					};
 
-					m_pFont->DrawText(NULL, m_pItems[i].c_str(), -1, &ItemTextPosition, 0, 0xFFFFFFFF);
+					m_pFont->DrawText(nullptr, m_pItems[i].c_str(), -1, &ItemTextPosition, 0, 0xFFFFFFFF);
 				}
 			}
 		}

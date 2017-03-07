@@ -29,7 +29,7 @@ namespace BONE_GRAPHICS
 	{
 		Vector3 position;
 		D3DCOLOR    color;
-		static const DWORD FVF;
+		static const int FVF;
 	};
 
 	struct Attribute
@@ -131,10 +131,10 @@ namespace BONE_GRAPHICS
 											   // 엄청나게 많은 수의 파티클이 동시에 존재할 수 있다.
 											   // 이 멤버는 이와 같은 상황을 막는다.
 
-		DWORD vbSize;      // 버텍스 버퍼가 보관할 수 있는 파티클의 수. 
+		int vbSize;      // 버텍스 버퍼가 보관할 수 있는 파티클의 수. 
 							// 이 값은 실제 파티클 시스템 내의 파티클 수와는 독립적.
-		DWORD vbOffset;    // 파티클 시스템의 렌더링에 이용.
-		DWORD vbBatchSize; // 파티클 시스템의 렌더링에 이용.
+		int vbOffset;    // 파티클 시스템의 렌더링에 이용.
+		int vbBatchSize; // 파티클 시스템의 렌더링에 이용.
 	};
 
 	// 눈

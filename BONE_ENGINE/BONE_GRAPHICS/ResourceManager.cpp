@@ -1,25 +1,24 @@
 #include "Common.h"
 #include "ResourceManager.h"
 #include "LogManager.h"
+#include "ConfigManager.h"
 #pragma warning(disable:4996)
 
 namespace BONE_GRAPHICS
 {
 	void ResourceManager::InitializeMembers()
 	{
-		CThreadSync sync;
-
 		LogMgr->ShowMessage(LOG_MESSAGE, "ResourceManager is initialized");
 	}
 
 	void ResourceManager::ReleaseMembers()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		for (auto Iter = staticMeshList.begin(); Iter != staticMeshList.end();)
 		{
-			(*Iter).second._mesh->Release();
-			(*Iter).second._buffer->Release();
+			(*Iter).second.mesh->Release();
+			(*Iter).second.buffer->Release();
 			Iter = staticMeshList.erase(Iter);
 		}
 		
@@ -32,96 +31,132 @@ namespace BONE_GRAPHICS
 		LogMgr->ShowMessage(LOG_MESSAGE, "ResourceManager Manager is Clear.");
 	}
 
-	MeshInfo* ResourceManager::LoadMesh(string _address)
+    bool ResourceManager::ExistFile(std::string name, std::string* full_path)
+    {
+        char path[MAX_PATH];
+
+        int path_length = 0;
+        std::string* paths = ConfigMgr->GetPaths("info", "ResourcePaths", &path_length);
+
+        for (int i = 0; i < path_length; i++)
+        {
+            WIN32_FIND_DATA FindData;
+            HANDLE FindHandle;
+
+            strcpy(path, paths[i].c_str()); //".\\Resource\\b\\*"
+            
+            FindHandle = FindFirstFile((LPCSTR)path, &FindData);
+
+            if (FindHandle == INVALID_HANDLE_VALUE)
+                return false;
+            do {
+                if (!strcmp(FindData.cFileName, name.c_str()))
+                {
+                    paths[i].pop_back();
+                    *full_path = paths[i] + name;
+
+                    FindClose(FindHandle);
+                    return true;
+                }
+            } while (FindNextFile(FindHandle, &FindData));
+        }
+
+        *full_path == "";
+
+        return false;
+    }
+
+	MESH_INFO* ResourceManager::LoadMesh(string name)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		if (staticMeshList.find(_address) == staticMeshList.end())
+		if (staticMeshList.find(name) == staticMeshList.end())
 		{
-			MeshInfo Temp;
+			MESH_INFO Temp;
 			
-			if (FAILED(D3DXLoadMeshFromX(_address.c_str(), NULL, RenderMgr->GetDevice(), NULL,
-				&Temp._buffer, NULL, &Temp._numMaterials, &Temp._mesh)))
-			{
-				return NULL;
-			}
+            std::string full_path = "";
+            if (!ExistFile(name, &full_path))
+                return nullptr;
 
-			staticMeshList.insert(std::pair<string, MeshInfo>(_address, Temp));
+			if (FAILED(D3DXLoadMeshFromX(full_path.c_str(), 0, RenderMgr->GetDevice(), 0,
+				&Temp.buffer, 0, &Temp.numMaterials, &Temp.mesh)))
+				return nullptr;
+			
+			staticMeshList.insert(std::pair<string, MESH_INFO>(name, Temp));
 			
 			char log[MAX_PATH] = "";
-			strcpy(log, _address.c_str());
+			strcpy(log, name.c_str());
 			strcat(log, "- is loaded.");
 			LogMgr->ShowMessage(LOG_MESSAGE, log);
 
-			return &(staticMeshList.find(_address)->second);
+			return &(staticMeshList.find(name)->second);
 		}
 		else
-		{
-			return &(staticMeshList.find(_address)->second);
-		}
+			return &(staticMeshList.find(name)->second);
 	}
 
-	MeshInfo* ResourceManager::FindMesh(string _address)
+	MESH_INFO* ResourceManager::FindMesh(string name)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		if (staticMeshList.find(_address) != staticMeshList.end())
-		{
-			return &(staticMeshList.find(_address)->second);
-		}
-		else
-			return NULL;
+        if (staticMeshList.find(name) != staticMeshList.end())
+            return &(staticMeshList.find(name)->second);
+        else
+            return nullptr;
 	}
 
-	LPDIRECT3DTEXTURE9 ResourceManager::LoadTexture(string _address)
+	LPDIRECT3DTEXTURE9 ResourceManager::LoadTexture(string name)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		if (textureList.find(_address) == textureList.end())
+		if (textureList.find(name) == textureList.end())
 		{
 			LPDIRECT3DTEXTURE9 Temp;
 
-			if (FAILED(D3DXCreateTextureFromFileEx(RenderMgr->GetDevice(), _address.c_str(),
-				D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2, 1, NULL, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT,
-				D3DX_DEFAULT, NULL, NULL, NULL, NULL, &Temp)))
-			{
-				return NULL;
-			}
+            std::string full_path = "";
+            if (!ExistFile(name, &full_path))
+                return nullptr;
 
-			textureList.insert(std::pair<string, LPDIRECT3DTEXTURE9>(_address, Temp));
+            if (FAILED(D3DXCreateTextureFromFileEx(RenderMgr->GetDevice(), full_path.c_str(),
+                D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT,
+                D3DX_DEFAULT, 0, 0, 0, 0, &Temp)))
+                return nullptr;
+			
+			textureList.insert(std::pair<string, LPDIRECT3DTEXTURE9>(name, Temp));
 
 			char log[MAX_PATH] = "";
-			strcpy(log, _address.c_str());
+			strcpy(log, name.c_str());
 			strcat(log, "- is loaded.");
 			LogMgr->ShowMessage(LOG_MESSAGE, log);
 
-			return textureList.find(_address)->second;
+			return textureList.find(name)->second;
 		}
 		else
 		{
-			return textureList.find(_address)->second;
+			return textureList.find(name)->second;
 		}
 	}
 
-	LPD3DXEFFECT ResourceManager::LoadEffect(string _address)
+	LPD3DXEFFECT ResourceManager::LoadEffect(string name)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		if (shaderList.find(_address) == shaderList.end())
+		if (shaderList.find(name) == shaderList.end())
 		{
 			LPD3DXEFFECT ret = NULL;
 			LPD3DXBUFFER pError = NULL;
-			DWORD dwShaderFlags = 0;
+			int dwShaderFlags = 0;
 
 #if _DEBUG
 			dwShaderFlags |= D3DXSHADER_DEBUG;
 #endif
+            std::string full_path = "";
+            if (!ExistFile(name, &full_path))
+                return nullptr;
 
-			D3DXCreateEffectFromFile(RenderMgr->GetDevice(), _address.c_str(), 
+			D3DXCreateEffectFromFile(RenderMgr->GetDevice(), full_path.c_str(),
 				NULL, NULL, dwShaderFlags, NULL, &ret, &pError);
 
-			// 셰이더 로딩에 실패한 경우 Output 창에 셰이더
-			// 컴파일 에러를 출력한다.
 			if (!ret && pError)
 			{
 				int size = pError->GetBufferSize();
@@ -135,81 +170,79 @@ namespace BONE_GRAPHICS
 					delete[] str;
 				}
 
-				return NULL;
+                return nullptr;
 			}
 
-			shaderList.insert(std::pair<string, LPD3DXEFFECT>(_address, ret));
+			shaderList.insert(std::pair<string, LPD3DXEFFECT>(name, ret));
 
-			return shaderList.find(_address)->second;
+			return shaderList.find(name)->second;
 		}
 		else
-		{
-			return shaderList.find(_address)->second;
-		}
-	}
+			return shaderList.find(name)->second;
+    }
 
-	void ResourceManager::ReleaseMesh(string _address)
+	void ResourceManager::ReleaseMesh(string name)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		if (staticMeshList.find(_address) != staticMeshList.end())
+		if (staticMeshList.find(name) != staticMeshList.end())
 		{
-			staticMeshList.erase(staticMeshList.find(_address));
-			staticMeshList.find(_address)->second._mesh->Release();
-			staticMeshList.find(_address)->second._buffer->Release();
-			staticMeshList.find(_address)->second._buffer->Release();
+			staticMeshList.erase(staticMeshList.find(name));
+			staticMeshList.find(name)->second.mesh->Release();
+			staticMeshList.find(name)->second.buffer->Release();
+			staticMeshList.find(name)->second.buffer->Release();
 		}
 	}
 	
-	void ResourceManager::ReleaseTexture(string _address)
+	void ResourceManager::ReleaseTexture(string name)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		if (textureList.find(_address) != textureList.end())
+		if (textureList.find(name) != textureList.end())
 		{
-			textureList.erase(textureList.find(_address));
-			textureList.find(_address)->second->Release();
+			textureList.erase(textureList.find(name));
+			textureList.find(name)->second->Release();
 		}
 	}
 
-	void ResourceManager::ReleaseEffect(string _address)
+	void ResourceManager::ReleaseEffect(string name)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 	}
 
-	void ResourceManager::ReleaseMesh(MeshInfo* _meshInfo)
+	void ResourceManager::ReleaseMesh(MESH_INFO* meshInfo)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		for (auto Iter = staticMeshList.begin(); Iter != staticMeshList.end(); Iter++)
 		{
-			if ((*Iter).second._mesh == _meshInfo->_mesh)
+			if ((*Iter).second.mesh == meshInfo->mesh)
 			{
 				staticMeshList.erase(Iter);
-				_meshInfo->_mesh->Release();
-				_meshInfo->_buffer->Release();
+				meshInfo->mesh->Release();
+				meshInfo->buffer->Release();
 				break;
 			}
 		}
 	}
 	
-	void ResourceManager::ReleaseTexture(LPDIRECT3DTEXTURE9 _texture)
+	void ResourceManager::ReleaseTexture(LPDIRECT3DTEXTURE9 texture)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 		
 		for (auto Iter = textureList.begin(); Iter != textureList.end(); Iter++)
 		{
-			if ((*Iter).second == _texture)
+			if ((*Iter).second == texture)
 			{
 				textureList.erase(Iter);
-				_texture->Release();
+				texture->Release();
 				break;
 			}
 		}
 	}
 
-	void ResourceManager::ReleaseEffect(LPD3DXEFFECT _address)
+	void ResourceManager::ReleaseEffect(LPD3DXEFFECT name)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 	}
 }

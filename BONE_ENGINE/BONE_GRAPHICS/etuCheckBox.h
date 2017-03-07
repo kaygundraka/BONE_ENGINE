@@ -12,7 +12,7 @@ namespace BONE_GRAPHICS
 		bool Is_Checked;
 
 	public:
-		bool SetInformaition(string _Name, D3DXVECTOR3 _vec3Position, string _Text, RECT* _Rect = NULL, RECT* _Margin = NULL);
+		bool SetInformaition(string _Name, D3DXVECTOR3 _vec3Position, string _Text, RECT* _Rect = nullptr, RECT* _Margin = nullptr);
 		void SetText(string _Text);
 		void SetStatus(bool Is_Checked);
 		bool GetStatus();

@@ -10,21 +10,23 @@
 #include <fstream>
 #include <math.h>
 #include <map>
+#include <list>
 #include <string>
 #include <dsound.h>
 #include <mmsystem.h>
 #include <vector>
 #include <CommCtrl.h>
 #include <tchar.h>
+#include <mutex>
 #include <thread>
+#include <ctime>
+#include <tuple>
 
 #include "Strsafe.h"
 #include "Interface.h"
-#include "tinystr.h"
-#include "tinyxml.h"
-//#include "BulletDynamics\Dynamics\btDiscreteDynamicsWorld.h"
-//#include "btBulletCollisionCommon.h"
-//#include "btBulletDynamicsCommon.h"
+#include <tinystr.h>
+#include <tinyxml.h>
+#include <MultiThreadSync.h>
 
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib,"dsound")
@@ -34,11 +36,12 @@
 
 using namespace std;
 
-typedef D3DXVECTOR3 D3DXVECTOR3;
 #define Vector3 D3DXVECTOR3
 #define Vector2 D3DXVECTOR2
 #define Matrix D3DXMATRIX
 #define Quaternion D3DXQUATERNION
+#define Color D3DCOLOR
+#define Mesh LPD3DXMESH
 
 class Rect {
 public:
@@ -61,6 +64,7 @@ namespace COLOR {
 #define RenderMgr RenderManager::GetInstance()
 #define InputMgr InputManager::GetInstance()
 #define ResourceMgr ResourceManager::GetInstance()
+#define ConfigMgr ConfigManager::GetInstance()
 //#define EMManager EnvironmentManager::GetInstance()
 //#define SDManager SoundManager::GetInstance()
 //#define PSManager PhysicsManager::GetInstance()

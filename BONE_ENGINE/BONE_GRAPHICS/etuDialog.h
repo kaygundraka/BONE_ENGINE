@@ -32,7 +32,7 @@ namespace BONE_GRAPHICS
 		RECT m_rFrameRect;
 
 	public:
-		bool SetInformaition(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, RECT* _Rect = NULL, RECT* _Margin = NULL);
+		bool SetInformaition(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, RECT* _Rect = nullptr, RECT* _Margin = nullptr);
 
 		void SetMessageHandler(etuMessageHandler<T> *MessageHandler)
 		{
@@ -42,10 +42,10 @@ namespace BONE_GRAPHICS
 
 		virtual void SetPosition(D3DXVECTOR3& _vec3Position);
 
-		bool AddTextBox(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, string _Text, RECT* _Rect = NULL, RECT* _Margin = NULL);
-		bool AddButton(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, string _Text, RECT* _Rect = NULL, RECT* _Margin = NULL);
-		bool AddCheckBox(string _Name, D3DXVECTOR3 _vec3Position, string _Text, RECT* _Rect = NULL, RECT* _Margin = NULL);
-		bool AddImage(string _Name, string _ImageAddress, D3DXVECTOR3 _vec3Position, int _Width, int _Height, RECT* _Rect, RECT* _Margin = NULL);
+		bool AddTextBox(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, string _Text, RECT* _Rect = nullptr, RECT* _Margin = nullptr);
+		bool AddButton(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, string _Text, RECT* _Rect = nullptr, RECT* _Margin = nullptr);
+		bool AddCheckBox(string _Name, D3DXVECTOR3 _vec3Position, string _Text, RECT* _Rect = nullptr, RECT* _Margin = nullptr);
+		bool AddImage(string _Name, string _ImageAddress, D3DXVECTOR3 _vec3Position, int _Width, int _Height, RECT* _Rect, RECT* _Margin = nullptr);
 		bool AddComboBox(string _Name, D3DXVECTOR3 _vec3Position);
 		bool AddStaticText(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, string _Text);
 		bool AddInputText(string _Name, D3DXVECTOR3 _vec3Position, int _Width, string _Text);
@@ -65,56 +65,56 @@ namespace BONE_GRAPHICS
 	auto etuDialog<T>::GetWindow(string _Name)
 	{
 		auto CheckBox = &(m_mCheckBoxMap.find(p_sName)->second);
-		if (CheckBox != NULL)
+		if (CheckBox != nullptr)
 			return CheckBox;
 
 		auto ScreenImage = &(m_mImage.find(p_sName)->second);
-		if (ScreenImage != NULL)
+		if (ScreenImage != nullptr)
 			return ScreenImage;
 
 		auto TextBox = &(m_mTextBoxMap.find(p_sName)->second);
-		if (TextBox != NULL)
+		if (TextBox != nullptr)
 			return TextBox;
 
 		auto Button = &(m_mButtonMap.find(p_sName)->second);
-		if (Button != NULL)
+		if (Button != nullptr)
 			return Button;
 
 		auto ComboBox = &(m_mComboBoxMap.find(p_sName)->second);
-		if (ComboBox != NULL)
+		if (ComboBox != nullptr)
 			return ComboBox;
 
-		return NULL;
+		return nullptr;
 	}
 
 	template <typename T>
 	etuInputText* etuDialog<T>::GetInputText(string _Name)
 	{
 		etuInputText* InputText = &(m_mInputTextMap.find(p_sName)->second);
-		if (InputText != NULL)
+		if (InputText != nullptr)
 			return InputText;
 
-		return NULL;
+		return nullptr;
 	}
 
 	template <typename T>
 	etuCheckBox* etuDialog<T>::GetCheckBox(string _Name)
 	{
 		etuCheckBox* CheckBox = &(m_mCheckBoxMap.find(p_sName)->second);
-		if (CheckBox != NULL)
+		if (CheckBox != nullptr)
 			return CheckBox;
 
-		return NULL;
+		return nullptr;
 	}
 
 	template <typename T>
 	etuComboBox* etuDialog<T>::GetComboBox(string _Name)
 	{
 		etuComboBox* ComboBox = &(m_mComboBoxMap.find(p_sName)->second);
-		if (ComboBox != NULL)
+		if (ComboBox != nullptr)
 			return ComboBox;
 
-		return NULL;
+		return nullptr;
 	}
 
 	template <typename T>
@@ -122,7 +122,7 @@ namespace BONE_GRAPHICS
 	{
 		m_sWindowName = _Name;
 
-		if (p_pRect == NULL)
+		if (p_pRect == nullptr)
 		{
 			m_rImageRect = { 495, 933, 817, 1156, };
 			m_rWindowBarRect = { 495, 933, 817, 979, };
@@ -208,7 +208,7 @@ namespace BONE_GRAPHICS
 	{
 		if (Is_Show == true)
 		{
-			if (this->etuForm::IsClicked() && MessageHandler != NULL &&
+			if (this->etuForm::IsClicked() && MessageHandler != nullptr &&
 				InputMgr->GetMousePosition().y <= m_vec3ParentPosition.y + m_vec3Position.y + (m_rWindowBarRect.bottom - m_rWindowBarRect.top))
 			{
 				MessageHandler->AddMessage(etuUIMessage(this, MS_LBDOWN));
@@ -221,7 +221,7 @@ namespace BONE_GRAPHICS
 			auto ComboBoxIterator = m_mComboBoxMap.begin();
 			for (int i = 0; i < m_mComboBoxMap.size(); i++)
 			{
-				if (ComboBoxIterator->second.IsClicked() && MessageHandler != NULL)
+				if (ComboBoxIterator->second.IsClicked() && MessageHandler != nullptr)
 					MessageHandler->AddMessage(etuUIMessage(&(ComboBoxIterator->second), MS_LBDOWN));
 				else if (InputMgr->GetMouseLBButtonStatus() == MOUSE_LBUP)
 					MessageHandler->AddMessage(etuUIMessage(&(ComboBoxIterator->second), MS_LBUP));
@@ -232,7 +232,7 @@ namespace BONE_GRAPHICS
 			auto CheckBoxIterator = m_mCheckBoxMap.begin();
 			for (int i = 0; i < m_mCheckBoxMap.size(); i++)
 			{
-				if (CheckBoxIterator->second.IsClicked() && MessageHandler != NULL)
+				if (CheckBoxIterator->second.IsClicked() && MessageHandler != nullptr)
 					MessageHandler->AddMessage(etuUIMessage(&(CheckBoxIterator->second), MS_LBDOWN));
 				else if (InputMgr->GetMouseLBButtonStatus() == MOUSE_LBUP)
 					MessageHandler->AddMessage(etuUIMessage(&(CheckBoxIterator->second), MS_LBUP));
@@ -243,7 +243,7 @@ namespace BONE_GRAPHICS
 			auto ImageIterator = m_mImageMap.begin();
 			for (int i = 0; i < m_mImageMap.size(); i++)
 			{
-				if (ImageIterator->second.IsClicked() && MessageHandler != NULL)
+				if (ImageIterator->second.IsClicked() && MessageHandler != nullptr)
 					MessageHandler->AddMessage(etuUIMessage(&(ImageIterator->second), MS_LBDOWN));
 				else if (InputMgr->GetMouseLBButtonStatus() == MOUSE_LBUP)
 					MessageHandler->AddMessage(etuUIMessage(&(ImageIterator->second), MS_LBUP));
@@ -255,7 +255,7 @@ namespace BONE_GRAPHICS
 			for (int i = 0; i < m_mTextBoxMap.size(); i++)
 			{
 
-				if (TextBoxIterator->second.IsClicked() && MessageHandler != NULL)
+				if (TextBoxIterator->second.IsClicked() && MessageHandler != nullptr)
 					MessageHandler->AddMessage(etuUIMessage(&(TextBoxIterator->second), MS_LBDOWN));
 				else if (InputMgr->GetMouseLBButtonStatus() == MOUSE_LBUP)
 					MessageHandler->AddMessage(etuUIMessage(&(TextBoxIterator->second), MS_LBUP));
@@ -266,7 +266,7 @@ namespace BONE_GRAPHICS
 			auto ButtonIterator = m_mButtonMap.begin();
 			for (int i = 0; i < m_mButtonMap.size(); i++)
 			{
-				if (ButtonIterator->second.IsClicked() && MessageHandler != NULL)
+				if (ButtonIterator->second.IsClicked() && MessageHandler != nullptr)
 					MessageHandler->AddMessage(etuUIMessage(&(ButtonIterator->second), MS_LBDOWN));
 				else if (InputMgr->GetMouseLBButtonStatus() == MOUSE_LBUP)
 					MessageHandler->AddMessage(etuUIMessage(&(ButtonIterator->second), MS_LBUP));
@@ -277,7 +277,7 @@ namespace BONE_GRAPHICS
 			auto InputTextIterator = m_mInputTextMap.begin();
 			for (int i = 0; i < m_mInputTextMap.size(); i++)
 			{
-				if (InputTextIterator->second.IsClicked() && MessageHandler != NULL)
+				if (InputTextIterator->second.IsClicked() && MessageHandler != nullptr)
 					MessageHandler->AddMessage(etuUIMessage(&(InputTextIterator->second), MS_LBDOWN));
 				else if (InputMgr->GetMouseLBButtonStatus() == MOUSE_LBUP)
 					MessageHandler->AddMessage(etuUIMessage(&(InputTextIterator->second), MS_LBUP));
@@ -298,16 +298,16 @@ namespace BONE_GRAPHICS
 			m_pSprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
 			D3DXMatrixIdentity(&m_TransformMatrix);
 			D3DXMatrixTransformation2D(&m_TransformMatrix, &D3DXVECTOR2(m_vec3Position.x, m_vec3Position.y),
-				NULL, &D3DXVECTOR2(m_fScaleX, 1), NULL, 0.0f, &D3DXVECTOR2(0, 0));
+				nullptr, &D3DXVECTOR2(m_fScaleX, 1), nullptr, 0.0f, &D3DXVECTOR2(0, 0));
 			m_pSprite->SetTransform(&m_TransformMatrix);
-			m_pSprite->Draw(m_pTextures, &m_rWindowBarRect, NULL, &m_vec3Position, 0xffffffff);
+			m_pSprite->Draw(m_pTextures, &m_rWindowBarRect, nullptr, &m_vec3Position, 0xffffffff);
 
 
 			D3DXMatrixIdentity(&m_TransformMatrix);
 			D3DXMatrixTransformation2D(&m_TransformMatrix, &D3DXVECTOR2(m_vec3Position.x, m_vec3Position.y + (m_rWindowBarRect.bottom - m_rWindowBarRect.top)),
-				NULL, &D3DXVECTOR2(m_fScaleX, m_fScaleY), NULL, 0.0f, &D3DXVECTOR2(0, 0));
+				nullptr, &D3DXVECTOR2(m_fScaleX, m_fScaleY), nullptr, 0.0f, &D3DXVECTOR2(0, 0));
 			m_pSprite->SetTransform(&m_TransformMatrix);
-			m_pSprite->Draw(m_pTextures, &m_rFrameRect, NULL,
+			m_pSprite->Draw(m_pTextures, &m_rFrameRect, nullptr,
 				&D3DXVECTOR3(m_vec3Position.x, m_vec3Position.y + (m_rWindowBarRect.bottom - m_rWindowBarRect.top),
 					m_vec3Position.z), 0xffffffff);
 
@@ -324,7 +324,7 @@ namespace BONE_GRAPHICS
 				m_vec3Position.y + size.cy * 2 ,
 			};
 
-			m_pFont->DrawText(NULL, m_sWindowName.c_str(), -1, &titlePosition, 0, 0xFFFFFFFF);
+			m_pFont->DrawText(nullptr, m_sWindowName.c_str(), -1, &titlePosition, 0, 0xFFFFFFFF);
 
 			auto TextBoxIterator = m_mTextBoxMap.begin();
 			for (int i = 0; i < m_mTextBoxMap.size(); i++)
@@ -444,7 +444,7 @@ namespace BONE_GRAPHICS
 	}
 
 	template <typename T>
-	bool etuDialog<T>::AddCheckBox(string _Name, D3DXVECTOR3 _vec3Position, string _Text, RECT* _Rect = NULL, RECT* _Margin = NULL)
+	bool etuDialog<T>::AddCheckBox(string _Name, D3DXVECTOR3 _vec3Position, string _Text, RECT* _Rect = nullptr, RECT* _Margin = nullptr)
 	{
 		if (0 != m_mCheckBoxMap.count(p_sName))
 			return false;
@@ -469,7 +469,7 @@ namespace BONE_GRAPHICS
 	}
 
 	template <typename T>
-	bool etuDialog<T>::AddImage(string _Name, string _ImageAddress, D3DXVECTOR3 _vec3Position, int _Width, int _Height, RECT* _Rect, RECT* _Margin = NULL)
+	bool etuDialog<T>::AddImage(string _Name, string _ImageAddress, D3DXVECTOR3 _vec3Position, int _Width, int _Height, RECT* _Rect, RECT* _Margin = nullptr)
 	{
 		if (0 != m_mImageMap.count(p_sName))
 			return false;

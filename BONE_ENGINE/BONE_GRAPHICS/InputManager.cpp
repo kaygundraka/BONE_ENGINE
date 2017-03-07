@@ -4,11 +4,9 @@
 
 namespace BONE_GRAPHICS
 {
-	//InputManager* InputManager::pInst = NULL;
-
 	void InputManager::InitializeMembers()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		mousePosition.x = 400;
 		mousePosition.y = 300;
@@ -25,45 +23,45 @@ namespace BONE_GRAPHICS
 		LogMgr->ShowMessage(LOG_MESSAGE, "InputManager is initialized");
 	}
 
-	void InputManager::SelectObject(string _name)
+	void InputManager::SelectObject(string name)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		IsSelectObject = true;
-		selectObjectName = _name;
+		selectObjectName = name;
 	}
 
-	void InputManager::SelectNature(string _name)
+	void InputManager::SelectNature(string name)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		selectNatureName = _name;
+		selectNatureName = name;
 	}
 
 	string InputManager::GetSelectedObjectName()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return selectObjectName;
 	}
 
-	void InputManager::SetSelectObjectValue(bool _isExist)
+	void InputManager::SetSelectObjectValue(bool isExist)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		IsSelectObject = _isExist;
+		IsSelectObject = isExist;
 	}
 
 	bool InputManager::ExistSelectObejct()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 	
 		return IsSelectObject;
 	}
 
 	char InputManager::GetCurrentChar()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (currentCharNumber >= 1)
 			currentCharNumber--;
@@ -75,21 +73,21 @@ namespace BONE_GRAPHICS
 
 	bool InputManager::IsFocusedWindow()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return focusedWindow;
 	}
 
-	void InputManager::SetFocusWindow(bool _isFocused)
+	void InputManager::SetFocusWindow(bool isFocused)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		focusedWindow = _isFocused;
+		focusedWindow = isFocused;
 	}
 
 	void InputManager::SetCurrentChar(char _char)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (focusedInputText >= 1)
 		{
@@ -98,150 +96,134 @@ namespace BONE_GRAPHICS
 		}
 	}
 
-	void InputManager::SetFocusTextInput(int _addNumber)
+	void InputManager::SetFocusTextInput(int addNumber)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		focusedInputText += _addNumber;
+		focusedInputText += addNumber;
 	}
 
 	void InputManager::NotFocusTextInput()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		focusedInputText = 0;
 	}
 
-	bool InputManager::KeyDown(char _key, bool _onlyOne)
+	bool InputManager::KeyDown(char key, bool onlyOne)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (!focusedInputText && focusedWindow)
 		{
-			if (_onlyOne)
+			if (onlyOne)
 			{
-				if ((GetAsyncKeyState(_key) & 0x8000) && keyStatus[_key] == true)
+				if ((GetAsyncKeyState(key) & 0x8000) && keyStatus[key] == true)
 				{
-					keyStatus[_key] = false;
+					keyStatus[key] = false;
 					return true;
 				}
 			}
-			else if ((GetAsyncKeyState(_key) & 0x8000))
-			{
+			else if ((GetAsyncKeyState(key) & 0x8000))
 				return true;
-			}
 		}
 		return false;
 	}
 
 	string InputManager::GetSelectedNatureName()
 	{
-		CThreadSync sync;
-
 		return selectNatureName;
 	}
 
 	MOUSE_WHEEL_STATUS InputManager::GetMouseWheelStatus()
 	{
-		CThreadSync sync;
-
 		return mouseStatus;
 	}
 
-	void InputManager::SetMouseWheelStatus(MOUSE_WHEEL_STATUS _mouseWheelStatus)
+	void InputManager::SetMouseWheelStatus(MOUSE_WHEEL_STATUS mouseWheelStatus)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		mouseStatus = _mouseWheelStatus;
+		mouseStatus = mouseWheelStatus;
 	}
 
-	bool InputManager::GetCheckBoxStatus(int _checkBoxName)
+	bool InputManager::GetCheckBoxStatus(int checkBoxName)
 	{
-		CThreadSync sync;
-
-		return checkBoxStatus[_checkBoxName];
+		return checkBoxStatus[checkBoxName];
 	}
 
-	void InputManager::SetCheckBoxStatus(int _checkBoxName, bool _isChecked)
+	void InputManager::SetCheckBoxStatus(int checkBoxName, bool isChecked)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		checkBoxStatus[_checkBoxName] = _isChecked;
+		checkBoxStatus[checkBoxName] = isChecked;
 	}
 
-	void InputManager::KeyUp(char _key)
+	void InputManager::KeyUp(char key)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		keyStatus[_key] = true;
+		keyStatus[key] = true;
 	}
 
 	POINT InputManager::GetMousePosition()
 	{
-		CThreadSync sync;
-
 		return mousePosition;
 	}
 
 	Vector2 InputManager::GetMousePositionToVector2()
 	{
-		CThreadSync sync;
-
 		return Vector2(mousePosition.x, mousePosition.y);
 	}
 
 	MOUSE_STATUS InputManager::GetMouseLBButtonStatus()
 	{
-		CThreadSync sync;
-
 		return IsLBClick;
 	}
 
 	int InputManager::GetCreatorMode()
 	{
-		CThreadSync sync;
-
 		return creatorMode;
 	}
 
-	void InputManager::SetCreatorMode(int _index)
+	void InputManager::SetCreatorMode(int index)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		creatorMode = _index;
+		creatorMode = index;
 	}
 
-	void InputManager::SetMouseLBButtonStatus(MOUSE_STATUS _isClicked)
+	void InputManager::SetMouseLBButtonStatus(MOUSE_STATUS isClicked)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		IsLBClick = _isClicked;
+		IsLBClick = isClicked;
 	}
 
 	MOUSE_STATUS InputManager::GetMouseRBButtonStatus()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return IsRBClick;
 	}
 
-	void InputManager::SetMouseRBButtonStatus(MOUSE_STATUS _isClicked)
+	void InputManager::SetMouseRBButtonStatus(MOUSE_STATUS isClicked)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		IsRBClick = _isClicked;
+		IsRBClick = isClicked;
 	}
 
-	void InputManager::SetMousePosition(POINT _mousePosition)
+	void InputManager::SetMousePosition(POINT mousePosition)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		mousePosition = _mousePosition;
+		mousePosition = mousePosition;
 	}
 
 	void InputManager::ReleaseMembers()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		LogMgr->ShowMessage(LOG_MESSAGE, "inputManager is clear.");
 	}

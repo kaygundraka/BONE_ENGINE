@@ -11,7 +11,7 @@ namespace BONE_GRAPHICS
 		std::vector<Component*> components;
 
 		GameObject* parent;
-		std::vector<GameObject*> child;
+		std::vector<GameObject*> childs;
 
 		int priorty;
 		
@@ -22,42 +22,42 @@ namespace BONE_GRAPHICS
 		GameObject();
 		virtual ~GameObject();
 
-		void SetStatic(bool _isStatic);
+		void SetStatic(bool isStatic);
 		bool GetStatic();
 
-		void SetActive(bool _isActive);
+		void SetActive(bool isActive);
 		bool GetActive();
 
-		void SetPriority(int _index);
+		void SetPriority(int index);
 		int GetPriority();
 
-		void AttachParent(GameObject* _parent);
+		void AttachParent(GameObject* parent);
 		void DetachParent();
 		GameObject* GetParent();
 		
-		void AttachChild(GameObject* _child);
-		void DetachChild(GameObject* _child);
+		void AttachChild(GameObject* child);
+		void DetachChild(GameObject* child);
 
-		void DetachChildByTag(string _tag);
-		GameObject* FindChildByTag(string _tag);
+		void DetachChildByTag(string tag);
+		GameObject* FindChildByTag(string tag);
 
-		void AttachTag(string _tag);
+		void AttachTag(string tag);
 		void DetachTag();
 		string Tag();
-		void SetTag(string Tag);
+		void SetTag(string tag);
 
-		Component* GetComponent(string _typeName);
-		bool AddComponent(Component* _component);
+		Component* GetComponent(string typeName);
+		bool AddComponent(Component* component);
 
 		void LoadContents();
 
 		virtual void Awake();
 		virtual void Init();
 		virtual void Reference();
-		virtual void Update(double _timeDelta);
-		virtual void LateUpdate(double _timeDelta);
+		virtual void Update();
+		virtual void LateUpdate();
 		virtual void LateRender();
 
-		void Render(double _timeDelta);
+		void Render();
 	};
 }

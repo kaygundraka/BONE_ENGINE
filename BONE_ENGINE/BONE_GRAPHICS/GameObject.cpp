@@ -1,4 +1,5 @@
 #include "Common.h"
+#include "SceneManager.h"
 #include "GameObject.h"
 #include "Transform3D.h"
 #include "Transform2D.h"
@@ -14,9 +15,9 @@
 
 namespace BONE_GRAPHICS
 {
-	void GameObject::SetStatic(bool _isStatic)
+	void GameObject::SetStatic(bool _sStatic)
 	{
-		isStatic = _isStatic;
+		this->isStatic = isStatic;
 	}
 
 	bool GameObject::GetStatic()
@@ -29,18 +30,18 @@ namespace BONE_GRAPHICS
 
 	}
 
-	void GameObject::SetActive(bool _isActive)
+	void GameObject::SetActive(bool isActive)
 	{
-		isActive = _isActive;
+		this->isActive = isActive;
 
-		if (_isActive)
+		if (isActive)
 			Awake();
 
 		for (auto Iter = child.begin(); Iter != child.end(); Iter++)
 		{
-			(*Iter)->SetActive(_isActive);
+			(*Iter)->SetActive(isActive);
 
-			if (_isActive)
+			if (isActive)
 				(*Iter)->Awake();
 		}
 	}
@@ -55,7 +56,7 @@ namespace BONE_GRAPHICS
 		isActive = true;
 		isStatic = false;
 
-		parent = NULL;
+		parent = nullptr;
 		std::vector<GameObject*> Child;
 	}
 
@@ -80,9 +81,9 @@ namespace BONE_GRAPHICS
 	{
 	}
 
-	void GameObject::SetPriority(int _index)
+	void GameObject::SetPriority(int index)
 	{
-		priorty = _index;
+		priorty = index;
 	}
 
 	int GameObject::GetPriority()
@@ -90,131 +91,114 @@ namespace BONE_GRAPHICS
 		return priorty;
 	}
 
-	void GameObject::SetTag(string Tag)
+	void GameObject::SetTag(string tag)
 	{
-		tag = Tag;
+		this->tag = tag;
 	}
 
-	Component* GameObject::GetComponent(string _typeName)
+	Component* GameObject::GetComponent(string typeName)
 	{
 		for (auto Iter = components.begin(); Iter != components.end(); Iter++)
-		{
-			if ((*Iter)->GetTypeName() == _typeName)
+			if ((*Iter)->GetTypeName() == typeName)
 				return (*Iter);
-		}
-
-		return NULL;
+		
+		return nullptr;
 	}
 
 	void GameObject::LoadContents()
 	{
 		for (auto Iter = components.begin(); Iter != components.end(); Iter++)
-		{
 			(*Iter)->LoadContent();
-		}
 	}
 
-	bool GameObject::AddComponent(Component* _component)
+	bool GameObject::AddComponent(Component* component)
 	{
 		for (auto Iter = components.begin(); Iter != components.end(); Iter++)
-		{
-			if ((*Iter)->GetTypeName() == _component->GetTypeName())
+			if ((*Iter)->GetTypeName() == component->GetTypeName())
 				return false;
-		}
-
-		components.push_back(_component);
+		
+		components.push_back(component);
 
 		return true;
 	}
 
-	void GameObject::Render(double _timeDelta)
+	void GameObject::Render()
 	{
 		IShader* Shader = ((IShader*)GetComponent("IShader"));
 
-		if (Shader != NULL)
-		{
-			{
-				UINT numPasses = 0;
+        if (Shader != nullptr)
+        {
+            UINT numPasses = 0;
 
-				Shader->GetShader()->Begin(&numPasses, NULL);
-				{
-					for (UINT i = 0; i < numPasses; i++)
-					{
-						Shader->GetShader()->BeginPass(i);
-						{
-							if (GetComponent("StaticMesh") != NULL)
-								((StaticMesh*)GetComponent("StaticMesh"))->Render(Shader, this);
+            Shader->GetShader()->Begin(&numPasses, 0);
+            {
+                for (UINT i = 0; i < numPasses; i++)
+                {
+                    Shader->GetShader()->BeginPass(i);
+                    {
+                        if (GetComponent("StaticMesh") != nullptr)
+                            ((StaticMesh*)GetComponent("StaticMesh"))->Render(Shader, this);
 
-							if (GetComponent("BillBoard") != NULL)
-								((BillBoard*)GetComponent("BillBoard"))->Render(Shader, this);
+                        if (GetComponent("BillBoard") != nullptr)
+                            ((BillBoard*)GetComponent("BillBoard"))->Render(Shader, this);
 
-							if (GetComponent("SpriteBillBoard") != NULL)
-								((SpriteBillBoard*)GetComponent("SpriteBillBoard"))->Render(Shader, this);
+                        if (GetComponent("SpriteBillBoard") != nullptr)
+                            ((SpriteBillBoard*)GetComponent("SpriteBillBoard"))->Render(Shader, this);
 
-							if (GetComponent("TrailRenderer") != NULL)
-								((TrailRenderer*)GetComponent("TrailRenderer"))->Render(Shader);
+                        if (GetComponent("TrailRenderer") != nullptr)
+                            ((TrailRenderer*)GetComponent("TrailRenderer"))->Render(Shader);
 
-							if (GetComponent("SkinnedMesh") != NULL)
-								((SkinnedMesh*)GetComponent("SkinnedMesh"))->Render(Shader, this, _timeDelta);
-						}
-						Shader->GetShader()->End();
-					}
-					Shader->GetShader()->EndPass();
-				}
-			}
+                        if (GetComponent("SkinnedMesh") != nullptr)
+                            ((SkinnedMesh*)GetComponent("SkinnedMesh"))->Render(Shader, this, SceneMgr->GetTimeDelta());
+                    }
+                    Shader->GetShader()->End();
+                }
+
+                Shader->GetShader()->EndPass();
+            }
 		}
 		else
 		{
-			if (GetComponent("StaticMesh") != NULL)
-			{
+			if (GetComponent("StaticMesh") != nullptr)
 				((StaticMesh*)GetComponent("StaticMesh"))->Render(Shader, this);
-			}
 
-			if (GetComponent("BillBoard") != NULL)
-			{
+			if (GetComponent("BillBoard") != nullptr)
 				((BillBoard*)GetComponent("BillBoard"))->Render(Shader, this);
-			}
 
-			if (GetComponent("TrailRenderer") != NULL)
-			{
+			if (GetComponent("TrailRenderer") != nullptr)
 				((TrailRenderer*)GetComponent("TrailRenderer"))->Render(Shader);
-			}
 
-			if (GetComponent("SpriteBillBoard") != NULL)
+			if (GetComponent("SpriteBillBoard") != nullptr)
 				((SpriteBillBoard*)GetComponent("SpriteBillBoard"))->Render(Shader, this);
 		}
 
-		if (GetComponent("ScreenSprite") != NULL)
+		if (GetComponent("ScreenSprite") != nullptr)
 			((ScreenSprite*)GetComponent("ScreenSprite"))->Render(this);
 
-		if (GetComponent("ScreenImage") != NULL)
+		if (GetComponent("ScreenImage") != nullptr)
 			((ScreenImage*)GetComponent("ScreenImage"))->Render(this);
 
-		if (GetComponent("ScreenButton") != NULL)
+		if (GetComponent("ScreenButton") != nullptr)
 			((ScreenButton*)GetComponent("ScreenButton"))->Render(this);
 	}
 
-	void GameObject::AttachParent(GameObject* _parent)
+	void GameObject::AttachParent(GameObject* parent)
 	{
-		parent = _parent;
+		this->parent = parent;
 		
-		if (((Transform3D*)GetComponent("Transform3D")) != NULL)
-		{
-			((Transform3D*)GetComponent("Transform3D"))->AttachObject(_parent);
-		}
+		if (((Transform3D*)GetComponent("Transform3D")) != nullptr)
+			((Transform3D*)GetComponent("Transform3D"))->AttachObject(this->parent);
 
-		if (((Transform2D*)GetComponent("Transform2D")) != NULL)
-		{
-			((Transform2D*)GetComponent("Transform2D"))->AttachObject(_parent);
-		}
+		if (((Transform2D*)GetComponent("Transform2D")) != nullptr)
+			((Transform2D*)GetComponent("Transform2D"))->AttachObject(this->parent);
 
-		_parent->AttachChild(this);
+        this->parent->AttachChild(this);
 	}
 
 	void GameObject::DetachParent()
 	{
 		parent->DetachChild(this);
-		parent = NULL;
+		parent = nullptr;
 	}
 
 	GameObject* GameObject::GetParent()
@@ -222,18 +206,18 @@ namespace BONE_GRAPHICS
 		return parent;
 	}
 
-	void GameObject::AttachChild(GameObject* _child)
+	void GameObject::AttachChild(GameObject* child)
 	{
-		if (_child != NULL)
+		if (child != nullptr)
 		{
-			if(_child->GetParent() == NULL)
-				_child->AttachParent(this);
+			if(child->GetParent() == nullptr)
+                child->AttachParent(this);
 
 			bool Flag = false;
 
-			for each (GameObject* var in child)
+			for each (GameObject* var in childs)
 			{
-				if (var == _child)
+				if (var == child)
 				{
 					Flag = true;
 					break;
@@ -241,27 +225,27 @@ namespace BONE_GRAPHICS
 			}
 
 			if(Flag == false)
-				child.push_back(_child);
+				childs.push_back(child);
 		}
 	}
 
-	void GameObject::DetachChild(GameObject* _child)
+	void GameObject::DetachChild(GameObject* child)
 	{
-		for (auto Iter = child.begin(); Iter != child.end(); Iter++)
+		for (auto Iter = childs.begin(); Iter != childs.end(); Iter++)
 		{
-			if ((*Iter) == _child)
+			if ((*Iter) == child)
 			{
-				_child->DetachParent();
+				child->DetachParent();
 				break;
 			}
 		}
 	}
 
-	void GameObject::DetachChildByTag(string _tag)
+	void GameObject::DetachChildByTag(string tag)
 	{
-		for (auto Iter = child.begin(); Iter != child.end(); Iter++)
+		for (auto Iter = childs.begin(); Iter != childs.end(); Iter++)
 		{
-			if ((*Iter)->Tag() == _tag)
+			if ((*Iter)->Tag() == tag)
 			{
 				(*Iter)->DetachParent();
 				break;
@@ -269,20 +253,16 @@ namespace BONE_GRAPHICS
 		}
 	}
 	
-	GameObject* GameObject::FindChildByTag(string _tag)
+	GameObject* GameObject::FindChildByTag(string tag)
 	{
-		for (auto Iter = child.begin(); Iter != child.end(); Iter++)
-		{
-			if ((*Iter)->Tag() == _tag)
-			{
+		for (auto Iter = childs.begin(); Iter != childs.end(); Iter++)
+			if ((*Iter)->Tag() == tag)
 				return *Iter;
-			}
-		}
 	}
 
-	void GameObject::AttachTag(string _tag)
+	void GameObject::AttachTag(string tag)
 	{
-		tag = _tag;
+		this->tag = tag;
 	}
 	
 	void GameObject::DetachTag()
@@ -300,12 +280,12 @@ namespace BONE_GRAPHICS
 		// 비어있음
 	}
 	
-	void GameObject::Update(double _timeDelta)
+	void GameObject::Update()
 	{
 		// 비어있음
 	}
 	
-	void GameObject::LateUpdate(double _timeDelta)
+	void GameObject::LateUpdate()
 	{
 		// 비어있음
 	}

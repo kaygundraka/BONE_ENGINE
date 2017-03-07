@@ -61,16 +61,16 @@ namespace BONE_GRAPHICS
 		{
 			D3DXMatrixIdentity(&m_TransformMatrix);
 			D3DXMatrixTransformation2D(&m_TransformMatrix, &D3DXVECTOR2(m_vec3Position.x + m_vec3ParentPosition.x, m_vec3Position.y + m_vec3ParentPosition.y),
-				NULL, &D3DXVECTOR2(m_fScaleX, m_fScaleY), NULL, 0.0f, NULL);
+				nullptr, &D3DXVECTOR2(m_fScaleX, m_fScaleY), nullptr, 0.0f, nullptr);
 
 			m_pSprite->SetTransform(&m_TransformMatrix);
 
 			m_pSprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
 
 			if (Is_Clicked)
-				m_pSprite->Draw(m_pTextures, &m_rClickDown, NULL, &(m_vec3ParentPosition + m_vec3Position), 0xffffffff);
+				m_pSprite->Draw(m_pTextures, &m_rClickDown, nullptr, &(m_vec3ParentPosition + m_vec3Position), 0xffffffff);
 			else
-				m_pSprite->Draw(m_pTextures, &m_rImageRect, NULL, &(m_vec3ParentPosition + m_vec3Position), 0xffffffff);
+				m_pSprite->Draw(m_pTextures, &m_rImageRect, nullptr, &(m_vec3ParentPosition + m_vec3Position), 0xffffffff);
 
 			m_pSprite->End();
 
@@ -92,7 +92,7 @@ namespace BONE_GRAPHICS
 				m_vec3ParentPosition.y + m_vec3Position.y + m_iHeight * m_fScaleY ,
 			};
 
-			m_pFont->DrawText(NULL, m_sString.c_str(), -1, &TextPosition, 0, 0xFFFFFFFF);
+			m_pFont->DrawText(nullptr, m_sString.c_str(), -1, &TextPosition, 0, 0xFFFFFFFF);
 
 		}
 	}

@@ -23,9 +23,9 @@ namespace BONE_GRAPHICS
 		Brush_Info.Invert = false;
 
 		/// etuTerrain 기본 설정
-		Terrain_Info.HeightMap = NULL;
-		Terrain_Info.VertexBuffer = NULL;
-		Terrain_Info.IndexBuffer = NULL;
+		Terrain_Info.HeightMap = nullptr;
+		Terrain_Info.VertexBuffer = nullptr;
+		Terrain_Info.IndexBuffer = nullptr;
 		Terrain_Info.HeightScale = _fHeightScale;
 		Terrain_Info.TileScale = _fTileScale;
 
@@ -35,7 +35,7 @@ namespace BONE_GRAPHICS
 		D3DXMatrixIdentity(&m_matWorld);
 		D3DXMatrixScaling(&m_matWorld, Terrain_Info.HeightScale, 1, Terrain_Info.HeightScale);
 
-		m_pQuadTree = NULL;
+		m_pQuadTree = nullptr;
 		m_pQuadTree = new ZQuadTree(Terrain_Info.WidthSize, Terrain_Info.HeightSize);
 
 		LoadBrushTexture(0, "Resource\\Environment\\Terrain\\TileMap.jpg");
@@ -69,14 +69,14 @@ namespace BONE_GRAPHICS
 		Brush_Info.Invert = false;
 
 		/// etuTerrain 기본 설정
-		Terrain_Info.HeightMap = NULL;
-		Terrain_Info.VertexBuffer = NULL;
-		Terrain_Info.IndexBuffer = NULL;
+		Terrain_Info.HeightMap = nullptr;
+		Terrain_Info.VertexBuffer = nullptr;
+		Terrain_Info.IndexBuffer = nullptr;
 
 		Terrain_Info.WidthSize = 129;
 		Terrain_Info.HeightSize = 129;
 
-		m_pQuadTree = NULL;
+		m_pQuadTree = nullptr;
 		m_pQuadTree = new ZQuadTree(Terrain_Info.WidthSize, Terrain_Info.HeightSize);
 
 		LoadBrushTexture(0, "Resource\\Environment\\Terrain\\TileMap.jpg");
@@ -147,7 +147,7 @@ namespace BONE_GRAPHICS
 		TiXmlElement* pHeightElem = pElem->NextSiblingElement("Height_Data")->FirstChildElement("z");
 		int length = 0;
 
-		if (Terrain_Info.Vertex == NULL)
+		if (Terrain_Info.Vertex == nullptr)
 		{
 			Terrain_Info.Vertex = new VERTEX[Terrain_Info.HeightSize * Terrain_Info.WidthSize];
 		}
@@ -251,10 +251,10 @@ namespace BONE_GRAPHICS
 
 	void etuTerrain::SaveAlphaMap()
 	{
-		D3DXSaveTextureToFile("MapData\\AlphaMap0.jpg", D3DXIFF_JPG, Terrain_Info.AlphaMap[0], NULL);
-		D3DXSaveTextureToFile("MapData\\AlphaMap1.jpg", D3DXIFF_JPG, Terrain_Info.AlphaMap[1], NULL);
-		D3DXSaveTextureToFile("MapData\\AlphaMap2.jpg", D3DXIFF_JPG, Terrain_Info.AlphaMap[2], NULL);
-		D3DXSaveTextureToFile("MapData\\AlphaMap3.jpg", D3DXIFF_JPG, Terrain_Info.AlphaMap[3], NULL);
+		D3DXSaveTextureToFile("MapData\\AlphaMap0.jpg", D3DXIFF_JPG, Terrain_Info.AlphaMap[0], nullptr);
+		D3DXSaveTextureToFile("MapData\\AlphaMap1.jpg", D3DXIFF_JPG, Terrain_Info.AlphaMap[1], nullptr);
+		D3DXSaveTextureToFile("MapData\\AlphaMap2.jpg", D3DXIFF_JPG, Terrain_Info.AlphaMap[2], nullptr);
+		D3DXSaveTextureToFile("MapData\\AlphaMap3.jpg", D3DXIFF_JPG, Terrain_Info.AlphaMap[3], nullptr);
 	}
 
 	void etuTerrain::Update(D3DXMATRIXA16* _matVeiwProj, D3DXVECTOR3 _vec3CameraPos)
@@ -272,13 +272,13 @@ namespace BONE_GRAPHICS
 
 	void etuTerrain::InitVertexBuffer()
 	{
-		if (Terrain_Info.Vertex == NULL)
+		if (Terrain_Info.Vertex == nullptr)
 		{
 			Terrain_Info.Vertex = new VERTEX[Terrain_Info.HeightSize * Terrain_Info.WidthSize];
 		}
 
 		if (!Terrain_Info.VertexBuffer && FAILED(RenderMgr->GetDevice()->CreateVertexBuffer(Terrain_Info.HeightSize * Terrain_Info.WidthSize * sizeof(VERTEX),
-			D3DUSAGE_WRITEONLY, VERTEX::FVF, D3DPOOL_DEFAULT, &Terrain_Info.VertexBuffer, NULL)))
+			D3DUSAGE_WRITEONLY, VERTEX::FVF, D3DPOOL_DEFAULT, &Terrain_Info.VertexBuffer, nullptr)))
 		{
 			return;
 		}
@@ -297,9 +297,9 @@ namespace BONE_GRAPHICS
 		VERTEX* pV = (VERTEX*)pVertices;
 		int length = 0;
 
-		for (DWORD z = 0; z < Terrain_Info.HeightSize; z++)
+		for (int z = 0; z < Terrain_Info.HeightSize; z++)
 		{
-			for (DWORD x = 0; x < Terrain_Info.WidthSize; x++)
+			for (int x = 0; x < Terrain_Info.WidthSize; x++)
 			{
 				v.p.x = (float)x - Terrain_Info.WidthSize / 2.0f;
 				v.p.z = -((float)z - Terrain_Info.HeightSize / 2.0f);
@@ -334,7 +334,7 @@ namespace BONE_GRAPHICS
 	void etuTerrain::InitIndexBuffer()
 	{
 		if (!Terrain_Info.IndexBuffer && FAILED(RenderMgr->GetDevice()->CreateIndexBuffer((Terrain_Info.HeightSize - 1) * (Terrain_Info.WidthSize - 1) * 2 * sizeof(VERTEX_INDEX),
-			0, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &Terrain_Info.IndexBuffer, NULL)))
+			0, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &Terrain_Info.IndexBuffer, nullptr)))
 		{
 			return;
 		}
@@ -349,9 +349,9 @@ namespace BONE_GRAPHICS
 			return;
 		}
 
-		for (DWORD z = 0; z < Terrain_Info.HeightSize - 1; z++)
+		for (int z = 0; z < Terrain_Info.HeightSize - 1; z++)
 		{
-			for (DWORD x = 0; x < Terrain_Info.WidthSize - 1; x++)
+			for (int x = 0; x < Terrain_Info.WidthSize - 1; x++)
 			{
 				// 정점 인덱스를 CW 방향으로 설정하고 있다.  
 				// 만약 CW 방향으로 컬링 모드를 설정하면 아무것도 그려지지 않을 것이다.  
@@ -377,15 +377,15 @@ namespace BONE_GRAPHICS
 		//m_pQuadTree->Build(Terrain_Info.Vertex);
 	}
 
-	D3DXVECTOR3 etuTerrain::FindVertexUseRay(Ray* _PickingRay)
+	D3DXVECTOR3 etuTerrain::FindVertexUseRay(RAY* _PickingRay)
 	{
 		static D3DXVECTOR3 LastPick;
 		float u, v;          // 픽킹지점 u v를 담을변수 (추후에 계산시 필요함)
 		float dist;          // 삼각형과 픽킹된점의 거리
 
-		Ray ray;
+		RAY ray;
 
-		if (p_PickingRay == NULL)
+		if (p_PickingRay == nullptr)
 			ray = RenderMgr->GetPickingRayToView(false);
 		else
 			ray = *p_PickingRay;
@@ -394,9 +394,9 @@ namespace BONE_GRAPHICS
 		D3DXMatrixIdentity(&matWorld);
 		RenderMgr->GetDevice()->GetTransform(D3DTS_WORLD, &matWorld);
 
-		for (DWORD z = 0; z < Terrain_Info.HeightSize - 1; z++)
+		for (int z = 0; z < Terrain_Info.HeightSize - 1; z++)
 		{
-			for (DWORD x = 0; x < Terrain_Info.WidthSize - 1; x++)
+			for (int x = 0; x < Terrain_Info.WidthSize - 1; x++)
 			{
 				// 좌상 위치의 삼각형  
 				D3DXVECTOR3 Temp[3];
@@ -470,7 +470,7 @@ namespace BONE_GRAPHICS
 		{
 			UINT numPasses = 0;
 
-			Shader_Terrain_Shadow->Begin(&numPasses, NULL);
+			Shader_Terrain_Shadow->Begin(&numPasses, nullptr);
 			{
 				for (UINT i = 0; i < numPasses; ++i)
 				{
@@ -496,15 +496,15 @@ namespace BONE_GRAPHICS
 		for (int i = 0; i<4; ++i)
 		{
 			if (FAILED(RenderMgr->GetDevice()->CreateTexture(1024, 1024, 1, 0, D3DFMT_A8R8G8B8,
-				D3DPOOL_MANAGED, &Terrain_Info.AlphaMap[i], NULL)))
-				return MessageBox(NULL, "alphaTexture make error", "Error", MB_OK);
+				D3DPOOL_MANAGED, &Terrain_Info.AlphaMap[i], nullptr)))
+				return MessageBox(nullptr, "alphaTexture make error", "Error", MB_OK);
 
 			D3DLOCKED_RECT		AlphaMap_Locked;
 
 			memset(&AlphaMap_Locked, 0, sizeof(D3DLOCKED_RECT));
 
-			if (FAILED(Terrain_Info.AlphaMap[i]->LockRect(0, &AlphaMap_Locked, NULL, 0)))
-				return MessageBox(NULL, "alphaTexture Lock error", "Error", MB_OK);
+			if (FAILED(Terrain_Info.AlphaMap[i]->LockRect(0, &AlphaMap_Locked, nullptr, 0)))
+				return MessageBox(nullptr, "alphaTexture Lock error", "Error", MB_OK);
 
 			LPBYTE pDataDST = (LPBYTE)AlphaMap_Locked.pBits;
 
@@ -519,7 +519,7 @@ namespace BONE_GRAPHICS
 			}
 
 			if (FAILED(Terrain_Info.AlphaMap[i]->UnlockRect(0)))
-				return MessageBox(NULL, "alphaTexture UnLock error", "Error", MB_OK);
+				return MessageBox(nullptr, "alphaTexture UnLock error", "Error", MB_OK);
 		}
 
 		return TRUE;
@@ -545,9 +545,9 @@ namespace BONE_GRAPHICS
 		float		EditSize = fHalfBrushSize / PixSize;
 
 		D3DXMATRIX matInverse;
-		D3DXMatrixInverse(&matInverse, NULL, &m_matWorld);
+		D3DXMatrixInverse(&matInverse, nullptr, &m_matWorld);
 
-		D3DXVECTOR3 RayPosition = FindVertexUseRay(NULL);
+		D3DXVECTOR3 RayPosition = FindVertexUseRay(nullptr);
 		D3DXVec3TransformCoord(&RayPosition, &RayPosition, &matInverse);
 
 		RayPosition.x += Terrain_Info.WidthSize / 2.0f;
@@ -565,17 +565,17 @@ namespace BONE_GRAPHICS
 		int EndPosX = int(((m_nTexPosX + EditSize) >= TEXALPHASIZE) ? TEXALPHASIZE - 1 : m_nTexPosX + EditSize);
 		int EndPosY = int(((m_nTexPosY + EditSize) >= TEXALPHASIZE) ? TEXALPHASIZE - 1 : m_nTexPosY + EditSize);
 
-		DWORD dwChangeColor = 0x00;
+		int dwChangeColor = 0x00;
 		float Smooth = 0.0f;
-		DWORD dwA = 0x00;
+		int dwA = 0x00;
 
 		D3DLOCKED_RECT		AlphaMap_Locked;
 
 		memset(&AlphaMap_Locked, 0, sizeof(D3DLOCKED_RECT));
 
-		if (FAILED(Terrain_Info.AlphaMap[nIndex]->LockRect(0, &AlphaMap_Locked, NULL, 0)))
+		if (FAILED(Terrain_Info.AlphaMap[nIndex]->LockRect(0, &AlphaMap_Locked, nullptr, 0)))
 		{
-			MessageBox(NULL, "alphaTexture Lock error", "Error", MB_OK);
+			MessageBox(nullptr, "alphaTexture Lock error", "Error", MB_OK);
 			return FALSE;
 		}
 
@@ -608,14 +608,14 @@ namespace BONE_GRAPHICS
 
 					if (!Brush_Info.Invert)
 					{
-						dwChangeColor = DWORD((Smooth - Len) / Smooth * 0xFF000000);
+						dwChangeColor = int((Smooth - Len) / Smooth * 0xFF000000);
 						dwA = (dwChangeColor & 0xFF000000) >> 24;
 
 						dwChangeColor = (dwA << 24) | (dwA << 16) | (dwA << 8) | dwA;
 					}
 					else
 					{
-						dwChangeColor = DWORD((Smooth - Len) / Smooth * 0x00000000);
+						dwChangeColor = int((Smooth - Len) / Smooth * 0x00000000);
 					}
 				}
 				else
@@ -632,7 +632,7 @@ namespace BONE_GRAPHICS
 
 		if (FAILED(Terrain_Info.AlphaMap[nIndex]->UnlockRect(0)))
 		{
-			MessageBox(NULL, "alphaTexture UnLock error", "Error", MB_OK);
+			MessageBox(nullptr, "alphaTexture UnLock error", "Error", MB_OK);
 			return FALSE;
 		}
 
@@ -700,7 +700,7 @@ namespace BONE_GRAPHICS
 		{
 			UINT numPasses = 0;
 
-			Shader_Terrain_Shadow->Begin(&numPasses, NULL);
+			Shader_Terrain_Shadow->Begin(&numPasses, nullptr);
 			{
 				for (UINT i = 0; i < numPasses; ++i)
 				{
@@ -790,11 +790,11 @@ namespace BONE_GRAPHICS
 			}
 			else if (TerrainBrushInfo::HEIGHT_1 || Brush_Info.BrushMode == TerrainBrushInfo::HEIGHT_2)
 			{
-				D3DXVECTOR3 RayPosition = FindVertexUseRay(NULL);
+				D3DXVECTOR3 RayPosition = FindVertexUseRay(nullptr);
 
-				for (DWORD z = 0; z < Terrain_Info.HeightSize; z++)
+				for (int z = 0; z < Terrain_Info.HeightSize; z++)
 				{
-					for (DWORD x = 0; x < Terrain_Info.WidthSize; x++)
+					for (int x = 0; x < Terrain_Info.WidthSize; x++)
 					{
 						int Vertex_Index = z * Terrain_Info.WidthSize + x;
 
@@ -874,7 +874,7 @@ namespace BONE_GRAPHICS
 		VERTEX BrushLine[2];
 		D3DXVECTOR3 CurrentPosition(1.0f, 0.0f, 0.0f);
 		D3DXVECTOR3 NextPosition;
-		D3DXVECTOR3 RayPosition = FindVertexUseRay(NULL);
+		D3DXVECTOR3 RayPosition = FindVertexUseRay(nullptr);
 
 		if (Brush_Info.BrushMode == TerrainBrushInfo::HEIGHT_2)
 			RayPosition.y = 0;
@@ -945,23 +945,23 @@ namespace BONE_GRAPHICS
 
 	void etuTerrain::Release()
 	{
-		//if (Terrain_Info.HeigtMapFileName != NULL)
+		//if (Terrain_Info.HeigtMapFileName != nullptr)
 		//	delete[] Terrain_Info.HeigtMapFileName;
 
-		if (Terrain_Info.Vertex != NULL)
+		if (Terrain_Info.Vertex != nullptr)
 			delete[] Terrain_Info.Vertex;
 
-		if (Terrain_Info.HeightMap != NULL)
+		if (Terrain_Info.HeightMap != nullptr)
 			Terrain_Info.HeightMap->Release();
 
 		for (int i = 0; i < 5; i++)
-			if (Terrain_Info.LayerMapFile[i] != NULL)
+			if (Terrain_Info.LayerMapFile[i] != nullptr)
 				Terrain_Info.LayerMapFile[i]->Release();
 
-		if (Terrain_Info.IndexBuffer != NULL)
+		if (Terrain_Info.IndexBuffer != nullptr)
 			Terrain_Info.IndexBuffer->Release();
 
-		if (Terrain_Info.VertexBuffer != NULL)
+		if (Terrain_Info.VertexBuffer != nullptr)
 			Terrain_Info.VertexBuffer->Release();
 	}
 }

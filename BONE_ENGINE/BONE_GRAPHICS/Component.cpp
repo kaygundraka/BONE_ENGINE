@@ -3,9 +3,9 @@
 
 namespace BONE_GRAPHICS
 {
-	void Component::SetTypeName(string _typeName)
+	void Component::SetTypeName(string typeName)
 	{
-		typeName = _typeName;
+		this->typeName = typeName;
 	}
 
 	string Component::GetTypeName() 

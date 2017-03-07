@@ -10,7 +10,7 @@ using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class InputTextBox : public Component, public CMultiThreadSync<InputTextBox>
+	class InputTextBox : public Component, public MultiThreadSync<InputTextBox>
 	{
 	private:
 		bool active;

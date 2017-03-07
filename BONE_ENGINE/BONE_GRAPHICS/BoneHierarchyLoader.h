@@ -2,8 +2,6 @@
 #pragma once
 #include "Common.h"
 
-using namespace std;
-
 namespace BONE_GRAPHICS
 {
 	struct Bone : public D3DXFRAME {
@@ -15,7 +13,7 @@ namespace BONE_GRAPHICS
 		vector<D3DMATERIAL9> materials;			// 재질 목록
 		vector<LPDIRECT3DTEXTURE9> textures;	// 텍스처 목록
 
-		DWORD NumAttributeGroups;				// 속성 그룹의 수
+		int NumAttributeGroups;				// 속성 그룹의 수
 		D3DXATTRIBUTERANGE* attributeTables;	// 속성 테이블
 		D3DXMATRIX** boneMatrixPtrs;			// 본 변환 행렬들의 포인터
 		D3DXMATRIX*	boneOffsetMatrices;			// 본 오프셋 행렬들
@@ -32,8 +30,8 @@ namespace BONE_GRAPHICS
 			CONST D3DXMESHDATA *pMeshData,
 			CONST D3DXMATERIAL *pMaterials,
 			CONST D3DXEFFECTINSTANCE *pEffectInstance,
-			DWORD NumMaterials,
-			CONST DWORD *pAdjacency,
+			int NumMaterials,
+			CONST int *pAdjacency,
 			LPD3DXSKININFO pSkinInfo,
 			LPD3DXMESHCONTAINER *ppNewMeshContainer);
 		STDMETHOD(DestroyFrame) (THIS_ LPD3DXFRAME pFrameToFree);

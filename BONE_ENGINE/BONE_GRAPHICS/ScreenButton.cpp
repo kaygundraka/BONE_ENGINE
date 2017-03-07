@@ -6,7 +6,7 @@ namespace BONE_GRAPHICS
 {
 	ScreenButton::ScreenButton()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		SetTypeName("ScreenButton");
 
@@ -17,28 +17,28 @@ namespace BONE_GRAPHICS
 
 	ScreenButton::~ScreenButton()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		sprite->Release();
 	}
 
 	void ScreenButton::LoadContent()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		ResourceMgr->LoadTexture(address);
 	}
 
 	ScreenButton::BUTTON_STATUS ScreenButton::Update(GameObject* _owner, float _timeDelta)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		Transform2D* tr = ((Transform2D*)_owner->GetComponent("Transform2D"));
 
 		int width = tr->GetSize().x;
 		int height = tr->GetSize().y;
 
-		if (tr == NULL)
+		if (tr == nullptr)
 			return BUTTON_STATUS::NORMAL;
 
 		Vector2 position(
@@ -72,14 +72,14 @@ namespace BONE_GRAPHICS
 
 	void ScreenButton::SetOriginRect(Rect _rect)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		originRect = _rect;
 	}
 	
 	void ScreenButton::SetOriginRect(Vector2 _leftTop, Vector2 _rightBottom)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		originRect.LeftTop = _leftTop;
 		originRect.RightBottom = _rightBottom;
@@ -87,28 +87,28 @@ namespace BONE_GRAPHICS
 
 	Rect ScreenButton::GetOriginRect()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return originRect;
 	}
 
 	void ScreenButton::SetImageFile(string _address)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		address = _address;
 	}
 
 	void ScreenButton::SetAlpha(float _alpha)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		alpha = _alpha;
 	}
 
 	void ScreenButton::Render(GameObject* _owner)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		Matrix matrix = ((Transform2D*)_owner->GetComponent("Transform2D"))->GetTransform();
 		Vector3 position = ((Transform2D*)_owner->GetComponent("Transform2D"))->GetPosition();
@@ -142,14 +142,14 @@ namespace BONE_GRAPHICS
 
 		sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
 
-		sprite->Draw(texture, &rect, NULL, &Vector3(0, 0, 0), 0xffffffff);
+		sprite->Draw(texture, &rect, nullptr, &Vector3(0, 0, 0), 0xffffffff);
 
 		sprite->End();
 	}
 
 	float ScreenButton::GetAlpha()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return alpha;
 	}

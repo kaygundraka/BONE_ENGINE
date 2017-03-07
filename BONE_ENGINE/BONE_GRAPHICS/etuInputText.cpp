@@ -13,7 +13,7 @@ namespace BONE_GRAPHICS
 			
 		m_sString = _Text;
 
-		if (!BasicSetInformation(p_sName, _vec3Position, _Width, m_rImageRect.bottom - m_rImageRect.top, NULL))
+		if (!BasicSetInformation(p_sName, _vec3Position, _Width, m_rImageRect.bottom - m_rImageRect.top, nullptr))
 			return false;
 
 		Is_Show = true;
@@ -106,16 +106,16 @@ namespace BONE_GRAPHICS
 		{
 			D3DXMatrixIdentity(&m_TransformMatrix);
 			D3DXMatrixTransformation2D(&m_TransformMatrix, &D3DXVECTOR2(m_vec3Position.x + m_vec3ParentPosition.x, m_vec3Position.y + m_vec3ParentPosition.y),
-				NULL, &D3DXVECTOR2(m_fScaleX, m_fScaleY), NULL, 0.0f, &D3DXVECTOR2(0, 0));
+				nullptr, &D3DXVECTOR2(m_fScaleX, m_fScaleY), nullptr, 0.0f, &D3DXVECTOR2(0, 0));
 
 			m_pSprite->SetTransform(&m_TransformMatrix);
 
 			m_pSprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
 			
 			if(Is_Focused)
-				m_pSprite->Draw(m_pTextures, &m_rFocusRect, NULL, &(m_vec3ParentPosition + m_vec3Position), 0xffffffff);
+				m_pSprite->Draw(m_pTextures, &m_rFocusRect, nullptr, &(m_vec3ParentPosition + m_vec3Position), 0xffffffff);
 			else
-				m_pSprite->Draw(m_pTextures, &m_rImageRect, NULL, &(m_vec3ParentPosition + m_vec3Position), 0xffffffff);
+				m_pSprite->Draw(m_pTextures, &m_rImageRect, nullptr, &(m_vec3ParentPosition + m_vec3Position), 0xffffffff);
 			
 			m_pSprite->End();
 
@@ -138,7 +138,7 @@ namespace BONE_GRAPHICS
 				Text.insert(index * i, "\n");
 			}
 
-			m_pFont->DrawText(NULL, Text.c_str(), -1, &TextRect, 0, 0xFFFFFFFF);
+			m_pFont->DrawText(nullptr, Text.c_str(), -1, &TextRect, 0, 0xFFFFFFFF);
 		}
 	}
 }

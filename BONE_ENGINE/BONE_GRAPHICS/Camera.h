@@ -10,7 +10,7 @@ namespace BONE_GRAPHICS
 {
 	enum PROJECTION_TYPE { PRJOJECTION_PERSPACTIVE, PROJECTION_ORTHOGONAL };
 
-	class Camera : public Component, public CMultiThreadSync<Camera>
+	class Camera : public Component, public MultiThreadSync<Camera>
 	{
 	private:
 		int ID;

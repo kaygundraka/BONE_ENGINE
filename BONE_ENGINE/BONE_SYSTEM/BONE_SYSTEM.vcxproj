@@ -21,15 +21,22 @@
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="IniFile.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="MemoryPool.h" />
     <ClInclude Include="MultiThreadSync.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Registry.h" />
+    <ClInclude Include="tinystr.h" />
+    <ClInclude Include="tinyxml.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IniFile.cpp" />
     <ClCompile Include="Registry.cpp" />
+    <ClCompile Include="tinystr.cpp" />
+    <ClCompile Include="tinyxml.cpp" />
+    <ClCompile Include="tinyxmlerror.cpp" />
+    <ClCompile Include="tinyxmlparser.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BB99A824-4818-4F87-97C4-02C265636508}</ProjectGuid>

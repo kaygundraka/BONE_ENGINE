@@ -11,7 +11,7 @@ namespace BONE_GRAPHICS
 {
 	InputTextBox::InputTextBox()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		SetTypeName("InputTextBox");
 
@@ -24,21 +24,21 @@ namespace BONE_GRAPHICS
 
 	InputTextBox::~InputTextBox()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 	}
 
 	void InputTextBox::LoadContent()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 	}
 
 	bool InputTextBox::IsClicked(GameObject* _owner)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		Transform2D* tr = ((Transform2D*)_owner->GetComponent("Transform2D"));
 		
-		if (tr == NULL)
+		if (tr == nullptr)
 			return false;
 
 		Vector2 position(
@@ -80,28 +80,28 @@ namespace BONE_GRAPHICS
 
 	void InputTextBox::SetMaxLength(int _length)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		maxStrLength = _length;
 	}
 	
 	int InputTextBox::GetMaxLength()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return maxStrLength;
 	}
 
 	string InputTextBox::GetString()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return str;
 	}
 
 	void InputTextBox::SetActive(bool _active)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		this->active = _active;
 	}
@@ -113,7 +113,7 @@ namespace BONE_GRAPHICS
 
 	void InputTextBox::Update(GameObject* _owner, float _timeDelta)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (active)
 		{

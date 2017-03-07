@@ -14,13 +14,13 @@ namespace BONE_GRAPHICS
 {
 	BillBoard::BillBoard()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		SetTypeName("BillBoard");
 
-		vertexBuffer = NULL;
-		indexBuffer = NULL;
-		target = NULL;
+		vertexBuffer = nullptr;
+		indexBuffer = nullptr;
+		target = nullptr;
 
 		rectWidth = 1;
 		rectHeight = 1;
@@ -30,12 +30,12 @@ namespace BONE_GRAPHICS
 
 	BillBoard::~BillBoard()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		if (vertexBuffer == NULL)
+		if (vertexBuffer == nullptr)
 			vertexBuffer->Release();
 
-		if (indexBuffer == NULL)
+		if (indexBuffer == nullptr)
 			indexBuffer->Release();
 
 		ResourceMgr->ReleaseTexture(textureAddress);
@@ -43,7 +43,7 @@ namespace BONE_GRAPHICS
 
 	void BillBoard::LoadContent()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		VERTEX vertex[4];
 
@@ -92,14 +92,14 @@ namespace BONE_GRAPHICS
 #pragma endregion
 
 #pragma region Vertex/Index Buffer Setup
-		if (vertexBuffer != NULL)
+		if (vertexBuffer != nullptr)
 		{
 			vertexBuffer->Release();
-			vertexBuffer = NULL;
+			vertexBuffer = nullptr;
 		}
 
 		if (FAILED(RenderMgr->GetDevice()->CreateVertexBuffer(4 * sizeof(VERTEX), D3DUSAGE_WRITEONLY,
-			VERTEX::FVF, D3DPOOL_DEFAULT, &vertexBuffer, NULL)))
+			VERTEX::FVF, D3DPOOL_DEFAULT, &vertexBuffer, nullptr)))
 		{
 			return;
 		}
@@ -116,14 +116,14 @@ namespace BONE_GRAPHICS
 
 		vertexBuffer->Unlock();
 
-		if (indexBuffer != NULL)
+		if (indexBuffer != nullptr)
 		{
 			indexBuffer->Release();
-			indexBuffer = NULL;
+			indexBuffer = nullptr;
 		}
 
 		if (FAILED(RenderMgr->GetDevice()->CreateIndexBuffer(2 * sizeof(VERTEX_INDEX),
-			0, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &indexBuffer, NULL)))
+			0, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &indexBuffer, nullptr)))
 			return;
 
 		VERTEX_INDEX IB;
@@ -154,19 +154,19 @@ namespace BONE_GRAPHICS
 
 	bool BillBoard::CheckMouseRayInMesh(Transform3D* _tr)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		Ray ray = RenderMgr->GetPickingRayToView(false);
+		RAY ray = RenderMgr->GetPickingRayToView(false);
 
-		//bool Result = RenderMgr->CheckRayInMesh(&ray, _tr->GetTransform(), , NULL);
-		//bool Result = RenderMgr->CheckRayInMesh(&ray, _tr->GetTransform(), ResourceMgr->FindMesh("BillBoard")->_mesh, NULL);
+		//bool Result = RenderMgr->CheckRayInMesh(&ray, _tr->GetTransform(), , nullptr);
+		//bool Result = RenderMgr->CheckRayInMesh(&ray, _tr->GetTransform(), ResourceMgr->FindMesh("BillBoard")->_mesh, nullptr);
 
 		return true;//Result;
 	}
 
 	void BillBoard::SetTexturesAddress(string _address, int _width, int _height)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		textureAddress = _address;
 		width = _width;
@@ -175,28 +175,28 @@ namespace BONE_GRAPHICS
 
 	string	BillBoard::GetTexturesAddress()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return textureAddress;
 	}
 
 	void BillBoard::SetTarget(GameObject* _target)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		target = _target;
 	}
 
 	void BillBoard::SetRenderMode(RENDER_MODE _mode)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		renderMode = _mode;
 	}
 
 	void BillBoard::SetRectSize(float _width, float _height)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		rectWidth = _width;
 		rectHeight = _height;
@@ -207,14 +207,14 @@ namespace BONE_GRAPHICS
 
 	Vector2 BillBoard::GetRectSize()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return Vector2(rectWidth, rectHeight);
 	}
 
 	void BillBoard::SetOriginRect(Rect _rect)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		originRect = _rect;
 
@@ -224,7 +224,7 @@ namespace BONE_GRAPHICS
 
 	void BillBoard::SetOriginRect(Vector2 _leftUp, Vector2 _rightBottom)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		originRect.LeftTop = _leftUp;
 		originRect.RightBottom = _rightBottom;
@@ -235,18 +235,18 @@ namespace BONE_GRAPHICS
 
 	Rect BillBoard::GetOriginRect()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return originRect;
 	}
 
 	void BillBoard::Render(IShader* _shaderOption, GameObject* _object)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (IsInit)
 		{
-			if (target != NULL)
+			if (target != nullptr)
 			{
 				Vector3 Dir = ((Camera*)target->GetComponent("Camera"))->GetTargetPosition() - ((Transform3D*)target->GetComponent("Transform3D"))->GetPosition();
 				D3DXVec3Normalize(&Dir, &Dir);
@@ -311,7 +311,7 @@ namespace BONE_GRAPHICS
 			RenderMgr->GetDevice()->SetStreamSource(0, vertexBuffer, 0, sizeof(VERTEX));
 			RenderMgr->GetDevice()->SetIndices(indexBuffer);
 
-			if (_shaderOption == NULL)
+			if (_shaderOption == nullptr)
 			{
 				//RenderMgr->GetDevice()->SetMaterial(&meshMaterial);
 				RenderMgr->GetDevice()->SetTexture(0, ResourceMgr->LoadTexture(textureAddress));

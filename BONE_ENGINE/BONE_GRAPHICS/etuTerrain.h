@@ -21,8 +21,8 @@ namespace BONE_GRAPHICS
 
 		// 높이맵의 크기
 		LPDIRECT3DTEXTURE9 HeightMap;
-		DWORD WidthSize;
-		DWORD HeightSize;
+		int WidthSize;
+		int HeightSize;
 
 		// Mesh
 		VERTEX* Vertex;
@@ -76,7 +76,7 @@ namespace BONE_GRAPHICS
 
 		void Render_CreateShadow();
 		int GetBrushMode();
-		D3DXVECTOR3 FindVertexUseRay(Ray* _PickingRay);
+		D3DXVECTOR3 FindVertexUseRay(RAY* _PickingRay);
 		TerrainInfo GetInfo();
 		TerrainBrushInfo GetBrushInfo();
 

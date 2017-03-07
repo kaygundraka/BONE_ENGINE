@@ -10,7 +10,7 @@ using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class BillBoard : public Component, public CMultiThreadSync<BillBoard>
+	class BillBoard : public Component, public MultiThreadSync<BillBoard>
 	{
 	public:
 		enum RENDER_MODE {

@@ -10,10 +10,10 @@ using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class StaticMesh : public Component, public CMultiThreadSync<StaticMesh>
+	class StaticMesh : public Component, public MultiThreadSync<StaticMesh>
 	{
 	private:
-		MeshInfo*		meshInfo;
+		MESH_INFO*		meshInfo;
 
 		string			address;
 		string*			textureAddress;

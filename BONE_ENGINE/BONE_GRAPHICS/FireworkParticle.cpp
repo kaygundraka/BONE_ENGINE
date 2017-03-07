@@ -65,7 +65,7 @@ namespace BONE_GRAPHICS
 		float distance = 0;
 		D3DXVECTOR3 r;
 
-		//srand(time(NULL));
+		//srand(time(nullptr));
 		for (i = particles.begin(); i != particles.end(); i++)
 		{
 			i->position = i->position + (i->velocity) * _timeDelta;	// p = p0 + 시간변화량*v'(속도변화량)		

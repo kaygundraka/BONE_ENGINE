@@ -1,15 +1,12 @@
 #include "Common.h"
 #include "SceneManager.h"
 #include "InputManager.h"
-#include <thread>
 
 namespace BONE_GRAPHICS
 {
-	//SceneManager* SceneManager::pInst = NULL;
-
 	void SceneManager::InitializeMembers()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		closeThread = false;
 		loadingBarValue = 0;
@@ -19,7 +16,7 @@ namespace BONE_GRAPHICS
 
 	void SceneManager::LoadingRender() 
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 	}
 	
 	void LoadThreadFunc(Scene* Framework)
@@ -27,54 +24,46 @@ namespace BONE_GRAPHICS
 		Framework->LoadContents();
 	}
 
-	void SceneManager::AddScene(string _name, Scene* _scene)
+	void SceneManager::AddScene(string name, Scene* scene)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		sceneList.insert(std::pair<string, Scene*>(_name, _scene));
+		sceneList.insert(std::pair<string, Scene*>(name, scene));
 	}
 
 	Scene* SceneManager::CurrentScene()
 	{
-		CThreadSync sync;
-
-		return sceneList[curScene];
+        return sceneList[curScene];
 	}
 
 	Scene* SceneManager::GetLoadScene()
 	{
-		CThreadSync sync;
-
 		return sceneList[loadScene];
 	}
 
-	void SceneManager::SetLoadingScene(string _name)
+	void SceneManager::SetLoadingScene(string name)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		loadScene = _name;
+		loadScene = name;
 	}
 
 	int SceneManager::GetFrame()
 	{
-		CThreadSync sync;
-
 		return frame;
 	}
 
 	double SceneManager::GetTimeDelta()
 	{
-		CThreadSync sync;
-
-		return frame;
+		return timeDelta;
 	}
 	
-	bool SceneManager::StartScene(string _name)
+	bool SceneManager::StartScene(string name)
 	{
-		curScene = _name;
-		sceneList[_name]->InitializeMembers();
+		curScene = name;
+		sceneList[name]->InitializeMembers();
 
-		std::thread LoadingThread(LoadThreadFunc, sceneList[_name]);
+		std::thread LoadingThread(LoadThreadFunc, sceneList[name]);
 
 		double lastTime = (double)timeGetTime();
 
@@ -108,15 +97,15 @@ namespace BONE_GRAPHICS
 
 				lastTime = currTime;
 
-			} while (!sceneList[_name]->EndLoading() || sceneList[loadScene]->GetSceneFlag());
+			} while (!sceneList[name]->EndLoading() || sceneList[loadScene]->GetSceneFlag());
 
 		}
 
 		LoadingThread.join();
 
-		sceneList[_name]->Reference();
+		sceneList[name]->Reference();
 
-		sceneList[_name]->SortPriorityObject();
+		sceneList[name]->SortPriorityObject();
 
 		lastTime = (double)timeGetTime();
 
@@ -135,7 +124,7 @@ namespace BONE_GRAPHICS
 			}
 			else
 			{
-				if (sceneList[_name]->GetSceneFlag())
+				if (sceneList[name]->GetSceneFlag())
 				{
 					double currTime = (double)timeGetTime();
 					double deltaTime = (currTime - lastTime) * 0.001f;
@@ -144,12 +133,12 @@ namespace BONE_GRAPHICS
 					RenderMgr->GetDevice()->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, backColor, 1.0f, 0);
 					RenderMgr->GetDevice()->BeginScene();
 
-					if (sceneList[_name]->GetSceneFlag())
+					if (sceneList[name]->GetSceneFlag())
 					{
-						sceneList[_name]->Update(deltaTime);
-						sceneList[_name]->LateUpdate(deltaTime);
-						sceneList[_name]->Render(deltaTime);
-						sceneList[_name]->LateRender();
+						sceneList[name]->Update(deltaTime);
+						sceneList[name]->LateUpdate(deltaTime);
+						sceneList[name]->Render(deltaTime);
+						sceneList[name]->LateRender();
 					}
 
 					RenderMgr->GetDevice()->EndScene();
@@ -176,30 +165,29 @@ namespace BONE_GRAPHICS
 
 		closeThread = true;
 
-		if (sceneList[_name]->GetSceneFlag() == false)
+		if (sceneList[name]->GetSceneFlag() == false)
 		{
 			sceneList.erase(loadScene);
 			loadScene = "";
-			sceneList.erase(_name);
+			sceneList.erase(name);
 			return true;
 		}
 
 		sceneList.erase(loadScene);
 		loadScene = "";
-		sceneList.erase(_name);
+		sceneList.erase(name);
 
 		return false;
 	}
 
-	void SceneManager::EndScene(string _name)
+	void SceneManager::EndScene(string name)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		sceneList[_name]->SetSceneFlag(false);
+		sceneList[name]->SetSceneFlag(false);
 	}
 
 	void SceneManager::ReleaseMembers()
 	{
-		CThreadSync sync;
 	}
 }

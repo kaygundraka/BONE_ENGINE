@@ -18,6 +18,15 @@
     <Filter Include="소스 파일\General">
       <UniqueIdentifier>{2f9fe178-adff-42e2-9504-bc111e066a54}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\ExternalLibrary">
+      <UniqueIdentifier>{4b87f599-38c8-417d-ac86-3416e1eeea34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\ExternalLibrary\Json">
+      <UniqueIdentifier>{48b25748-4791-440a-abaf-d0e5b6f7ab77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\ExternalLibrary\XML">
+      <UniqueIdentifier>{f3294482-8631-4796-9a6f-12d23147a339}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IniFile.h">
@@ -35,11 +44,20 @@
     <ClInclude Include="Registry.h">
       <Filter>소스 파일\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>소스 파일\General</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml.h">
+      <Filter>소스 파일\ExternalLibrary\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="tinystr.h">
+      <Filter>소스 파일\ExternalLibrary\XML</Filter>
+    </ClInclude>
     <ClInclude Include="Common.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Random.h">
-      <Filter>소스 파일\General</Filter>
+    <ClInclude Include="json.hpp">
+      <Filter>소스 파일\ExternalLibrary\Json</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -48,6 +66,18 @@
     </ClCompile>
     <ClCompile Include="Registry.cpp">
       <Filter>소스 파일\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml.cpp">
+      <Filter>소스 파일\ExternalLibrary\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxmlerror.cpp">
+      <Filter>소스 파일\ExternalLibrary\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxmlparser.cpp">
+      <Filter>소스 파일\ExternalLibrary\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinystr.cpp">
+      <Filter>소스 파일\ExternalLibrary\XML</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

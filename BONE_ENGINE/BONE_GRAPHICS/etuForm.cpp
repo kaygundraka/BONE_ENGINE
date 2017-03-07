@@ -10,7 +10,7 @@ namespace BONE_GRAPHICS
 		m_sName = p_sName;
 
 		if (FAILED(D3DXCreateTextureFromFileEx(RenderMgr->GetDevice(), "Resource\\GUI\\GUI.png", D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2,
-			1, NULL, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, D3DX_DEFAULT, NULL, NULL, NULL, NULL, &m_pTextures)))
+			1, nullptr, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, D3DX_DEFAULT, nullptr, nullptr, nullptr, nullptr, &m_pTextures)))
 		{
 			return false;
 		}
@@ -30,7 +30,7 @@ namespace BONE_GRAPHICS
 		else if (m_vec3Position < 0)
 			m_vec3Position.z = 0;
 
-		if (p_pMargin != NULL)
+		if (p_pMargin != nullptr)
 		{
 			m_rMargin = {
 				(int)p_pMargin->left,
@@ -49,7 +49,7 @@ namespace BONE_GRAPHICS
 			};
 		}
 
-		if (FAILED(D3DXCreateFont(RenderMgr->GetDevice(), 20, 0, NULL, 0, FALSE, DEFAULT_CHARSET,
+		if (FAILED(D3DXCreateFont(RenderMgr->GetDevice(), 20, 0, nullptr, 0, FALSE, DEFAULT_CHARSET,
 			OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Arial"), &m_pFont)))
 		{
 			return false;
@@ -92,7 +92,7 @@ namespace BONE_GRAPHICS
 
 	void etuForm::SetMargin(RECT* p_pMargin)
 	{
-		if (p_pMargin != NULL)
+		if (p_pMargin != nullptr)
 		{
 			m_rMargin = {
 				(int)m_vec3Position.x + p_pMargin->left,
@@ -131,7 +131,7 @@ namespace BONE_GRAPHICS
 	bool etuForm::SetFont(int p_iSize, const char* p_sFont, int p_iSetting)
 	{
 		m_pFont->Release();
-		m_pFont = NULL;
+		m_pFont = nullptr;
 
 		if (FAILED(D3DXCreateFont(RenderMgr->GetDevice(), p_iSize, 0, p_iSetting, 0, FALSE, DEFAULT_CHARSET,
 			OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, p_sFont, &m_pFont)))

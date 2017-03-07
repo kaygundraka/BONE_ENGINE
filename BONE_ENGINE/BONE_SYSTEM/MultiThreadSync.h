@@ -3,18 +3,18 @@
 
 namespace BONE_SYSTEM
 {
-	class CCriticalSection
+	class CriticalSection
 	{
 	private:
 		CRITICAL_SECTION sync;
 
 	public:
-		CCriticalSection(VOID)
+		CriticalSection(VOID)
 		{
 			InitializeCriticalSection(&sync);
 		}
 
-		~CCriticalSection(VOID)
+		~CriticalSection(VOID)
 		{
 			DeleteCriticalSection(&sync);
 		}
@@ -31,29 +31,29 @@ namespace BONE_SYSTEM
 	};
 
 	template <class T>
-	class CMultiThreadSync {
-		friend class CThreadSync;
+	class MultiThreadSync {
+		friend class ThreadSync;
 
 	public:
-		class CThreadSync
+		class ThreadSync
 		{
 		public:
-			CThreadSync(VOID)
+            ThreadSync(VOID)
 			{
 				T::sync.Enter();
 			}
 
-			~CThreadSync(VOID)
+			~ThreadSync(VOID)
 			{
 				T::sync.Leave();
 			}
 		};
 
 	private:
-		static CCriticalSection sync;
+		static CriticalSection sync;
 	};
 
 	template<class T>
-	CCriticalSection CMultiThreadSync<T>::sync;
+	CriticalSection MultiThreadSync<T>::sync;
 }
 

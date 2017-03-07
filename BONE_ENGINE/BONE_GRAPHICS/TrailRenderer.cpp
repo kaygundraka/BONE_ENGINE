@@ -10,12 +10,12 @@ namespace BONE_GRAPHICS
 {
 	TrailRenderer::TrailRenderer()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		SetTypeName("TrailRenderer");
 
-		vertexBuffer = NULL;
-		indexBuffer = NULL;
+		vertexBuffer = nullptr;
+		indexBuffer = nullptr;
 
 		liveCycle = 1;
 		createCycle = 2;
@@ -35,25 +35,25 @@ namespace BONE_GRAPHICS
 
 	TrailRenderer::~TrailRenderer()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		if (vertexBuffer != NULL)
+		if (vertexBuffer != nullptr)
 			vertexBuffer->Release();
 
-		if (indexBuffer != NULL)
+		if (indexBuffer != nullptr)
 			 indexBuffer->Release();
 	}
 
 	void TrailRenderer::LoadContent()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		IsInit = true;
 	}
 
 	void TrailRenderer::SetTargetObject(GameObject* _targetObject, Vector3 _pivot)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		target = _targetObject;
 		pivot = _pivot;
@@ -61,7 +61,7 @@ namespace BONE_GRAPHICS
 
 	void TrailRenderer::SetSize(float _start, float _end)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		startSize = _start;
 		endSize = _end;
@@ -69,7 +69,7 @@ namespace BONE_GRAPHICS
 
 	void TrailRenderer::SetCycle(float _liveCycle, float _createCycle)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (_liveCycle < 0)
 			liveCycle = 0;
@@ -84,7 +84,7 @@ namespace BONE_GRAPHICS
 	
 	void TrailRenderer::UpdateStatus(double _timeDelta)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		for (auto Iter = trailList.begin(); Iter != trailList.end(); Iter++)
 		{
@@ -131,7 +131,7 @@ namespace BONE_GRAPHICS
 
 	void TrailRenderer::SetMeshBuffer()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		VERTEX* vertex;
 		vertex = new VERTEX[trailList.size() * 2];
@@ -153,15 +153,15 @@ namespace BONE_GRAPHICS
 			vertex[index++].uv.y = 1;
 		}
 
-		if (vertexBuffer != NULL)
+		if (vertexBuffer != nullptr)
 		{
 			vertexBuffer->Release();
-			vertexBuffer = NULL;
+			vertexBuffer = nullptr;
 		}
 
 		if (FAILED(RenderMgr->GetDevice()->CreateVertexBuffer(
 			trailList.size() * 2 * sizeof(VERTEX), D3DUSAGE_WRITEONLY,
-			VERTEX::FVF, D3DPOOL_DEFAULT, &vertexBuffer, NULL)))
+			VERTEX::FVF, D3DPOOL_DEFAULT, &vertexBuffer, nullptr)))
 		{
 			return;
 		}
@@ -180,15 +180,15 @@ namespace BONE_GRAPHICS
 
 		delete[] vertex;
 
-		if (indexBuffer != NULL)
+		if (indexBuffer != nullptr)
 		{
 			indexBuffer->Release();
-			indexBuffer = NULL;
+			indexBuffer = nullptr;
 		}
 
 		if (FAILED(RenderMgr->GetDevice()->CreateIndexBuffer(
 			(trailList.size() * 2 - 2) * sizeof(VERTEX_INDEX),
-			0, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &indexBuffer, NULL)))
+			0, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &indexBuffer, nullptr)))
 			return;
 
 		VERTEX_INDEX IB;
@@ -220,7 +220,7 @@ namespace BONE_GRAPHICS
 
 	void TrailRenderer::SetUpVector(Vector3 _upDir)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		upDir = _upDir;
 		D3DXVec3Normalize(&upDir, &upDir);
@@ -228,21 +228,21 @@ namespace BONE_GRAPHICS
 	
 	void TrailRenderer::SetActive(bool _active)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		IsActive = _active;
 	}
 
 	void TrailRenderer::SetRenderMode(int _mode)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		renderMode = _mode;
 	}
 
 	void TrailRenderer::Render(IShader* _shaderOption)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (IsInit && trailList.size() >= 2 && IsActive)
 		{
@@ -281,14 +281,14 @@ namespace BONE_GRAPHICS
 
 	void TrailRenderer::SetTexturesAddress(string _address)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		textureAddress = _address;
 	}
 
 	string TrailRenderer::GetTexturesAddress()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return textureAddress;
 	}

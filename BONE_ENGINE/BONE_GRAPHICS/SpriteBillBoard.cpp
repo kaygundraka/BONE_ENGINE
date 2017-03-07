@@ -14,12 +14,12 @@ namespace BONE_GRAPHICS
 {
 	SpriteBillBoard::SpriteBillBoard()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		SetTypeName("SpriteBillBoard");
 
-		vertexBuffer = NULL;
-		indexBuffer = NULL;
+		vertexBuffer = nullptr;
+		indexBuffer = nullptr;
 
 		rectWidth = 1;
 		rectHeight = 1;
@@ -31,12 +31,12 @@ namespace BONE_GRAPHICS
 
 	SpriteBillBoard::~SpriteBillBoard()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		if(vertexBuffer == NULL)
+		if(vertexBuffer == nullptr)
 			vertexBuffer->Release();
 		
-		if(indexBuffer == NULL)
+		if(indexBuffer == nullptr)
 			indexBuffer->Release();
 
 		ResourceMgr->ReleaseTexture(textureAddress);
@@ -44,7 +44,7 @@ namespace BONE_GRAPHICS
 
 	void SpriteBillBoard::LoadContent()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		VERTEX vertex[4];
 
@@ -93,14 +93,14 @@ namespace BONE_GRAPHICS
 #pragma endregion
 
 #pragma region Vertex/Index Buffer Setup
-		if (vertexBuffer != NULL)
+		if (vertexBuffer != nullptr)
 		{
 			vertexBuffer->Release();
-			vertexBuffer = NULL;
+			vertexBuffer = nullptr;
 		}
 
 		if (FAILED(RenderMgr->GetDevice()->CreateVertexBuffer(4 * sizeof(VERTEX), D3DUSAGE_WRITEONLY,
-			VERTEX::FVF, D3DPOOL_DEFAULT, &vertexBuffer, NULL)))
+			VERTEX::FVF, D3DPOOL_DEFAULT, &vertexBuffer, nullptr)))
 		{
 			return;
 		}
@@ -117,14 +117,14 @@ namespace BONE_GRAPHICS
 
 		vertexBuffer->Unlock();
 
-		if (indexBuffer != NULL)
+		if (indexBuffer != nullptr)
 		{
 			indexBuffer->Release();
-			indexBuffer = NULL;
+			indexBuffer = nullptr;
 		}
 
 		if (FAILED(RenderMgr->GetDevice()->CreateIndexBuffer( 2 * sizeof(VERTEX_INDEX),
-			0, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &indexBuffer, NULL)))
+			0, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &indexBuffer, nullptr)))
 			return;
 
 		VERTEX_INDEX IB;
@@ -160,7 +160,7 @@ namespace BONE_GRAPHICS
 
 	void SpriteBillBoard::SetRectSize(float _width, float _height)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		rectWidth = _width;
 		rectHeight = _height;
@@ -168,14 +168,14 @@ namespace BONE_GRAPHICS
 
 	Vector2 SpriteBillBoard::GetRectSize()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return Vector2(rectWidth, rectHeight);
 	}
 
 	void SpriteBillBoard::SetAnimation(int _width, int _height, int _animationCut, int _animationScene, float _alpha)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		width = _width;
 		height = _height;
@@ -202,7 +202,7 @@ namespace BONE_GRAPHICS
 
 	void SpriteBillBoard::PlayCutAnimation(float _timeDelta, float _cutTimer)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		RECT rect = {
 			width / animeCut * curAnimeCut, height / animeScene * curAnimeScene,
@@ -240,7 +240,7 @@ namespace BONE_GRAPHICS
 
 	void SpriteBillBoard::PlayFullAnimation(float _timeDelta, float _cutTimer)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		RECT rect = {
 			width / animeCut * curAnimeCut, height / animeScene * curAnimeScene,
@@ -276,7 +276,7 @@ namespace BONE_GRAPHICS
 	
 	void SpriteBillBoard::SelectAnimation(int _sceneIndex)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (curAnimeScene != _sceneIndex)
 		{
@@ -287,50 +287,50 @@ namespace BONE_GRAPHICS
 	
 	bool SpriteBillBoard::CheckMouseRayInMesh(Transform3D* _tr)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		Ray ray = RenderMgr->GetPickingRayToView(false);
+		RAY ray = RenderMgr->GetPickingRayToView(false);
 
-		//bool Result = RenderMgr->CheckRayInMesh(&ray, _tr->GetTransform(), , NULL);
+		//bool Result = RenderMgr->CheckRayInMesh(&ray, _tr->GetTransform(), , nullptr);
 
 		return true;// Result;
 	}
 
 	void SpriteBillBoard::SetTexturesAddress(string _address)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		textureAddress = _address;
 	}
 
 	string	SpriteBillBoard::GetTexturesAddress()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return textureAddress;
 	}
 
 	void SpriteBillBoard::SetTargetCamera(GameObject* _target)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		target = _target;
 	}
 
 	void SpriteBillBoard::SetRenderMode(RENDER_MODE _mode)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		renderMode = _mode;
 	}
 
 	void SpriteBillBoard::Render(IShader* _shaderOption, GameObject* _object)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (IsInit)
 		{
-			if (target != NULL)
+			if (target != nullptr)
 			{
 				Vector3 Dir = ((Camera*)target->GetComponent("Camera"))->GetTargetPosition() - ((Transform3D*)target->GetComponent("Transform3D"))->GetPosition();
 				D3DXVec3Normalize(&Dir, &Dir);
@@ -396,7 +396,7 @@ namespace BONE_GRAPHICS
 			RenderMgr->GetDevice()->SetStreamSource(0, vertexBuffer, 0, sizeof(VERTEX));
 			RenderMgr->GetDevice()->SetIndices(indexBuffer);
 
-			if (_shaderOption == NULL)
+			if (_shaderOption == nullptr)
 			{
 				//RenderMgr->GetDevice()->SetMaterial(&meshMaterial);
 				RenderMgr->GetDevice()->SetTexture(0, ResourceMgr->LoadTexture(textureAddress));

@@ -1,6 +1,5 @@
 #pragma once
 #include "stddef.h"
-#include <assert.h>
 
 namespace BONE_GRAPHICS
 {
@@ -22,7 +21,7 @@ namespace BONE_GRAPHICS
 	public:
 		static T* GetInstance()
 		{
-			if (pInst == NULL)
+			if (pInst == nullptr)
 				pInst = new T;
 
 			return pInst;
@@ -33,6 +32,6 @@ namespace BONE_GRAPHICS
 	};
 
 	template <typename T>
-	T* ISingleton<T>::pInst = NULL;
+	T* ISingleton<T>::pInst = nullptr;
 }
 

@@ -12,7 +12,7 @@ namespace BONE_GRAPHICS
 
 	public:
 		bool SetInformaition(string p_sName, string p_sImageAddress, D3DXVECTOR3 p_vec3Position, int p_iWidth,
-			int p_iHeight, RECT* p_pRect, RECT* p_pMargin = NULL);
+			int p_iHeight, RECT* p_pRect, RECT* p_pMargin = nullptr);
 
 		virtual void Render() override;
 		virtual void Render(int Alpha);

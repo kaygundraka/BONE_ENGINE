@@ -7,7 +7,7 @@ using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class Transform2D : public Component, public CMultiThreadSync<Transform2D>
+	class Transform2D : public Component
 	{
 	private:
 		Vector3 position;
@@ -18,37 +18,37 @@ namespace BONE_GRAPHICS
 
 		Matrix transform;
 		
-		GameObject *parent;
+		GameObject* parent;
 
 	public:
 		Transform2D();
 		virtual ~Transform2D();
 
-		void SetPosition(Vector3 _position);
-		void SetPosition(float _x, float _y, float _z);
-		void Translate(Vector3 _position);
-		void Translate(float _x, float _y, float _z);
+		void SetPosition(Vector3 pos);
+		void SetPosition(float x, float y, float z);
+		void Translate(Vector3 pos);
+		void Translate(float x, float y, float z);
 		Vector3 GetPosition();
 
-		void Scale(Vector2 _scale);
-		void Scale(float _x, float _y);
-		void SetScale(Vector2 _scale);
-		void SetScale(float _x, float _y);
+		void Scale(Vector2 scale);
+		void Scale(float x, float y);
+		void SetScale(Vector2 scale);
+		void SetScale(float x, float y);
 		Vector2 GetScale();
 
-		void Rotate(float _rotAngle);
-		void SetRotate(float _rotAngle);
+		void Rotate(float rotAngle);
+		void SetRotate(float rotAngle);
 		float GetRotateAngle();
 		
-		void SetPivotCenter(Vector2 _pivotCenter);
-		void SetPivotCenter(float _x, float _y);
+		void SetPivotCenter(Vector2 pivotCenter);
+		void SetPivotCenter(float x, float y);
 		Vector2 GetPivotCenter();
 
-		void SetSize(float _width, float _height);
+		void SetSize(float width, float height);
 		Vector2 GetSize();
 
 		Matrix GetTransform();
 
-		void AttachObject(GameObject* _parent);
+		void AttachObject(GameObject* parent);
 	};
 }

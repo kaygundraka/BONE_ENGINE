@@ -46,24 +46,24 @@ namespace BONE_GRAPHICS
 
 		// - texture UV까지 생각해보면 정점 24개가 필요하다.
 		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[0], &m_pMeshTextures[0])))
-			m_pMeshTextures[0] = NULL;
+			m_pMeshTextures[0] = nullptr;
 		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[1], &m_pMeshTextures[1])))
-			m_pMeshTextures[1] = NULL;
+			m_pMeshTextures[1] = nullptr;
 		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[2], &m_pMeshTextures[2])))
-			m_pMeshTextures[2] = NULL;
+			m_pMeshTextures[2] = nullptr;
 		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[3], &m_pMeshTextures[3])))
-			m_pMeshTextures[3] = NULL;
+			m_pMeshTextures[3] = nullptr;
 		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[4], &m_pMeshTextures[4])))
-			m_pMeshTextures[4] = NULL;
+			m_pMeshTextures[4] = nullptr;
 		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[5], &m_pMeshTextures[5])))
-			m_pMeshTextures[5] = NULL;
+			m_pMeshTextures[5] = nullptr;
 
 		VERTEX* pv;
 
 		for (int i = 0; i<6; i++)
 		{
 			if (FAILED(RenderMgr->GetDevice()->CreateVertexBuffer(sizeof(VERTEX) * 4, 0,
-				VERTEX::FVF, D3DPOOL_DEFAULT, &VB[i], NULL))) return false;
+				VERTEX::FVF, D3DPOOL_DEFAULT, &VB[i], nullptr))) return false;
 		}
 		//top
 		if (FAILED(VB[0]->Lock(0, 0, (void**)&pv, 0))) return false;
@@ -111,7 +111,7 @@ namespace BONE_GRAPHICS
 		{
 			//인덱스 버퍼
 			if (FAILED(RenderMgr->GetDevice()->CreateIndexBuffer(sizeof(VERTEX_INDEX) * 12, 0,
-				D3DFMT_INDEX16, D3DPOOL_DEFAULT, &IB[i], NULL))) return false;
+				D3DFMT_INDEX16, D3DPOOL_DEFAULT, &IB[i], nullptr))) return false;
 		}
 		//인덱스 버퍼 초기화
 		VERTEX_INDEX* iv;
@@ -149,7 +149,7 @@ namespace BONE_GRAPHICS
 			RenderMgr->GetDevice()->SetSamplerState(7, D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC);
 			RenderMgr->GetDevice()->SetSamplerState(7, D3DSAMP_MINFILTER, D3DTEXF_ANISOTROPIC);
 
-			if (VB != NULL && IB != NULL)
+			if (VB != nullptr && IB != nullptr)
 			{
 
 				//스카이 박스를 그린후 월드 행렬을 다시 초기화 시킴.
@@ -176,10 +176,10 @@ namespace BONE_GRAPHICS
 
 					RenderMgr->GetDevice()->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 					RenderMgr->GetDevice()->SetTextureStageState(0, D3DTSS_TEXCOORDINDEX, 0);
-					RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSU, NULL);
-					RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSV, NULL);
+					RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSU, nullptr);
+					RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSV, nullptr);
 
-					RenderMgr->GetDevice()->SetTexture(0, (m_pMeshTextures[i]) ? m_pMeshTextures[i] : NULL);
+					RenderMgr->GetDevice()->SetTexture(0, (m_pMeshTextures[i]) ? m_pMeshTextures[i] : nullptr);
 					RenderMgr->GetDevice()->SetStreamSource(0, VB[i], 0, sizeof(VERTEX));
 					RenderMgr->GetDevice()->SetFVF(VERTEX::FVF);
 					RenderMgr->GetDevice()->SetIndices(IB[i]);
@@ -202,13 +202,13 @@ namespace BONE_GRAPHICS
 	{
 		for (int i = 0; i<6; i++)
 		{
-			if (m_pMeshTextures[i] != NULL)
+			if (m_pMeshTextures[i] != nullptr)
 				m_pMeshTextures[i]->Release();
 
-			if (VB[i] != NULL)
+			if (VB[i] != nullptr)
 				VB[i]->Release();
 
-			if (IB[i] != NULL)
+			if (IB[i] != nullptr)
 				IB[i]->Release();
 		}
 	}

@@ -12,7 +12,7 @@ namespace BONE_GRAPHICS
 {
 	StaticMesh::StaticMesh()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		SetTypeName("StaticMesh");
 
@@ -21,7 +21,7 @@ namespace BONE_GRAPHICS
 
 	StaticMesh::~StaticMesh()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		ResourceMgr->ReleaseMesh(address);
 
@@ -31,7 +31,7 @@ namespace BONE_GRAPHICS
 
 	void StaticMesh::LoadContent()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		char Address[MAX_PATH];
 		strcpy(Address, address.c_str());
@@ -41,7 +41,7 @@ namespace BONE_GRAPHICS
 			{
 				meshInfo = ResourceMgr->LoadMesh(address);
 
-				if(meshInfo == NULL)
+				if(meshInfo == nullptr)
 				{
 					LogMgr->ShowMessage(LOG_ERROR, "%s : Could Not Find Xfile.", Address);
 					throw;
@@ -55,7 +55,7 @@ namespace BONE_GRAPHICS
 
 				meshMaterials = new D3DMATERIAL9[MaterialSize];
 
-				for (DWORD i = 0; i < MaterialSize; i++)
+				for (int i = 0; i < MaterialSize; i++)
 				{
 					// 재질 정보 복사
 					meshMaterials[i] = d3dxMaterials[i].MatD3D;
@@ -74,25 +74,25 @@ namespace BONE_GRAPHICS
 
 						if (Temp != '\\')
 						{
-							TexAddr[TexLen--] = NULL;
+							TexAddr[TexLen--] = nullptr;
 						}
 						else
 							break;
 					}
 
-					if (d3dxMaterials[i].pTextureFilename != NULL)
+					if (d3dxMaterials[i].pTextureFilename != nullptr)
 					{
 						char* filename = PathFindFileName(d3dxMaterials[i].pTextureFilename);
 
 						strcat(TexAddr, filename);
 					}
 
-					if (d3dxMaterials[i].pTextureFilename != NULL && lstrlenA(d3dxMaterials[i].pTextureFilename) > 0)
+					if (d3dxMaterials[i].pTextureFilename != nullptr && lstrlenA(d3dxMaterials[i].pTextureFilename) > 0)
 					{
 						textureAddress[i] = TexAddr;
 
 						// 텍스쳐 생성
-						if (ResourceMgr->LoadTexture(TexAddr) == NULL)
+						if (ResourceMgr->LoadTexture(TexAddr) == nullptr)
 						{
 							LogMgr->ShowMessage(LOG_ERROR, "%s : Could Not Find TextureFile.", TexAddr);
 							throw;
@@ -114,39 +114,39 @@ namespace BONE_GRAPHICS
 
 	bool StaticMesh::CheckMouseRayInMesh(Transform3D* _tr)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
-		Ray ray = RenderMgr->GetPickingRayToView(false);
+		RAY ray = RenderMgr->GetPickingRayToView(false);
 
-		bool Result = RenderMgr->CheckRayInMesh(&ray, _tr->GetTransform(), ResourceMgr->FindMesh(address)->_mesh, NULL);
+		bool Result = RenderMgr->CheckRayInMesh(&ray, _tr->GetTransform(), ResourceMgr->FindMesh(address)->_mesh, nullptr);
 
 		return Result;
 	}
 
 	void StaticMesh::SetRenderMode(int _mode)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 		
 		renderMode = _mode;
 	}
 
 	string* StaticMesh::GetTexturesAddress()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return textureAddress;
 	}
 
 	void StaticMesh::SetTexturesAddress(string* _address)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		textureAddress = _address;
 	}
 
 	void StaticMesh::Render(IShader* _shaderOption, GameObject* _object)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (IsInit)
 		{
@@ -168,10 +168,10 @@ namespace BONE_GRAPHICS
 				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 			}
 
-			if (_shaderOption == NULL)
+			if (_shaderOption == nullptr)
 			{
 
-				for (DWORD i = 0; i < ResourceMgr->FindMesh(address)->_numMaterials; i++)
+				for (int i = 0; i < ResourceMgr->FindMesh(address)->_numMaterials; i++)
 				{
 					RenderMgr->GetDevice()->SetMaterial(&meshMaterials[i]);
 					RenderMgr->GetDevice()->SetTexture(0, ResourceMgr->LoadTexture(textureAddress[i]));
@@ -181,7 +181,7 @@ namespace BONE_GRAPHICS
 			}
 			else
 			{
-				for (DWORD i = 0; i < ResourceMgr->FindMesh(address)->_numMaterials; i++)
+				for (int i = 0; i < ResourceMgr->FindMesh(address)->_numMaterials; i++)
 				{
 					_shaderOption->Render(i, _object);
 					ResourceMgr->FindMesh(address)->_mesh->DrawSubset(i);
@@ -197,14 +197,14 @@ namespace BONE_GRAPHICS
 
 	void StaticMesh::SetFileAddress(string _address)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		address = _address;
 	}
 
 	string StaticMesh::GetFileAddress()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return address;
 	}

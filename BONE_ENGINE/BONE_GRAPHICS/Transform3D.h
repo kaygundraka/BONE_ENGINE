@@ -2,12 +2,11 @@
 #include "Common.h"
 #include "Component.h"
 #include "GameObject.h"
-#include <MultiThreadSync.h>
 using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class Transform3D : public Component, public CMultiThreadSync<Transform3D> {
+	class Transform3D : public Component {
 	private:
 		Vector3 position;
 		Quaternion rotAngle;
@@ -27,34 +26,34 @@ namespace BONE_GRAPHICS
 		Transform3D();
 		virtual ~Transform3D();
 
-		void SetForward(Vector3 _forward);
-		void SetForward(float _x, float _y, float _z);
+		void SetForward(Vector3 forward);
+		void SetForward(float x, float y, float z);
 		Vector3 GetForward();
 		Vector3 GetLeft();
 
-		void SetPosition(Vector3 _position);
-		void SetPosition(float _x, float _y, float _z);		
-		void Translate(Vector3 _position);
-		void Translate(float _x, float _y, float _z);
+		void SetPosition(Vector3 pos);
+		void SetPosition(float x, float y, float z);		
+		void Translate(Vector3 pos);
+		void Translate(float x, float y, float z);
 		Vector3 GetPosition();
 		Vector3 GetWorldPositon();
 
-		void Scale(Vector3 _scale);
-		void Scale(float _x, float _y, float _z);
-		void SetScale(Vector3 _scale);
-		void SetScale(float _x, float _y, float _z);
+		void Scale(Vector3 scale);
+		void Scale(float x, float y, float z);
+		void SetScale(Vector3 scale);
+		void SetScale(float x, float y, float z);
 		Vector3 GetScale();
 		Vector3 GetWolrdScale();
 
-		void Rotate(Quaternion _rotateAngle);
-		void Rotate(float _x, float _y, float _z);
-		void SetRotate(Quaternion _rotateAngle);
-		void SetRotate(float _x, float _y, float _z);
+		void Rotate(Quaternion rotAngle);
+		void Rotate(float x, float y, float z);
+		void SetRotate(Quaternion rotAngle);
+		void SetRotate(float x, float y, float z);
 		Quaternion GetRotateAngle();
 		Quaternion GetWorldRotateAngle();
 
 		Matrix GetTransform();
 
-		void AttachObject(GameObject* _parent);
+		void AttachObject(GameObject* parent);
 	};
 }

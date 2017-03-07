@@ -35,7 +35,7 @@ namespace BONE_GRAPHICS
 		radius = 0.0f;
 	}
 
-	const DWORD Particle::FVF = D3DFVF_XYZ | D3DFVF_DIFFUSE;
+	const int Particle::FVF = D3DFVF_XYZ | D3DFVF_DIFFUSE;
 
 	ParticleSystem::ParticleSystem()
 	{
@@ -94,9 +94,9 @@ namespace BONE_GRAPHICS
 		particles.push_back(attribute);
 	}
 
-	DWORD FtoDw(float f)
+	int FtoDw(float f)
 	{
-		return *((DWORD*)&f);
+		return *((int*)&f);
 	}
 
 	void ParticleSystem::PreRender()
@@ -166,7 +166,7 @@ namespace BONE_GRAPHICS
 				(void**)&v,
 				vbOffset ? D3DLOCK_NOOVERWRITE : D3DLOCK_DISCARD);
 
-			DWORD numParticlesInBatch = 0;
+			int numParticlesInBatch = 0;
 
 			//
 			// Until all particles have been rendered.

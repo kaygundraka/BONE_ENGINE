@@ -81,6 +81,15 @@
     <Filter Include="소스 파일\Management\Coroutine">
       <UniqueIdentifier>{ab158cc2-d310-45b2-b6c8-eed3b5a1e318}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Management\Configuration">
+      <UniqueIdentifier>{9c0d54b8-2d1b-4ade-ac20-2e352dd37980}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Management\ExternalLibrary\XML">
+      <UniqueIdentifier>{1852afdc-9b17-422c-a782-3f1beb558562}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Management\ExternalLibrary\Json">
+      <UniqueIdentifier>{65f85ac3-21a9-4ee1-84d1-ea73002dd072}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -185,15 +194,6 @@
     <ClInclude Include="SceneManager.h">
       <Filter>소스 파일\Management\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="tinystr.h">
-      <Filter>소스 파일\Management\ExternalLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="tinyxml.h">
-      <Filter>소스 파일\Management\ExternalLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="SmartPointer.h">
-      <Filter>소스 파일\Management</Filter>
-    </ClInclude>
     <ClInclude Include="Common.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
@@ -223,6 +223,15 @@
     </ClInclude>
     <ClInclude Include="Coroutine.h">
       <Filter>소스 파일\Management\Coroutine</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigManager.h">
+      <Filter>소스 파일\Management\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="tinystr.h">
+      <Filter>소스 파일\Management\ExternalLibrary\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml.h">
+      <Filter>소스 파일\Management\ExternalLibrary\XML</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -322,18 +331,6 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>소스 파일\Management\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="tinystr.cpp">
-      <Filter>소스 파일\Management\ExternalLibrary</Filter>
-    </ClCompile>
-    <ClCompile Include="tinyxml.cpp">
-      <Filter>소스 파일\Management\ExternalLibrary</Filter>
-    </ClCompile>
-    <ClCompile Include="tinyxmlerror.cpp">
-      <Filter>소스 파일\Management\ExternalLibrary</Filter>
-    </ClCompile>
-    <ClCompile Include="tinyxmlparser.cpp">
-      <Filter>소스 파일\Management\ExternalLibrary</Filter>
-    </ClCompile>
     <ClCompile Include="Common.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -366,6 +363,21 @@
     </ClCompile>
     <ClCompile Include="ScreenButton.cpp">
       <Filter>소스 파일\GameObject\Components\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigManager.cpp">
+      <Filter>소스 파일\Management\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxmlparser.cpp">
+      <Filter>소스 파일\Management\ExternalLibrary\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinystr.cpp">
+      <Filter>소스 파일\Management\ExternalLibrary\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml.cpp">
+      <Filter>소스 파일\Management\ExternalLibrary\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxmlerror.cpp">
+      <Filter>소스 파일\Management\ExternalLibrary\XML</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

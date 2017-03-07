@@ -4,12 +4,12 @@
 namespace BONE_SYSTEM
 {
 	template <class T, int ALLOC_BLOCK_SIZE = 50>
-	class CMemoryPool : public CMultiThreadSync<T>
+	class MemoryPool : public MultiThreadSync<T>
 	{
 	public:
 		static VOID* operator new(std::size_t allocLength)
 		{
-			CThreadSync Sync;
+			ThreadSync Sync;
 
 			assert(sizeof(T) == allocLength);
 			assert(sizeof(T) >= sizeof(UCHAR*));
@@ -25,7 +25,7 @@ namespace BONE_SYSTEM
 
 		static VOID operator delete(VOID* deletePointer)
 		{
-			CThreadSync Sync;
+            ThreadSync Sync;
 
 			*reinterpret_cast<UCHAR**>(deletePointer) = freePointer;
 
@@ -55,11 +55,11 @@ namespace BONE_SYSTEM
 		static UCHAR *freePointer;
 
 	protected:
-		~CMemoryPool()
+		~MemoryPool()
 		{
 		}
 	};
 
 	template <class T, int ALLOC_BLOCK_SIZE>
-	UCHAR* CMemoryPool<T, ALLOC_BLOCK_SIZE>::freePointer;
+	UCHAR* MemoryPool<T, ALLOC_BLOCK_SIZE>::freePointer;
 }

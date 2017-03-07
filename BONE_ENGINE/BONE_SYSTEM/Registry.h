@@ -3,10 +3,10 @@
 
 namespace BONE_SYSTEM
 {
-	class CRegistry{
+	class Registry{
 	public:
-		CRegistry(VOID);
-		virtual ~CRegistry(VOID);
+		Registry(VOID);
+		virtual ~Registry(VOID);
 
 	private:
 		HKEY rootKey;

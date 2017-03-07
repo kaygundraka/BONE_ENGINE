@@ -7,7 +7,7 @@ namespace BONE_GRAPHICS
 {
 	ScreenSprite::ScreenSprite()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		SetTypeName("ScreenSprite");
 
@@ -16,14 +16,14 @@ namespace BONE_GRAPHICS
 
 	ScreenSprite::~ScreenSprite()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		sprite->Release();
 	}
 
 	void ScreenSprite::SetInformation(string _address, int _width, int _height, int _animationCut, int _animationScene, float _alpha)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		width = _width;
 		height = _height;
@@ -52,7 +52,7 @@ namespace BONE_GRAPHICS
 
 	void ScreenSprite::PlayAnimation(float _timeDelta, float _cutTiemr)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		RECT rect = {
 			width / animeCut * curAnimeCut, height / animeScene * curAnimeScene,
@@ -88,7 +88,7 @@ namespace BONE_GRAPHICS
 
 	void ScreenSprite::Render(GameObject* _owner)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		Matrix matrix = ((Transform2D*)_owner->GetComponent("Transform2D"))->GetTransform();
 		Vector3 position = ((Transform2D*)_owner->GetComponent("Transform2D"))->GetPosition();
@@ -99,21 +99,21 @@ namespace BONE_GRAPHICS
 
 		sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
 
-		sprite->Draw(texture, &curRect, NULL, &Vector3(0, 0, 0), 0xffffffff);
+		sprite->Draw(texture, &curRect, nullptr, &Vector3(0, 0, 0), 0xffffffff);
 
 		sprite->End();
 	}
 
 	void ScreenSprite::LoadContent()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		ResourceMgr->LoadTexture(address);
 	}
 
 	void ScreenSprite::SelectAnimation(int _sceneIndex)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (curAnimeScene != _sceneIndex)
 		{
@@ -124,14 +124,14 @@ namespace BONE_GRAPHICS
 
 	void ScreenSprite::SetAlpha(float _alpha)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		alpha = _alpha;
 	}
 
 	float ScreenSprite::GetAlpha()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return alpha;
 	}

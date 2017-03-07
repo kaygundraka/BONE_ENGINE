@@ -1,6 +1,5 @@
 #pragma once
 #include "ISingleton.h"
-#include <MultiThreadSync.h>
 #include "Common.h"
 
 namespace BONE_GRAPHICS
@@ -10,7 +9,7 @@ namespace BONE_GRAPHICS
 	enum MOUSE_WHEEL_STATUS { MOUSE_WHEEL_UP, MOUSE_WHEEL_DOWN, MOUSE_WHEEL_NONE };
 	enum MOUSE_STATUS { MOUSE_NONE, MOUSE_LBDOWN, MOUSE_LBUP, MOUSE_RBDOWN, MOUSE_RBUP};
 
-	class InputManager : public ISingleton<InputManager>, public BONE_SYSTEM::CMultiThreadSync<InputManager>
+	class InputManager : public ISingleton<InputManager>, public BONE_SYSTEM::MultiThreadSync<InputManager>
 	{
 	private:
 		POINT mousePosition;
@@ -47,19 +46,19 @@ namespace BONE_GRAPHICS
 		char GetCurrentChar();
 		bool IsFocusedWindow();
 
-		void SetFocusTextInput(int _addNumber);
-		void SetFocusWindow(bool _isFocused);
+		void SetFocusTextInput(int addNumber);
+		void SetFocusWindow(bool isFocused);
 		void SetCurrentChar(char _char);
-		void SetMouseLBButtonStatus(MOUSE_STATUS _isClicked);
-		void SetMouseRBButtonStatus(MOUSE_STATUS _isClicked);
-		void SetMouseWheelStatus(MOUSE_WHEEL_STATUS _mouseWheelStatus);
+		void SetMouseLBButtonStatus(MOUSE_STATUS isClicked);
+		void SetMouseRBButtonStatus(MOUSE_STATUS isClicked);
+		void SetMouseWheelStatus(MOUSE_WHEEL_STATUS mouseWheelStatus);
 		void NotFocusTextInput();
-		void SetSelectObjectValue(bool _isExist);
-		void SetMousePosition(POINT _mousePosition);
-		void SetCheckBoxStatus(int _checkBoxName, bool _isChecked);
-		void SelectObject(string _name);
-		void SelectNature(string _name);
-		void SetCreatorMode(int _index);
+		void SetSelectObjectValue(bool isExist);
+		void SetMousePosition(POINT mousePosition);
+		void SetCheckBoxStatus(int checkBoxName, bool isChecked);
+		void SelectObject(string name);
+		void SelectNature(string name);
+		void SetCreatorMode(int index);
 		bool ExistSelectObejct();
 
 		virtual void ReleaseMembers();

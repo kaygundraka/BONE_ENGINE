@@ -15,7 +15,7 @@ namespace BONE_GRAPHICS
 		bool IsPlay;
 	};
 
-	class SkinnedMesh : public Component, public CMultiThreadSync<SkinnedMesh> {
+	class SkinnedMesh : public Component, public MultiThreadSync<SkinnedMesh> {
 	public:
 		virtual ~SkinnedMesh();
 
@@ -31,7 +31,7 @@ namespace BONE_GRAPHICS
 		void SetAnimation(string _name, int _index, float _animationSpeed);
 		void SetAnimation(string _name, float _animationSpeed);
 
-		void CheckInRay(Ray *_ray, Bone* _bone, float& _curDist);
+		void CheckInRay(RAY *_ray, Bone* _bone, float& _curDist);
 
 		string address;
 		LPD3DXMESH GetMesh();

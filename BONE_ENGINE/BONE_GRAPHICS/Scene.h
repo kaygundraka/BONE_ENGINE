@@ -5,8 +5,6 @@
 #include "etuImage.h"
 #include "GameObject.h"
 #include "Skybox.h"
-#include "SmartPointer.h"
-#include <list>
 
 namespace BONE_GRAPHICS
 {
@@ -25,36 +23,36 @@ namespace BONE_GRAPHICS
 		bool InitializeMembers();
 		void Reference();
 		bool LoadContents();
-		void Render(double _timeDelta);
-		void Update(double _timeDelta);
-		void LateUpdate(double _timeDelta);
+		void Render(double timeDelta);
+		void Update(double timeDelta);
+		void LateUpdate(double timeDelta);
 		void LateRender();
 
 	public:
 		Scene();
 		~Scene();
 		
-		void AddObject(GameObject* _object);
-		void AddObjects(GameObject** _objects, int _size);
+		void AddObject(GameObject* object);
+		void AddObjects(GameObject** objects, int size);
 		
 		void SortPriorityObject();
 
-		std::tuple<GameObject**, int> FindObjectsByTag(string _tag);
-		GameObject* FindObjectByTag(string _tag);
-		void Destroy(GameObject* _gameObject);
+		std::tuple<GameObject**, int> FindObjectsByTag(string tag);
+		GameObject* FindObjectByTag(string tag);
+		void Destroy(GameObject* gameObject);
 
 		GameObject* GetCurrentCamera();
 
 		void SetCamera(int ID);
-		bool SetLoading(string _imageAddress, int _width, int _height);
+		bool SetLoading(string imageAddress, int width, int height);
 
-		void SetSkybox(string _dirName, string _fileType);
+		void SetSkybox(string dirName, string fileType);
 
 		bool GetSceneFlag();
-		void SetSceneFlag(bool _flag);
+		void SetSceneFlag(bool flag);
 		bool EndLoading();
 
-		void SetCameraIndex(int _index);
+		void SetCameraIndex(int index);
 		int GetCameraIndex();
 
 	};

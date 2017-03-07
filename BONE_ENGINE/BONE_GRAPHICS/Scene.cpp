@@ -5,10 +5,7 @@
 #include "SceneManager.h"
 #include "InputManager.h"
 #include "etuImage.h"
-#include <thread>
-#include <tuple>
 #include "LogManager.h"
-#pragma warning (disable:4996)
 
 namespace BONE_GRAPHICS
 {
@@ -35,18 +32,17 @@ namespace BONE_GRAPHICS
 		}
 	}
 
-	bool Scene::SetLoading(string _imageAddress, int _width, int _height)
+	bool Scene::SetLoading(string imageAddress, int width, int height)
 	{
-		RECT rect = { 0, 0, _width, _height };
-		return image_LoadingBackground.SetInformaition("image_LoadingBackground", _imageAddress, D3DXVECTOR3(0, 0, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), &rect, NULL);
+		RECT rect = { 0, 0, width, height };
+		return image_LoadingBackground.SetInformaition("image_LoadingBackground", imageAddress, D3DXVECTOR3(0, 0, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), &rect, NULL);
 	}
 
 	bool Scene::InitializeMembers()
 	{
+
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-		{
 			(*Iter)->Init();
-		}
 
 		IsFrameworkFlag = true;
 
@@ -56,105 +52,85 @@ namespace BONE_GRAPHICS
 	bool Scene::LoadContents()
 	{
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-		{
 			(*Iter)->LoadContents();
-		}
-
+		
 		IsFrameworkFlag = true;
 		CompleateLoading = true;
 
 		return IsFrameworkFlag;
 	}
 
-	void Scene::Render(double _timeDelta)
+	void Scene::Render(double timeDelta)
 	{
 		for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
-		{
 			if ((*Iter)->GetActive())
-				(*Iter)->Render(_timeDelta);
-		}
+				(*Iter)->Render(timeDelta);
 
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-		{
 			if ((*Iter)->GetActive())
-				(*Iter)->Render(_timeDelta);
-		}
+				(*Iter)->Render(timeDelta);
 	}
 
 	void Scene::LateRender()
 	{
 		for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
-		{
 			if ((*Iter)->GetActive())
 				(*Iter)->LateRender();
-		}
 
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-		{
 			if ((*Iter)->GetActive())
 				(*Iter)->LateRender();
-		}
 	}
 
-	void Scene::SetSkybox(string _dirName, string _fileType)
+	void Scene::SetSkybox(string dirName, string fileType)
 	{
 		char Path[MAX_PATH];
-		strcpy(Path, _dirName.c_str());
-		skybox.SetSkybox(Path, _fileType);
+		strcpy(Path, dirName.c_str());
+		skybox.SetSkybox(Path, fileType);
 	}
 
 	GameObject* Scene::GetCurrentCamera()
 	{
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-		{
 			if (((Camera*)(*Iter)->GetComponent("Camera")) != NULL)
-			{
 				if (((Camera*)(*Iter)->GetComponent("Camera"))->GetID() == SceneMgr->CurrentScene()->GetCameraIndex())
 					return (*Iter);
-			}
-		}
-	}
+    }
 
 	void Scene::Reference()
 	{
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-		{
 			(*Iter)->Reference();
-		}
 	}
 	
-	void Scene::Update(double _timeDelta)
+	void Scene::Update(double timeDelta)
 	{
 		skybox.Render(GetCurrentCamera());
 
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-		{
 			if ((*Iter)->GetActive())
-				(*Iter)->Update(_timeDelta);
-		}
+				(*Iter)->Update(timeDelta);
 	}
 
-	void Scene::LateUpdate(double _timeDelta)
+	void Scene::LateUpdate(double timeDelta)
 	{
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-		{
-			if ((*Iter)->GetActive())
-				(*Iter)->LateUpdate(_timeDelta);
-		}
+		    if ((*Iter)->GetActive())
+				(*Iter)->LateUpdate(timeDelta);
 	}
 
-	void Scene::AddObject(GameObject* _object)
+	void Scene::AddObject(GameObject* object)
 	{
-		if (_object->GetStatic())
-			staticObjectList.push_back(_object);
+		if (object->GetStatic())
+			staticObjectList.push_back(object);
 		else
-			objectList.push_back(_object);
+			objectList.push_back(object);
 
 		if (CompleateLoading)
 		{
-			_object->Init();
-			_object->Reference();
-			_object->LoadContents();
+			object->Init();
+			object->Reference();
+			object->LoadContents();
 		}
 	}
 
@@ -171,20 +147,20 @@ namespace BONE_GRAPHICS
 		staticObjectList.sort(ObjSortClass());
 	}
 
-	void Scene::AddObjects(GameObject** _objects, int _size)
+	void Scene::AddObjects(GameObject** objects, int size)
 	{
-		for (int i = 0; i < _size; i++)
+		for (int i = 0; i < size; i++)
 		{
-			if (_objects[i]->GetStatic())
-				staticObjectList.push_back(_objects[i]);
+			if (objects[i]->GetStatic())
+				staticObjectList.push_back(objects[i]);
 			else
-				objectList.push_back(_objects[i]);
+				objectList.push_back(objects[i]);
 
 			if (CompleateLoading)
 			{
-				_objects[i]->Init();
-				_objects[i]->Reference();
-				_objects[i]->LoadContents();
+				objects[i]->Init();
+				objects[i]->Reference();
+				objects[i]->LoadContents();
 			}
 		}
 	}
@@ -194,20 +170,20 @@ namespace BONE_GRAPHICS
 		return CompleateLoading;
 	}
 
-	GameObject* Scene::FindObjectByTag(string _tag)
+	GameObject* Scene::FindObjectByTag(string tag)
 	{
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-			if (_tag == (*Iter)->Tag())
+			if (tag == (*Iter)->Tag())
 				return (*Iter);
 
 		for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
-			if (_tag == (*Iter)->Tag())
+			if (tag == (*Iter)->Tag())
 				return (*Iter);
 
-		return NULL;
+		return nullptr
 	}
 
-	std::tuple<GameObject**, int> Scene::FindObjectsByTag(string _tag)
+	std::tuple<GameObject**, int> Scene::FindObjectsByTag(string tag)
 	{
 		std::tuple<GameObject**, int> Result;
 		
@@ -218,21 +194,13 @@ namespace BONE_GRAPHICS
 			ObjArray[i] = NULL;
 
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-		{
-			if (_tag == (*Iter)->Tag())
-			{
+			if (tag == (*Iter)->Tag())
 				ObjArray[Size++] = (*Iter);
-			}
-		}
-
+		
 		for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
-		{
-			if (_tag == (*Iter)->Tag())
-			{
-				ObjArray[Size++] = (*Iter);
-			}
-		}
-
+			if (tag == (*Iter)->Tag())
+			    ObjArray[Size++] = (*Iter);
+	
 		std::get<0>(Result) = ObjArray;
 		std::get<1>(Result) = Size;
 
@@ -244,27 +212,27 @@ namespace BONE_GRAPHICS
 		return IsFrameworkFlag;
 	}
 
-	void Scene::Destroy(GameObject* _gameObject)
+	void Scene::Destroy(GameObject* gameObject)
 	{
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
 		{
-			if (_gameObject == (*Iter))
+			if (gameObject == (*Iter))
 			{
-				objectList.remove(_gameObject);
+				objectList.remove(gameObject);
 				break;
 			}
 		}
 
 		for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
 		{
-			if (_gameObject == (*Iter))
+			if (gameObject == (*Iter))
 			{
-				objectList.remove(_gameObject);
+				objectList.remove(gameObject);
 				break;
 			}
 		}
 
-		delete _gameObject;
+		delete gameObject;
 	}
 
 	void Scene::SetCamera(int ID)

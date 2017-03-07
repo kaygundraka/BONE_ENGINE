@@ -29,7 +29,7 @@ namespace BONE_GRAPHICS
 		m_vtx[7].x = -1.0f;     m_vtx[7].y = 1.0f;		m_vtx[7].z = 1.0f;
 
 		// view * proj의 역행렬을 구한다.
-		D3DXMatrixInverse(&matInv, NULL, pmatViewProj);
+		D3DXMatrixInverse(&matInv, nullptr, pmatViewProj);
 
 		// Vertex_최종 = Vertex_local * Matrix_world * Matrix_view * Matrix_Proj 인데,
 		// Vertex_world = Vertex_local * Matrix_world이므로,
@@ -126,8 +126,8 @@ namespace BONE_GRAPHICS
 			vtx[i].p = m_vtx[i];
 
 		pDev->SetFVF(D3DFVF_XYZ);
-		pDev->SetStreamSource(0, NULL, 0, sizeof(VTX));
-		pDev->SetTexture(0, NULL);
+		pDev->SetStreamSource(0, nullptr, 0, sizeof(VTX));
+		pDev->SetTexture(0, nullptr);
 		pDev->SetIndices(0);
 		pDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
 		pDev->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);

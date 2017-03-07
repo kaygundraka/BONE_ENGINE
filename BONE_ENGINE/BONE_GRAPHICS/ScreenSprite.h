@@ -7,7 +7,7 @@ using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class ScreenSprite : public Component, public CMultiThreadSync<ScreenSprite>
+	class ScreenSprite : public Component, public MultiThreadSync<ScreenSprite>
 	{
 	protected:
 		int width;

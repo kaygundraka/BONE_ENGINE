@@ -28,7 +28,7 @@ namespace BONE_GRAPHICS
 		bool Is_Show;
 
 	public:
-		bool BasicSetInformation(string p_sName, D3DXVECTOR3 p_vec3Position, int p_iWidth, int p_iHeight, RECT* p_pMargin = NULL);
+		bool BasicSetInformation(string p_sName, D3DXVECTOR3 p_vec3Position, int p_iWidth, int p_iHeight, RECT* p_pMargin = nullptr);
 		D3DXVECTOR3 GetPosition();
 		SIZE GetStaticObjectSize();
 		string GetName();

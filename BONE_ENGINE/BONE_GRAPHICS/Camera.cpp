@@ -10,7 +10,7 @@ namespace BONE_GRAPHICS
 {
 	Camera::Camera(int _ID, PROJECTION_TYPE _type, Vector3 _cameraUp, int _width, int _height, float _far, float _near, float _fov)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		Transform3D Transform;
 		
@@ -30,21 +30,21 @@ namespace BONE_GRAPHICS
 
 	Vector3 Camera::GetTargetPosition()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return targetPosition;
 	}
 
 	void Camera::SetTargetPosition(Vector3 _targetPosition)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		targetPosition = _targetPosition;
 	}
 	
 	void Camera::SetTargetPosition(float x, float y, float z)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		targetPosition.x = x;
 		targetPosition.y = y;
@@ -53,11 +53,11 @@ namespace BONE_GRAPHICS
 
 	Matrix Camera::GetViewMatrix(GameObject* _owner)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		Transform3D* Tr = ((Transform3D*)_owner->GetComponent("Transform3D"));
 
-		if (Tr != NULL)
+		if (Tr != nullptr)
 		{
 			Vector3 Position = Tr->GetPosition();
 
@@ -74,7 +74,7 @@ namespace BONE_GRAPHICS
 
 	Matrix Camera::GetProjectionMatrix()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (type == PRJOJECTION_PERSPACTIVE)
 			D3DXMatrixPerspectiveFovLH(&projectionMatrix, fov, width / height, nearDistance, farDistance);
@@ -86,7 +86,7 @@ namespace BONE_GRAPHICS
 
 	void Camera::FixedUpdate(GameObject* _owner)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		if (SceneMgr->CurrentScene()->GetCameraIndex() == ID)
 		{
@@ -94,7 +94,7 @@ namespace BONE_GRAPHICS
 			
 			Vector3 Position(0, 0, 0);
 
-			if (Tr != NULL)
+			if (Tr != nullptr)
 				Position = Tr->GetWorldPositon();
 			else
 				LogMgr->ShowMessage(LOG_ERROR, "Camera %d - Don't Exist Transform3D Component.", ID);
@@ -113,56 +113,56 @@ namespace BONE_GRAPHICS
 
 	void Camera::SetFov(float _fov)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		fov = _fov;
 	}
 	
 	float Camera::GetFov()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return fov;
 	}
 
 	void Camera::SetNearDistance(float _near)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		nearDistance = _near;
 	}
 	
 	float Camera::GetNearDistance()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return nearDistance;
 	}
 
 	void Camera::SetFarDistance(float _far)
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		farDistance = _far;
 	}
 	
 	float Camera::GetFarDistance()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return farDistance;
 	}
 
 	Vector3 Camera::GetCameraUp()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return cameraUp;
 	}
 
 	int Camera::GetID()
 	{
-		CThreadSync sync;
+		ThreadSync sync;
 
 		return ID;
 	}

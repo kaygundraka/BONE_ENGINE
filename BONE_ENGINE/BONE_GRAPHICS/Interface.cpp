@@ -5,17 +5,18 @@
 #include "SceneManager.h"
 #include "ResourceManager.h"
 #include "InputManager.h"
+#include "ConfigManager.h"
 #include "etuImage.h"
 
 namespace BONE_GRAPHICS
 {
-	LRESULT CALLBACK FrameworkWndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
+	LRESULT CALLBACK FrameworkWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		POINT MousePosition;
 		RECT ClientRect;
-		int iActive;
+		int Active;
 
-		switch (iMessage) {
+		switch (message) {
 		case WM_MOUSEWHEEL:
 			if (InputMgr->IsFocusedWindow())
 			{
@@ -37,9 +38,9 @@ namespace BONE_GRAPHICS
 			break;
 
 		case WM_ACTIVATE:
-			iActive = LOWORD(wParam);
+            Active = LOWORD(wParam);
 
-			switch (iActive)
+			switch (Active)
 			{
 			case WA_ACTIVE:
 			case WA_CLICKACTIVE:
@@ -90,16 +91,15 @@ namespace BONE_GRAPHICS
 			break;
 
 		default:
-			return (DefWindowProc(hWnd, iMessage, wParam, lParam));
+			return (DefWindowProc(hWnd, message, wParam, lParam));
 		}
 
 		return 0;
 	}
 
 
-	bool FastCreateWindow(HWND& _hWnd, HINSTANCE _hInstance, bool _showLog, int _windowWidth, int _windowHeight, const char* _windowName)
+	bool FastCreateWindow(HWND& hWnd, HINSTANCE hInstance)
 	{
-		/// 윈도우창 관련 설정
 		WNDCLASS WndClass;
 
 		WndClass.cbClsExtra = 0;
@@ -107,20 +107,30 @@ namespace BONE_GRAPHICS
 		WndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 		WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 		WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-		WndClass.hInstance = _hInstance;
+		WndClass.hInstance = hInstance;
 		WndClass.lpfnWndProc = (WNDPROC)FrameworkWndProc;
-		WndClass.lpszClassName = _windowName;
+		WndClass.lpszClassName = ConfigMgr->GetStr("WindowsName").c_str();
 		WndClass.lpszMenuName = NULL;
 		WndClass.style = CS_HREDRAW | CS_VREDRAW;
 		RegisterClass(&WndClass);
 
-		_hWnd = CreateWindow(_windowName, _windowName, WS_OVERLAPPEDWINDOW, 0, 0, _windowWidth, _windowHeight,
-			NULL, (HMENU)NULL, _hInstance, NULL);
+		hWnd = CreateWindow(
+            ConfigMgr->GetStr("Info", "WindowsName").c_str(),
+            ConfigMgr->GetStr("Info", "WindowsName").c_str(), 
+            WS_OVERLAPPEDWINDOW, 
+            0, 
+            0, 
+            ConfigMgr->GetFloat("Info", "WindowsWidth"),
+            ConfigMgr->GetFloat("Info", "WindowsHeight"),
+			NULL, 
+            (HMENU)NULL, 
+            hInstance, 
+            NULL
+        );
 
-		ShowWindow(_hWnd, SW_SHOW);
+		ShowWindow(hWnd, SW_SHOW);
 
-		/// 콘솔창 관련 설정
-		if (_showLog)
+		if (ConfigMgr->GetBool("Info", "ShowLogCmd"))
 		{
 			AllocConsole();
 			SetConsoleTitleA("[Debug]");
@@ -129,19 +139,26 @@ namespace BONE_GRAPHICS
 			int ConsoleHeight = 200;
 
 			HWND ConsolehWnd = GetConsoleWindow();
-			SetWindowPos(ConsolehWnd, 0, _windowWidth, 0, ConsoleWidth, ConsoleHeight, 0);
+			SetWindowPos(ConsolehWnd, 
+                0, 
+                ConfigMgr->GetFloat("Info", "WindowsWidth"), 
+                0, 
+                ConfigMgr->GetFloat("Info", "WindowsWidth"),
+                ConfigMgr->GetFloat("Info", "WindowsHeight"), 
+                0
+            );
 		}
 
-		if (_hWnd != NULL)
+		if (hWnd != NULL)
 			return true;
 		else
 			return false;
 	}
 
-	bool InitializeFramework(HWND _hWnd, bool _outputLog)
+	bool InitializeFramework(HWND hWnd)
 	{
-		LogMgr->InitializeMembers(_outputLog);
-		RenderMgr->InitializeMembers(_hWnd);
+		LogMgr->InitializeMembers(ConfigMgr->GetFloat("Info", "EnableLog"));
+		RenderMgr->InitializeMembers(hWnd);
 		InputMgr->InitializeMembers();
 		SceneMgr->InitializeMembers();
 		ResourceMgr->InitializeMembers();

@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClInclude Include="BillBoard.h" />
     <ClInclude Include="BoneHierarchyLoader.h" />
+    <ClInclude Include="ConfigManager.h" />
     <ClInclude Include="Coroutine.h" />
     <ClInclude Include="ScreenButton.h" />
     <ClInclude Include="Camera.h" />
@@ -196,7 +197,6 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SkinnedMesh.h" />
     <ClInclude Include="Skybox.h" />
-    <ClInclude Include="SmartPointer.h" />
     <ClInclude Include="ScreenSprite.h" />
     <ClInclude Include="SpriteBillBoard.h" />
     <ClInclude Include="StaticMesh.h" />
@@ -222,6 +222,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="etuButton.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

@@ -9,7 +9,7 @@ namespace BONE_GRAPHICS
 		LOG_ERROR, LOG_VALUE, LOG_MESSAGE, LOG_SET
 	};
 
-	class LogManager : public ISingleton<LogManager>, public BONE_SYSTEM::CMultiThreadSync<LogManager>
+	class LogManager : public ISingleton<LogManager>, public BONE_SYSTEM::MultiThreadSync<LogManager>
 	{
 	private:
 		int index;

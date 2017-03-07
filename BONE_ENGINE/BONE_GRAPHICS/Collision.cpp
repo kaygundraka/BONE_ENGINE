@@ -13,7 +13,7 @@ bool Collision::PointToRect(const POINT& _ptPos, const RECT& _rtRect)
 	return true;
 }
 
-bool Collision::VectorToAABB(const D3DXVECTOR3& _vPos, const tagBox& _Box)
+bool Collision::VectorToAABB(const Vector3& _vPos, const tagBox& _Box)
 {
 	if (_vPos.x > _Box.vMax.x)	return false;
 	if (_vPos.x < _Box.vMin.x)	return false;
@@ -24,6 +24,7 @@ bool Collision::VectorToAABB(const D3DXVECTOR3& _vPos, const tagBox& _Box)
 
 	return true;
 }
+
 bool Collision::AABBToAABB(const tagBox& _Box1, const tagBox& _Box2)
 {
 	if (_Box1.vMin.x + _Box1.vPosition.x  > _Box2.vMax.x + _Box2.vPosition.x
@@ -41,9 +42,9 @@ bool Collision::AABBToAABB(const tagBox& _Box1, const tagBox& _Box2)
 	return true;
 }
 
-bool Collision::VectorToSphere(const D3DXVECTOR3& _vPos, const tagSphere& _Sphere)
+bool Collision::VectorToSphere(const Vector3& _vPos, const tagSphere& _Sphere)
 {
-	D3DXVECTOR3 RVec(D3DXVECTOR3(0, 0, 0));
+	Vector3 RVec(Vector3(0, 0, 0));
 
 	//중심점간 뺄셈
 	D3DXVec3Subtract(&RVec, &(_vPos), &(_Sphere.vPosition));
@@ -59,7 +60,7 @@ bool Collision::VectorToSphere(const D3DXVECTOR3& _vPos, const tagSphere& _Spher
 
 bool Collision::SphereToSphere(const tagSphere& _Sphere1, const tagSphere& _Sphere2)
 {
-	D3DXVECTOR3 RVec(D3DXVECTOR3(0, 0, 0));
+	Vector3 RVec(Vector3(0, 0, 0));
 
 	//중심점간 뺄셈
 	D3DXVec3Subtract(&RVec, &(_Sphere1.vPosition), &(_Sphere2.vPosition));
@@ -79,9 +80,9 @@ Collision::tagOBB Collision::ConvertAABBtoOBB(const tagBox& _Box, tagOBB R_OBB)
 
 	R_OBB.vPosition = (_Box.vMin + _Box.vMax) / 2.0f;
 
-	D3DXVECTOR3 vX(_Box.vMax.x, _Box.vMin.y, _Box.vMin.z); // x축
-	D3DXVECTOR3 vY(_Box.vMin.x, _Box.vMax.y, _Box.vMin.z); // y축
-	D3DXVECTOR3 vZ(_Box.vMin.x, _Box.vMin.y, _Box.vMax.z); // z축
+	Vector3 vX(_Box.vMax.x, _Box.vMin.y, _Box.vMin.z); // x축
+	Vector3 vY(_Box.vMin.x, _Box.vMax.y, _Box.vMin.z); // y축
+	Vector3 vZ(_Box.vMin.x, _Box.vMin.y, _Box.vMax.z); // z축
 
 	R_OBB.vAxisDir[0] = vX - _Box.vMin;
 	D3DXVec3Normalize(&R_OBB.vAxisDir[0], &R_OBB.vAxisDir[0]);
@@ -104,9 +105,9 @@ bool Collision::AABBToOBB(const tagBox& _Box, const tagOBB& _OBB)
 	tagOBB OBB;
 	OBB.vPosition = (_Box.vMin + _Box.vMax) / 2.0f;
 
-	D3DXVECTOR3 vX(_Box.vMax.x, _Box.vMin.y, _Box.vMin.z);
-	D3DXVECTOR3 vY(_Box.vMin.x, _Box.vMax.y, _Box.vMin.z);
-	D3DXVECTOR3 vZ(_Box.vMin.x, _Box.vMin.y, _Box.vMax.z);
+	Vector3 vX(_Box.vMax.x, _Box.vMin.y, _Box.vMin.z);
+	Vector3 vY(_Box.vMin.x, _Box.vMax.y, _Box.vMin.z);
+	Vector3 vZ(_Box.vMin.x, _Box.vMin.y, _Box.vMax.z);
 
 	OBB.vAxisDir[0] = vX - _Box.vMin;
 	D3DXVec3Normalize(&OBB.vAxisDir[0], &OBB.vAxisDir[0]);
@@ -139,7 +140,7 @@ bool Collision::OBBToOBB(const tagOBB& _OBB1, const tagOBB& _OBB2)
 	const double cutoff = 0.999999;
 	bool existsParallelPair = false;
 
-	D3DXVECTOR3 diff = _OBB1.vPosition - _OBB2.vPosition;
+	Vector3 diff = _OBB1.vPosition - _OBB2.vPosition;
 
 
 	//
@@ -278,18 +279,12 @@ bool Collision::OBBToOBB(const tagOBB& _OBB1, const tagOBB& _OBB2)
 	return true;
 }
 
-//==================================================================================
-// Project FrameWork 
-// Desc : 경계 박스 생성
-// Edited by : 정장영
-// Last Edited On : '13.09.08
-//==================================================================================
 HRESULT Collision::ComputeBoundingBox(LPD3DXMESH _lpMesh, tagBox& _Box)
 {
-	LPVOID pVertices(NULL);
+	LPVOID pVertices(nullptr);
 	_lpMesh->LockVertexBuffer(D3DLOCK_NOSYSLOCK, &pVertices);
 
-	if (FAILED(D3DXComputeBoundingBox((D3DXVECTOR3*)pVertices,
+	if (FAILED(D3DXComputeBoundingBox((Vector3*)pVertices,
 		_lpMesh->GetNumVertices(),
 		D3DXGetFVFVertexSize(_lpMesh->GetFVF()),
 		&_Box.vMin,
@@ -305,18 +300,12 @@ HRESULT Collision::ComputeBoundingBox(LPD3DXMESH _lpMesh, tagBox& _Box)
 	return S_OK;
 }
 
-//==================================================================================
-// Project FrameWork 
-// Desc : 경계 구 생성
-// Edited by : 정장영
-// Last Edited On : '13.09.08
-//==================================================================================
 HRESULT Collision::ComputeBoundingSphere(LPD3DXMESH _lpMesh, tagSphere& _Sphere)
 {
-	LPVOID pVertices(NULL);
+	LPVOID pVertices(nullptr);
 	_lpMesh->LockVertexBuffer(D3DLOCK_NOSYSLOCK, &pVertices);
 
-	if (FAILED(D3DXComputeBoundingSphere((D3DXVECTOR3*)pVertices,
+	if (FAILED(D3DXComputeBoundingSphere((Vector3*)pVertices,
 		_lpMesh->GetNumVertices(),
 		D3DXGetFVFVertexSize(_lpMesh->GetFVF()),
 		&_Sphere.vPosition,
@@ -344,12 +333,6 @@ HRESULT Collision::ComputeBoundingSphere(LPD3DXFRAME _lpFrame, tagSphere& _Spher
 	return S_OK;
 }
 
-//==================================================================================
-// Project FrameWork 
-// Desc : 경계 OBB 생성
-// Edited by : 정장영
-// Last Edited On : '13.09.08
-//==================================================================================
 HRESULT Collision::ComputeOBB(const tagBox& _Box, tagOBB& _OBB)
 {
 	return S_OK;

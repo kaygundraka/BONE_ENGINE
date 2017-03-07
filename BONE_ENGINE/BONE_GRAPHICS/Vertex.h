@@ -3,10 +3,10 @@
 
 struct VERTEX
 {
-	D3DXVECTOR3 p;
-	D3DXVECTOR3 n;
-	D3DXVECTOR2 uv;
-	static const DWORD FVF;
+	Vector3 p;
+	Vector3 n;
+	Vector2 uv;
+	static const int FVF;
 
 	VERTEX() {}
 	VERTEX(float x, float y, float z, float _nX, float _nY, float _nZ, float _fU, float _fV)
@@ -44,6 +44,6 @@ struct VERTEX
 struct VERTEX_INDEX {
 	WORD _0, _1, _2;
 };
-void SetVtx3DTexture(VERTEX &ct, D3DXVECTOR3 p, D3DXVECTOR3 n, float tu, float tv);
+void SetVtx3DTexture(VERTEX &ct, Vector3 p, Vector3 n, float tu, float tv);
 void SetIdx(VERTEX_INDEX &ci, WORD _0, WORD _1, WORD _2);
-float CalculateDistance(D3DXVECTOR3 a, D3DXVECTOR3 b);
+float CalculateDistance(Vector3 a, Vector3 b);

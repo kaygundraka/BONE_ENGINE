@@ -9,7 +9,7 @@ namespace BONE_GRAPHICS
 	{
 		m_sString = _Text;
 
-		if (!BasicSetInformation(p_sName, _vec3Position, _Width, _Height, NULL))
+		if (!BasicSetInformation(p_sName, _vec3Position, _Width, _Height, nullptr))
 			return false;
 
 		m_iWidth = _Width;
@@ -48,7 +48,7 @@ namespace BONE_GRAPHICS
 				Text.insert(index * i, "\n");
 			}
 
-			m_pFont->DrawText(NULL, Text.c_str(), -1, &TextRect, 0, 0xFFFFFFFF);
+			m_pFont->DrawText(nullptr, Text.c_str(), -1, &TextRect, 0, 0xFFFFFFFF);
 
 		}
 	}

@@ -7,7 +7,7 @@ using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class ScreenImage : public Component, public CMultiThreadSync<ScreenImage> 
+	class ScreenImage : public Component, public MultiThreadSync<ScreenImage> 
 	{
 	protected:
 		LPD3DXSPRITE sprite;

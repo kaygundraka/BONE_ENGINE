@@ -5,7 +5,7 @@
 
 namespace BONE_SYSTEM
 {
-	class CLog {
+	class Log {
 	public:
 		static BOOL WriteLog(LPTSTR _data, ...)
 		{

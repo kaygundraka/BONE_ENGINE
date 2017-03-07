@@ -10,7 +10,7 @@ using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class ScreenButton : public Component, public CMultiThreadSync<ScreenButton>
+	class ScreenButton : public Component, public MultiThreadSync<ScreenButton>
 	{
 	public:
 		enum BUTTON_STATUS { NORMAL, PRESSED, HIGHLIGHT };

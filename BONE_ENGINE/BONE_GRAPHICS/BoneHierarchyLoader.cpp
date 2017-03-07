@@ -11,7 +11,7 @@ namespace BONE_GRAPHICS
 		memset(newBone, 0, sizeof(Bone));
 
 		// Name 복사
-		if (Name != NULL)
+		if (Name != nullptr)
 		{
 			newBone->Name = new char[strlen(Name) + 1];
 			strcpy(newBone->Name, Name);
@@ -33,14 +33,14 @@ namespace BONE_GRAPHICS
 		if (pFrameToFree)
 		{
 			// Free Name String
-			if (pFrameToFree->Name != NULL)
+			if (pFrameToFree->Name != nullptr)
 				delete[] pFrameToFree->Name;
 
 			// Free Frame
 			delete pFrameToFree;
 		}
 
-		pFrameToFree = NULL;
+		pFrameToFree = nullptr;
 
 		return S_OK;
 	}
@@ -49,8 +49,8 @@ namespace BONE_GRAPHICS
 		CONST D3DXMESHDATA *pMeshData,
 		CONST D3DXMATERIAL *pMaterials,
 		CONST D3DXEFFECTINSTANCE *pEffectInstance,
-		DWORD NumMaterials,
-		CONST DWORD *pAdjacency,
+		int NumMaterials,
+		CONST int *pAdjacency,
 		LPD3DXSKININFO pSkinInfo,
 		LPD3DXMESHCONTAINER *ppNewMeshContainer)
 	{
@@ -68,7 +68,7 @@ namespace BONE_GRAPHICS
 		pMeshData->pMesh->AddRef();
 
 		// D3D 디바이스 포인터를 얻는다.
-		IDirect3DDevice9 *pDevice = NULL;//RenderMgr->GetDevice();
+		IDirect3DDevice9 *pDevice = nullptr;//RenderMgr->GetDevice();
 		pMeshData->pMesh->GetDevice(&pDevice);
 
 		// 재질을 복사하고 텍스처를 로드한다. (스태틱 메시의 경우와 동일하다.)
@@ -78,9 +78,9 @@ namespace BONE_GRAPHICS
 			memcpy(&mtrl, &pMaterials[i], sizeof(D3DXMATERIAL));
 			boneMesh->materials.push_back(mtrl.MatD3D);
 
-			IDirect3DTexture9* newTexture = NULL;
+			IDirect3DTexture9* newTexture = nullptr;
 
-			if (mtrl.pTextureFilename != NULL)
+			if (mtrl.pTextureFilename != nullptr)
 			{
 				char textureFileName[200];
 				strcpy(textureFileName, "Resource\\Meshbank\\");
@@ -119,7 +119,7 @@ namespace BONE_GRAPHICS
 		}
 
 		// 스킨 정보가 전달되었다면 이를 저장해야한다.
-		if (pSkinInfo != NULL)
+		if (pSkinInfo != nullptr)
 		{
 			// 스킨 정보를 얻는다.
 			boneMesh->pSkinInfo = pSkinInfo;
@@ -128,16 +128,16 @@ namespace BONE_GRAPHICS
 			pSkinInfo->AddRef();
 
 			// 메시를 인덱스 블렌디드 메시로 변환하고, 본 컴비네이션 테이블을 저장해둔다
-			/*DWORD maxVertInfluences = 0;
-			DWORD numBoneComboEntries = 0;
+			/*int maxVertInfluences = 0;
+			int numBoneComboEntries = 0;
 
 			pSkinInfo->ConvertToIndexedBlendedMesh(pMeshData->pMesh,
 			D3DXMESH_MANAGED | D3DXMESH_WRITEONLY,
 			30,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
+			nullptr,
+			nullptr,
 			&maxVertInfluences,
 			&numBoneComboEntries,
 			&boneMesh->pBoneCombinationBuf,
@@ -151,9 +151,9 @@ namespace BONE_GRAPHICS
 				&boneMesh->MeshData.pMesh);
 
 			// 속성 테이블을 얻는다.
-			boneMesh->MeshData.pMesh->GetAttributeTable(NULL, &boneMesh->NumAttributeGroups);
+			boneMesh->MeshData.pMesh->GetAttributeTable(nullptr, &boneMesh->NumAttributeGroups);
 			boneMesh->attributeTables = new D3DXATTRIBUTERANGE[boneMesh->NumAttributeGroups];
-			boneMesh->MeshData.pMesh->GetAttributeTable(boneMesh->attributeTables, NULL);
+			boneMesh->MeshData.pMesh->GetAttributeTable(boneMesh->attributeTables, nullptr);
 
 			// 본의 오프셋과 합산된 변환 행렬들을 만든다.
 			int NumBones = pSkinInfo->GetNumBones();
@@ -178,7 +178,7 @@ namespace BONE_GRAPHICS
 		if (boneMesh->pBoneCombinationBuf)
 			boneMesh->pBoneCombinationBuf->Release();
 
-		if (pMeshContainerBase != NULL)
+		if (pMeshContainerBase != nullptr)
 			delete pMeshContainerBase;
 
 		return S_OK;
