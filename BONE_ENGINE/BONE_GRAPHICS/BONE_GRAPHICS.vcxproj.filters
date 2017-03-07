@@ -66,9 +66,6 @@
     <Filter Include="소스 파일\Management\Scene">
       <UniqueIdentifier>{7005c771-d18f-4f23-bbe1-1a9687f299e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Management\ExternalLibrary">
-      <UniqueIdentifier>{4d676e3a-2262-4e07-aa10-b9ed896601fb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\GameObject\Components\Image">
       <UniqueIdentifier>{0365dbb4-17a5-403c-b2a8-c78de75eceb0}</UniqueIdentifier>
     </Filter>
@@ -83,12 +80,6 @@
     </Filter>
     <Filter Include="소스 파일\Management\Configuration">
       <UniqueIdentifier>{9c0d54b8-2d1b-4ade-ac20-2e352dd37980}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Management\ExternalLibrary\XML">
-      <UniqueIdentifier>{1852afdc-9b17-422c-a782-3f1beb558562}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Management\ExternalLibrary\Json">
-      <UniqueIdentifier>{65f85ac3-21a9-4ee1-84d1-ea73002dd072}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -227,12 +218,6 @@
     <ClInclude Include="ConfigManager.h">
       <Filter>소스 파일\Management\Configuration</Filter>
     </ClInclude>
-    <ClInclude Include="tinystr.h">
-      <Filter>소스 파일\Management\ExternalLibrary\XML</Filter>
-    </ClInclude>
-    <ClInclude Include="tinyxml.h">
-      <Filter>소스 파일\Management\ExternalLibrary\XML</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -366,18 +351,6 @@
     </ClCompile>
     <ClCompile Include="ConfigManager.cpp">
       <Filter>소스 파일\Management\Configuration</Filter>
-    </ClCompile>
-    <ClCompile Include="tinyxmlparser.cpp">
-      <Filter>소스 파일\Management\ExternalLibrary\XML</Filter>
-    </ClCompile>
-    <ClCompile Include="tinystr.cpp">
-      <Filter>소스 파일\Management\ExternalLibrary\XML</Filter>
-    </ClCompile>
-    <ClCompile Include="tinyxml.cpp">
-      <Filter>소스 파일\Management\ExternalLibrary\XML</Filter>
-    </ClCompile>
-    <ClCompile Include="tinyxmlerror.cpp">
-      <Filter>소스 파일\Management\ExternalLibrary\XML</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

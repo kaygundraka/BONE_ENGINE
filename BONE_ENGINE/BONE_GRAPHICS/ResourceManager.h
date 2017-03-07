@@ -1,5 +1,4 @@
 #pragma once
-#include <MultiThreadSync.h>
 #include "ISingleton.h"
 #include "Common.h"
 #include <map>

@@ -2,7 +2,6 @@
 #include "Common.h"
 #include "Component.h"
 #include "GameObject.h"
-#include <MultiThreadSync.h>
 using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS

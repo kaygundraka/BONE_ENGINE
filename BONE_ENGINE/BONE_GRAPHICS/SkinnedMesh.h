@@ -3,7 +3,6 @@
 #include "BoneHierarchyLoader.h"
 #include "IShader.h"
 #include "Component.h"
-#include <MultiThreadSync.h>
 using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
@@ -15,7 +14,7 @@ namespace BONE_GRAPHICS
 		bool IsPlay;
 	};
 
-	class SkinnedMesh : public Component, public MultiThreadSync<SkinnedMesh> {
+	class SkinnedMesh : public Component {
 	public:
 		virtual ~SkinnedMesh();
 

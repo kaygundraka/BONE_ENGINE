@@ -153,7 +153,6 @@ namespace BONE_GRAPHICS
 		void Update(double _timeDelta);
 	};
 
-	// ∫“≤…≥Ó¿Ã
 	class FireworkParticle : public ParticleSystem
 	{
 	public:

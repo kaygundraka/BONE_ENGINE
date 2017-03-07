@@ -5,12 +5,11 @@
 #include "GameObject.h"
 #include "Transform3D.h"
 #include "ResourceManager.h"
-#include <MultiThreadSync.h>
 using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class StaticMesh : public Component, public MultiThreadSync<StaticMesh>
+	class StaticMesh : public Component
 	{
 	private:
 		MESH_INFO*		meshInfo;
@@ -28,19 +27,18 @@ namespace BONE_GRAPHICS
 		};
 
 		StaticMesh();
+        virtual ~StaticMesh();
 
-		void LoadContent();
-
-		virtual ~StaticMesh();
-
+        void LoadContent();
 		void Render(IShader* _shaderOption, GameObject* _object);
-		void SetTexturesAddress(string* _address);
-		bool CheckMouseRayInMesh(Transform3D* _tr);
 
-		void SetRenderMode(int _mode);
+        void SetRenderMode(int _mode);
+        void SetTexturesAddress(string* _address);
+        void SetFileAddress(string _address);
 
+        bool CheckMouseRayInMesh(Transform3D* _tr);
+		
 		string* GetTexturesAddress();
 		string GetFileAddress();
-		void SetFileAddress(string _address);
 	};
 }

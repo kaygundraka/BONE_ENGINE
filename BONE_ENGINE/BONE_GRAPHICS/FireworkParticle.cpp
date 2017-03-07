@@ -3,10 +3,6 @@
 
 namespace BONE_GRAPHICS
 {
-	//*****************************************************************************
-	// Explosion System
-	//********************
-
 	FireworkParticle::FireworkParticle()
 	{
 		SetTypeName("FireworkParticle");

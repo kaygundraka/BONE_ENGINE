@@ -1,6 +1,5 @@
 #pragma once
 #include "ISingleton.h"
-#include <MultiThreadSync.h>
 #include "Common.h"
 
 namespace BONE_GRAPHICS
