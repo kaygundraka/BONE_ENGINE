@@ -12,6 +12,7 @@
 #include "BillBoard.h"
 #include "ScreenImage.h"
 #include "ScreenButton.h"
+#include "PhongShader.h"
 
 namespace BONE_GRAPHICS
 {
@@ -125,54 +126,41 @@ namespace BONE_GRAPHICS
 	void GameObject::Render()
 	{
 		IShader* Shader = ((IShader*)GetComponent("IShader"));
+        static PhongShader phongShader;
 
-        if (Shader != nullptr)
+        if (Shader == nullptr)
+            Shader = &phongShader;
+
+        UINT numPasses = 0;
+
+        Shader->GetShader()->Begin(&numPasses, 0);
         {
-            UINT numPasses = 0;
-
-            Shader->GetShader()->Begin(&numPasses, 0);
+            for (UINT i = 0; i < numPasses; i++)
             {
-                for (UINT i = 0; i < numPasses; i++)
+                Shader->GetShader()->BeginPass(i);
                 {
-                    Shader->GetShader()->BeginPass(i);
-                    {
-                        if (GetComponent("StaticMesh") != nullptr)
-                            ((StaticMesh*)GetComponent("StaticMesh"))->Render(Shader, this);
+                    if (GetComponent("StaticMesh") != nullptr)
+                        ((StaticMesh*)GetComponent("StaticMesh"))->Render(Shader, this);
 
-                        if (GetComponent("BillBoard") != nullptr)
-                            ((BillBoard*)GetComponent("BillBoard"))->Render(Shader, this);
+                    if (GetComponent("BillBoard") != nullptr)
+                        ((BillBoard*)GetComponent("BillBoard"))->Render(Shader, this);
 
-                        if (GetComponent("SpriteBillBoard") != nullptr)
-                            ((SpriteBillBoard*)GetComponent("SpriteBillBoard"))->Render(Shader, this);
+                    if (GetComponent("SpriteBillBoard") != nullptr)
+                        ((SpriteBillBoard*)GetComponent("SpriteBillBoard"))->Render(Shader, this);
 
-                        if (GetComponent("TrailRenderer") != nullptr)
-                            ((TrailRenderer*)GetComponent("TrailRenderer"))->Render(Shader);
+                    if (GetComponent("TrailRenderer") != nullptr)
+                        ((TrailRenderer*)GetComponent("TrailRenderer"))->Render(Shader);
 
-                        if (GetComponent("SkinnedMesh") != nullptr)
-                            ((SkinnedMesh*)GetComponent("SkinnedMesh"))->Render(Shader, this);
-                    }
-                    Shader->GetShader()->End();
+                    if (GetComponent("SkinnedMesh") != nullptr)
+                        ((SkinnedMesh*)GetComponent("SkinnedMesh"))->Render(Shader, this);
                 }
-
-                Shader->GetShader()->EndPass();
+                Shader->GetShader()->End();
             }
-		}
-		else
-		{
-			if (GetComponent("StaticMesh") != nullptr)
-				((StaticMesh*)GetComponent("StaticMesh"))->Render(Shader, this);
 
-			if (GetComponent("BillBoard") != nullptr)
-				((BillBoard*)GetComponent("BillBoard"))->Render(Shader, this);
+            Shader->GetShader()->EndPass();
+        }
 
-			if (GetComponent("TrailRenderer") != nullptr)
-				((TrailRenderer*)GetComponent("TrailRenderer"))->Render(Shader);
-
-			if (GetComponent("SpriteBillBoard") != nullptr)
-				((SpriteBillBoard*)GetComponent("SpriteBillBoard"))->Render(Shader, this);
-		}
-
-		if (GetComponent("ScreenSprite") != nullptr)
+        if (GetComponent("ScreenSprite") != nullptr)
 			((ScreenSprite*)GetComponent("ScreenSprite"))->Render(this);
 
 		if (GetComponent("ScreenImage") != nullptr)

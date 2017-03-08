@@ -14,7 +14,6 @@ namespace BONE_SYSTEM
 
 	}
 
-
 	BOOL Registry::Open(HKEY _rootKey, LPCTSTR _subkey)
 	{
 		if (!_subkey)

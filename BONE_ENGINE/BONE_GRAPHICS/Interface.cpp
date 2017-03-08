@@ -6,7 +6,6 @@
 #include "ResourceManager.h"
 #include "InputManager.h"
 #include "ConfigManager.h"
-#include "etuImage.h"
 
 namespace BONE_GRAPHICS
 {
@@ -166,12 +165,20 @@ namespace BONE_GRAPHICS
 		SceneMgr->InitializeMembers();
 		ResourceMgr->InitializeMembers();
 
-		RECT rect = { 0, 0, RenderMgr->GetWidth(), RenderMgr->GetHeight() };
-		etuImage LogoImage;
+		RECT rect = { 0, 0, 1600, 1200 };
 		
-		if (!LogoImage.SetInformaition("LogoImage", "Resource\\Logo\\Logo.png", D3DXVECTOR3(0, 0, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), &rect, NULL))
-			return false;
-		
+        LPDIRECT3DTEXTURE9 texture = ResourceMgr->LoadTexture("Logo.png");
+        LPD3DXSPRITE sprite;
+        D3DXCreateSprite(RenderMgr->GetDevice(), &sprite);
+
+        float WidthScale = (float)RenderMgr->GetWidth() / 1600;
+        float HeightScale = (float)RenderMgr->GetHeight() / 1200;
+
+        Matrix matrix;
+        D3DXMatrixIdentity(&matrix);
+        D3DXMatrixTransformation2D(&matrix, 0, 0, &Vector2(WidthScale, HeightScale), 0, 0, 0);
+        sprite->SetTransform(&matrix);
+
 		int Alpha = 0;
 
 		while (Alpha <= 255)
@@ -179,11 +186,29 @@ namespace BONE_GRAPHICS
 			RenderMgr->GetDevice()->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, RGB(0, 0, 0), 1.0f, 0);
 			RenderMgr->GetDevice()->BeginScene();
 
-			LogoImage.Render(Alpha);
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+            // alpha - normal 
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+            sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
+            sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
+
+            D3DCOLOR RGB = D3DCOLOR_ARGB((int)Alpha, 255, 255, 255);
+            sprite->Draw(texture, &rect, nullptr, &Vector3(0, 0, 0), RGB);
+
+            sprite->End();
 			Alpha += 1;
+
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
 			RenderMgr->GetDevice()->EndScene();
 			RenderMgr->GetDevice()->Present(0, 0, 0, 0);
+
+            Sleep(10);
 		}
 
 		Sleep(2000);
@@ -193,12 +218,33 @@ namespace BONE_GRAPHICS
 			RenderMgr->GetDevice()->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, RGB(0, 0, 0), 1.0f, 0);
 			RenderMgr->GetDevice()->BeginScene();
 
-			LogoImage.Render(Alpha);
-			Alpha -= 1;
+            sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
+            sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
+
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+            // alpha - normal 
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+            sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
+            sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
+
+            D3DCOLOR RGB = D3DCOLOR_ARGB((int)Alpha, 255, 255, 255);
+            sprite->Draw(texture, &rect, nullptr, &Vector3(0, 0, 0), RGB);
+
+            sprite->End();
+            Alpha -= 1;
+
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
 			RenderMgr->GetDevice()->EndScene();
 			RenderMgr->GetDevice()->Present(0, 0, 0, 0);
-		}
+		
+            Sleep(10);
+        }
 
 		return true;
 	}

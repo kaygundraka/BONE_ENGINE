@@ -14,6 +14,11 @@ namespace BONE_GRAPHICS
 		IsFrameworkFlag = false;
 		cameraIndex = 0;
 		CompleateLoading = false;
+
+        globalAmbient.r = 1.0f;
+        globalAmbient.g = 1.0f;
+        globalAmbient.b = 1.0f;
+        globalAmbient.a = 1.0f;
 	}
 
 	Scene::~Scene()
