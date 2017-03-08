@@ -12,8 +12,6 @@ namespace BONE_GRAPHICS
 {
 	StaticMesh::StaticMesh()
 	{
-		ThreadSync sync;
-
 		SetTypeName("StaticMesh");
 
 		renderMode = RENDER_DEFAULT;
@@ -21,18 +19,14 @@ namespace BONE_GRAPHICS
 
 	StaticMesh::~StaticMesh()
 	{
-		ThreadSync sync;
-
 		ResourceMgr->ReleaseMesh(address);
 
-		for (int i = 0; i < ResourceMgr->FindMesh(address)->_numMaterials; i++)
+		for (int i = 0; i < ResourceMgr->FindMesh(address)->numMaterials; i++)
 			ResourceMgr->ReleaseTexture(textureAddress[i]);
 	}
 
 	void StaticMesh::LoadContent()
 	{
-		ThreadSync sync;
-
 		char Address[MAX_PATH];
 		strcpy(Address, address.c_str());
 
@@ -47,11 +41,11 @@ namespace BONE_GRAPHICS
 					throw;
 				}
 
-				int MaterialSize = meshInfo->_numMaterials;
+				int MaterialSize = meshInfo->numMaterials;
 
 				textureAddress = new string[MaterialSize];
 
-				D3DXMATERIAL* d3dxMaterials = (D3DXMATERIAL*)meshInfo->_buffer->GetBufferPointer();
+				D3DXMATERIAL* d3dxMaterials = (D3DXMATERIAL*)meshInfo->buffer->GetBufferPointer();
 
 				meshMaterials = new D3DMATERIAL9[MaterialSize];
 
@@ -112,42 +106,32 @@ namespace BONE_GRAPHICS
 		}
 	}
 
-	bool StaticMesh::CheckMouseRayInMesh(Transform3D* _tr)
+	bool StaticMesh::CheckMouseRayInMesh(Transform3D* tr)
 	{
-		ThreadSync sync;
-
 		RAY ray = RenderMgr->GetPickingRayToView(false);
 
-		bool Result = RenderMgr->CheckRayInMesh(&ray, _tr->GetTransform(), ResourceMgr->FindMesh(address)->_mesh, nullptr);
+		bool Result = RenderMgr->CheckRayInMesh(&ray, tr->GetTransform(), ResourceMgr->FindMesh(address)->mesh, nullptr);
 
 		return Result;
 	}
 
-	void StaticMesh::SetRenderMode(int _mode)
+	void StaticMesh::SetRenderMode(int mode)
 	{
-		ThreadSync sync;
-		
-		renderMode = _mode;
+		renderMode = mode;
 	}
 
 	string* StaticMesh::GetTexturesAddress()
 	{
-		ThreadSync sync;
-
 		return textureAddress;
 	}
 
-	void StaticMesh::SetTexturesAddress(string* _address)
+	void StaticMesh::SetTexturesAddress(string* address)
 	{
-		ThreadSync sync;
-
-		textureAddress = _address;
+		textureAddress = address;
 	}
 
-	void StaticMesh::Render(IShader* _shaderOption, GameObject* _object)
+	void StaticMesh::Render(IShader* shaderOpt, GameObject* object)
 	{
-		ThreadSync sync;
-
 		if (IsInit)
 		{
 			Matrix Transform = ((Transform3D*)_object->GetComponent("Transform3D"))->GetTransform();
@@ -168,23 +152,23 @@ namespace BONE_GRAPHICS
 				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 			}
 
-			if (_shaderOption == nullptr)
+			if (shaderOpt == nullptr)
 			{
 
-				for (int i = 0; i < ResourceMgr->FindMesh(address)->_numMaterials; i++)
+				for (int i = 0; i < ResourceMgr->FindMesh(address)->numMaterials; i++)
 				{
 					RenderMgr->GetDevice()->SetMaterial(&meshMaterials[i]);
 					RenderMgr->GetDevice()->SetTexture(0, ResourceMgr->LoadTexture(textureAddress[i]));
-					ResourceMgr->FindMesh(address)->_mesh->DrawSubset(i);
+					ResourceMgr->FindMesh(address)->mesh->DrawSubset(i);
 				}
 
 			}
 			else
 			{
-				for (int i = 0; i < ResourceMgr->FindMesh(address)->_numMaterials; i++)
+				for (int i = 0; i < ResourceMgr->FindMesh(address)->numMaterials; i++)
 				{
-					_shaderOption->Render(i, _object);
-					ResourceMgr->FindMesh(address)->_mesh->DrawSubset(i);
+					shaderOpt->Render(i, _object);
+					ResourceMgr->FindMesh(address)->mesh->DrawSubset(i);
 				}
 			}
 
@@ -195,17 +179,13 @@ namespace BONE_GRAPHICS
 		}
 	}
 
-	void StaticMesh::SetFileAddress(string _address)
+	void StaticMesh::SetFileAddress(string address)
 	{
-		ThreadSync sync;
-
-		address = _address;
+		address = address;
 	}
 
 	string StaticMesh::GetFileAddress()
 	{
-		ThreadSync sync;
-
 		return address;
 	}
 }

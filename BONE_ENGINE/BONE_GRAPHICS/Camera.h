@@ -9,7 +9,7 @@ namespace BONE_GRAPHICS
 {
 	enum PROJECTION_TYPE { PRJOJECTION_PERSPACTIVE, PROJECTION_ORTHOGONAL };
 
-	class Camera : public Component, public MultiThreadSync<Camera>
+	class Camera : public Component
 	{
 	private:
 		int ID;
@@ -29,26 +29,23 @@ namespace BONE_GRAPHICS
 		int height;
 
 	public:
-		Camera(int _ID, PROJECTION_TYPE _type, Vector3 _cameraUp, int _width, int _height, float _far, float _near, float _fov);
-
-		int GetID();
-
-		void SetFov(float _fov);
-		float GetFov();
-
-		void SetNearDistance(float _near);
-		float GetNearDistance();
-
-		void SetFarDistance(float _far);
-		float GetFarDistance();
-
-		Vector3 GetCameraUp();
-		void SetTargetPosition(Vector3 _targetPosition);
+		Camera(int ID, PROJECTION_TYPE type, Vector3 cameraUp, int width, int height, float farDist, float nearDist, float fov);
+        
+        void SetFov(float fov);
+		void SetNearDistance(float nearDist);
+		void SetFarDistance(float farDist);
+		void SetTargetPosition(Vector3 targetPosition);
 		void SetTargetPosition(float x, float y, float z);
-		Vector3 GetTargetPosition();
-		Matrix GetViewMatrix(GameObject* _owner);
+
+        int GetID();
+        float GetFov();
+        float GetNearDistance();
+        float GetFarDistance();
+        Vector3 GetCameraUp();
+        Vector3 GetTargetPosition();
+		Matrix GetViewMatrix(GameObject* owner);
 		Matrix GetProjectionMatrix();
 
-		virtual void FixedUpdate(GameObject* _owner);
+		virtual void FixedUpdate(GameObject* owner);
 	};
 }

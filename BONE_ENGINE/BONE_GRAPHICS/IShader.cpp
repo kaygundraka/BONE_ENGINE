@@ -7,40 +7,30 @@ namespace BONE_GRAPHICS
 {
 	IShader::IShader()
 	{
-		ThreadSync sync;
-
 		SetTypeName("IShader");
 		address = "";
 	}
 
-	IShader::~IShader() { ThreadSync sync; }
+	IShader::~IShader() {}
 
-	void IShader::SetAddress(string _address)
+	void IShader::SetAddress(string address)
 	{
-		ThreadSync sync;
-
-		address = _address;
-		ResourceMgr->LoadEffect(address);
+		this->address = address;
+		ResourceMgr->LoadEffect(this->address);
 	}
 
 	string IShader::GetAddress()
 	{
-		ThreadSync sync;
-
 		return address;
 	}
 
 	void IShader::LoadContent()
 	{
-		ThreadSync sync;
-
 		ResourceMgr->LoadEffect(address);
 	}
 
 	LPD3DXEFFECT IShader::GetShader()
 	{
-		ThreadSync sync;
-
 		return ResourceMgr->LoadEffect(address);
 	}
 }

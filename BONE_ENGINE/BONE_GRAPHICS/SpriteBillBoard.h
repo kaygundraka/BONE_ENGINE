@@ -5,12 +5,11 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "Transform3D.h"
-#include <MultiThreadSync.h>
 using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class SpriteBillBoard : public Component, public MultiThreadSync<SpriteBillBoard>
+	class SpriteBillBoard : public Component
 	{
 	public:
 		enum RENDER_MODE {
@@ -18,7 +17,7 @@ namespace BONE_GRAPHICS
 		};
 
 	private:
-		string			textureAddress;
+		string textureAddress;
 		
 		int width;
 		int height;
@@ -43,29 +42,27 @@ namespace BONE_GRAPHICS
 		bool IsInit;
 
 	public:
-		void SetAnimation(int _width, int _height, int _animationCut, int _animationScene, float _alpha);
+		void SetAnimation(int width, int height, int animationCut, int animationScene, float alpha);
 
-		void SetPlayDirection(bool _isRight);
-		void PlayCutAnimation(float _timeDelta, float _cutTimer);
-		void PlayFullAnimation(float _timeDelta, float _cutTimer);
-		void SelectAnimation(int _sceneIndex);
+		void SetPlayDirection(bool isRight);
+		void PlayCutAnimation(float cutTimer);
+		void PlayFullAnimation(float cutTimer);
+		void SelectAnimation(int sceneIndex);
 		
-		void SetRectSize(float _width, float _height);
+		void SetRectSize(float width, float height);
 		Vector2 GetRectSize();
 
 		SpriteBillBoard();
-
-		void LoadContent();
-
 		virtual ~SpriteBillBoard();
 
-		void Render(IShader* _shaderOption, GameObject* _cameraObject);
-		void SetTargetCamera(GameObject* _targetCamera);
+        void LoadContent();
+        void Render(IShader* shaderOpt, GameObject* cameraObject);
+		void SetTargetCamera(GameObject* targetCamera);
 				
-		void SetRenderMode(RENDER_MODE _mode);
+		void SetRenderMode(RENDER_MODE mode);
 
-		void SetTexturesAddress(string _address);
-		bool CheckMouseRayInMesh(Transform3D* _tr);
+		void SetTexturesAddress(string address);
+		bool CheckMouseRayInMesh(Transform3D* tr);
 
 		string GetTexturesAddress();
 	};

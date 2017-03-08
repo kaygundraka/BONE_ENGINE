@@ -7,51 +7,52 @@ using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	struct KEYFRAMERATE {
+	typedef struct _KEYFRAMERATE {
 		LPD3DXANIMATIONSET AnimationSet;
 		UINT Vertex_Index;
 		float AnimationSpeed;
 		bool IsPlay;
-	};
+	} KEYFRAMERATE;
 
 	class SkinnedMesh : public Component {
 	public:
-		virtual ~SkinnedMesh();
+        SkinnedMesh();
+        virtual ~SkinnedMesh();
 
-		SkinnedMesh();
-		void SetFileAddress(string _address);
-		void LoadContent();
-		string GetFileAddress();
-
-		void Render(IShader* _shaderOption, GameObject* _object, float _timeDelta);
+        void LoadContent();
+		void Render(IShader* shaderOpt, GameObject* object);
 		
-		void UpdateAnimation(float _timeDelta);
-		void PlayAnimation(string _animationName, bool _IsPlay, bool bRotateLoop);
-		void SetAnimation(string _name, int _index, float _animationSpeed);
-		void SetAnimation(string _name, float _animationSpeed);
+		void UpdateAnimation();
+		void PlayAnimation(string animationName, bool isPlay, bool rotateLoop);
 
-		void CheckInRay(RAY *_ray, Bone* _bone, float& _curDist);
+        void SetAnimation(string name, int index, float animationSpeed);
+		void SetAnimation(string name, float animationSpeed);
+        void SetFileAddress(string address);
+
+        string GetFileAddress();
+
+		void CheckInRay(RAY *ray, Bone* bone, float& curDist);
 
 		string address;
 		LPD3DXMESH GetMesh();
 
 	private:
-		void SetupBoneMatrixPointers(Bone* _bone);
+		void SetupBoneMatrixPointers(Bone* bone);
 
-		void UpdateMatrices(Bone *_bone, D3DXMATRIX *_parentMatrix);
-		void SoftwareRendering(IShader* _shaderOption, GameObject* _object, Bone *_bone);
+		void UpdateMatrices(Bone *bone, D3DXMATRIX *parentMatrix);
+		void SoftwareRendering(IShader* shaderOpt, GameObject* object, Bone *bone);
 
 		D3DXFRAME *rootBone;
 
-		/// 에니메이션 관련 변수
 		BoneHierarchyLoader boneHierarchy;
-		LPD3DXANIMATIONCONTROLLER animationContainer;
-		map<string, KEYFRAMERATE> animationSet;
+		
+        LPD3DXANIMATIONCONTROLLER animationContainer;
+		
+        map<string, KEYFRAMERATE> animationSet;
 		string animationName;
-		bool IsPlay;
+		
+        bool IsPlay;
 		bool IsRotateLoop;
-
-		// 기본 3D 관련 변수
-		bool IsInit;
+        bool IsInit;
 	};
 }

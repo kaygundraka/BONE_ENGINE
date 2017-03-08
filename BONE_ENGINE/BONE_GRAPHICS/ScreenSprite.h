@@ -2,12 +2,11 @@
 #include "Common.h"
 #include "Component.h"
 #include "GameObject.h"
-#include <MultiThreadSync.h>
 using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class ScreenSprite : public Component, public MultiThreadSync<ScreenSprite>
+	class ScreenSprite : public Component
 	{
 	protected:
 		int width;
@@ -30,15 +29,15 @@ namespace BONE_GRAPHICS
 
 		void LoadContent();
 
-		void SetInformation(string _address, int _width, int _height, int _animationCut, int _animationScene, float _alpha);
+		void SetInformation(string address, int width, int height, int animationCut, int animationScene, float alpha);
 
-		void PlayAnimation(float _timeDelta, float _cutTimer);
-		void SelectAnimation(int _sceneIndex);
-		void SetPlayDirection(bool _isRight);
+		void PlayAnimation(float cutTimer);
+		void SelectAnimation(int sceneIndex);
+		void SetPlayDirection(bool isRight);
 
-		void SetAlpha(float _alpha);
+		void SetAlpha(float alpha);
 
-		virtual void Render(GameObject* _owner);
+		virtual void Render(GameObject* owner);
 		
 		float GetAlpha();
 	};

@@ -6,8 +6,6 @@ namespace BONE_GRAPHICS
 {
 	ScreenButton::ScreenButton()
 	{
-		ThreadSync sync;
-
 		SetTypeName("ScreenButton");
 
 		status = BUTTON_STATUS::NORMAL;
@@ -17,22 +15,16 @@ namespace BONE_GRAPHICS
 
 	ScreenButton::~ScreenButton()
 	{
-		ThreadSync sync;
-
 		sprite->Release();
 	}
 
 	void ScreenButton::LoadContent()
 	{
-		ThreadSync sync;
-
 		ResourceMgr->LoadTexture(address);
 	}
 
-	ScreenButton::BUTTON_STATUS ScreenButton::Update(GameObject* _owner, float _timeDelta)
+	ScreenButton::BUTTON_STATUS ScreenButton::Update(GameObject* _owner)
 	{
-		ThreadSync sync;
-
 		Transform2D* tr = ((Transform2D*)_owner->GetComponent("Transform2D"));
 
 		int width = tr->GetSize().x;
@@ -70,48 +62,36 @@ namespace BONE_GRAPHICS
 		return status;
 	}
 
-	void ScreenButton::SetOriginRect(Rect _rect)
+	void ScreenButton::SetOriginRect(Rect rect)
 	{
-		ThreadSync sync;
-
-		originRect = _rect;
+		originRect = rect;
 	}
 	
-	void ScreenButton::SetOriginRect(Vector2 _leftTop, Vector2 _rightBottom)
+	void ScreenButton::SetOriginRect(Vector2 leftTop, Vector2 rightBottom)
 	{
-		ThreadSync sync;
-
-		originRect.LeftTop = _leftTop;
-		originRect.RightBottom = _rightBottom;
+		originRect.LeftTop = leftTop;
+		originRect.RightBottom = rightBottom;
 	}
 
 	Rect ScreenButton::GetOriginRect()
 	{
-		ThreadSync sync;
-
 		return originRect;
 	}
 
-	void ScreenButton::SetImageFile(string _address)
+	void ScreenButton::SetImageFile(string address)
 	{
-		ThreadSync sync;
-
-		address = _address;
+		this->address = address;
 	}
 
-	void ScreenButton::SetAlpha(float _alpha)
+	void ScreenButton::SetAlpha(float alpha)
 	{
-		ThreadSync sync;
-
-		alpha = _alpha;
+		this->alpha = alpha;
 	}
 
-	void ScreenButton::Render(GameObject* _owner)
+	void ScreenButton::Render(GameObject* owner)
 	{
-		ThreadSync sync;
-
-		Matrix matrix = ((Transform2D*)_owner->GetComponent("Transform2D"))->GetTransform();
-		Vector3 position = ((Transform2D*)_owner->GetComponent("Transform2D"))->GetPosition();
+		Matrix matrix = ((Transform2D*)owner->GetComponent("Transform2D"))->GetTransform();
+		Vector3 position = ((Transform2D*)owner->GetComponent("Transform2D"))->GetPosition();
 
 		RECT rect;
 		rect.left = originRect.LeftTop.x;
@@ -149,8 +129,6 @@ namespace BONE_GRAPHICS
 
 	float ScreenButton::GetAlpha()
 	{
-		ThreadSync sync;
-
 		return alpha;
 	}
 }

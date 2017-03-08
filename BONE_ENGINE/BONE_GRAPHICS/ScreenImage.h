@@ -2,12 +2,11 @@
 #include "Common.h"
 #include "Component.h"
 #include "GameObject.h"
-#include <MultiThreadSync.h>
 using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class ScreenImage : public Component, public MultiThreadSync<ScreenImage> 
+	class ScreenImage : public Component
 	{
 	protected:
 		LPD3DXSPRITE sprite;
@@ -21,14 +20,14 @@ namespace BONE_GRAPHICS
 
 		void LoadContent();
 
-		void SetOriginRect(Rect _rect);
-		void SetOriginRect(Vector2 _leftTop, Vector2 _rightBottom);
+		void SetOriginRect(Rect rect);
+		void SetOriginRect(Vector2 leftTop, Vector2 rightBottom);
 		Rect GetOriginRect();
 
-		void SetImageFile(string _address);
+		void SetImageFile(string address);
 		
-		void SetAlpha(float _alpha);
-		virtual void Render(GameObject* _owner);
+		void SetAlpha(float alpha);
+		virtual void Render(GameObject* owner);
 		float GetAlpha();
 	};
 }

@@ -1,6 +1,7 @@
 #include "Common.h"
 #include "RenderManager.h"
 #include "LogManager.h"
+#include "SceneManager.h"
 #include "ResourceManager.h"
 #include "GameObject.h"
 #include "TrailRenderer.h"
@@ -10,8 +11,6 @@ namespace BONE_GRAPHICS
 {
 	TrailRenderer::TrailRenderer()
 	{
-		ThreadSync sync;
-
 		SetTypeName("TrailRenderer");
 
 		vertexBuffer = nullptr;
@@ -28,15 +27,13 @@ namespace BONE_GRAPHICS
 		endSize = 1;
 
 		renderMode = RENDER_ALPHA;
-		IsActive = true;
 		
+        IsActive = true;
 		IsInit = false;
 	}
 
 	TrailRenderer::~TrailRenderer()
 	{
-		ThreadSync sync;
-
 		if (vertexBuffer != nullptr)
 			vertexBuffer->Release();
 
@@ -46,46 +43,36 @@ namespace BONE_GRAPHICS
 
 	void TrailRenderer::LoadContent()
 	{
-		ThreadSync sync;
-
 		IsInit = true;
 	}
 
-	void TrailRenderer::SetTargetObject(GameObject* _targetObject, Vector3 _pivot)
+	void TrailRenderer::SetTargetObject(GameObject* targetObject, Vector3 pivot)
 	{
-		ThreadSync sync;
-
-		target = _targetObject;
-		pivot = _pivot;
+		target = targetObject;
+		this->pivot = pivot;
 	}
 
-	void TrailRenderer::SetSize(float _start, float _end)
+	void TrailRenderer::SetSize(float start, float end)
 	{
-		ThreadSync sync;
-
-		startSize = _start;
-		endSize = _end;
+		startSize = start;
+		endSize = end;
 	}
 
-	void TrailRenderer::SetCycle(float _liveCycle, float _createCycle)
+	void TrailRenderer::SetCycle(float liveCycle, float createCycle)
 	{
-		ThreadSync sync;
-
-		if (_liveCycle < 0)
-			liveCycle = 0;
+		if (liveCycle < 0)
+            this->liveCycle = 0;
 		else
-			liveCycle = _liveCycle;
+            this->liveCycle = liveCycle;
 
-		if (_createCycle < 0)
-			createCycle = 0;
+		if (createCycle < 0)
+			this->createCycle = 0;
 		else
-			createCycle = _createCycle;
+            this->createCycle = createCycle;
 	}
 	
-	void TrailRenderer::UpdateStatus(double _timeDelta)
+	void TrailRenderer::UpdateStatus()
 	{
-		ThreadSync sync;
-
 		for (auto Iter = trailList.begin(); Iter != trailList.end(); Iter++)
 		{
 			if (liveCycle < (*Iter).curLiveTime)
@@ -95,7 +82,7 @@ namespace BONE_GRAPHICS
 				float time = (*Iter).curLiveTime / liveCycle;
 
 				(*Iter).curSize = (-(startSize + endSize)) * time + (startSize + endSize) + endSize;
-				(*Iter).curLiveTime += _timeDelta;
+				(*Iter).curLiveTime += SceneMgr->GetTimeDelta();
 			}
 		}
 
@@ -103,7 +90,7 @@ namespace BONE_GRAPHICS
 		{
 			if (createCycle < curCreateTime)
 			{
-				TrailMesh temp;
+				TRAIL_MESH temp;
 				temp.curLiveTime = 0;
 				temp.curSize = startSize;
 				
@@ -121,7 +108,7 @@ namespace BONE_GRAPHICS
 				curCreateTime = 0;
 			}
 
-			curCreateTime += _timeDelta;
+			curCreateTime += SceneMgr->GetTimeDelta();
 
 			if (trailList.size() >= 2)
 				SetMeshBuffer();
@@ -131,8 +118,6 @@ namespace BONE_GRAPHICS
 
 	void TrailRenderer::SetMeshBuffer()
 	{
-		ThreadSync sync;
-
 		VERTEX* vertex;
 		vertex = new VERTEX[trailList.size() * 2];
 
@@ -218,32 +203,24 @@ namespace BONE_GRAPHICS
 		indexBuffer->Unlock();
 	}
 
-	void TrailRenderer::SetUpVector(Vector3 _upDir)
+	void TrailRenderer::SetUpVector(Vector3 upDir)
 	{
-		ThreadSync sync;
-
-		upDir = _upDir;
-		D3DXVec3Normalize(&upDir, &upDir);
+		this->upDir = upDir;
+		D3DXVec3Normalize(&this->upDir, &this->upDir);
 	}
 	
-	void TrailRenderer::SetActive(bool _active)
+	void TrailRenderer::SetActive(bool active)
 	{
-		ThreadSync sync;
-
-		IsActive = _active;
+		IsActive = active;
 	}
 
-	void TrailRenderer::SetRenderMode(int _mode)
+	void TrailRenderer::SetRenderMode(int mode)
 	{
-		ThreadSync sync;
-
-		renderMode = _mode;
+		renderMode = mode;
 	}
 
-	void TrailRenderer::Render(IShader* _shaderOption)
+	void TrailRenderer::Render(IShader* shaderOpt)
 	{
-		ThreadSync sync;
-
 		if (IsInit && trailList.size() >= 2 && IsActive)
 		{
 			if (renderMode == RENDER_ALPHA)
@@ -279,17 +256,13 @@ namespace BONE_GRAPHICS
 		}
 	}
 
-	void TrailRenderer::SetTexturesAddress(string _address)
+	void TrailRenderer::SetTexturesAddress(string address)
 	{
-		ThreadSync sync;
-
-		textureAddress = _address;
+		textureAddress = address;
 	}
 
 	string TrailRenderer::GetTexturesAddress()
 	{
-		ThreadSync sync;
-
 		return textureAddress;
 	}
 }

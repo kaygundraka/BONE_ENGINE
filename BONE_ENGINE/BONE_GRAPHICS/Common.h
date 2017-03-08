@@ -21,6 +21,7 @@
 #include <thread>
 #include <ctime>
 #include <tuple>
+#include <shlwapi.h>
 
 #include "Strsafe.h"
 #include "Interface.h"
@@ -28,6 +29,7 @@
 #include <tinyxml.h>
 #include <MultiThreadSync.h>
 
+#pragma comment(lib, "shlwapi")
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib,"dsound")
 #pragma comment(lib,"winmm")

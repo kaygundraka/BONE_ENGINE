@@ -2,17 +2,15 @@
 #include "RenderManager.h"
 #include "LogManager.h"
 #include "ResourceManager.h"
+#include "SceneManager.h"
 #include "InputManager.h"
 #include "InputTextBox.h"
 #include "GameObject.h"
-#pragma warning(disable:4996)
 
 namespace BONE_GRAPHICS
 {
 	InputTextBox::InputTextBox()
 	{
-		ThreadSync sync;
-
 		SetTypeName("InputTextBox");
 
 		isClicked = false;
@@ -24,19 +22,15 @@ namespace BONE_GRAPHICS
 
 	InputTextBox::~InputTextBox()
 	{
-		ThreadSync sync;
 	}
 
 	void InputTextBox::LoadContent()
 	{
-		ThreadSync sync;
 	}
 
-	bool InputTextBox::IsClicked(GameObject* _owner)
+	bool InputTextBox::IsClicked(GameObject* owner)
 	{
-		ThreadSync sync;
-
-		Transform2D* tr = ((Transform2D*)_owner->GetComponent("Transform2D"));
+		Transform2D* tr = ((Transform2D*)owner->GetComponent("Transform2D"));
 		
 		if (tr == nullptr)
 			return false;
@@ -73,37 +67,27 @@ namespace BONE_GRAPHICS
 			isFocused = false;
 		}
 		else
-		{
 			isClicked = false;
-		}
 	}
 
-	void InputTextBox::SetMaxLength(int _length)
+	void InputTextBox::SetMaxLength(int length)
 	{
-		ThreadSync sync;
-
-		maxStrLength = _length;
+		maxStrLength = length;
 	}
 	
 	int InputTextBox::GetMaxLength()
 	{
-		ThreadSync sync;
-
 		return maxStrLength;
 	}
 
 	string InputTextBox::GetString()
 	{
-		ThreadSync sync;
-
 		return str;
 	}
 
-	void InputTextBox::SetActive(bool _active)
+	void InputTextBox::SetActive(bool active)
 	{
-		ThreadSync sync;
-
-		this->active = _active;
+		this->active = active;
 	}
 
 	void InputTextBox::ClearString()
@@ -111,13 +95,11 @@ namespace BONE_GRAPHICS
 		str = "";
 	}
 
-	void InputTextBox::Update(GameObject* _owner, float _timeDelta)
+	void InputTextBox::Update(GameObject* owner)
 	{
-		ThreadSync sync;
-
 		if (active)
 		{
-			IsClicked(_owner);
+			IsClicked(owner);
 
 			if (isFocused)
 			{
@@ -154,7 +136,7 @@ namespace BONE_GRAPHICS
 				}
 
 				if (KeyDown <= 0.1f)
-					KeyDown += _timeDelta;
+					KeyDown += SceneMgr->GetTimeDelta();
 			}
 		}
 	}

@@ -3,19 +3,14 @@
 #include "LogManager.h"
 #include "ResourceManager.h"
 #include "BillBoard.h"
-#include <shlwapi.h>
 #include "Camera.h"
 #include "Vertex.h"
 #include "GameObject.h"
-#pragma comment(lib, "shlwapi")
-#pragma warning(disable:4996)
 
 namespace BONE_GRAPHICS
 {
 	BillBoard::BillBoard()
 	{
-		ThreadSync sync;
-
 		SetTypeName("BillBoard");
 
 		vertexBuffer = nullptr;
@@ -30,8 +25,6 @@ namespace BONE_GRAPHICS
 
 	BillBoard::~BillBoard()
 	{
-		ThreadSync sync;
-
 		if (vertexBuffer == nullptr)
 			vertexBuffer->Release();
 
@@ -43,8 +36,6 @@ namespace BONE_GRAPHICS
 
 	void BillBoard::LoadContent()
 	{
-		ThreadSync sync;
-
 		VERTEX vertex[4];
 
 #pragma region Vertex Setup
@@ -152,54 +143,39 @@ namespace BONE_GRAPHICS
 		IsInit = true;
 	}
 
-	bool BillBoard::CheckMouseRayInMesh(Transform3D* _tr)
+	bool BillBoard::CheckMouseRayInMesh(Transform3D* tr)
 	{
-		ThreadSync sync;
-
 		RAY ray = RenderMgr->GetPickingRayToView(false);
 
-		//bool Result = RenderMgr->CheckRayInMesh(&ray, _tr->GetTransform(), , nullptr);
-		//bool Result = RenderMgr->CheckRayInMesh(&ray, _tr->GetTransform(), ResourceMgr->FindMesh("BillBoard")->_mesh, nullptr);
-
-		return true;//Result;
+		return true;
 	}
 
-	void BillBoard::SetTexturesAddress(string _address, int _width, int _height)
+	void BillBoard::SetTexturesAddress(string address, int width, int height)
 	{
-		ThreadSync sync;
-
-		textureAddress = _address;
-		width = _width;
-		height = _height;
+		textureAddress = address;
+		this->width = width;
+        this->height = height;
 	}
 
 	string	BillBoard::GetTexturesAddress()
 	{
-		ThreadSync sync;
-
 		return textureAddress;
 	}
 
-	void BillBoard::SetTarget(GameObject* _target)
+	void BillBoard::SetTarget(GameObject* target)
 	{
-		ThreadSync sync;
-
-		target = _target;
+		this->target = target;
 	}
 
-	void BillBoard::SetRenderMode(RENDER_MODE _mode)
+	void BillBoard::SetRenderMode(RENDER_MODE mode)
 	{
-		ThreadSync sync;
-
-		renderMode = _mode;
+		renderMode = mode;
 	}
 
-	void BillBoard::SetRectSize(float _width, float _height)
+	void BillBoard::SetRectSize(float width, float height)
 	{
-		ThreadSync sync;
-
-		rectWidth = _width;
-		rectHeight = _height;
+		rectWidth = width;
+		rectHeight = height;
 
 		if (IsInit)
 			LoadContent();
@@ -207,27 +183,21 @@ namespace BONE_GRAPHICS
 
 	Vector2 BillBoard::GetRectSize()
 	{
-		ThreadSync sync;
-
 		return Vector2(rectWidth, rectHeight);
 	}
 
-	void BillBoard::SetOriginRect(Rect _rect)
+	void BillBoard::SetOriginRect(Rect rect)
 	{
-		ThreadSync sync;
-
-		originRect = _rect;
+		originRect = rect;
 
 		if (IsInit)
 			LoadContent();
 	}
 
-	void BillBoard::SetOriginRect(Vector2 _leftUp, Vector2 _rightBottom)
+	void BillBoard::SetOriginRect(Vector2 leftUp, Vector2 rightBottom)
 	{
-		ThreadSync sync;
-
-		originRect.LeftTop = _leftUp;
-		originRect.RightBottom = _rightBottom;
+		originRect.LeftTop = leftUp;
+		originRect.RightBottom = rightBottom;
 
 		if (IsInit)
 			LoadContent();
@@ -235,15 +205,11 @@ namespace BONE_GRAPHICS
 
 	Rect BillBoard::GetOriginRect()
 	{
-		ThreadSync sync;
-
 		return originRect;
 	}
 
-	void BillBoard::Render(IShader* _shaderOption, GameObject* _object)
+	void BillBoard::Render(IShader* shaderOpt, GameObject* object)
 	{
-		ThreadSync sync;
-
 		if (IsInit)
 		{
 			if (target != nullptr)
@@ -285,10 +251,10 @@ namespace BONE_GRAPHICS
 
 				YAngle += 3.14f + (3.0f / 2.0f);
 
-				((Transform3D*)_object->GetComponent("Transform3D"))->SetRotate(0, -YAngle, -ZAngle);
+				((Transform3D*)object->GetComponent("Transform3D"))->SetRotate(0, -YAngle, -ZAngle);
 			}
 
-			Matrix Transform = ((Transform3D*)_object->GetComponent("Transform3D"))->GetTransform();
+			Matrix Transform = ((Transform3D*)object->GetComponent("Transform3D"))->GetTransform();
 			RenderMgr->GetDevice()->SetTransform(D3DTS_WORLD, &Transform);
 
 			if (renderMode == RENDER_ALPHA)
@@ -311,13 +277,10 @@ namespace BONE_GRAPHICS
 			RenderMgr->GetDevice()->SetStreamSource(0, vertexBuffer, 0, sizeof(VERTEX));
 			RenderMgr->GetDevice()->SetIndices(indexBuffer);
 
-			if (_shaderOption == nullptr)
-			{
-				//RenderMgr->GetDevice()->SetMaterial(&meshMaterial);
+			if (shaderOpt == nullptr)
 				RenderMgr->GetDevice()->SetTexture(0, ResourceMgr->LoadTexture(textureAddress));
-			}
 			else
-				_shaderOption->Render(0, _object);
+				shaderOpt->Render(0, object);
 
 			RenderMgr->GetDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 			RenderMgr->GetDevice()->SetFVF(VERTEX::FVF);

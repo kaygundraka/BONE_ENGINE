@@ -1,21 +1,17 @@
 #include "Common.h"
 #include "RenderManager.h"
+#include "SceneManager.h"
 #include "LogManager.h"
 #include "ResourceManager.h"
 #include "SpriteBillBoard.h"
-#include <shlwapi.h>
 #include "Camera.h"
 #include "GameObject.h"
 #include "Vertex.h"
-#pragma comment(lib, "shlwapi")
-#pragma warning(disable:4996)
 
 namespace BONE_GRAPHICS
 {
 	SpriteBillBoard::SpriteBillBoard()
 	{
-		ThreadSync sync;
-
 		SetTypeName("SpriteBillBoard");
 
 		vertexBuffer = nullptr;
@@ -31,8 +27,6 @@ namespace BONE_GRAPHICS
 
 	SpriteBillBoard::~SpriteBillBoard()
 	{
-		ThreadSync sync;
-
 		if(vertexBuffer == nullptr)
 			vertexBuffer->Release();
 		
@@ -44,8 +38,6 @@ namespace BONE_GRAPHICS
 
 	void SpriteBillBoard::LoadContent()
 	{
-		ThreadSync sync;
-
 		VERTEX vertex[4];
 
 #pragma region Vertex Setup
@@ -153,34 +145,28 @@ namespace BONE_GRAPHICS
 		IsInit = true;
 	}
 
-	void SpriteBillBoard::SetPlayDirection(bool _isRight)
+	void SpriteBillBoard::SetPlayDirection(bool isRight)
 	{
-		rightPlay = _isRight;
+		rightPlay = isRight;
 	}
 
-	void SpriteBillBoard::SetRectSize(float _width, float _height)
+	void SpriteBillBoard::SetRectSize(float width, float height)
 	{
-		ThreadSync sync;
-
-		rectWidth = _width;
-		rectHeight = _height;
+		rectWidth = width;
+		rectHeight = height;
 	}
 
 	Vector2 SpriteBillBoard::GetRectSize()
 	{
-		ThreadSync sync;
-
 		return Vector2(rectWidth, rectHeight);
 	}
 
-	void SpriteBillBoard::SetAnimation(int _width, int _height, int _animationCut, int _animationScene, float _alpha)
+	void SpriteBillBoard::SetAnimation(int width, int height, int animationCut, int animationScene, float alpha)
 	{
-		ThreadSync sync;
-
-		width = _width;
-		height = _height;
-		animeCut = _animationCut;
-		animeScene = _animationScene;
+		this->width = width;
+        this->height = height;
+		animeCut = animationCut;
+		animeScene = animationScene;
 
 		RECT rect = {
 			0, 0, width / animeCut, height / animeScene,
@@ -200,10 +186,8 @@ namespace BONE_GRAPHICS
 		curRect = rect2;
 	}
 
-	void SpriteBillBoard::PlayCutAnimation(float _timeDelta, float _cutTimer)
+	void SpriteBillBoard::PlayCutAnimation(float cutTimer)
 	{
-		ThreadSync sync;
-
 		RECT rect = {
 			width / animeCut * curAnimeCut, height / animeScene * curAnimeScene,
 			width / animeCut * (curAnimeCut + 1), height / animeScene * (curAnimeScene + 1)
@@ -213,7 +197,7 @@ namespace BONE_GRAPHICS
 
 		static float CutTimer = 0;
 
-		if (CutTimer > _cutTimer)
+		if (CutTimer > cutTimer)
 		{
 			if (rightPlay)
 			{
@@ -233,15 +217,13 @@ namespace BONE_GRAPHICS
 			CutTimer = 0;
 		}
 		else
-			CutTimer += _timeDelta;
+			CutTimer += SceneMgr->GetTimeDelta();
 
 		LoadContent();
 	}
 
-	void SpriteBillBoard::PlayFullAnimation(float _timeDelta, float _cutTimer)
+	void SpriteBillBoard::PlayFullAnimation(float cutTimer)
 	{
-		ThreadSync sync;
-
 		RECT rect = {
 			width / animeCut * curAnimeCut, height / animeScene * curAnimeScene,
 			width / animeCut * (curAnimeCut + 1), height / animeScene * (curAnimeScene + 1)
@@ -251,7 +233,7 @@ namespace BONE_GRAPHICS
 
 		static float CutTimer = 0;
 
-		if (CutTimer > _cutTimer)
+		if (CutTimer > cutTimer)
 		{
 			if (curAnimeCut >= animeCut - 1)
 			{
@@ -269,65 +251,49 @@ namespace BONE_GRAPHICS
 			CutTimer = 0;
 		}
 		else
-			CutTimer += _timeDelta;
+			CutTimer += SceneMgr->GetTimeDelta();
 
 		LoadContent();
 	}
 	
-	void SpriteBillBoard::SelectAnimation(int _sceneIndex)
+	void SpriteBillBoard::SelectAnimation(int sceneIndex)
 	{
-		ThreadSync sync;
-
-		if (curAnimeScene != _sceneIndex)
+		if (curAnimeScene != sceneIndex)
 		{
-			curAnimeScene = _sceneIndex;
+			curAnimeScene = sceneIndex;
 			curAnimeCut = 0;
 		}
 	}
 	
-	bool SpriteBillBoard::CheckMouseRayInMesh(Transform3D* _tr)
+	bool SpriteBillBoard::CheckMouseRayInMesh(Transform3D* tr)
 	{
-		ThreadSync sync;
-
 		RAY ray = RenderMgr->GetPickingRayToView(false);
 
-		//bool Result = RenderMgr->CheckRayInMesh(&ray, _tr->GetTransform(), , nullptr);
-
-		return true;// Result;
+		return true;
 	}
 
-	void SpriteBillBoard::SetTexturesAddress(string _address)
+	void SpriteBillBoard::SetTexturesAddress(string address)
 	{
-		ThreadSync sync;
-
-		textureAddress = _address;
+		textureAddress = address;
 	}
 
 	string	SpriteBillBoard::GetTexturesAddress()
 	{
-		ThreadSync sync;
-
 		return textureAddress;
 	}
 
-	void SpriteBillBoard::SetTargetCamera(GameObject* _target)
+	void SpriteBillBoard::SetTargetCamera(GameObject* target)
 	{
-		ThreadSync sync;
-
-		target = _target;
+		this->target = target;
 	}
 
-	void SpriteBillBoard::SetRenderMode(RENDER_MODE _mode)
+	void SpriteBillBoard::SetRenderMode(RENDER_MODE mode)
 	{
-		ThreadSync sync;
-
-		renderMode = _mode;
+		renderMode = mode;
 	}
 
-	void SpriteBillBoard::Render(IShader* _shaderOption, GameObject* _object)
+	void SpriteBillBoard::Render(IShader* shaderOpt, GameObject* object)
 	{
-		ThreadSync sync;
-
 		if (IsInit)
 		{
 			if (target != nullptr)
@@ -351,28 +317,25 @@ namespace BONE_GRAPHICS
 				else if (Dir.x < 0 && Dir.z >= 0)
 				{
 					YAngle = asin(-x / (sqrt(pow(x, 2) + pow(z, 2))));
-
-					YAngle += 3.14f / 2;
+                    YAngle += 3.14f / 2;
 				}
 				else if (Dir.z < 0 && Dir.x < 0)
 				{
 					YAngle = asin(-z / (sqrt(pow(x, 2) + pow(z, 2))));
-
-					YAngle += 3.14f;
+                    YAngle += 3.14f;
 				}
 				else if (Dir.z < 0 && Dir.x >= 0)
 				{
 					YAngle = asin(x / (sqrt(pow(x, 2) + pow(z, 2))));
-
-					YAngle += 3.14f * (3.0f / 2.0f);
+                    YAngle += 3.14f * (3.0f / 2.0f);
 				}
 
 				YAngle += 3.14f + (3.0f / 2.0f);
 
-				((Transform3D*)_object->GetComponent("Transform3D"))->SetRotate(0, -YAngle, -ZAngle);
+				((Transform3D*)object->GetComponent("Transform3D"))->SetRotate(0, -YAngle, -ZAngle);
 			}
 
-			Matrix Transform = ((Transform3D*)_object->GetComponent("Transform3D"))->GetTransform();
+			Matrix Transform = ((Transform3D*)object->GetComponent("Transform3D"))->GetTransform();
 			RenderMgr->GetDevice()->SetTransform(D3DTS_WORLD, &Transform);
 
 			if (renderMode == RENDER_ALPHA)
@@ -396,13 +359,10 @@ namespace BONE_GRAPHICS
 			RenderMgr->GetDevice()->SetStreamSource(0, vertexBuffer, 0, sizeof(VERTEX));
 			RenderMgr->GetDevice()->SetIndices(indexBuffer);
 
-			if (_shaderOption == nullptr)
-			{
-				//RenderMgr->GetDevice()->SetMaterial(&meshMaterial);
-				RenderMgr->GetDevice()->SetTexture(0, ResourceMgr->LoadTexture(textureAddress));
-			}
+			if (shaderOpt == nullptr)
+			    RenderMgr->GetDevice()->SetTexture(0, ResourceMgr->LoadTexture(textureAddress));
 			else
-				_shaderOption->Render(0, _object);
+				shaderOpt->Render(0, object);
 			
 			RenderMgr->GetDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 			RenderMgr->GetDevice()->SetFVF(VERTEX::FVF);

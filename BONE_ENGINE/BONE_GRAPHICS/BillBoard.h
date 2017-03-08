@@ -5,12 +5,11 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "Transform3D.h"
-#include <MultiThreadSync.h>
 using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class BillBoard : public Component, public MultiThreadSync<BillBoard>
+	class BillBoard : public Component
 	{
 	public:
 		enum RENDER_MODE {
@@ -18,12 +17,12 @@ namespace BONE_GRAPHICS
 		};
 
 	private:
-		string			textureAddress;
+		string textureAddress;
 
 		IDirect3DVertexBuffer9* vertexBuffer;
 		IDirect3DIndexBuffer9*	indexBuffer;
 		
-		D3DMATERIAL9	meshMaterial;
+		D3DMATERIAL9 meshMaterial;
 		GameObject*	target;
 
 		RENDER_MODE renderMode;
@@ -34,6 +33,7 @@ namespace BONE_GRAPHICS
 		int height;
 		float rectWidth;
 		float rectHeight;
+
 		Rect originRect;
 
 	public:
@@ -44,20 +44,20 @@ namespace BONE_GRAPHICS
 
 		virtual ~BillBoard();
 
-		void Render(IShader* _shaderOption, GameObject* _cameraObject);
-		void SetTarget(GameObject* _targetCamera);
+		void Render(IShader* shaderOption, GameObject* cameraObject);
+		void SetTarget(GameObject* targetCamera);
 
-		void SetRectSize(float _width, float _height);
+		void SetRectSize(float width, float height);
 		Vector2 GetRectSize();
 
-		void SetOriginRect(Rect _rect);
-		void SetOriginRect(Vector2 _leftTop, Vector2 _rightBottom);
+		void SetOriginRect(Rect rect);
+		void SetOriginRect(Vector2 leftTop, Vector2 rightBottom);
 		Rect GetOriginRect();
 
-		void SetRenderMode(RENDER_MODE _mode);
+		void SetRenderMode(RENDER_MODE mode);
 
-		void SetTexturesAddress(string _address, int _width, int _height);
-		bool CheckMouseRayInMesh(Transform3D* _tr);
+		void SetTexturesAddress(string address, int width, int height);
+		bool CheckMouseRayInMesh(Transform3D* tr);
 
 		string GetTexturesAddress();
 	};

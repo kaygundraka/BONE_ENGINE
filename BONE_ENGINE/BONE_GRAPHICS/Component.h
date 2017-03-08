@@ -7,7 +7,7 @@ namespace BONE_GRAPHICS
 		string typeName;
 		
 	protected:
-		void SetTypeName(string _typeName);
+		void SetTypeName(string typeName);
 
 	public:
 		virtual void LoadContent();

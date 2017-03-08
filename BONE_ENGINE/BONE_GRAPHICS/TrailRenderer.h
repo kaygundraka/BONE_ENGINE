@@ -5,21 +5,19 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "Transform3D.h"
-#include <vector>
-#include <MultiThreadSync.h>
 using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	struct TrailMesh{
+	typedef struct _TRAIL_MESH{
 		Vector3 pivot;
 		Vector3 upDir;
-		float curSize;
 
+        float curSize;
 		float curLiveTime;
-	};
+	} TRAIL_MESH;
 
-	class TrailRenderer: public Component, public MultiThreadSync<TrailRenderer>
+	class TrailRenderer: public Component
 	{
 	private:
 		IDirect3DVertexBuffer9* vertexBuffer;
@@ -38,7 +36,7 @@ namespace BONE_GRAPHICS
 		float startSize;
 		float endSize;
 		
-		vector<TrailMesh> trailList;
+		vector<TRAIL_MESH> trailList;
 
 		int renderMode;
 		
@@ -57,18 +55,18 @@ namespace BONE_GRAPHICS
 
 		void LoadContent();
 			
-		void SetTargetObject(GameObject* _targetObject, Vector3 _pivot);
+		void SetTargetObject(GameObject* targetObject, Vector3 pivot);
+        void SetSize(float start, float end);
+		void SetCycle(float liveCycle, float createCycle);
+		void SetUpVector(Vector3 upDir);
+        void SetActive(bool active);
+		void SetRenderMode(int mode);
 
-		void SetSize(float _start, float _end);
-		void SetCycle(float _liveCycle, float _createCycle);
-		void SetUpVector(Vector3 _upDir);
-		void UpdateStatus(double _timeDelta);
-		void SetActive(bool _active);
-		
-		void SetRenderMode(int _mode);
-		void Render(IShader* _shaderOption);
+        void UpdateStatus();
 
-		void SetTexturesAddress(string _address);
+        void Render(IShader* shaderOpt);
+
+		void SetTexturesAddress(string address);
 		string GetTexturesAddress();
 	};
 }

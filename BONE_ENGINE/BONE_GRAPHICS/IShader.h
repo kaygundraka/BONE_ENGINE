@@ -6,7 +6,7 @@ using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class IShader : public Component, public MultiThreadSync<IShader>
+	class IShader : public Component
 	{
 	protected:
 		LPD3DXEFFECT* shader;
@@ -17,7 +17,7 @@ namespace BONE_GRAPHICS
 		virtual ~IShader();
 
 		void LoadContent();
-		void SetAddress(string _address);
+		void SetAddress(string address);
 		string GetAddress();
 
 		virtual void Render(int i, GameObject* parent) = 0;

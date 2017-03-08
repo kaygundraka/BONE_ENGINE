@@ -1,42 +1,35 @@
 #include "Common.h"
 #include "SkinnedMesh.h"
 #include "RenderManager.h"
+#include "SceneManager.h"
 
 namespace BONE_GRAPHICS
 {
-	struct etuSkinnedVertex {
-		etuSkinnedVertex() {}
-		etuSkinnedVertex(D3DXVECTOR3 pos, D3DCOLOR col) { position = pos; color = col; }
+	typedef struct _SKINNED_VERTEX {
+		SKINNED_VERTEX() {}
+		SKINNED_VERTEX(D3DXVECTOR3 pos, D3DCOLOR col) { position = pos; color = col; }
 		D3DXVECTOR3 position;
 		D3DCOLOR color;
 		static const int FVF;
-	};
+	} SKINNED_VERTEX;
 
-	const int etuSkinnedVertex::FVF = D3DFVF_XYZ | D3DFVF_DIFFUSE;
+	const int SKINNED_VERTEX::FVF = D3DFVF_XYZ | D3DFVF_DIFFUSE;
 
 	SkinnedMesh::SkinnedMesh()
 	{
-		ThreadSync sync;
-
 		SetTypeName("SkinnedMesh");
 	}
 
-	void SkinnedMesh::SetFileAddress(string _address)
+	void SkinnedMesh::SetFileAddress(string address)
 	{
-		ThreadSync sync;
-
-		address = _address;
+		this->address = address;
 	}
 
 	void SkinnedMesh::LoadContent()
 	{
-		ThreadSync sync;
-
-		// .x파일로부터 계층 구조를 로드한다.
 		D3DXLoadMeshHierarchyFromX(address.c_str(), D3DXMESH_MANAGED, RenderMgr->GetDevice(),
 			&boneHierarchy, nullptr, &rootBone, &animationContainer);
 
-		// 모든 본의 변환 행렬들을 업데이트 한다.
 		UpdateMatrices((Bone*)rootBone, nullptr);
 
 		SetupBoneMatrixPointers(nullptr);
@@ -46,35 +39,29 @@ namespace BONE_GRAPHICS
 
 	string SkinnedMesh::GetFileAddress()
 	{
-		ThreadSync sync;
-
 		return address;
 	}
 	
 	SkinnedMesh::~SkinnedMesh() 
 	{
-		ThreadSync sync;
-
 		if (animationContainer != nullptr)
 			animationContainer->Release();
 	}
 
-	void SkinnedMesh::CheckInRay(RAY* _ray, Bone* _bone, float& _curDist)
+	void SkinnedMesh::CheckInRay(RAY* ray, Bone* bone, float& curDist)
 	{
-		ThreadSync sync;
-
-		if (_bone == nullptr)
+		if (bone == nullptr)
 		{
 			UpdateMatrices((Bone*)rootBone, nullptr);
-			_bone = (Bone*)rootBone;
+			bone = (Bone*)rootBone;
 		}
 
 		float Temp = -1;
 
 		// 렌더링할 메시가 존재한다면
-		if (_bone->pMeshContainer != nullptr)
+		if (bone->pMeshContainer != nullptr)
 		{
-			BoneMesh *boneMesh = (BoneMesh*)_bone->pMeshContainer;
+			BoneMesh *boneMesh = (BoneMesh*)bone->pMeshContainer;
 
 			if (boneMesh->pSkinInfo != nullptr)
 			{
@@ -85,7 +72,6 @@ namespace BONE_GRAPHICS
 				for (int i = 0; i < numBones; i++)
 					D3DXMatrixMultiply(&boneMesh->currentBoneMatrices[i], &boneMesh->boneOffsetMatrices[i], boneMesh->boneMatrixPtrs[i]);
 
-				// 스킨드 메시를 갱신한다.
 				void* *src = nullptr, *dest = nullptr;
 
 				boneMesh->OriginalMesh->LockVertexBuffer(D3DLOCK_READONLY, (VOID**)&src);
@@ -100,25 +86,22 @@ namespace BONE_GRAPHICS
 				{
 					D3DXMATRIX matIden;
 					D3DXMatrixIdentity(&matIden);
-					if (RenderMgr->CheckRayInMesh(_ray, matIden, boneMesh->MeshData.pMesh, &Temp))
-						if (Temp <= _curDist)
-							_curDist = Temp;
+					if (RenderMgr->CheckRayInMesh(ray, matIden, boneMesh->MeshData.pMesh, &Temp))
+						if (Temp <= curDist)
+							curDist = Temp;
 				}
 			}
 		}
 
-		// 형제, 자식 본들에 대해서도 렌더링한다.
-		if (_bone->pFrameSibling != nullptr)
-			CheckInRay(_ray, (Bone*)_bone->pFrameSibling, _curDist);
+        if (bone->pFrameSibling != nullptr)
+			CheckInRay(ray, (Bone*)bone->pFrameSibling, curDist);
 
-		if (_bone->pFrameFirstChild != nullptr)
-			CheckInRay(_ray, (Bone*)_bone->pFrameFirstChild, _curDist);
+		if (bone->pFrameFirstChild != nullptr)
+			CheckInRay(ray, (Bone*)bone->pFrameFirstChild, curDist);
 	}
 
 	void SkinnedMesh::SetupBoneMatrixPointers(Bone* bone)
 	{
-		ThreadSync sync;
-
 		if (bone == nullptr)
 			bone = (Bone*)rootBone;
 
@@ -144,13 +127,9 @@ namespace BONE_GRAPHICS
 
 					// 그리고 그 본의 결합된 변환 행렬의 포인터를 배열에 저장한다.
 					if (b != nullptr)
-					{
 						boneMesh->boneMatrixPtrs[i] = &b->CombinedTransformationMatrix;
-					}
 					else
-					{
 						boneMesh->boneMatrixPtrs[i] = nullptr;
-					}
 				}
 			}
 		}
@@ -163,73 +142,66 @@ namespace BONE_GRAPHICS
 			SetupBoneMatrixPointers((Bone*)bone->pFrameFirstChild);
 	}
 
-	void SkinnedMesh::PlayAnimation(string _animationName, bool _IsPlay, bool _rotateLoop)
+	void SkinnedMesh::PlayAnimation(string animationName, bool isPlay, bool rotateLoop)
 	{
-		ThreadSync sync;
-
-		if (animationName != _animationName)
+		if (this->animationName != animationName)
 		{
-			animationSet[animationName].IsPlay = false;
-			animationSet[animationName].IsPlay = true;
+			animationSet[this->animationName].IsPlay = false;
+			animationSet[this->animationName].IsPlay = true;
 
 			animationContainer->KeyTrackSpeed(0, 1.0f, 0, 0.1f, D3DXTRANSITION_LINEAR);
 			animationContainer->KeyTrackWeight(0, 1.0f, 0, 0.1f, D3DXTRANSITION_LINEAR);
-			animationContainer->SetTrackAnimationSet(0, animationSet[_animationName].AnimationSet);
-			animationContainer->SetTrackEnable(animationSet[animationName].Vertex_Index, false);
-			animationContainer->SetTrackEnable(animationSet[_animationName].Vertex_Index, true);
-			animationName = animationName;
+			animationContainer->SetTrackAnimationSet(0, animationSet[animationName].AnimationSet);
+			animationContainer->SetTrackEnable(animationSet[this->animationName].Vertex_Index, false);
+			animationContainer->SetTrackEnable(animationSet[animationName].Vertex_Index, true);
+            this->animationName = animationName;
 
-			IsPlay = _IsPlay;
-			IsRotateLoop = _rotateLoop;
+			this->IsPlay = isPlay;
+			this->IsRotateLoop = rotateLoop;
 		}
 	}
 
-	void SkinnedMesh::UpdateAnimation(float _timeDelta)
+	void SkinnedMesh::UpdateAnimation()
 	{
-		ThreadSync sync;
-
-		animationContainer->AdvanceTime(_timeDelta * animationSet[animationName].AnimationSpeed, nullptr);
+		animationContainer->AdvanceTime(
+            SceneMgr->GetTimeDelta() * animationSet[animationName].AnimationSpeed, 
+            nullptr
+        );
 	}
 
-	void SkinnedMesh::SetAnimation(string _name, int _index, float _animationSpeed)
+	void SkinnedMesh::SetAnimation(string name, int index, float animationSpeed)
 	{
-		ThreadSync sync;
-
-		animationName = _name;
+		animationName = name;
 
 		animationSet[animationName].AnimationSet = nullptr;
-		animationSet[animationName].AnimationSpeed = _animationSpeed;
-		animationSet[animationName].Vertex_Index = _index;
+		animationSet[animationName].AnimationSpeed = animationSpeed;
+		animationSet[animationName].Vertex_Index = index;
 		animationSet[animationName].IsPlay = false;
 
 		animationContainer->GetAnimationSet(animationSet[animationName].Vertex_Index, &animationSet[animationName].AnimationSet);
 	}
 
-	void SkinnedMesh::SetAnimation(string _name, float _animationSpeed)
+	void SkinnedMesh::SetAnimation(string name, float animationSpeed)
 	{
-		ThreadSync sync;
-
-		animationName = _name;
+		animationName = name;
 
 		animationSet[animationName].AnimationSet = nullptr;
-		animationSet[animationName].AnimationSpeed = _animationSpeed;
+		animationSet[animationName].AnimationSpeed = animationSpeed;
 		animationSet[animationName].IsPlay = false;
 
 		animationContainer->GetAnimationSetByName(animationName.c_str(), &animationSet[animationName].AnimationSet);
 		animationSet[animationName].AnimationSet->GetAnimationIndexByName(animationName.c_str(), &animationSet[animationName].Vertex_Index);
 	}
 
-	void SkinnedMesh::SoftwareRendering(IShader* _shaderOption, GameObject* _object, Bone* _bone)
+	void SkinnedMesh::SoftwareRendering(IShader* shaderOpt, GameObject* object, Bone* bone)
 	{
-		ThreadSync sync;
-
-		if (_bone == nullptr)
-			_bone = (Bone*)rootBone;
+		if (bone == nullptr)
+			bone = (Bone*)rootBone;
 
 		// 렌더링할 메시가 존재한다면
-		if (_bone->pMeshContainer != nullptr)
+		if (bone->pMeshContainer != nullptr)
 		{
-			BoneMesh *boneMesh = (BoneMesh*)_bone->pMeshContainer;
+			BoneMesh *boneMesh = (BoneMesh*)bone->pMeshContainer;
 
 			if (boneMesh->pSkinInfo != nullptr)
 			{
@@ -252,7 +224,7 @@ namespace BONE_GRAPHICS
 				boneMesh->OriginalMesh->UnlockVertexBuffer();
 
 				// 메시를 렌더링한다.
-				if (_shaderOption == nullptr)
+				if (shaderOpt == nullptr)
 				{
 					for (UINT i = 0; i < boneMesh->NumAttributeGroups; i++)
 					{
@@ -265,8 +237,8 @@ namespace BONE_GRAPHICS
 
 						RenderMgr->GetDevice()->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 						RenderMgr->GetDevice()->SetTextureStageState(0, D3DTSS_TEXCOORDINDEX, 0);
-						RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSU, nullptr);
-						RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSV, nullptr);
+						RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSU, 0);
+						RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSV, 0);
 
 						RenderMgr->GetDevice()->SetTexture(0, boneMesh->textures[mtrl]);
 						boneMesh->MeshData.pMesh->DrawSubset(mtrl);
@@ -278,7 +250,7 @@ namespace BONE_GRAPHICS
 					{
 						int mtrl = boneMesh->attributeTables[i].AttribId;
 
-						_shaderOption->Render(i, _object);
+						shaderOpt->Render(i, object);
 						
 						boneMesh->MeshData.pMesh->DrawSubset(mtrl);
 					}
@@ -287,60 +259,54 @@ namespace BONE_GRAPHICS
 		}
 
 		// 형제, 자식 본들에 대해서도 렌더링한다.
-		if (_bone->pFrameSibling != nullptr)
-			SoftwareRendering(_shaderOption, _object, (Bone*)_bone->pFrameSibling);
+		if (bone->pFrameSibling != nullptr)
+			SoftwareRendering(shaderOpt, object, (Bone*)bone->pFrameSibling);
 
-		if (_bone->pFrameFirstChild != nullptr)
-			SoftwareRendering(_shaderOption, _object, (Bone*)_bone->pFrameFirstChild);
+		if (bone->pFrameFirstChild != nullptr)
+			SoftwareRendering(shaderOpt, object, (Bone*)bone->pFrameFirstChild);
 	}
 
-	void SkinnedMesh::UpdateMatrices(Bone* _bone, D3DXMATRIX* _parentMatrix)
+	void SkinnedMesh::UpdateMatrices(Bone* bone, D3DXMATRIX* parentMatrix)
 	{
-		ThreadSync sync;
-
-		if (_parentMatrix == nullptr)
-			_bone->CombinedTransformationMatrix = _bone->TransformationMatrix;
+		if (parentMatrix == nullptr)
+			bone->CombinedTransformationMatrix = bone->TransformationMatrix;
 		else
 		{
 			// 부모 변환 행렬과 복합된 월드 변환 행렬을 계산한다.
-			D3DXMatrixMultiply(&_bone->CombinedTransformationMatrix,
-				&_bone->TransformationMatrix,
-				_parentMatrix);
+			D3DXMatrixMultiply(&bone->CombinedTransformationMatrix,
+				&bone->TransformationMatrix,
+				parentMatrix
+            );
 		}
 
 		// 동일한 계산을 형제 본에 대해 수행한다.
-		if (_bone->pFrameSibling)
-		{
-			UpdateMatrices((Bone*)_bone->pFrameSibling, _parentMatrix);
-		}
-
+		if (bone->pFrameSibling)
+		    UpdateMatrices((Bone*)bone->pFrameSibling, parentMatrix);
+		    
 		// 동일한 계산을 자식 본에 대해 수행한다.
-		if (_bone->pFrameFirstChild)
+		if (bone->pFrameFirstChild)
 		{
 			// 형제 본에 전달한 부모 행렬과 다른 행렬을 전달하는 것에 주의!
-			UpdateMatrices((Bone*)_bone->pFrameFirstChild,
-				&_bone->CombinedTransformationMatrix);
+			UpdateMatrices(
+                (Bone*)bone->pFrameFirstChild,
+				&bone->CombinedTransformationMatrix
+            );
 		}
 	}
 
-	void SkinnedMesh::Render(IShader* _shaderOption, GameObject* _object, float _timeDelta)
+	void SkinnedMesh::Render(IShader* shaderOpt, GameObject* object)
 	{
-		ThreadSync sync;
-
 		D3DXMATRIX A;
 		D3DXMatrixIdentity(&A);
 		RenderMgr->GetDevice()->SetTransform(D3DTS_WORLD, &A);
 
-		// 모든 본의 변환 행렬들을 업데이트 한다.
 		UpdateMatrices((Bone*)rootBone, nullptr);
 
-		SoftwareRendering(_shaderOption, _object, nullptr);
+		SoftwareRendering(shaderOpt, object, nullptr);
 	}
 
 	LPD3DXMESH SkinnedMesh::GetMesh()
 	{
-		ThreadSync sync;
-
 		return rootBone->pMeshContainer->MeshData.pMesh;
 	}
 }

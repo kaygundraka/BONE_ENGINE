@@ -2,13 +2,12 @@
 #include "ScreenSprite.h"
 #include "Transform2D.h"
 #include "ResourceManager.h"
+#include "SceneManager.h"
 
 namespace BONE_GRAPHICS
 {
 	ScreenSprite::ScreenSprite()
 	{
-		ThreadSync sync;
-
 		SetTypeName("ScreenSprite");
 
 		D3DXCreateSprite(RenderMgr->GetDevice(), &sprite);
@@ -16,21 +15,17 @@ namespace BONE_GRAPHICS
 
 	ScreenSprite::~ScreenSprite()
 	{
-		ThreadSync sync;
-
 		sprite->Release();
 	}
 
-	void ScreenSprite::SetInformation(string _address, int _width, int _height, int _animationCut, int _animationScene, float _alpha)
+	void ScreenSprite::SetInformation(string address, int width, int height, int animationCut, int animationScene, float alpha)
 	{
-		ThreadSync sync;
+		this->width = width;
+        this->height = height;
+		animeCut = animationCut;
+		animeScene = animationScene;
 
-		width = _width;
-		height = _height;
-		animeCut = _animationCut;
-		animeScene = _animationScene;
-
-		address = _address;
+        this->address = address;
 
 		RECT rect = {
 			0, 0, width / animeCut, height / animeScene,
@@ -45,15 +40,13 @@ namespace BONE_GRAPHICS
 		rightPlay = true;
 	}
 	
-	void ScreenSprite::SetPlayDirection(bool _isRight)
+	void ScreenSprite::SetPlayDirection(bool isRight)
 	{
-		rightPlay = _isRight;
+		rightPlay = isRight;
 	}
 
-	void ScreenSprite::PlayAnimation(float _timeDelta, float _cutTiemr)
+	void ScreenSprite::PlayAnimation(float cutTiemr)
 	{
-		ThreadSync sync;
-
 		RECT rect = {
 			width / animeCut * curAnimeCut, height / animeScene * curAnimeScene,
 			width / animeCut * (curAnimeCut + 1), height / animeScene * (curAnimeScene + 1)
@@ -63,7 +56,7 @@ namespace BONE_GRAPHICS
 
 		static float CutTimer = 0;
 		
-		if (CutTimer > _cutTiemr)
+		if (CutTimer > cutTiemr)
 		{
 			if (rightPlay)
 			{
@@ -83,15 +76,13 @@ namespace BONE_GRAPHICS
 			CutTimer = 0;
 		}
 		else
-			CutTimer += _timeDelta;
+			CutTimer += SceneMgr->GetTimeDelta();
 	}
 
-	void ScreenSprite::Render(GameObject* _owner)
+	void ScreenSprite::Render(GameObject* owner)
 	{
-		ThreadSync sync;
-
-		Matrix matrix = ((Transform2D*)_owner->GetComponent("Transform2D"))->GetTransform();
-		Vector3 position = ((Transform2D*)_owner->GetComponent("Transform2D"))->GetPosition();
+		Matrix matrix = ((Transform2D*)owner->GetComponent("Transform2D"))->GetTransform();
+		Vector3 position = ((Transform2D*)owner->GetComponent("Transform2D"))->GetPosition();
 
 		LPDIRECT3DTEXTURE9 texture = ResourceMgr->LoadTexture(address);
 
@@ -106,33 +97,25 @@ namespace BONE_GRAPHICS
 
 	void ScreenSprite::LoadContent()
 	{
-		ThreadSync sync;
-
 		ResourceMgr->LoadTexture(address);
 	}
 
-	void ScreenSprite::SelectAnimation(int _sceneIndex)
+	void ScreenSprite::SelectAnimation(int sceneIndex)
 	{
-		ThreadSync sync;
-
-		if (curAnimeScene != _sceneIndex)
+		if (curAnimeScene != sceneIndex)
 		{
-			curAnimeScene = _sceneIndex;
+			curAnimeScene = sceneIndex;
 			curAnimeCut = 0;
 		}
 	}
 
-	void ScreenSprite::SetAlpha(float _alpha)
+	void ScreenSprite::SetAlpha(float alpha)
 	{
-		ThreadSync sync;
-
-		alpha = _alpha;
+		this->alpha = alpha;
 	}
 
 	float ScreenSprite::GetAlpha()
 	{
-		ThreadSync sync;
-
 		return alpha;
 	}
 }

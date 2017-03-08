@@ -5,12 +5,11 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "Transform2D.h"
-#include <MultiThreadSync.h>
 using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class ScreenButton : public Component, public MultiThreadSync<ScreenButton>
+	class ScreenButton : public Component
 	{
 	public:
 		enum BUTTON_STATUS { NORMAL, PRESSED, HIGHLIGHT };
@@ -29,16 +28,16 @@ namespace BONE_GRAPHICS
 
 		void LoadContent();
 
-		BUTTON_STATUS Update(GameObject* _owner, float _timeDelta);
+		BUTTON_STATUS Update(GameObject* owner);
 
-		void SetOriginRect(Rect _rect);
-		void SetOriginRect(Vector2 _leftTop, Vector2 _rightBottom);
+		void SetOriginRect(Rect rect);
+		void SetOriginRect(Vector2 leftTop, Vector2 rightBottom);
 		Rect GetOriginRect();
 
-		void SetImageFile(string _address);
+		void SetImageFile(string address);
 		
-		void SetAlpha(float _alpha);
-		virtual void Render(GameObject* _owner);
+		void SetAlpha(float alpha);
+		virtual void Render(GameObject* owner);
 		float GetAlpha();
 	};
 }

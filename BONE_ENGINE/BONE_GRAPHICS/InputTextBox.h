@@ -5,13 +5,12 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "Transform2D.h"
-#include <MultiThreadSync.h>
 using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class InputTextBox : public Component, public MultiThreadSync<InputTextBox>
-	{
+	class InputTextBox : public Component
+    {
 	private:
 		bool active;
 		bool isFocused;
@@ -25,14 +24,14 @@ namespace BONE_GRAPHICS
 
 		void LoadContent();
 	
-		bool IsClicked(GameObject* _owner);
-		void SetActive(bool _active);
+		bool IsClicked(GameObject* owner);
+		void SetActive(bool active);
 		string GetString();
 		void ClearString();
 
-		void SetMaxLength(int _length);
+		void SetMaxLength(int length);
 		int GetMaxLength();
 		
-		void Update(GameObject* _owner, float _timeDelta);
+		void Update(GameObject* owner);
 	};
 }

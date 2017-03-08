@@ -30,13 +30,13 @@ namespace BONE_GRAPHICS
         virtual ~StaticMesh();
 
         void LoadContent();
-		void Render(IShader* _shaderOption, GameObject* _object);
+		void Render(IShader* shaderOpt, GameObject* object);
 
-        void SetRenderMode(int _mode);
-        void SetTexturesAddress(string* _address);
-        void SetFileAddress(string _address);
+        void SetRenderMode(int mode);
+        void SetTexturesAddress(string* address);
+        void SetFileAddress(string address);
 
-        bool CheckMouseRayInMesh(Transform3D* _tr);
+        bool CheckMouseRayInMesh(Transform3D* tr);
 		
 		string* GetTexturesAddress();
 		string GetFileAddress();

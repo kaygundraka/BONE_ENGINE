@@ -7,8 +7,6 @@ namespace BONE_GRAPHICS
 {
 	ScreenImage::ScreenImage()
 	{
-		ThreadSync sync;
-
 		SetTypeName("ScreenImage");
 
 		alpha = 255;
@@ -18,60 +16,44 @@ namespace BONE_GRAPHICS
 	
 	ScreenImage::~ScreenImage()
 	{
-		ThreadSync sync;
-
 		sprite->Release();
 	}
 
 	void ScreenImage::LoadContent()
 	{
-		ThreadSync sync;
-
 		ResourceMgr->LoadTexture(address);
 	}
 
-	void ScreenImage::SetOriginRect(Rect _rect)
+	void ScreenImage::SetOriginRect(Rect rect)
 	{
-		ThreadSync sync;
-
-		originRect = _rect;
+		originRect = rect;
 	}
 
-	void ScreenImage::SetOriginRect(Vector2 _leftUp, Vector2 _rightBottom)
+	void ScreenImage::SetOriginRect(Vector2 leftUp, Vector2 rightBottom)
 	{
-		ThreadSync sync;
-
-		originRect.LeftTop = _leftUp;
-		originRect.RightBottom = _rightBottom;
+		originRect.LeftTop = leftUp;
+		originRect.RightBottom = rightBottom;
 	}
 
 	Rect ScreenImage::GetOriginRect()
 	{
-		ThreadSync sync;
-
 		return originRect;
 	}
 
-	void ScreenImage::SetImageFile(string _address)
+	void ScreenImage::SetImageFile(string address)
 	{
-		ThreadSync sync;
-
-		address = _address;
+		this->address = address;
 	}
 
-	void ScreenImage::SetAlpha(float _alpha)
+	void ScreenImage::SetAlpha(float alpha)
 	{
-		ThreadSync sync;
-
-		alpha = _alpha;
+		this->alpha = alpha;
 	}
 	
-	void ScreenImage::Render(GameObject* _owner)
+	void ScreenImage::Render(GameObject* owner)
 	{
-		ThreadSync sync;
-
-		Matrix matrix = ((Transform2D*)_owner->GetComponent("Transform2D"))->GetTransform();
-		Vector3 position = ((Transform2D*)_owner->GetComponent("Transform2D"))->GetPosition();
+		Matrix matrix = ((Transform2D*)owner->GetComponent("Transform2D"))->GetTransform();
+		Vector3 position = ((Transform2D*)owner->GetComponent("Transform2D"))->GetPosition();
 
 		RECT rect;
 		rect.left = originRect.LeftTop.x;
@@ -92,7 +74,7 @@ namespace BONE_GRAPHICS
 		RenderMgr->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 		sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
-		sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);   //3D¿ë
+		sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
 
 		D3DCOLOR RGB = D3DCOLOR_ARGB((int)alpha, 255, 255, 255);
 		sprite->Draw(texture, &rect, nullptr, &Vector3(0, 0, 0), RGB);
@@ -103,8 +85,6 @@ namespace BONE_GRAPHICS
 	
 	float ScreenImage::GetAlpha()
 	{
-		ThreadSync sync;
-
 		return alpha;
 	}
 }

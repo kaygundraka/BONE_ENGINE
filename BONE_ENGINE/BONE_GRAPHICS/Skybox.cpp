@@ -1,8 +1,8 @@
 #include "Common.h"
 #include "Skybox.h"
 #include "RenderManager.h"
+#include "ResourceManager.h"
 #include "Transform3D.h"
-#pragma warning(disable:4996)
 
 namespace BONE_GRAPHICS
 {
@@ -11,61 +11,65 @@ namespace BONE_GRAPHICS
 		Is_Init = false;
 	}
 
-	bool Skybox::SetSkybox(char* name, string _fileType)
+	bool Skybox::SetSkybox(char* name, string fileType)
 	{
 		char TextureAddress[6][100] = { {} };
 
-		//상자 만들기
-		char temp[100] = "Resource\\Environment\\Skybox\\";
+        std::string FullPath;
+        ResourceMgr->ExistFile(name, &FullPath);
+
+        int pos = FullPath.find(name);
+        
+        for (int i = FullPath.size(); i > pos; i--)
+            FullPath.pop_back();
+
 		for (int i = 0; i < 6; i++)
 		{
-			strcpy(TextureAddress[i], temp);
+			strcpy(TextureAddress[i], FullPath.c_str());
 			strcat(TextureAddress[i], name);
 			strcat(TextureAddress[i], "\\");
 			strcat(TextureAddress[i], name);
 		}
 
 		strcat(TextureAddress[0], "_up");
-		strcat(TextureAddress[0], _fileType.c_str());
+		strcat(TextureAddress[0], fileType.c_str());
 
 		strcat(TextureAddress[1], "_dn");
-		strcat(TextureAddress[1], _fileType.c_str());
+		strcat(TextureAddress[1], fileType.c_str());
 
 		strcat(TextureAddress[2], "_lf");
-		strcat(TextureAddress[2], _fileType.c_str());
+		strcat(TextureAddress[2], fileType.c_str());
 
 		strcat(TextureAddress[3], "_rt");
-		strcat(TextureAddress[3], _fileType.c_str());
+		strcat(TextureAddress[3], fileType.c_str());
 
 		strcat(TextureAddress[4], "_ft");
-		strcat(TextureAddress[4], _fileType.c_str());
+		strcat(TextureAddress[4], fileType.c_str());
 
 		strcat(TextureAddress[5], "_bk");
-		strcat(TextureAddress[5], _fileType.c_str());
-
+		strcat(TextureAddress[5], fileType.c_str());
 
 		// - texture UV까지 생각해보면 정점 24개가 필요하다.
-		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[0], &m_pMeshTextures[0])))
-			m_pMeshTextures[0] = nullptr;
-		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[1], &m_pMeshTextures[1])))
-			m_pMeshTextures[1] = nullptr;
-		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[2], &m_pMeshTextures[2])))
-			m_pMeshTextures[2] = nullptr;
-		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[3], &m_pMeshTextures[3])))
-			m_pMeshTextures[3] = nullptr;
-		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[4], &m_pMeshTextures[4])))
-			m_pMeshTextures[4] = nullptr;
-		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[5], &m_pMeshTextures[5])))
-			m_pMeshTextures[5] = nullptr;
+		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[0], &meshTextures[0])))
+            meshTextures[0] = nullptr;
+		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[1], &meshTextures[1])))
+            meshTextures[1] = nullptr;
+		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[2], &meshTextures[2])))
+            meshTextures[2] = nullptr;
+		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[3], &meshTextures[3])))
+            meshTextures[3] = nullptr;
+		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[4], &meshTextures[4])))
+            meshTextures[4] = nullptr;
+		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[5], &meshTextures[5])))
+            meshTextures[5] = nullptr;
 
 		VERTEX* pv;
 
 		for (int i = 0; i<6; i++)
-		{
 			if (FAILED(RenderMgr->GetDevice()->CreateVertexBuffer(sizeof(VERTEX) * 4, 0,
 				VERTEX::FVF, D3DPOOL_DEFAULT, &VB[i], nullptr))) return false;
-		}
-		//top
+		
+        //top
 		if (FAILED(VB[0]->Lock(0, 0, (void**)&pv, 0))) return false;
 		SetVtx3DTexture(pv[0], D3DXVECTOR3(1.f, 1.f, -1.f), D3DXVECTOR3(1, 1, 1), 0, 1);
 		SetVtx3DTexture(pv[1], D3DXVECTOR3(-1.f, 1.f, -1.f), D3DXVECTOR3(1, 1, 1), 0, 0);
@@ -108,12 +112,10 @@ namespace BONE_GRAPHICS
 		SetVtx3DTexture(pv[3], D3DXVECTOR3(1.f, -1.f, -1.f), D3DXVECTOR3(1, 1, 1), 1, 1);
 		VB[5]->Unlock();
 		for (int i = 0; i<6; i++)
-		{
-			//인덱스 버퍼
 			if (FAILED(RenderMgr->GetDevice()->CreateIndexBuffer(sizeof(VERTEX_INDEX) * 12, 0,
 				D3DFMT_INDEX16, D3DPOOL_DEFAULT, &IB[i], nullptr))) return false;
-		}
-		//인덱스 버퍼 초기화
+		
+        //인덱스 버퍼 초기화
 		VERTEX_INDEX* iv;
 		for (int i = 0; i<6; i++)
 		{
@@ -124,19 +126,15 @@ namespace BONE_GRAPHICS
 		}
 
 		for (int i = 0; i < 6; i++)
-		{
-			if (!m_pMeshTextures[i])
-			{
+			if (!meshTextures[i])
 				return false;
-			}
-		}
-
+		
 		Is_Init = true;
 
 		return Is_Init;
 	}
 
-	void Skybox::Render(GameObject* _cameraObject)
+	void Skybox::Render(GameObject* cameraObject)
 	{
 		if (Is_Init)
 		{
@@ -151,14 +149,13 @@ namespace BONE_GRAPHICS
 
 			if (VB != nullptr && IB != nullptr)
 			{
-
 				//스카이 박스를 그린후 월드 행렬을 다시 초기화 시킴.
 				RenderMgr->GetDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);	//컬링은 양면
 				RenderMgr->GetDevice()->SetRenderState(D3DRS_ZENABLE, FALSE);			//Z버퍼 끄기
 				RenderMgr->GetDevice()->SetRenderState(D3DRS_LIGHTING, FALSE);			//조명 끄기
 
 																						//스카이 박스 이동.
-				D3DXVECTOR3 vPos = ((Transform3D*)_cameraObject->GetComponent("Transform3D"))->GetPosition();
+				D3DXVECTOR3 vPos = ((Transform3D*)cameraObject->GetComponent("Transform3D"))->GetPosition();
 
 				D3DXMatrixIdentity(&matWrd);
 				D3DXMatrixTranslation(&matWrd, vPos.x, vPos.y, vPos.z);
@@ -176,10 +173,10 @@ namespace BONE_GRAPHICS
 
 					RenderMgr->GetDevice()->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 					RenderMgr->GetDevice()->SetTextureStageState(0, D3DTSS_TEXCOORDINDEX, 0);
-					RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSU, nullptr);
-					RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSV, nullptr);
+					RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSU, 0);
+					RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSV, 0);
 
-					RenderMgr->GetDevice()->SetTexture(0, (m_pMeshTextures[i]) ? m_pMeshTextures[i] : nullptr);
+					RenderMgr->GetDevice()->SetTexture(0, (meshTextures[i]) ? meshTextures[i] : nullptr);
 					RenderMgr->GetDevice()->SetStreamSource(0, VB[i], 0, sizeof(VERTEX));
 					RenderMgr->GetDevice()->SetFVF(VERTEX::FVF);
 					RenderMgr->GetDevice()->SetIndices(IB[i]);
@@ -202,8 +199,8 @@ namespace BONE_GRAPHICS
 	{
 		for (int i = 0; i<6; i++)
 		{
-			if (m_pMeshTextures[i] != nullptr)
-				m_pMeshTextures[i]->Release();
+			if (meshTextures[i] != nullptr)
+                meshTextures[i]->Release();
 
 			if (VB[i] != nullptr)
 				VB[i]->Release();
