@@ -46,8 +46,7 @@ bool Collision::VectorToSphere(const Vector3& _vPos, const tagSphere& _Sphere)
 {
 	Vector3 RVec(Vector3(0, 0, 0));
 
-	//¡ﬂΩ…¡°∞£ ª¨º¿
-	D3DXVec3Subtract(&RVec, &(_vPos), &(_Sphere.vPosition));
+    D3DXVec3Subtract(&RVec, &(_vPos), &(_Sphere.vPosition));
 
 	float C = D3DXVec3Dot(&RVec, &RVec);
 	float distans = _Sphere.fRadius * _Sphere.fRadius;

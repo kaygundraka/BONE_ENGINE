@@ -3,10 +3,7 @@
 #include "LogManager.h"
 #include "ResourceManager.h"
 #include "StaticMesh.h"
-#include <shlwapi.h>
 #include "GameObject.h"
-#pragma comment(lib, "shlwapi")
-#pragma warning(disable:4996)
 
 namespace BONE_GRAPHICS
 {
@@ -28,7 +25,7 @@ namespace BONE_GRAPHICS
 	void StaticMesh::LoadContent()
 	{
 		char Address[MAX_PATH];
-		strcpy(Address, address.c_str());
+		strcpy_s(Address, address.c_str());
 
 		try {
 			if (IsInit)
@@ -58,7 +55,7 @@ namespace BONE_GRAPHICS
 					meshMaterials[i].Ambient = meshMaterials[i].Diffuse;
 
 					char TexAddr[100];
-					strcpy(TexAddr, Address);
+					strcpy_s(TexAddr, Address);
 					int TexLen = strlen(TexAddr);
 					char Temp;
 
@@ -68,7 +65,7 @@ namespace BONE_GRAPHICS
 
 						if (Temp != '\\')
 						{
-							TexAddr[TexLen--] = nullptr;
+							TexAddr[TexLen--] = '\0';
 						}
 						else
 							break;
@@ -78,7 +75,7 @@ namespace BONE_GRAPHICS
 					{
 						char* filename = PathFindFileName(d3dxMaterials[i].pTextureFilename);
 
-						strcat(TexAddr, filename);
+						strcat_s(TexAddr, filename);
 					}
 
 					if (d3dxMaterials[i].pTextureFilename != nullptr && lstrlenA(d3dxMaterials[i].pTextureFilename) > 0)
@@ -110,7 +107,7 @@ namespace BONE_GRAPHICS
 	{
 		RAY ray = RenderMgr->GetPickingRayToView(false);
 
-		bool Result = RenderMgr->CheckRayInMesh(&ray, tr->GetTransform(), ResourceMgr->FindMesh(address)->mesh, nullptr);
+		bool Result = RenderMgr->CheckRayInMesh(&ray, tr->GetTransform(), ResourceMgr->FindMesh(address)->mesh, 0);
 
 		return Result;
 	}
@@ -134,7 +131,7 @@ namespace BONE_GRAPHICS
 	{
 		if (IsInit)
 		{
-			Matrix Transform = ((Transform3D*)_object->GetComponent("Transform3D"))->GetTransform();
+			Matrix Transform = ((Transform3D*)object->GetComponent("Transform3D"))->GetTransform();
 			RenderMgr->GetDevice()->SetTransform(D3DTS_WORLD, &Transform);
 
 			if (renderMode == RENDER_ALPHA)
@@ -167,7 +164,7 @@ namespace BONE_GRAPHICS
 			{
 				for (int i = 0; i < ResourceMgr->FindMesh(address)->numMaterials; i++)
 				{
-					shaderOpt->Render(i, _object);
+					shaderOpt->Render(i, object);
 					ResourceMgr->FindMesh(address)->mesh->DrawSubset(i);
 				}
 			}
@@ -181,7 +178,7 @@ namespace BONE_GRAPHICS
 
 	void StaticMesh::SetFileAddress(string address)
 	{
-		address = address;
+		this->address = address;
 	}
 
 	string StaticMesh::GetFileAddress()

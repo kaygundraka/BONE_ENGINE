@@ -10,7 +10,7 @@ namespace BONE_GRAPHICS
 		m_sName = p_sName;
 
 		if (FAILED(D3DXCreateTextureFromFileEx(RenderMgr->GetDevice(), "Resource\\GUI\\GUI.png", D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2,
-			1, nullptr, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, D3DX_DEFAULT, nullptr, nullptr, nullptr, nullptr, &m_pTextures)))
+			1, 0, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, D3DX_DEFAULT, 0, 0, 0, 0, &m_pTextures)))
 		{
 			return false;
 		}
@@ -49,7 +49,7 @@ namespace BONE_GRAPHICS
 			};
 		}
 
-		if (FAILED(D3DXCreateFont(RenderMgr->GetDevice(), 20, 0, nullptr, 0, FALSE, DEFAULT_CHARSET,
+		if (FAILED(D3DXCreateFont(RenderMgr->GetDevice(), 20, 0, 0, 0, FALSE, DEFAULT_CHARSET,
 			OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Arial"), &m_pFont)))
 		{
 			return false;

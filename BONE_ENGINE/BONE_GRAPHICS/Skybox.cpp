@@ -25,29 +25,29 @@ namespace BONE_GRAPHICS
 
 		for (int i = 0; i < 6; i++)
 		{
-			strcpy(TextureAddress[i], FullPath.c_str());
-			strcat(TextureAddress[i], name);
-			strcat(TextureAddress[i], "\\");
-			strcat(TextureAddress[i], name);
+			strcpy_s(TextureAddress[i], FullPath.c_str());
+			strcat_s(TextureAddress[i], name);
+			strcat_s(TextureAddress[i], "\\");
+			strcat_s(TextureAddress[i], name);
 		}
 
-		strcat(TextureAddress[0], "_up");
-		strcat(TextureAddress[0], fileType.c_str());
+		strcat_s(TextureAddress[0], "_up");
+		strcat_s(TextureAddress[0], fileType.c_str());
 
-		strcat(TextureAddress[1], "_dn");
-		strcat(TextureAddress[1], fileType.c_str());
+		strcat_s(TextureAddress[1], "_dn");
+		strcat_s(TextureAddress[1], fileType.c_str());
 
-		strcat(TextureAddress[2], "_lf");
-		strcat(TextureAddress[2], fileType.c_str());
+		strcat_s(TextureAddress[2], "_lf");
+		strcat_s(TextureAddress[2], fileType.c_str());
 
-		strcat(TextureAddress[3], "_rt");
-		strcat(TextureAddress[3], fileType.c_str());
+		strcat_s(TextureAddress[3], "_rt");
+		strcat_s(TextureAddress[3], fileType.c_str());
 
-		strcat(TextureAddress[4], "_ft");
-		strcat(TextureAddress[4], fileType.c_str());
+		strcat_s(TextureAddress[4], "_ft");
+		strcat_s(TextureAddress[4], fileType.c_str());
 
-		strcat(TextureAddress[5], "_bk");
-		strcat(TextureAddress[5], fileType.c_str());
+		strcat_s(TextureAddress[5], "_bk");
+		strcat_s(TextureAddress[5], fileType.c_str());
 
 		// - texture UV까지 생각해보면 정점 24개가 필요하다.
 		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), TextureAddress[0], &meshTextures[0])))

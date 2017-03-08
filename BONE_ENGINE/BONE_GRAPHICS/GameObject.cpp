@@ -37,7 +37,7 @@ namespace BONE_GRAPHICS
 		if (isActive)
 			Awake();
 
-		for (auto Iter = child.begin(); Iter != child.end(); Iter++)
+		for (auto Iter = childs.begin(); Iter != childs.end(); Iter++)
 		{
 			(*Iter)->SetActive(isActive);
 
@@ -62,10 +62,10 @@ namespace BONE_GRAPHICS
 
 	GameObject::~GameObject()
 	{
-		for (auto Iter = child.begin(); Iter != child.end();)
+		for (auto Iter = childs.begin(); Iter != childs.end();)
 		{
 			GameObject* Temp = (*Iter);
-			Iter = child.erase(Iter);
+			Iter = childs.erase(Iter);
 			delete Temp;
 		}
 
@@ -149,7 +149,7 @@ namespace BONE_GRAPHICS
                             ((TrailRenderer*)GetComponent("TrailRenderer"))->Render(Shader);
 
                         if (GetComponent("SkinnedMesh") != nullptr)
-                            ((SkinnedMesh*)GetComponent("SkinnedMesh"))->Render(Shader, this, SceneMgr->GetTimeDelta());
+                            ((SkinnedMesh*)GetComponent("SkinnedMesh"))->Render(Shader, this);
                     }
                     Shader->GetShader()->End();
                 }
@@ -258,6 +258,8 @@ namespace BONE_GRAPHICS
 		for (auto Iter = childs.begin(); Iter != childs.end(); Iter++)
 			if ((*Iter)->Tag() == tag)
 				return *Iter;
+
+        return nullptr;
 	}
 
 	void GameObject::AttachTag(string tag)

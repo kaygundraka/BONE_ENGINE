@@ -122,7 +122,7 @@ namespace BONE_GRAPHICS
 	Matrix Transform2D::GetTransform()
 	{
 		D3DXMatrixIdentity(&transform);
-		D3DXMatrixTransformation2D(&transform, &pivotCenter, nullptr, &scale, &pivotCenter, rotAngle, &Vector2(position.x, position.y));
+		D3DXMatrixTransformation2D(&transform, &pivotCenter, 0, &scale, &pivotCenter, rotAngle, &Vector2(position.x, position.y));
 
 		return transform;
 	}

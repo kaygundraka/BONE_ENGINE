@@ -173,9 +173,6 @@
     <ClInclude Include="Component.h">
       <Filter>소스 파일\GameObject\Components</Filter>
     </ClInclude>
-    <ClInclude Include="RenderManager.h">
-      <Filter>소스 파일\Management\Render</Filter>
-    </ClInclude>
     <ClInclude Include="ResourceManager.h">
       <Filter>소스 파일\Management\Resource</Filter>
     </ClInclude>
@@ -217,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="ConfigManager.h">
       <Filter>소스 파일\Management\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderManager.h">
+      <Filter>소스 파일\Management\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -304,9 +304,6 @@
     <ClCompile Include="Component.cpp">
       <Filter>소스 파일\GameObject\Components</Filter>
     </ClCompile>
-    <ClCompile Include="RenderManager.cpp">
-      <Filter>소스 파일\Management\Render</Filter>
-    </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>소스 파일\Management\Resource</Filter>
     </ClCompile>
@@ -351,6 +348,9 @@
     </ClCompile>
     <ClCompile Include="ConfigManager.cpp">
       <Filter>소스 파일\Management\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderManager.cpp">
+      <Filter>소스 파일\Management\Render</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

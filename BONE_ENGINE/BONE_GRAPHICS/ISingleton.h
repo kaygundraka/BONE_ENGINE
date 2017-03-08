@@ -1,10 +1,10 @@
 #pragma once
-#include "stddef.h"
+#include "Common.h"
 
 namespace BONE_GRAPHICS
 {
 	template <typename T>
-	class ISingleton abstract
+	class ISingleton
 	{
 	private:
 		static T* pInst;

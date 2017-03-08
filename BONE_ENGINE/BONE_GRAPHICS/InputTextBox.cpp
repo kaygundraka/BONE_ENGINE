@@ -108,7 +108,7 @@ namespace BONE_GRAPHICS
 				if ((GetAsyncKeyState(VK_BACK) & 0x8000) && KeyDown >= 0.1f)
 				{
 					char Text[100];
-					strcpy(Text, str.c_str());
+					strcpy_s(Text, str.c_str());
 
 					if (strlen(Text) >= 1)
 						Text[strlen(Text) - 1] = 0;
@@ -127,8 +127,8 @@ namespace BONE_GRAPHICS
 						if (Temp[0] >= 32 && Temp[0] <= 126)
 						{
 							char Text[100];
-							strcpy(Text, str.c_str());
-							strcat(Text, Temp);
+							strcpy_s(Text, str.c_str());
+							strcat_s(Text, Temp);
 
 							str = Text;
 						}

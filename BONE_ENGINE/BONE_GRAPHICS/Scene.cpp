@@ -60,15 +60,15 @@ namespace BONE_GRAPHICS
 		return IsFrameworkFlag;
 	}
 
-	void Scene::Render(double timeDelta)
+	void Scene::Render()
 	{
 		for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
 			if ((*Iter)->GetActive())
-				(*Iter)->Render(timeDelta);
+				(*Iter)->Render();
 
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
 			if ((*Iter)->GetActive())
-				(*Iter)->Render(timeDelta);
+				(*Iter)->Render();
 	}
 
 	void Scene::LateRender()
@@ -85,7 +85,7 @@ namespace BONE_GRAPHICS
 	void Scene::SetSkybox(string dirName, string fileType)
 	{
 		char Path[MAX_PATH];
-		strcpy(Path, dirName.c_str());
+		strcpy_s(Path, dirName.c_str());
 		skybox.SetSkybox(Path, fileType);
 	}
 
@@ -103,20 +103,20 @@ namespace BONE_GRAPHICS
 			(*Iter)->Reference();
 	}
 	
-	void Scene::Update(double timeDelta)
+	void Scene::Update()
 	{
 		skybox.Render(GetCurrentCamera());
 
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
 			if ((*Iter)->GetActive())
-				(*Iter)->Update(timeDelta);
+				(*Iter)->Update();
 	}
 
-	void Scene::LateUpdate(double timeDelta)
+	void Scene::LateUpdate()
 	{
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
 		    if ((*Iter)->GetActive())
-				(*Iter)->LateUpdate(timeDelta);
+				(*Iter)->LateUpdate();
 	}
 
 	void Scene::AddObject(GameObject* object)
@@ -180,7 +180,7 @@ namespace BONE_GRAPHICS
 			if (tag == (*Iter)->Tag())
 				return (*Iter);
 
-		return nullptr
+        return nullptr;
 	}
 
 	std::tuple<GameObject**, int> Scene::FindObjectsByTag(string tag)

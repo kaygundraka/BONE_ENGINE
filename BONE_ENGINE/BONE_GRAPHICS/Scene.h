@@ -23,9 +23,9 @@ namespace BONE_GRAPHICS
 		bool InitializeMembers();
 		void Reference();
 		bool LoadContents();
-		void Render(double timeDelta);
-		void Update(double timeDelta);
-		void LateUpdate(double timeDelta);
+		void Render();
+		void Update();
+		void LateUpdate();
 		void LateRender();
 
 	public:

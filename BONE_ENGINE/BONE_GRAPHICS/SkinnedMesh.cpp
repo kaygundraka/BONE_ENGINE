@@ -6,8 +6,8 @@
 namespace BONE_GRAPHICS
 {
 	typedef struct _SKINNED_VERTEX {
-		SKINNED_VERTEX() {}
-		SKINNED_VERTEX(D3DXVECTOR3 pos, D3DCOLOR col) { position = pos; color = col; }
+        _SKINNED_VERTEX() {}
+        _SKINNED_VERTEX(D3DXVECTOR3 pos, D3DCOLOR col) { position = pos; color = col; }
 		D3DXVECTOR3 position;
 		D3DCOLOR color;
 		static const int FVF;
@@ -84,7 +84,7 @@ namespace BONE_GRAPHICS
 
 				for (UINT i = 0; i < boneMesh->NumAttributeGroups; i++)
 				{
-					D3DXMATRIX matIden;
+					Matrix matIden;
 					D3DXMatrixIdentity(&matIden);
 					if (RenderMgr->CheckRayInMesh(ray, matIden, boneMesh->MeshData.pMesh, &Temp))
 						if (Temp <= curDist)

@@ -33,17 +33,16 @@
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib,"dsound")
 #pragma comment(lib,"winmm")
-#pragma warning(disable:4996)
 #pragma warning (disable:4251)
 
 using namespace std;
 
-#define Vector3 D3DXVECTOR3
-#define Vector2 D3DXVECTOR2
-#define Matrix D3DXMATRIX
-#define Quaternion D3DXQUATERNION
-#define Color D3DCOLOR
-#define Mesh LPD3DXMESH
+typedef D3DXVECTOR3 Vector3;
+typedef D3DXVECTOR2 Vector2;
+typedef D3DXMATRIX Matrix;
+typedef D3DXQUATERNION Quaternion;
+typedef D3DCOLOR Color;
+typedef LPD3DXMESH Mesh;
 
 class Rect {
 public:

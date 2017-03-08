@@ -84,9 +84,9 @@ namespace BONE_GRAPHICS
 
 				if (sceneList[loadScene]->GetSceneFlag())
 				{
-					sceneList[loadScene]->Update(deltaTime);
-					sceneList[loadScene]->LateUpdate(deltaTime);
-					sceneList[loadScene]->Render(deltaTime);
+					sceneList[loadScene]->Update();
+					sceneList[loadScene]->LateUpdate();
+					sceneList[loadScene]->Render();
 					sceneList[loadScene]->LateRender();
 				}
 
@@ -135,9 +135,9 @@ namespace BONE_GRAPHICS
 
 					if (sceneList[name]->GetSceneFlag())
 					{
-						sceneList[name]->Update(deltaTime);
-						sceneList[name]->LateUpdate(deltaTime);
-						sceneList[name]->Render(deltaTime);
+						sceneList[name]->Update();
+						sceneList[name]->LateUpdate();
+						sceneList[name]->Render();
 						sceneList[name]->LateRender();
 					}
 

@@ -36,14 +36,14 @@ namespace BONE_GRAPHICS
         char path[MAX_PATH];
 
         int path_length = 0;
-        std::string* paths = ConfigMgr->GetPaths("info", "ResourcePaths", &path_length);
+        std::vector<std::string> paths = ConfigMgr->GetPaths("info", "ResourcePaths");
 
-        for (int i = 0; i < path_length; i++)
+        for (int i = 0; i < paths.size(); i++)
         {
             WIN32_FIND_DATA FindData;
             HANDLE FindHandle;
 
-            strcpy(path, paths[i].c_str()); //".\\Resource\\b\\*"
+            strcpy_s(path, paths[i].c_str()); //".\\Resource\\b\\*"
             
             FindHandle = FindFirstFile((LPCSTR)path, &FindData);
 
@@ -78,15 +78,14 @@ namespace BONE_GRAPHICS
             if (!ExistFile(name, &full_path))
                 return nullptr;
 
-			if (FAILED(D3DXLoadMeshFromX(full_path.c_str(), 0, RenderMgr->GetDevice(), 0,
-				&Temp.buffer, 0, &Temp.numMaterials, &Temp.mesh)))
+			if (FAILED(D3DXLoadMeshFromX(full_path.c_str(), 0, RenderMgr->GetDevice(), 0, &Temp.buffer, 0, (DWORD*)&Temp.numMaterials, &Temp.mesh)))
 				return nullptr;
 			
 			staticMeshList.insert(std::pair<string, MESH_INFO>(name, Temp));
 			
 			char log[MAX_PATH] = "";
-			strcpy(log, name.c_str());
-			strcat(log, "- is loaded.");
+			strcpy_s(log, name.c_str());
+			strcat_s(log, "- is loaded.");
 			LogMgr->ShowMessage(LOG_MESSAGE, log);
 
 			return &(staticMeshList.find(name)->second);
@@ -125,8 +124,8 @@ namespace BONE_GRAPHICS
 			textureList.insert(std::pair<string, LPDIRECT3DTEXTURE9>(name, Temp));
 
 			char log[MAX_PATH] = "";
-			strcpy(log, name.c_str());
-			strcat(log, "- is loaded.");
+			strcpy_s(log, name.c_str());
+			strcat_s(log, "- is loaded.");
 			LogMgr->ShowMessage(LOG_MESSAGE, log);
 
 			return textureList.find(name)->second;

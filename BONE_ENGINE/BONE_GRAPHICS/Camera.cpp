@@ -8,7 +8,7 @@
 
 namespace BONE_GRAPHICS
 {
-	Camera::Camera(int ID, PROJECTION_TYPE type, Vector3 cameraUp, int width, int height, float far, float near, float fov)
+	Camera::Camera(int ID, PROJECTION_TYPE type, Vector3 cameraUp, int width, int height, float farDist, float nearDist, float fov)
 	{
 		Transform3D Transform;
 		
@@ -16,8 +16,8 @@ namespace BONE_GRAPHICS
         this->width = width;
         this->height = height;
         this->cameraUp = cameraUp;
-        this->farDistance = far;
-        this->nearDistance = near;
+        this->farDistance = farDist;
+        this->nearDistance = nearDist;
         this->fov = fov;
         this->type = type;
 

@@ -1,6 +1,7 @@
 #include "Common.h"
 #include "LogManager.h"
 #include "RenderManager.h"
+#pragma warning(disable:4996)
 
 namespace BONE_GRAPHICS
 {

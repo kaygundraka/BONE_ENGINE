@@ -109,7 +109,7 @@ namespace BONE_GRAPHICS
 		WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 		WndClass.hInstance = hInstance;
 		WndClass.lpfnWndProc = (WNDPROC)FrameworkWndProc;
-		WndClass.lpszClassName = ConfigMgr->GetStr("WindowsName").c_str();
+		WndClass.lpszClassName = ConfigMgr->GetStr("Info", "WindowsName").c_str();
 		WndClass.lpszMenuName = NULL;
 		WndClass.style = CS_HREDRAW | CS_VREDRAW;
 		RegisterClass(&WndClass);

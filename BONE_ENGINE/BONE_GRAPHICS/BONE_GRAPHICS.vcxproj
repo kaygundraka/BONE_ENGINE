@@ -133,6 +133,7 @@
     <ClInclude Include="BoneHierarchyLoader.h" />
     <ClInclude Include="ConfigManager.h" />
     <ClInclude Include="Coroutine.h" />
+    <ClInclude Include="RenderManager.h" />
     <ClInclude Include="ScreenButton.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
@@ -191,7 +192,6 @@
     <ClInclude Include="ISingleton.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="Common.h" />
-    <ClInclude Include="RenderManager.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
@@ -270,13 +270,13 @@
     <ClCompile Include="FireworkParticle.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="ScreenButton.cpp" />
     <ClCompile Include="ScreenImage.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="IShader.cpp" />
     <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="Common.cpp" />
-    <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />

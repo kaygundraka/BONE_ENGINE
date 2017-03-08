@@ -3,301 +3,304 @@
 #include "LogManager.h"
 #include "InputManager.h"
 
-
 namespace BONE_GRAPHICS
 {
-	bool RenderManager::InitializeMembers(HWND hWnd)
-	{
-		ThreadSync sync;
+    _RAY::_RAY() : origin(D3DXVECTOR3(0, 0, 0)), direction(D3DXVECTOR3(0, 0, 0))
+    {
+    }
 
-		this->hWnd = hWnd;
+    bool RenderManager::InitializeMembers(HWND hWnd)
+    {
+        ThreadSync sync;
 
-		d3d9 = Direct3DCreate9(D3D_SDK_VERSION);
-		d3d9->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &caps);
+        this->hWnd = hWnd;
 
-		int vp = 0;
+        d3d9 = Direct3DCreate9(D3D_SDK_VERSION);
+        d3d9->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &caps);
 
-		if (caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT)
-			vp = D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED;
-		else
-			vp = D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED;
+        int vp = 0;
 
-		RECT ClientRect;
-		GetClientRect(this->hWnd, &ClientRect);
+        if (caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT)
+            vp = D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED;
+        else
+            vp = D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED;
 
-		width = ClientRect.right;
-		height = ClientRect.bottom;
+        RECT ClientRect;
+        GetClientRect(this->hWnd, &ClientRect);
 
-		d3dpp.BackBufferWidth = width;
-		d3dpp.BackBufferHeight = height;
-		d3dpp.BackBufferFormat = D3DFMT_A8R8G8B8;
-		d3dpp.BackBufferCount = 1;
-		d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
-		d3dpp.MultiSampleQuality = 0;
-		d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-		d3dpp.hDeviceWindow = this->hWnd;
-		d3dpp.Windowed = true;
-		d3dpp.EnableAutoDepthStencil = true;
-		d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
-		d3dpp.Flags = 0;
-		d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
-		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+        width = ClientRect.right;
+        height = ClientRect.bottom;
 
-		vp = d3d9->CreateDevice(
-			D3DADAPTER_DEFAULT,
-			D3DDEVTYPE_HAL,
+        d3dpp.BackBufferWidth = width;
+        d3dpp.BackBufferHeight = height;
+        d3dpp.BackBufferFormat = D3DFMT_A8R8G8B8;
+        d3dpp.BackBufferCount = 1;
+        d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
+        d3dpp.MultiSampleQuality = 0;
+        d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+        d3dpp.hDeviceWindow = this->hWnd;
+        d3dpp.Windowed = true;
+        d3dpp.EnableAutoDepthStencil = true;
+        d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
+        d3dpp.Flags = 0;
+        d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
+        d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+
+        vp = d3d9->CreateDevice(
+            D3DADAPTER_DEFAULT,
+            D3DDEVTYPE_HAL,
             this->hWnd,
-			vp,
-			&d3dpp,
-			&D3D_DEVICE);
+            vp,
+            &d3dpp,
+            &D3D_DEVICE);
 
-		font = nullptr;
-		line = nullptr;
-		
-		if (vp != D3D_OK)
-		{
+        font = nullptr;
+        line = nullptr;
+
+        if (vp != D3D_OK)
+        {
             LogMgr->ShowMessage(LOG_ERROR, "CreateDevice() - FAILED");
-			Is_init = false;
-			return 0;
-		}
+            Is_init = false;
+            return 0;
+        }
 
-		Is_init = true;
-		LogMgr->ShowMessage(LOG_MESSAGE, "RenderManager is initialized");
+        Is_init = true;
+        LogMgr->ShowMessage(LOG_MESSAGE, "RenderManager is initialized");
 
-		return Is_init;
-	}
+        return Is_init;
+    }
 
-	void RenderManager::RenderText(string text, Vector2 pos, int length, const char* font, int opt, int setting, Color color)
-	{
-		ThreadSync sync;
+    void RenderManager::RenderText(std::string text, D3DXVECTOR2 pos, int length, const char* font, int opt, int setting, D3DXCOLOR color)
+    {
+        ThreadSync sync;
 
-		if (length == 0)
+        if (length == 0)
             length = 20;
 
-		if (this->font != nullptr)
+        if (this->font != nullptr)
             this->font->Release();
 
         this->font = nullptr;
 
-		D3DXCreateFont(D3D_DEVICE, length, 0, setting, 0, FALSE, DEFAULT_CHARSET,
-			OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT(font), &this->font);
+        D3DXCreateFont(D3D_DEVICE, length, 0, setting, 0, FALSE, DEFAULT_CHARSET,
+            OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT(font), &this->font);
 
-		static SIZE size;
+        static SIZE size;
 
-		GetTextExtentPoint32(this->font->GetDC(), text.c_str(), text.length(), &size);
+        GetTextExtentPoint32(this->font->GetDC(), text.c_str(), text.length(), &size);
 
-		RECT TextRect = {
-			pos.x, pos.y,
-			pos.x + size.cx, pos.y + size.cy
-		};
+        RECT TextRect = {
+            pos.x, pos.y,
+            pos.x + size.cx, pos.y + size.cy
+        };
 
-		this->font->DrawText(nullptr, text.c_str(), -1, &TextRect, opt, color);
-	}
+        this->font->DrawText(nullptr, text.c_str(), -1, &TextRect, opt, color);
+    }
 
-	RAY	RenderManager::GetPickingRayToView(bool isMouseCenter)
-	{
+    RAY	RenderManager::GetPickingRayToView(bool isMouseCenter)
+    {
         ThreadSync sync;
 
-		return TransRayToView(GetPickingRay(isMouseCenter));
-	}
+        return TransRayToView(GetPickingRay(isMouseCenter));
+    }
 
-	RAY	RenderManager::GetPickingRay(bool _isMouseCenter)
-	{
-		ThreadSync sync;
+    RAY	RenderManager::GetPickingRay(bool _isMouseCenter)
+    {
+        ThreadSync sync;
 
-		RAY			ray;
-		Matrix	proj;
-		RECT		rt;
+        RAY			ray;
+        D3DXMATRIX	proj;
+        RECT		rt;
 
-		D3D_DEVICE->GetTransform(D3DTS_PROJECTION, &proj);
-		GetClientRect(hWnd, &rt);
+        D3D_DEVICE->GetTransform(D3DTS_PROJECTION, &proj);
+        GetClientRect(hWnd, &rt);
 
-        Vector3		vec;
+        D3DXVECTOR3		vec;
 
-		int MouseX;
-		int MouseY;
+        int MouseX;
+        int MouseY;
 
-		if (_isMouseCenter)
-		{
-			MouseX = GetWidth() / 2;
-			MouseY = GetHeight() / 2;
-		}
-		else
-		{
-			MouseX = InputMgr->GetMousePosition().x;
-			MouseY = InputMgr->GetMousePosition().y;
-		}
+        if (_isMouseCenter)
+        {
+            MouseX = GetWidth() / 2;
+            MouseY = GetHeight() / 2;
+        }
+        else
+        {
+            MouseX = InputMgr->GetMousePosition().x;
+            MouseY = InputMgr->GetMousePosition().y;
+        }
 
-		vec.x = (((2.0f * MouseX) / rt.right) - 1.0f) / proj._11;
-		vec.y = -(((2.0f * MouseY) / rt.bottom) - 1.0f) / proj._22;
-		vec.z = 1.0f;
+        vec.x = (((2.0f * MouseX) / rt.right) - 1.0f) / proj._11;
+        vec.y = -(((2.0f * MouseY) / rt.bottom) - 1.0f) / proj._22;
+        vec.z = 1.0f;
 
-		ray.origin = Vector3(0.0f, 0.0f, 0.0f);
-		ray.direction = vec;
+        ray.origin = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        ray.direction = vec;
 
-		return ray;
-	}
+        return ray;
+    }
 
-    Vector3 RenderManager::GetScreenPos(const Vector3& pos, Matrix* view, Matrix* proj)
-	{
-		D3DVIEWPORT9 vp;
-		D3D_DEVICE->GetViewport(&vp);
+    D3DXVECTOR3 RenderManager::GetScreenPos(const D3DXVECTOR3& pos, D3DXMATRIX* view, D3DXMATRIX* proj)
+    {
+        D3DVIEWPORT9 vp;
+        D3D_DEVICE->GetViewport(&vp);
 
-		Vector3 Result = pos;
+        D3DXVECTOR3 Result = pos;
 
-		D3DXMATRIX ViewProjMatrix = (*view) * (*proj);
+        D3DXMATRIX ViewProjMatrix = (*view) * (*proj);
 
-		D3DXVec3TransformCoord(&Result, &Result, view);
-		D3DXVec3TransformCoord(&Result, &Result, proj);
+        D3DXVec3TransformCoord(&Result, &Result, view);
+        D3DXVec3TransformCoord(&Result, &Result, proj);
 
-		//Vector3 hcsPosition = _proj * (_view * _pos);
+        //D3DXVECTOR3 hcsPosition = _proj * (_view * _pos);
 
-		/*Result.x = vp.Width * (Result.x + 1.0f) / 2.0f;
-		Result.y = vp.Height * (1.0f - ((Result.y + 1.0f) / 2.0f));*/
+        /*Result.x = vp.Width * (Result.x + 1.0f) / 2.0f;
+        Result.y = vp.Height * (1.0f - ((Result.y + 1.0f) / 2.0f));*/
 
-		Result.x = (float)vp.Width * ((Result.x * 0.5f) + 0.5f);
-		Result.y = (float)vp.Height * (1.0f - ((Result.y * 0.5f) + 0.5f));
-        
-		//x = ((hcsPosition.x * 0.5f) + 0.5f);          // 0 <= x <= 1 // left := 0,right := 1 
-		//y = 1.0f - ((hcsPosition.y * 0.5f) + 0.5f); // 0 <= y <= 1 // bottom := 1,top := 0
+        Result.x = (float)vp.Width * ((Result.x * 0.5f) + 0.5f);
+        Result.y = (float)vp.Height * (1.0f - ((Result.y * 0.5f) + 0.5f));
 
-		//x, y 값에 SCREEN_WIDTH, SCREEN_HEIGHT를 곱해주면 된다.
+        //x = ((hcsPosition.x * 0.5f) + 0.5f);          // 0 <= x <= 1 // left := 0,right := 1 
+        //y = 1.0f - ((hcsPosition.y * 0.5f) + 0.5f); // 0 <= y <= 1 // bottom := 1,top := 0
 
-		return Result;
-	}
+        //x, y 값에 SCREEN_WIDTH, SCREEN_HEIGHT를 곱해주면 된다.
 
-	RAY	RenderManager::TransRayToView(RAY ray)
-	{
-		ThreadSync sync;
+        return Result;
+    }
 
-		Matrix view;		//뷰행렬 받아올 변수
+    RAY	RenderManager::TransRayToView(RAY ray)
+    {
+        ThreadSync sync;
 
-		D3D_DEVICE->GetTransform(D3DTS_VIEW, &view);		//뷰행렬 가져오기
+        D3DXMATRIX view;		//뷰행렬 받아올 변수
 
-        Matrix viewInverse;	//뷰역행렬 변수
+        D3D_DEVICE->GetTransform(D3DTS_VIEW, &view);		//뷰행렬 가져오기
 
-		D3DXMatrixInverse(&viewInverse, nullptr, &view);
-		D3DXVec3TransformCoord(&ray.origin, &ray.origin, &viewInverse);
-		D3DXVec3TransformNormal(&ray.direction, &ray.direction, &viewInverse);
-		D3DXVec3Normalize(&ray.direction, &ray.direction);
+        D3DXMATRIX viewInverse;	//뷰역행렬 변수
 
-		return ray;
-	}
+        D3DXMatrixInverse(&viewInverse, nullptr, &view);
+        D3DXVec3TransformCoord(&ray.origin, &ray.origin, &viewInverse);
+        D3DXVec3TransformNormal(&ray.direction, &ray.direction, &viewInverse);
+        D3DXVec3Normalize(&ray.direction, &ray.direction);
 
-	bool RenderManager::CheckRayInMesh(RAY* ray, const D3DXMATRIX& matWorld, LPD3DXMESH mesh, float* dist)
-	{
-		ThreadSync sync;
+        return ray;
+    }
 
-		Vector3 vOrg;
-        Vector3 vDir;
-		Matrix Inversemat;
+    bool RenderManager::CheckRayInMesh(RAY* ray, const D3DXMATRIX& matWorld, LPD3DXMESH mesh, float* dist)
+    {
+        ThreadSync sync;
 
-		D3DXMatrixInverse(&Inversemat, nullptr, &matWorld);
-		D3DXVec3TransformCoord(&vOrg, &ray->origin, &Inversemat);
-		D3DXVec3TransformNormal(&vDir, &ray->direction, &Inversemat);
+        D3DXVECTOR3 vOrg;
+        D3DXVECTOR3 vDir;
+        D3DXMATRIX Inversemat;
 
-		BOOL bHit = FALSE;
-		D3DXIntersect(mesh, &vOrg, &vDir, &bHit, nullptr, nullptr, nullptr, dist, nullptr, nullptr);
+        D3DXMatrixInverse(&Inversemat, nullptr, &matWorld);
+        D3DXVec3TransformCoord(&vOrg, &ray->origin, &Inversemat);
+        D3DXVec3TransformNormal(&vDir, &ray->direction, &Inversemat);
 
-		return bHit;
-	}
+        BOOL bHit = FALSE;
+        D3DXIntersect(mesh, &vOrg, &vDir, &bHit, nullptr, nullptr, nullptr, dist, nullptr, nullptr);
 
-	bool RenderManager::CheckRayInTriangle(RAY* ray, const Matrix& matWorld, Vector3 p0, Vector3 p1, Vector3 p2, float* u, float* v, float* dist)
-	{
-		ThreadSync sync;
+        return bHit;
+    }
 
-		Vector3 vOrg;
-        Vector3 vDir;
-        Matrix Inversemat;
+    bool RenderManager::CheckRayInTriangle(RAY* ray, const D3DXMATRIX& matWorld, D3DXVECTOR3 p0, D3DXVECTOR3 p1, D3DXVECTOR3 p2, float* u, float* v, float* dist)
+    {
+        ThreadSync sync;
 
-		D3DXMatrixInverse(&Inversemat, nullptr, &matWorld);
-		D3DXVec3TransformCoord(&vOrg, &ray->origin, &Inversemat);
-		D3DXVec3TransformNormal(&vDir, &ray->direction, &Inversemat);
+        D3DXVECTOR3 vOrg;
+        D3DXVECTOR3 vDir;
+        D3DXMATRIX Inversemat;
 
-		BOOL bHit;
-		bHit = D3DXIntersectTri(&p0, &p1, &p2, &vOrg, &vDir, u, v, dist);
+        D3DXMatrixInverse(&Inversemat, nullptr, &matWorld);
+        D3DXVec3TransformCoord(&vOrg, &ray->origin, &Inversemat);
+        D3DXVec3TransformNormal(&vDir, &ray->direction, &Inversemat);
 
-		return bHit;
-	}
-	
-	int RenderManager::GetMatrixPaletteSize()
-	{
-		ThreadSync sync;
+        BOOL bHit;
+        bHit = D3DXIntersectTri(&p0, &p1, &p2, &vOrg, &vDir, u, v, dist);
 
-		return caps.MaxVertexShaderConst / 4;
-	}
+        return bHit;
+    }
 
-	IDirect3DDevice9* RenderManager::GetDevice()
-	{
-		ThreadSync sync;
+    int RenderManager::GetMatrixPaletteSize()
+    {
+        ThreadSync sync;
 
-		if (Is_init)
-			return D3D_DEVICE;
-		else
-		{
+        return caps.MaxVertexShaderConst / 4;
+    }
+
+    IDirect3DDevice9* RenderManager::GetDevice()
+    {
+        ThreadSync sync;
+
+        if (Is_init)
+            return D3D_DEVICE;
+        else
+        {
             LogMgr->ShowMessage(LOG_ERROR, "Not Exist Device - FAILED");
-			return nullptr;
-		}
-	}
+            return nullptr;
+        }
+    }
 
-	void RenderManager::SetupPixelFog(int color, int mode)
-	{
-		ThreadSync sync;
+    void RenderManager::SetupPixelFog(int color, int mode)
+    {
+        ThreadSync sync;
 
-		float Start = 0.5f;
-		float End = 0.8f;
-		float Density = 0.66f;
+        float Start = 0.5f;
+        float End = 0.8f;
+        float Density = 0.66f;
 
-		D3D_DEVICE->SetRenderState(D3DRS_FOGENABLE, TRUE);
-		D3D_DEVICE->SetRenderState(D3DRS_FOGCOLOR, color);
+        D3D_DEVICE->SetRenderState(D3DRS_FOGENABLE, TRUE);
+        D3D_DEVICE->SetRenderState(D3DRS_FOGCOLOR, color);
 
-		if (mode == D3DFOG_LINEAR)
-		{
-			D3D_DEVICE->SetRenderState(D3DRS_FOGTABLEMODE, mode);
-			D3D_DEVICE->SetRenderState(D3DRS_FOGSTART, *(int *)(&Start));
-			D3D_DEVICE->SetRenderState(D3DRS_FOGEND, *(int *)(&End));
-		}
-		else
-		{
-			D3D_DEVICE->SetRenderState(D3DRS_FOGTABLEMODE, mode);
-			D3D_DEVICE->SetRenderState(D3DRS_FOGDENSITY, *(int *)(&Density));
-		}
-	}
+        if (mode == D3DFOG_LINEAR)
+        {
+            D3D_DEVICE->SetRenderState(D3DRS_FOGTABLEMODE, mode);
+            D3D_DEVICE->SetRenderState(D3DRS_FOGSTART, *(int *)(&Start));
+            D3D_DEVICE->SetRenderState(D3DRS_FOGEND, *(int *)(&End));
+        }
+        else
+        {
+            D3D_DEVICE->SetRenderState(D3DRS_FOGTABLEMODE, mode);
+            D3D_DEVICE->SetRenderState(D3DRS_FOGDENSITY, *(int *)(&Density));
+        }
+    }
 
-	int RenderManager::GetHeight()
-	{
-		ThreadSync sync;
+    int RenderManager::GetHeight()
+    {
+        ThreadSync sync;
 
-		RECT rt;
-		GetClientRect(hWnd, &rt);
-		height = rt.bottom;
+        RECT rt;
+        GetClientRect(hWnd, &rt);
+        height = rt.bottom;
 
-		return height;
-	}
+        return height;
+    }
 
-	int RenderManager::GetWidth()
-	{
-		ThreadSync sync;
+    int RenderManager::GetWidth()
+    {
+        ThreadSync sync;
 
-		RECT rt;
-		GetClientRect(hWnd, &rt);
-		width = rt.right;
+        RECT rt;
+        GetClientRect(hWnd, &rt);
+        width = rt.right;
 
-		return width;
-	}
+        return width;
+    }
 
-	void RenderManager::ReleaseMembers()
-	{
-		ThreadSync sync;
+    void RenderManager::ReleaseMembers()
+    {
+        ThreadSync sync;
 
-		if (font) font->Release();
+        if (font) font->Release();
 
-		if (line) line->Release();
+        if (line) line->Release();
 
-		if (D3D_DEVICE) D3D_DEVICE->Release();
+        if (D3D_DEVICE) D3D_DEVICE->Release();
 
-		if (d3d9) d3d9->Release();
+        if (d3d9) d3d9->Release();
 
-		LogMgr->ShowMessage(LOG_MESSAGE, "Render Manager is Clear.");
-	}
+        LogMgr->ShowMessage(LOG_MESSAGE, "Render Manager is Clear.");
+    }
 }
