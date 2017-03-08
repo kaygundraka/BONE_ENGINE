@@ -18,7 +18,7 @@ namespace BONE_GRAPHICS
 		sprite->Release();
 	}
 
-	void ScreenSprite::SetInformation(string address, int width, int height, int animationCut, int animationScene, float alpha)
+	void ScreenSprite::SetInformation(std::string address, int width, int height, int animationCut, int animationScene, float alpha)
 	{
 		this->width = width;
         this->height = height;

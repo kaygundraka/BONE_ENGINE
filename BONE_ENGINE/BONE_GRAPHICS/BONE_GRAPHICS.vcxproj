@@ -133,6 +133,9 @@
     <ClInclude Include="BoneHierarchyLoader.h" />
     <ClInclude Include="ConfigManager.h" />
     <ClInclude Include="Coroutine.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="PhongShader.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="ScreenButton.h" />
     <ClInclude Include="Camera.h" />
@@ -269,7 +272,10 @@
     <ClCompile Include="Interface.cpp" />
     <ClCompile Include="FireworkParticle.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="PhongShader.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="ScreenButton.cpp" />
     <ClCompile Include="ScreenImage.cpp" />

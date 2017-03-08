@@ -80,7 +80,7 @@ namespace BONE_GRAPHICS
 
 		virtual void ResetParticle(Attribute* attribute) = 0;
 
-		void SetTextreAddress(string _address);
+		void SetTextreAddress(std::string _address);
 
 		// 시스템에 파티클을 추가.
 		virtual void AddParticle();
@@ -110,7 +110,7 @@ namespace BONE_GRAPHICS
 		virtual void RemoveDeadParticles();
 
 	protected:
-		string textureAddress;
+		std::string textureAddress;
 		Transform3D*       transform3D;  // 시스템의 원천, 시스템 내에서 파티클이 시작되는 곳.
 		BoundingBox        boundingBox;  // 파티클이 이동할 수 있는 부피를 제한하는 데 이용. 
 											   // 예, 산 정상을 둘러싼 지역에만 눈이 오는 시스템.

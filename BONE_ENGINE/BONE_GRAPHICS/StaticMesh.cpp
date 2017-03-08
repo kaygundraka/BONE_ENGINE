@@ -18,8 +18,9 @@ namespace BONE_GRAPHICS
 	{
 		ResourceMgr->ReleaseMesh(address);
 
-		for (int i = 0; i < ResourceMgr->FindMesh(address)->numMaterials; i++)
-			ResourceMgr->ReleaseTexture(textureAddress[i]);
+        if (ResourceMgr->FindMesh(address) != nullptr)
+    		for (int i = 0; i < ResourceMgr->FindMesh(address)->numMaterials; i++)
+	    		ResourceMgr->ReleaseTexture(textureAddress[i]);
 	}
 
 	void StaticMesh::LoadContent()
@@ -53,39 +54,17 @@ namespace BONE_GRAPHICS
 
 					// 재질용 주변광 색깔 설정(D3DX에서 직접해주지 않음)
 					meshMaterials[i].Ambient = meshMaterials[i].Diffuse;
-
-					char TexAddr[100];
-					strcpy_s(TexAddr, Address);
-					int TexLen = strlen(TexAddr);
-					char Temp;
-
-					while (1)
-					{
-						Temp = TexAddr[TexLen];
-
-						if (Temp != '\\')
-						{
-							TexAddr[TexLen--] = '\0';
-						}
-						else
-							break;
-					}
-
-					if (d3dxMaterials[i].pTextureFilename != nullptr)
-					{
-						char* filename = PathFindFileName(d3dxMaterials[i].pTextureFilename);
-
-						strcat_s(TexAddr, filename);
-					}
+                    
+                    char* filename = PathFindFileName(d3dxMaterials[i].pTextureFilename);
 
 					if (d3dxMaterials[i].pTextureFilename != nullptr && lstrlenA(d3dxMaterials[i].pTextureFilename) > 0)
 					{
-						textureAddress[i] = TexAddr;
+						textureAddress[i] = filename;
 
 						// 텍스쳐 생성
-						if (ResourceMgr->LoadTexture(TexAddr) == nullptr)
+						if (ResourceMgr->LoadTexture(filename) == nullptr)
 						{
-							LogMgr->ShowMessage(LOG_ERROR, "%s : Could Not Find TextureFile.", TexAddr);
+							LogMgr->ShowMessage(LOG_ERROR, "%s : Could Not Find TextureFile.", filename);
 							throw;
 						}
 					}
@@ -151,7 +130,6 @@ namespace BONE_GRAPHICS
 
 			if (shaderOpt == nullptr)
 			{
-
 				for (int i = 0; i < ResourceMgr->FindMesh(address)->numMaterials; i++)
 				{
 					RenderMgr->GetDevice()->SetMaterial(&meshMaterials[i]);

@@ -7,13 +7,13 @@ namespace BONE_GRAPHICS
 	class etuCheckBox : public etuForm
 	{
 	private:
-		string m_sString;
+		std::string m_sString;
 		RECT m_rCheck;
 		bool Is_Checked;
 
 	public:
-		bool SetInformaition(string _Name, D3DXVECTOR3 _vec3Position, string _Text, RECT* _Rect = nullptr, RECT* _Margin = nullptr);
-		void SetText(string _Text);
+		bool SetInformaition(std::string _Name, D3DXVECTOR3 _vec3Position, std::string _Text, RECT* _Rect = nullptr, RECT* _Margin = nullptr);
+		void SetText(std::string _Text);
 		void SetStatus(bool Is_Checked);
 		bool GetStatus();
 		virtual bool IsClicked() override;

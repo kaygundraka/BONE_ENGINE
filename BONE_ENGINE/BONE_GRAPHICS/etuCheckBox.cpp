@@ -6,7 +6,7 @@
 
 namespace BONE_GRAPHICS
 {
-	bool etuCheckBox::SetInformaition(string _Name, D3DXVECTOR3 _vec3Position, string _Text, RECT* _Rect, RECT* _Margin)
+	bool etuCheckBox::SetInformaition(std::string _Name, D3DXVECTOR3 _vec3Position, std::string _Text, RECT* _Rect, RECT* _Margin)
 	{
 		m_rImageRect = { 50, 294, 65, 308, };
 		m_rCheck = { 50, 328, 65, 343, };
@@ -32,7 +32,7 @@ namespace BONE_GRAPHICS
 		this->Is_Checked = Is_Checked;
 	}
 
-	void etuCheckBox::SetText(string _Text)
+	void etuCheckBox::SetText(std::string _Text)
 	{
 		m_sString = _Text;
 	}

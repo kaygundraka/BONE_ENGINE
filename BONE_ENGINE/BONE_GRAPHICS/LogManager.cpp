@@ -5,9 +5,9 @@
 
 namespace BONE_GRAPHICS
 {
-	string GetTime()
+	std::string GetTime()
 	{
-		string Time;
+		std::string Time;
 
 		time_t timer;
 		struct tm *t;
@@ -31,7 +31,7 @@ namespace BONE_GRAPHICS
 		return Time;
 	}
 
-	void LogManager::AddLogToFile(int _type, string _log)
+	void LogManager::AddLogToFile(int _type, std::string _log)
 	{
 		ThreadSync sync;
 

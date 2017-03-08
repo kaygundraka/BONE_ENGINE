@@ -13,13 +13,13 @@ namespace BONE_GRAPHICS
 
 	IShader::~IShader() {}
 
-	void IShader::SetAddress(string address)
+	void IShader::SetAddress(std::string address)
 	{
 		this->address = address;
 		ResourceMgr->LoadEffect(this->address);
 	}
 
-	string IShader::GetAddress()
+	std::string IShader::GetAddress()
 	{
 		return address;
 	}

@@ -63,8 +63,8 @@ namespace BONE_GRAPHICS
 
 	public:
 		void Initialize(float _fHeightScale, float _fTileScale);
-		void InitializeFromData(string _Address);
-		void SaveData(string _Address);
+		void InitializeFromData(std::string _Address);
+		void SaveData(std::string _Address);
 
 		void LoadBrushTexture(int _Index, char* _String);
 		void SetBrush(float _fTopRadiuse, float _fBottomRadiuse, float _fHeight, float _fStrong);

@@ -40,7 +40,7 @@ namespace BONE_GRAPHICS
 		return originRect;
 	}
 
-	void ScreenImage::SetImageFile(string address)
+	void ScreenImage::SetImageFile(std::string address)
 	{
 		this->address = address;
 	}

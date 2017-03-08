@@ -23,7 +23,7 @@ namespace BONE_GRAPHICS
 		LogMgr->ShowMessage(LOG_MESSAGE, "InputManager is initialized");
 	}
 
-	void InputManager::SelectObject(string name)
+	void InputManager::SelectObject(std::string name)
 	{
 		ThreadSync sync;
 
@@ -31,14 +31,14 @@ namespace BONE_GRAPHICS
 		selectObjectName = name;
 	}
 
-	void InputManager::SelectNature(string name)
+	void InputManager::SelectNature(std::string name)
 	{
 		ThreadSync sync;
 
 		selectNatureName = name;
 	}
 
-	string InputManager::GetSelectedObjectName()
+	std::string InputManager::GetSelectedObjectName()
 	{
 		ThreadSync sync;
 
@@ -130,7 +130,7 @@ namespace BONE_GRAPHICS
 		return false;
 	}
 
-	string InputManager::GetSelectedNatureName()
+	std::string InputManager::GetSelectedNatureName()
 	{
 		return selectNatureName;
 	}

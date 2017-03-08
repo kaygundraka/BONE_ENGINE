@@ -23,17 +23,17 @@ namespace BONE_GRAPHICS
 		void Render(IShader* shaderOpt, GameObject* object);
 		
 		void UpdateAnimation();
-		void PlayAnimation(string animationName, bool isPlay, bool rotateLoop);
+		void PlayAnimation(std::string animationName, bool isPlay, bool rotateLoop);
 
-        void SetAnimation(string name, int index, float animationSpeed);
-		void SetAnimation(string name, float animationSpeed);
-        void SetFileAddress(string address);
+        void SetAnimation(std::string name, int index, float animationSpeed);
+		void SetAnimation(std::string name, float animationSpeed);
+        void SetFileAddress(std::string address);
 
-        string GetFileAddress();
+        std::string GetFileAddress();
 
 		void CheckInRay(RAY *ray, Bone* bone, float& curDist);
 
-		string address;
+		std::string address;
 		LPD3DXMESH GetMesh();
 
 	private:
@@ -48,8 +48,8 @@ namespace BONE_GRAPHICS
 		
         LPD3DXANIMATIONCONTROLLER animationContainer;
 		
-        map<string, KEYFRAMERATE> animationSet;
-		string animationName;
+        map<std::string, KEYFRAMERATE> animationSet;
+		std::string animationName;
 		
         bool IsPlay;
 		bool IsRotateLoop;

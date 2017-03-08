@@ -3,15 +3,18 @@
 
 namespace BONE_GRAPHICS
 {
-	bool etuImage::SetInformaition(string p_sName, string p_sImageAddress, D3DXVECTOR3 p_vec3Position, int p_iWidth, int p_iHeight, RECT* p_pRect, RECT* p_pMargin)
+	bool etuImage::SetInformaition(std::string p_sName, std::string p_sImageAddress, D3DXVECTOR3 p_vec3Position, int p_iWidth, int p_iHeight, RECT* p_pRect, RECT* p_pMargin)
 	{
 		m_rImageRect = *p_pRect;
 
 		if (!BasicSetInformation(p_sName, p_vec3Position, p_iWidth, p_iHeight, p_pMargin))
 			return false;
 
-		m_pTextures->Release();
-		m_pTextures = nullptr;
+        if (m_pTextures != nullptr)
+        {
+            m_pTextures->Release();
+            m_pTextures = nullptr;
+        }
 
 		if (FAILED(D3DXCreateTextureFromFileEx(RenderMgr->GetDevice(), p_sImageAddress.c_str(), D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2,
 			1, 0, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, D3DX_DEFAULT, 0, 0, 0, 0, &m_pTextures)))

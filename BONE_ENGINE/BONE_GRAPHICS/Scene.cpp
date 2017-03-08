@@ -32,7 +32,7 @@ namespace BONE_GRAPHICS
 		}
 	}
 
-	bool Scene::SetLoading(string imageAddress, int width, int height)
+	bool Scene::SetLoading(std::string imageAddress, int width, int height)
 	{
 		RECT rect = { 0, 0, width, height };
 		return image_LoadingBackground.SetInformaition("image_LoadingBackground", imageAddress, D3DXVECTOR3(0, 0, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), &rect, NULL);
@@ -82,7 +82,7 @@ namespace BONE_GRAPHICS
 				(*Iter)->LateRender();
 	}
 
-	void Scene::SetSkybox(string dirName, string fileType)
+	void Scene::SetSkybox(std::string dirName, std::string fileType)
 	{
 		char Path[MAX_PATH];
 		strcpy_s(Path, dirName.c_str());
@@ -170,7 +170,7 @@ namespace BONE_GRAPHICS
 		return CompleateLoading;
 	}
 
-	GameObject* Scene::FindObjectByTag(string tag)
+	GameObject* Scene::FindObjectByTag(std::string tag)
 	{
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
 			if (tag == (*Iter)->Tag())
@@ -183,7 +183,7 @@ namespace BONE_GRAPHICS
         return nullptr;
 	}
 
-	std::tuple<GameObject**, int> Scene::FindObjectsByTag(string tag)
+	std::tuple<GameObject**, int> Scene::FindObjectsByTag(std::string tag)
 	{
 		std::tuple<GameObject**, int> Result;
 		
@@ -253,4 +253,44 @@ namespace BONE_GRAPHICS
 	{
 		return cameraIndex;
 	}
+
+    void Scene::SetAmbientColor(float r, float g, float b, float a)
+    {
+        globalAmbient.r = r;
+        globalAmbient.g = g;
+        globalAmbient.b = b;
+        globalAmbient.a = a;
+    }
+    
+    void Scene::SetAmbientColor(RGBA color)
+    {
+        globalAmbient = color;
+    }
+    
+    RGBA Scene::GetAmbientColor()
+    {
+        return globalAmbient;
+    }
+
+    void Scene::AddPointLight(PointLight* object)
+    {
+        pointLightList.push_back(object);
+    }
+
+    void Scene::RemovePointLight(PointLight* object)
+    {
+        for (auto iter = pointLightList.begin(); iter != pointLightList.end();)
+        {
+            if (*iter == object)
+            {
+                pointLightList.erase(iter);
+                break;
+            }
+        }
+    }
+
+    std::list<PointLight*> Scene::GetPointLights()
+    {
+        return pointLightList;
+    }
 }

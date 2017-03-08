@@ -5,7 +5,7 @@
 
 namespace BONE_GRAPHICS
 {
-	bool etuStaticText::SetInformaition(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, string _Text)
+	bool etuStaticText::SetInformaition(std::string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, std::string _Text)
 	{
 		m_sString = _Text;
 
@@ -20,7 +20,7 @@ namespace BONE_GRAPHICS
 		return true;
 	}
 
-	void etuStaticText::SetText(string _Text)
+	void etuStaticText::SetText(std::string _Text)
 	{
 		m_sString = _Text;
 	}
@@ -36,7 +36,7 @@ namespace BONE_GRAPHICS
 				m_vec3ParentPosition.y + m_vec3Position.y + m_iHeight,
 			};
 
-			string Text = m_sString;
+			std::string Text = m_sString;
 			SIZE TextSize;
 			GetTextExtentPoint32(m_pFont->GetDC(), m_sString.c_str(), m_sString.length(), &TextSize);
 

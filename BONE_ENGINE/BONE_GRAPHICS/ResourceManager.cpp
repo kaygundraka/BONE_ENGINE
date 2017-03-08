@@ -36,7 +36,7 @@ namespace BONE_GRAPHICS
         char path[MAX_PATH];
 
         int path_length = 0;
-        std::vector<std::string> paths = ConfigMgr->GetPaths("info", "ResourcePaths");
+        std::vector<std::string> paths = ConfigMgr->GetPaths(".\\info", "ResourcePaths");
 
         for (int i = 0; i < paths.size(); i++)
         {
@@ -66,7 +66,7 @@ namespace BONE_GRAPHICS
         return false;
     }
 
-	MESH_INFO* ResourceManager::LoadMesh(string name)
+	MESH_INFO* ResourceManager::LoadMesh(std::string name)
 	{
 		ThreadSync sync;
 
@@ -81,7 +81,7 @@ namespace BONE_GRAPHICS
 			if (FAILED(D3DXLoadMeshFromX(full_path.c_str(), 0, RenderMgr->GetDevice(), 0, &Temp.buffer, 0, (DWORD*)&Temp.numMaterials, &Temp.mesh)))
 				return nullptr;
 			
-			staticMeshList.insert(std::pair<string, MESH_INFO>(name, Temp));
+			staticMeshList.insert(std::pair<std::string, MESH_INFO>(name, Temp));
 			
 			char log[MAX_PATH] = "";
 			strcpy_s(log, name.c_str());
@@ -94,7 +94,7 @@ namespace BONE_GRAPHICS
 			return &(staticMeshList.find(name)->second);
 	}
 
-	MESH_INFO* ResourceManager::FindMesh(string name)
+	MESH_INFO* ResourceManager::FindMesh(std::string name)
 	{
 		ThreadSync sync;
 
@@ -104,7 +104,7 @@ namespace BONE_GRAPHICS
             return nullptr;
 	}
 
-	LPDIRECT3DTEXTURE9 ResourceManager::LoadTexture(string name)
+	LPDIRECT3DTEXTURE9 ResourceManager::LoadTexture(std::string name)
 	{
 		ThreadSync sync;
 
@@ -121,7 +121,7 @@ namespace BONE_GRAPHICS
                 D3DX_DEFAULT, 0, 0, 0, 0, &Temp)))
                 return nullptr;
 			
-			textureList.insert(std::pair<string, LPDIRECT3DTEXTURE9>(name, Temp));
+			textureList.insert(std::pair<std::string, LPDIRECT3DTEXTURE9>(name, Temp));
 
 			char log[MAX_PATH] = "";
 			strcpy_s(log, name.c_str());
@@ -136,7 +136,7 @@ namespace BONE_GRAPHICS
 		}
 	}
 
-	LPD3DXEFFECT ResourceManager::LoadEffect(string name)
+	LPD3DXEFFECT ResourceManager::LoadEffect(std::string name)
 	{
 		ThreadSync sync;
 
@@ -146,9 +146,8 @@ namespace BONE_GRAPHICS
 			LPD3DXBUFFER pError = NULL;
 			int dwShaderFlags = 0;
 
-#if _DEBUG
-			dwShaderFlags |= D3DXSHADER_DEBUG;
-#endif
+			dwShaderFlags = D3DXFX_NOT_CLONEABLE | D3DXSHADER_NO_PRESHADER;
+
             std::string full_path = "";
             if (!ExistFile(name, &full_path))
                 return nullptr;
@@ -172,7 +171,7 @@ namespace BONE_GRAPHICS
                 return nullptr;
 			}
 
-			shaderList.insert(std::pair<string, LPD3DXEFFECT>(name, ret));
+			shaderList.insert(std::pair<std::string, LPD3DXEFFECT>(name, ret));
 
 			return shaderList.find(name)->second;
 		}
@@ -180,7 +179,7 @@ namespace BONE_GRAPHICS
 			return shaderList.find(name)->second;
     }
 
-	void ResourceManager::ReleaseMesh(string name)
+	void ResourceManager::ReleaseMesh(std::string name)
 	{
 		ThreadSync sync;
 
@@ -193,7 +192,7 @@ namespace BONE_GRAPHICS
 		}
 	}
 	
-	void ResourceManager::ReleaseTexture(string name)
+	void ResourceManager::ReleaseTexture(std::string name)
 	{
 		ThreadSync sync;
 
@@ -204,7 +203,7 @@ namespace BONE_GRAPHICS
 		}
 	}
 
-	void ResourceManager::ReleaseEffect(string name)
+	void ResourceManager::ReleaseEffect(std::string name)
 	{
 		ThreadSync sync;
 	}

@@ -20,7 +20,7 @@ namespace BONE_GRAPHICS
 		SetTypeName("SkinnedMesh");
 	}
 
-	void SkinnedMesh::SetFileAddress(string address)
+	void SkinnedMesh::SetFileAddress(std::string address)
 	{
 		this->address = address;
 	}
@@ -37,7 +37,7 @@ namespace BONE_GRAPHICS
 		IsInit = true;
 	}
 
-	string SkinnedMesh::GetFileAddress()
+	std::string SkinnedMesh::GetFileAddress()
 	{
 		return address;
 	}
@@ -142,7 +142,7 @@ namespace BONE_GRAPHICS
 			SetupBoneMatrixPointers((Bone*)bone->pFrameFirstChild);
 	}
 
-	void SkinnedMesh::PlayAnimation(string animationName, bool isPlay, bool rotateLoop)
+	void SkinnedMesh::PlayAnimation(std::string animationName, bool isPlay, bool rotateLoop)
 	{
 		if (this->animationName != animationName)
 		{
@@ -169,7 +169,7 @@ namespace BONE_GRAPHICS
         );
 	}
 
-	void SkinnedMesh::SetAnimation(string name, int index, float animationSpeed)
+	void SkinnedMesh::SetAnimation(std::string name, int index, float animationSpeed)
 	{
 		animationName = name;
 
@@ -181,7 +181,7 @@ namespace BONE_GRAPHICS
 		animationContainer->GetAnimationSet(animationSet[animationName].Vertex_Index, &animationSet[animationName].AnimationSet);
 	}
 
-	void SkinnedMesh::SetAnimation(string name, float animationSpeed)
+	void SkinnedMesh::SetAnimation(std::string name, float animationSpeed)
 	{
 		animationName = name;
 

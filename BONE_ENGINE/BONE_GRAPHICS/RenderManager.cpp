@@ -2,12 +2,12 @@
 #include "RenderManager.h"
 #include "LogManager.h"
 #include "InputManager.h"
+#include "ResourceManager.h"
+#include "Vertex.h"
 
 namespace BONE_GRAPHICS
 {
-    _RAY::_RAY() : origin(D3DXVECTOR3(0, 0, 0)), direction(D3DXVECTOR3(0, 0, 0))
-    {
-    }
+    _RAY::_RAY() : origin(D3DXVECTOR3(0, 0, 0)), direction(D3DXVECTOR3(0, 0, 0)) {}
 
     bool RenderManager::InitializeMembers(HWND hWnd)
     {

@@ -17,7 +17,7 @@ namespace BONE_GRAPHICS
 	public:
 		Skybox();
 
-		bool SetSkybox(char* name, string fileType);
+		bool SetSkybox(char* name, std::string fileType);
 		void Render(GameObject* cameraObject);
 		void Release();
 	};

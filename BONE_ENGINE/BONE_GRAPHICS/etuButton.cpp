@@ -6,7 +6,7 @@
 
 namespace BONE_GRAPHICS
 {
-	bool etuButton::SetInformaition(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, string _Text, RECT* _Rect, RECT* _Margin)
+	bool etuButton::SetInformaition(std::string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, std::string _Text, RECT* _Rect, RECT* _Margin)
 	{
 		m_rImageRect = { 213, 499, 357, 535, };
 		m_rClickDown = { 213, 555, 357, 590, };
@@ -21,7 +21,7 @@ namespace BONE_GRAPHICS
 		return true;
 	}
 
-	void etuButton::SetText(string _Text)
+	void etuButton::SetText(std::string _Text)
 	{
 		m_sString = _Text;
 	}

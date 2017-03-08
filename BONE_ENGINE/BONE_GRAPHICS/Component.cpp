@@ -3,12 +3,12 @@
 
 namespace BONE_GRAPHICS
 {
-	void Component::SetTypeName(string typeName)
+	void Component::SetTypeName(std::string typeName)
 	{
 		this->typeName = typeName;
 	}
 
-	string Component::GetTypeName() 
+    std::string Component::GetTypeName()
 	{
 		return typeName;
 	}

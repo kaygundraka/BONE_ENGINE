@@ -24,11 +24,11 @@ namespace BONE_GRAPHICS
 		Framework->LoadContents();
 	}
 
-	void SceneManager::AddScene(string name, Scene* scene)
+	void SceneManager::AddScene(std::string name, Scene* scene)
 	{
 		ThreadSync sync;
 
-		sceneList.insert(std::pair<string, Scene*>(name, scene));
+		sceneList.insert(std::pair<std::string, Scene*>(name, scene));
 	}
 
 	Scene* SceneManager::CurrentScene()
@@ -41,7 +41,7 @@ namespace BONE_GRAPHICS
 		return sceneList[loadScene];
 	}
 
-	void SceneManager::SetLoadingScene(string name)
+	void SceneManager::SetLoadingScene(std::string name)
 	{
 		ThreadSync sync;
 
@@ -58,7 +58,7 @@ namespace BONE_GRAPHICS
 		return timeDelta;
 	}
 	
-	bool SceneManager::StartScene(string name)
+	bool SceneManager::StartScene(std::string name)
 	{
 		curScene = name;
 		sceneList[name]->InitializeMembers();
@@ -180,7 +180,7 @@ namespace BONE_GRAPHICS
 		return false;
 	}
 
-	void SceneManager::EndScene(string name)
+	void SceneManager::EndScene(std::string name)
 	{
 		ThreadSync sync;
 

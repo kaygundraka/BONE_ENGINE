@@ -23,7 +23,7 @@ namespace BONE_GRAPHICS
 		IDirect3DVertexBuffer9* vertexBuffer;
 		IDirect3DIndexBuffer9*	indexBuffer;
 		
-		string		textureAddress;
+		std::string		textureAddress;
 		GameObject*	target;
 
 		float liveCycle;
@@ -66,7 +66,7 @@ namespace BONE_GRAPHICS
 
         void Render(IShader* shaderOpt);
 
-		void SetTexturesAddress(string address);
-		string GetTexturesAddress();
+		void SetTexturesAddress(std::string address);
+		std::string GetTexturesAddress();
 	};
 }

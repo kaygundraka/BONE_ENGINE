@@ -31,18 +31,18 @@
 
 #pragma comment(lib, "shlwapi")
 #pragma comment(lib, "comctl32.lib")
-#pragma comment(lib,"dsound")
-#pragma comment(lib,"winmm")
+#pragma comment(lib, "dsound")
+#pragma comment(lib, "winmm")
 #pragma warning (disable:4251)
 
 using namespace std;
 
-typedef D3DXVECTOR3 Vector3;
-typedef D3DXVECTOR2 Vector2;
-typedef D3DXMATRIX Matrix;
-typedef D3DXQUATERNION Quaternion;
-typedef D3DCOLOR Color;
-typedef LPD3DXMESH Mesh;
+#define Vector3 D3DXVECTOR3
+#define Vector2 D3DXVECTOR2
+#define Matrix D3DXMATRIX
+#define Quaternion D3DXQUATERNION
+#define Color D3DCOLOR
+#define Mesh LPD3DXMESH
 
 class Rect {
 public:
@@ -60,6 +60,15 @@ namespace COLOR {
 	const D3DXCOLOR       CYAN(D3DCOLOR_XRGB(0, 255, 255));
 	const D3DXCOLOR    MAGENTA(D3DCOLOR_XRGB(255, 0, 255));
 }
+
+typedef struct _RGBA {
+    float r;
+    float g;
+    float b;
+    float a;
+
+    _RGBA() : r(1), g(1), b(1), a(1) {}
+} RGBA;
 
 #define SceneMgr SceneManager::GetInstance()
 #define RenderMgr RenderManager::GetInstance()

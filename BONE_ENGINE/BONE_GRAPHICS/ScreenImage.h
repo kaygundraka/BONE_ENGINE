@@ -11,7 +11,7 @@ namespace BONE_GRAPHICS
 	protected:
 		LPD3DXSPRITE sprite;
 		Rect originRect;
-		string address;
+		std::string address;
 		float alpha;
 
 	public:
@@ -24,7 +24,7 @@ namespace BONE_GRAPHICS
 		void SetOriginRect(Vector2 leftTop, Vector2 rightBottom);
 		Rect GetOriginRect();
 
-		void SetImageFile(string address);
+		void SetImageFile(std::string address);
 		
 		void SetAlpha(float alpha);
 		virtual void Render(GameObject* owner);

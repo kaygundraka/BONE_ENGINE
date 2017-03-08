@@ -1,13 +1,12 @@
 #pragma once
 #include "Common.h"
 #include "Component.h"
-#include <vector>
 
 namespace BONE_GRAPHICS 
 {
 	class GameObject {
 	private:
-		string tag;
+		std::string tag;
 		std::vector<Component*> components;
 
 		GameObject* parent;
@@ -38,15 +37,15 @@ namespace BONE_GRAPHICS
 		void AttachChild(GameObject* child);
 		void DetachChild(GameObject* child);
 
-		void DetachChildByTag(string tag);
-		GameObject* FindChildByTag(string tag);
+		void DetachChildByTag(std::string tag);
+		GameObject* FindChildByTag(std::string tag);
 
-		void AttachTag(string tag);
+		void AttachTag(std::string tag);
 		void DetachTag();
-		string Tag();
-		void SetTag(string tag);
+		std::string Tag();
+		void SetTag(std::string tag);
 
-		Component* GetComponent(string typeName);
+		Component* GetComponent(std::string typeName);
 		bool AddComponent(Component* component);
 
 		void LoadContents();

@@ -14,7 +14,7 @@ namespace BONE_GRAPHICS
 		int index;
 		char* logMessage;
 		char* preMessage;
-		string logFileName;
+		std::string logFileName;
 		bool IsSave;
 
 	public:
@@ -25,7 +25,7 @@ namespace BONE_GRAPHICS
 		void ShowMessage(int _type, char* _log);
 		void ShowMessage(int _type, char* _log, float _value);
 		void ShowMessage(int _type, char* _log, char* _value);
-		void AddLogToFile(int _type, string _log);
+		void AddLogToFile(int _type, std::string _log);
 		void SaveLog(bool _flag);
 		virtual void ReleaseMembers();
 	};

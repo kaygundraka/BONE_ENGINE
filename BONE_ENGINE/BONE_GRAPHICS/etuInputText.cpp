@@ -6,7 +6,7 @@
 
 namespace BONE_GRAPHICS
 {
-	bool etuInputText::SetInformaition(string _Name, D3DXVECTOR3 _vec3Position, int _Width, string _Text)
+	bool etuInputText::SetInformaition(std::string _Name, D3DXVECTOR3 _vec3Position, int _Width, std::string _Text)
 	{
 		m_rImageRect = { 50, 50, 296, 86, };
 		m_rFocusRect = { 50, 192, 296, 229, };
@@ -57,7 +57,7 @@ namespace BONE_GRAPHICS
 		return false;
 	}
 
-	string etuInputText::GetText()
+	std::string etuInputText::GetText()
 	{
 		return m_sString;
 	}
@@ -126,7 +126,7 @@ namespace BONE_GRAPHICS
 				m_vec3ParentPosition.y + m_vec3Position.y + m_iHeight * m_fScaleY - m_rMargin.bottom,
 			};
 
-			string Text = m_sString;
+			std::string Text = m_sString;
 			SIZE TextSize;
 			GetTextExtentPoint32(m_pFont->GetDC(), m_sString.c_str(), m_sString.length(), &TextSize);
 

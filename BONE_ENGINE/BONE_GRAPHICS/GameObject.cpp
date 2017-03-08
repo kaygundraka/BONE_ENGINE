@@ -91,12 +91,12 @@ namespace BONE_GRAPHICS
 		return priorty;
 	}
 
-	void GameObject::SetTag(string tag)
+	void GameObject::SetTag(std::string tag)
 	{
 		this->tag = tag;
 	}
 
-	Component* GameObject::GetComponent(string typeName)
+	Component* GameObject::GetComponent(std::string typeName)
 	{
 		for (auto Iter = components.begin(); Iter != components.end(); Iter++)
 			if ((*Iter)->GetTypeName() == typeName)
@@ -241,7 +241,7 @@ namespace BONE_GRAPHICS
 		}
 	}
 
-	void GameObject::DetachChildByTag(string tag)
+	void GameObject::DetachChildByTag(std::string tag)
 	{
 		for (auto Iter = childs.begin(); Iter != childs.end(); Iter++)
 		{
@@ -253,7 +253,7 @@ namespace BONE_GRAPHICS
 		}
 	}
 	
-	GameObject* GameObject::FindChildByTag(string tag)
+	GameObject* GameObject::FindChildByTag(std::string tag)
 	{
 		for (auto Iter = childs.begin(); Iter != childs.end(); Iter++)
 			if ((*Iter)->Tag() == tag)
@@ -262,7 +262,7 @@ namespace BONE_GRAPHICS
         return nullptr;
 	}
 
-	void GameObject::AttachTag(string tag)
+	void GameObject::AttachTag(std::string tag)
 	{
 		this->tag = tag;
 	}
@@ -272,7 +272,7 @@ namespace BONE_GRAPHICS
 		tag = "";
 	}
 
-	string GameObject::Tag()
+	std::string GameObject::Tag()
 	{
 		return tag;
 	}

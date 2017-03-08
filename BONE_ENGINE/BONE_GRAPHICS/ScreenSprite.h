@@ -20,7 +20,7 @@ namespace BONE_GRAPHICS
 		bool rightPlay;
 
 		LPD3DXSPRITE sprite;
-		string address;
+		std::string address;
 		RECT curRect;
 
 	public:
@@ -29,7 +29,7 @@ namespace BONE_GRAPHICS
 
 		void LoadContent();
 
-		void SetInformation(string address, int width, int height, int animationCut, int animationScene, float alpha);
+		void SetInformation(std::string address, int width, int height, int animationCut, int animationScene, float alpha);
 
 		void PlayAnimation(float cutTimer);
 		void SelectAnimation(int sceneIndex);

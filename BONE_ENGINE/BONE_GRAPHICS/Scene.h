@@ -5,6 +5,7 @@
 #include "etuImage.h"
 #include "GameObject.h"
 #include "Skybox.h"
+#include "PointLight.h"
 
 namespace BONE_GRAPHICS
 {
@@ -18,7 +19,10 @@ namespace BONE_GRAPHICS
 		int cameraIndex;
 		Skybox skybox;
 		bool CompleateLoading;
+        RGBA globalAmbient;
  
+        std::list<PointLight*> pointLightList;
+
 	public:
 		bool InitializeMembers();
 		void Reference();
@@ -34,19 +38,19 @@ namespace BONE_GRAPHICS
 		
 		void AddObject(GameObject* object);
 		void AddObjects(GameObject** objects, int size);
-		
+
 		void SortPriorityObject();
 
-		std::tuple<GameObject**, int> FindObjectsByTag(string tag);
-		GameObject* FindObjectByTag(string tag);
+		std::tuple<GameObject**, int> FindObjectsByTag(std::string tag);
+		GameObject* FindObjectByTag(std::string tag);
 		void Destroy(GameObject* gameObject);
 
 		GameObject* GetCurrentCamera();
 
 		void SetCamera(int ID);
-		bool SetLoading(string imageAddress, int width, int height);
+		bool SetLoading(std::string imageAddress, int width, int height);
 
-		void SetSkybox(string dirName, string fileType);
+		void SetSkybox(std::string dirName, std::string fileType);
 
 		bool GetSceneFlag();
 		void SetSceneFlag(bool flag);
@@ -55,5 +59,12 @@ namespace BONE_GRAPHICS
 		void SetCameraIndex(int index);
 		int GetCameraIndex();
 
+        void SetAmbientColor(float r, float g, float b, float a);
+        void SetAmbientColor(RGBA color);
+        RGBA GetAmbientColor();
+
+        void AddPointLight(PointLight* object);
+        void RemovePointLight(PointLight* object);
+        std::list<PointLight*>  GetPointLights();
 	};
 }

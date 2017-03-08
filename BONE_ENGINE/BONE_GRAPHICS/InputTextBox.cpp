@@ -80,7 +80,7 @@ namespace BONE_GRAPHICS
 		return maxStrLength;
 	}
 
-	string InputTextBox::GetString()
+	std::string InputTextBox::GetString()
 	{
 		return str;
 	}

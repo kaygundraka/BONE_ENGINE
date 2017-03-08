@@ -15,7 +15,7 @@ namespace BONE_GRAPHICS
 		bool active;
 		bool isFocused;
 		bool isClicked;
-		string str;
+		std::string str;
 		int maxStrLength;
 
 	public:
@@ -26,7 +26,7 @@ namespace BONE_GRAPHICS
 	
 		bool IsClicked(GameObject* owner);
 		void SetActive(bool active);
-		string GetString();
+		std::string GetString();
 		void ClearString();
 
 		void SetMaxLength(int length);

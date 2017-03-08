@@ -18,21 +18,21 @@ namespace BONE_GRAPHICS
 	class etuDialog : public etuForm
 	{
 	private:
-		string m_sWindowName;
-		map<string, etuTextBox> m_mTextBoxMap;
-		map<string, etuButton> m_mButtonMap;
-		map<string, etuCheckBox> m_mCheckBoxMap;
-		map<string, etuImage> m_mImageMap;
-		map<string, etuComboBox> m_mComboBoxMap;
-		map<string, etuStaticText> m_mStaticTextMap;
-		map<string, etuInputText> m_mInputTextMap;
+		std::string m_sWindowName;
+		map<std::string, etuTextBox> m_mTextBoxMap;
+		map<std::string, etuButton> m_mButtonMap;
+		map<std::string, etuCheckBox> m_mCheckBoxMap;
+		map<std::string, etuImage> m_mImageMap;
+		map<std::string, etuComboBox> m_mComboBoxMap;
+		map<std::string, etuStaticText> m_mStaticTextMap;
+		map<std::string, etuInputText> m_mInputTextMap;
 		etuMessageHandler<T> *MessageHandler;
 
 		RECT m_rWindowBarRect;
 		RECT m_rFrameRect;
 
 	public:
-		bool SetInformaition(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, RECT* _Rect = nullptr, RECT* _Margin = nullptr);
+		bool SetInformaition(std::string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, RECT* _Rect = nullptr, RECT* _Margin = nullptr);
 
 		void SetMessageHandler(etuMessageHandler<T> *MessageHandler)
 		{
@@ -42,18 +42,18 @@ namespace BONE_GRAPHICS
 
 		virtual void SetPosition(D3DXVECTOR3& _vec3Position);
 
-		bool AddTextBox(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, string _Text, RECT* _Rect = nullptr, RECT* _Margin = nullptr);
-		bool AddButton(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, string _Text, RECT* _Rect = nullptr, RECT* _Margin = nullptr);
-		bool AddCheckBox(string _Name, D3DXVECTOR3 _vec3Position, string _Text, RECT* _Rect = nullptr, RECT* _Margin = nullptr);
-		bool AddImage(string _Name, string _ImageAddress, D3DXVECTOR3 _vec3Position, int _Width, int _Height, RECT* _Rect, RECT* _Margin = nullptr);
-		bool AddComboBox(string _Name, D3DXVECTOR3 _vec3Position);
-		bool AddStaticText(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, string _Text);
-		bool AddInputText(string _Name, D3DXVECTOR3 _vec3Position, int _Width, string _Text);
+		bool AddTextBox(std::string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, std::string _Text, RECT* _Rect = nullptr, RECT* _Margin = nullptr);
+		bool AddButton(std::string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, std::string _Text, RECT* _Rect = nullptr, RECT* _Margin = nullptr);
+		bool AddCheckBox(std::string _Name, D3DXVECTOR3 _vec3Position, std::string _Text, RECT* _Rect = nullptr, RECT* _Margin = nullptr);
+		bool AddImage(std::string _Name, std::string _ImageAddress, D3DXVECTOR3 _vec3Position, int _Width, int _Height, RECT* _Rect, RECT* _Margin = nullptr);
+		bool AddComboBox(std::string _Name, D3DXVECTOR3 _vec3Position);
+		bool AddStaticText(std::string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, std::string _Text);
+		bool AddInputText(std::string _Name, D3DXVECTOR3 _vec3Position, int _Width, std::string _Text);
 
-		auto GetWindow(string _Name);
-		etuComboBox* GetComboBox(string _Name);
-		etuInputText* GetInputText(string _Name);
-		etuCheckBox* GetCheckBox(string _Name);
+		auto GetWindow(std::string _Name);
+		etuComboBox* GetComboBox(std::string _Name);
+		etuInputText* GetInputText(std::string _Name);
+		etuCheckBox* GetCheckBox(std::string _Name);
 		virtual void Render() override;
 
 		void Update(float _fTimeDelta);
@@ -62,7 +62,7 @@ namespace BONE_GRAPHICS
 	};
 
 	template <typename T>
-	auto etuDialog<T>::GetWindow(string _Name)
+	auto etuDialog<T>::GetWindow(std::string _Name)
 	{
 		auto CheckBox = &(m_mCheckBoxMap.find(p_sName)->second);
 		if (CheckBox != nullptr)
@@ -88,7 +88,7 @@ namespace BONE_GRAPHICS
 	}
 
 	template <typename T>
-	etuInputText* etuDialog<T>::GetInputText(string _Name)
+	etuInputText* etuDialog<T>::GetInputText(std::string _Name)
 	{
 		etuInputText* InputText = &(m_mInputTextMap.find(p_sName)->second);
 		if (InputText != nullptr)
@@ -98,7 +98,7 @@ namespace BONE_GRAPHICS
 	}
 
 	template <typename T>
-	etuCheckBox* etuDialog<T>::GetCheckBox(string _Name)
+	etuCheckBox* etuDialog<T>::GetCheckBox(std::string _Name)
 	{
 		etuCheckBox* CheckBox = &(m_mCheckBoxMap.find(p_sName)->second);
 		if (CheckBox != nullptr)
@@ -108,7 +108,7 @@ namespace BONE_GRAPHICS
 	}
 
 	template <typename T>
-	etuComboBox* etuDialog<T>::GetComboBox(string _Name)
+	etuComboBox* etuDialog<T>::GetComboBox(std::string _Name)
 	{
 		etuComboBox* ComboBox = &(m_mComboBoxMap.find(p_sName)->second);
 		if (ComboBox != nullptr)
@@ -118,7 +118,7 @@ namespace BONE_GRAPHICS
 	}
 
 	template <typename T>
-	bool etuDialog<T>::SetInformaition(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, RECT* _Rect, RECT* _Margin)
+	bool etuDialog<T>::SetInformaition(std::string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, RECT* _Rect, RECT* _Margin)
 	{
 		m_sWindowName = _Name;
 
@@ -378,7 +378,7 @@ namespace BONE_GRAPHICS
 	}
 
 	template <typename T>
-	bool etuDialog<T>::AddButton(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, string _Text, RECT* _Rect, RECT* _Margin)
+	bool etuDialog<T>::AddButton(std::string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, std::string _Text, RECT* _Rect, RECT* _Margin)
 	{
 		if (0 != m_mButtonMap.count(p_sName))
 			return false;
@@ -411,7 +411,7 @@ namespace BONE_GRAPHICS
 	}
 
 	template <typename T>
-	bool etuDialog<T>::AddTextBox(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, string _Text, RECT* _Rect, RECT* _Margin)
+	bool etuDialog<T>::AddTextBox(std::string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, std::string _Text, RECT* _Rect, RECT* _Margin)
 	{
 		if (0 != m_mTextBoxMap.count(p_sName))
 			return false;
@@ -444,7 +444,7 @@ namespace BONE_GRAPHICS
 	}
 
 	template <typename T>
-	bool etuDialog<T>::AddCheckBox(string _Name, D3DXVECTOR3 _vec3Position, string _Text, RECT* _Rect = nullptr, RECT* _Margin = nullptr)
+	bool etuDialog<T>::AddCheckBox(std::string _Name, D3DXVECTOR3 _vec3Position, std::string _Text, RECT* _Rect = nullptr, RECT* _Margin = nullptr)
 	{
 		if (0 != m_mCheckBoxMap.count(p_sName))
 			return false;
@@ -469,7 +469,7 @@ namespace BONE_GRAPHICS
 	}
 
 	template <typename T>
-	bool etuDialog<T>::AddImage(string _Name, string _ImageAddress, D3DXVECTOR3 _vec3Position, int _Width, int _Height, RECT* _Rect, RECT* _Margin = nullptr)
+	bool etuDialog<T>::AddImage(std::string _Name, std::string _ImageAddress, D3DXVECTOR3 _vec3Position, int _Width, int _Height, RECT* _Rect, RECT* _Margin = nullptr)
 	{
 		if (0 != m_mImageMap.count(p_sName))
 			return false;
@@ -500,7 +500,7 @@ namespace BONE_GRAPHICS
 	}
 
 	template <typename T>
-	bool etuDialog<T>::AddComboBox(string _Name, D3DXVECTOR3 _vec3Position)
+	bool etuDialog<T>::AddComboBox(std::string _Name, D3DXVECTOR3 _vec3Position)
 	{
 		if (0 != m_mComboBoxMap.count(p_sName))
 			return false;
@@ -525,7 +525,7 @@ namespace BONE_GRAPHICS
 	}
 
 	template <typename T>
-	bool etuDialog<T>::AddStaticText(string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, string _Text)
+	bool etuDialog<T>::AddStaticText(std::string _Name, D3DXVECTOR3 _vec3Position, int _Width, int _Height, std::string _Text)
 	{
 		if (0 != m_mStaticTextMap.count(p_sName))
 			return false;
@@ -550,7 +550,7 @@ namespace BONE_GRAPHICS
 	}
 
 	template <typename T>
-	bool etuDialog<T>::AddInputText(string _Name, D3DXVECTOR3 _vec3Position, int _Width, string _Text)
+	bool etuDialog<T>::AddInputText(std::string _Name, D3DXVECTOR3 _vec3Position, int _Width, std::string _Text)
 	{
 		if (0 != m_mInputTextMap.count(p_sName))
 			return false;

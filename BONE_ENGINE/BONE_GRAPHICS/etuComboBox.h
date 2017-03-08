@@ -7,8 +7,8 @@ namespace BONE_GRAPHICS
 	class etuComboBox : public etuForm
 	{
 	private:
-		string m_sName;
-		string m_sSelectItem;
+		std::string m_sName;
+		std::string m_sSelectItem;
 		bool Is_SelectStatus;
 
 		int m_rItemHeight;
@@ -17,15 +17,15 @@ namespace BONE_GRAPHICS
 		RECT m_rSelectItem;
 		RECT m_rItemLast;
 
-		vector<string> m_pItems;
+		vector<std::string> m_pItems;
 
 	public:
-		bool SetInformaition(string _Name, D3DXVECTOR3 _vec3Position);
+		bool SetInformaition(std::string _Name, D3DXVECTOR3 _vec3Position);
 
-		bool AddItems(string _String);
-		bool DeleteItems(string _String);
+		bool AddItems(std::string _String);
+		bool DeleteItems(std::string _String);
 
-		string GetSelectItems();
+		std::string GetSelectItems();
 
 		virtual bool IsClicked() override;
 		virtual void Render() override;

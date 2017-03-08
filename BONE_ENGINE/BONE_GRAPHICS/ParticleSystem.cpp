@@ -47,7 +47,7 @@ namespace BONE_GRAPHICS
 		vb->Release();
 	}
 
-	void ParticleSystem::SetTextreAddress(string _address)
+	void ParticleSystem::SetTextreAddress(std::string _address)
 	{
 		textureAddress = _address;
 	}

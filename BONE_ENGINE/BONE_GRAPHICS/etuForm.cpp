@@ -5,15 +5,15 @@
 
 namespace BONE_GRAPHICS
 {
-	bool etuForm::BasicSetInformation(string p_sName, D3DXVECTOR3 p_vec3Position, int p_iWidth, int p_iHeight, RECT* p_pMargin)
+	bool etuForm::BasicSetInformation(std::string p_sName, D3DXVECTOR3 p_vec3Position, int p_iWidth, int p_iHeight, RECT* p_pMargin)
 	{
 		m_sName = p_sName;
 
-		if (FAILED(D3DXCreateTextureFromFileEx(RenderMgr->GetDevice(), "Resource\\GUI\\GUI.png", D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2,
+		/*if (FAILED(D3DXCreateTextureFromFileEx(RenderMgr->GetDevice(), "Resource\\GUI\\GUI.png", D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2,
 			1, 0, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, D3DX_DEFAULT, 0, 0, 0, 0, &m_pTextures)))
 		{
 			return false;
-		}
+		}*/
 
 		if (FAILED(D3DXCreateSprite(RenderMgr->GetDevice(), &m_pSprite)))
 		{
@@ -85,7 +85,7 @@ namespace BONE_GRAPHICS
 		return Temp;
 	}
 
-	string etuForm::GetName()
+	std::string etuForm::GetName()
 	{
 		return m_sName;
 	}

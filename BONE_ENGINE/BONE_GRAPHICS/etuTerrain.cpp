@@ -54,7 +54,7 @@ namespace BONE_GRAPHICS
 		Is_Init = true;
 	}
 
-	void etuTerrain::InitializeFromData(string _Address)
+	void etuTerrain::InitializeFromData(std::string _Address)
 	{
 		CreateAlphaMaps();
 
@@ -89,7 +89,7 @@ namespace BONE_GRAPHICS
 
 		Is_Init = true;
 
-		string XmlAddr = _Address + "\\Settings.xml";
+		std::string XmlAddr = _Address + "\\Settings.xml";
 		
 		TiXmlDocument doc;
 		doc.LoadFile(XmlAddr.c_str());
@@ -131,7 +131,7 @@ namespace BONE_GRAPHICS
 		
 		for (int i = 0; i < 4; i++)
 		{
-			string Address;
+			std::string Address;
 
 			pTerrainInfoElem = pTerrainInfoElem->NextSiblingElement();
 			Address = pTerrainInfoElem->Attribute("Address");
@@ -174,7 +174,7 @@ namespace BONE_GRAPHICS
 		m_pQuadTree->Build(Terrain_Info.Vertex);
 	}
 
-	void etuTerrain::SaveData(string _Address)
+	void etuTerrain::SaveData(std::string _Address)
 	{
 		SaveAlphaMap();
 
@@ -208,7 +208,7 @@ namespace BONE_GRAPHICS
 			pElem->LinkEndChild(pTextureElem);
 			pTextureElem->SetDoubleAttribute("ID", i);
 
-			string addr = _Address + "\\AlphaMap";
+			std::string addr = _Address + "\\AlphaMap";
 
 			char Number[3];
 			itoa(i, Number, 10);

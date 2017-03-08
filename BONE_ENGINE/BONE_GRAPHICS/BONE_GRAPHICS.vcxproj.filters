@@ -81,6 +81,15 @@
     <Filter Include="소스 파일\Management\Configuration">
       <UniqueIdentifier>{9c0d54b8-2d1b-4ade-ac20-2e352dd37980}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\GameObject\Components\Environment\Light">
+      <UniqueIdentifier>{148a6df0-bc60-49c7-9cb6-93937320c348}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GameObject\Components\Effect\Basic">
+      <UniqueIdentifier>{0c4d47e8-e2a4-473c-b8e2-5ec69485518e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GameObject\Components\Effect\Extension">
+      <UniqueIdentifier>{8dc67a41-b40a-4c6e-8dbc-930eb223d273}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -96,9 +105,6 @@
       <Filter>소스 파일\GameObject\Components\Camera</Filter>
     </ClInclude>
     <ClInclude Include="IShader.h">
-      <Filter>소스 파일\GameObject\Components\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="TrailRenderer.h">
       <Filter>소스 파일\GameObject\Components\Effect</Filter>
     </ClInclude>
     <ClInclude Include="Skybox.h">
@@ -218,6 +224,18 @@
     <ClInclude Include="RenderManager.h">
       <Filter>소스 파일\Management\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>소스 파일\GameObject\Components\Effect\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="PhongShader.h">
+      <Filter>소스 파일\GameObject\Components\Effect\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>소스 파일\GameObject\Components\Effect\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="TrailRenderer.h">
+      <Filter>소스 파일\GameObject\Components\Effect\Extension</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -230,9 +248,6 @@
       <Filter>소스 파일\GameObject\Components\Camera</Filter>
     </ClCompile>
     <ClCompile Include="IShader.cpp">
-      <Filter>소스 파일\GameObject\Components\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="TrailRenderer.cpp">
       <Filter>소스 파일\GameObject\Components\Effect</Filter>
     </ClCompile>
     <ClCompile Include="Skybox.cpp">
@@ -351,6 +366,18 @@
     </ClCompile>
     <ClCompile Include="RenderManager.cpp">
       <Filter>소스 파일\Management\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>소스 파일\GameObject\Components\Effect\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="PhongShader.cpp">
+      <Filter>소스 파일\GameObject\Components\Effect\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>소스 파일\GameObject\Components\Effect\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="TrailRenderer.cpp">
+      <Filter>소스 파일\GameObject\Components\Effect\Extension</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

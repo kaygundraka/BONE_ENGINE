@@ -15,8 +15,8 @@ namespace BONE_GRAPHICS
 		POINT mousePosition;
 		MOUSE_STATUS IsLBClick;
 		MOUSE_STATUS IsRBClick;
-		string selectObjectName;
-		string selectNatureName;
+		std::string selectObjectName;
+		std::string selectNatureName;
 		bool IsSelectObject;
 		map<char, bool> keyStatus;
 		map<int, bool> checkBoxStatus;
@@ -39,8 +39,8 @@ namespace BONE_GRAPHICS
 		MOUSE_STATUS GetMouseLBButtonStatus();
 		MOUSE_STATUS GetMouseRBButtonStatus();
 		bool GetCheckBoxStatus(int _checkBoxName);
-		string GetSelectedObjectName();
-		string GetSelectedNatureName();
+		std::string GetSelectedObjectName();
+		std::string GetSelectedNatureName();
 		int GetCreatorMode();
 		MOUSE_WHEEL_STATUS GetMouseWheelStatus();
 		char GetCurrentChar();
@@ -56,8 +56,8 @@ namespace BONE_GRAPHICS
 		void SetSelectObjectValue(bool isExist);
 		void SetMousePosition(POINT mousePosition);
 		void SetCheckBoxStatus(int checkBoxName, bool isChecked);
-		void SelectObject(string name);
-		void SelectNature(string name);
+		void SelectObject(std::string name);
+		void SelectNature(std::string name);
 		void SetCreatorMode(int index);
 		bool ExistSelectObejct();
 

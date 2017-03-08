@@ -256,12 +256,12 @@ namespace BONE_GRAPHICS
 		}
 	}
 
-	void TrailRenderer::SetTexturesAddress(string address)
+	void TrailRenderer::SetTexturesAddress(std::string address)
 	{
 		textureAddress = address;
 	}
 
-	string TrailRenderer::GetTexturesAddress()
+	std::string TrailRenderer::GetTexturesAddress()
 	{
 		return textureAddress;
 	}

@@ -78,7 +78,7 @@ namespace BONE_GRAPHICS
 		return originRect;
 	}
 
-	void ScreenButton::SetImageFile(string address)
+	void ScreenButton::SetImageFile(std::string address)
 	{
 		this->address = address;
 	}

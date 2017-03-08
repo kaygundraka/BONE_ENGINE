@@ -8,13 +8,13 @@ namespace BONE_GRAPHICS
 	{
 	private:
 		RECT m_rFocusRect;
-		string m_sString;
+		std::string m_sString;
 
 	public:
-		bool SetInformaition(string _Name, D3DXVECTOR3 _vec3Position, int _Width, string _Text);
+		bool SetInformaition(std::string _Name, D3DXVECTOR3 _vec3Position, int _Width, std::string _Text);
 		virtual bool IsClicked();
 		void Update(float _fTimeDelta);
-		string GetText();
+		std::string GetText();
 		virtual void Render() override;
 	};
 }

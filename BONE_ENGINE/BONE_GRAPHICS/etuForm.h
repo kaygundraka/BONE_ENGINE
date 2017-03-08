@@ -10,7 +10,7 @@ namespace BONE_GRAPHICS
 		D3DXVECTOR3 m_vec3Position;
 		LPDIRECT3DTEXTURE9 m_pTextures;
 		LPD3DXFONT m_pFont;
-		string m_sName;
+		std::string m_sName;
 		D3DXVECTOR3 m_vec3ParentPosition;
 
 		D3DXMATRIX m_TransformMatrix;
@@ -28,10 +28,10 @@ namespace BONE_GRAPHICS
 		bool Is_Show;
 
 	public:
-		bool BasicSetInformation(string p_sName, D3DXVECTOR3 p_vec3Position, int p_iWidth, int p_iHeight, RECT* p_pMargin = nullptr);
+		bool BasicSetInformation(std::string p_sName, D3DXVECTOR3 p_vec3Position, int p_iWidth, int p_iHeight, RECT* p_pMargin = nullptr);
 		D3DXVECTOR3 GetPosition();
 		SIZE GetStaticObjectSize();
-		string GetName();
+		std::string GetName();
 		virtual void SetPosition(D3DXVECTOR3& p_vec3Position);
 		void SetParentPosition(D3DXVECTOR3 p_vec3Position);
 		void SetSize(int p_iWidth, int p_iHeight);

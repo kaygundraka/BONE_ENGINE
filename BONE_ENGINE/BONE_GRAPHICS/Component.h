@@ -1,17 +1,18 @@
 #pragma once
+#include "Common.h"
 
 namespace BONE_GRAPHICS
 {
 	class Component{
 	private:
-		string typeName;
+		std::string typeName;
 		
 	protected:
-		void SetTypeName(string typeName);
+		void SetTypeName(std::string typeName);
 
 	public:
 		virtual void LoadContent();
-		string GetTypeName();
+        std::string GetTypeName();
 
 		virtual ~Component() {}
 	};

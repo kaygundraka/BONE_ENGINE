@@ -11,42 +11,36 @@ namespace BONE_GRAPHICS
 		Is_Init = false;
 	}
 
-	bool Skybox::SetSkybox(char* name, string fileType)
+	bool Skybox::SetSkybox(char* name, std::string fileType)
 	{
 		char TextureAddress[6][100] = { {} };
 
         std::string FullPath;
         ResourceMgr->ExistFile(name, &FullPath);
 
-        int pos = FullPath.find(name);
-        
-        for (int i = FullPath.size(); i > pos; i--)
-            FullPath.pop_back();
-
-		for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 6; i++)
 		{
 			strcpy_s(TextureAddress[i], FullPath.c_str());
-			strcat_s(TextureAddress[i], name);
 			strcat_s(TextureAddress[i], "\\");
 			strcat_s(TextureAddress[i], name);
 		}
 
-		strcat_s(TextureAddress[0], "_up");
+		strcat_s(TextureAddress[0], "_up.");
 		strcat_s(TextureAddress[0], fileType.c_str());
 
-		strcat_s(TextureAddress[1], "_dn");
+		strcat_s(TextureAddress[1], "_dn.");
 		strcat_s(TextureAddress[1], fileType.c_str());
 
-		strcat_s(TextureAddress[2], "_lf");
+		strcat_s(TextureAddress[2], "_lf.");
 		strcat_s(TextureAddress[2], fileType.c_str());
 
-		strcat_s(TextureAddress[3], "_rt");
+		strcat_s(TextureAddress[3], "_rt.");
 		strcat_s(TextureAddress[3], fileType.c_str());
 
-		strcat_s(TextureAddress[4], "_ft");
+		strcat_s(TextureAddress[4], "_ft.");
 		strcat_s(TextureAddress[4], fileType.c_str());
 
-		strcat_s(TextureAddress[5], "_bk");
+		strcat_s(TextureAddress[5], "_bk.");
 		strcat_s(TextureAddress[5], fileType.c_str());
 
 		// - texture UV까지 생각해보면 정점 24개가 필요하다.

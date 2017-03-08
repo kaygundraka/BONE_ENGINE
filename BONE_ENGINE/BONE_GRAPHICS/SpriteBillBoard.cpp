@@ -272,12 +272,12 @@ namespace BONE_GRAPHICS
 		return true;
 	}
 
-	void SpriteBillBoard::SetTexturesAddress(string address)
+	void SpriteBillBoard::SetTexturesAddress(std::string address)
 	{
 		textureAddress = address;
 	}
 
-	string	SpriteBillBoard::GetTexturesAddress()
+	std::string	SpriteBillBoard::GetTexturesAddress()
 	{
 		return textureAddress;
 	}

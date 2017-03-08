@@ -2,7 +2,6 @@
 #include "Common.h"
 #include "Component.h"
 #include "GameObject.h"
-using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
@@ -10,17 +9,19 @@ namespace BONE_GRAPHICS
 	{
 	protected:
 		LPD3DXEFFECT* shader;
-		string address;
+		std::string address;
+        
+        void SetAddress(std::string address);
 
 	public:
 		IShader();
 		virtual ~IShader();
 
 		void LoadContent();
-		void SetAddress(string address);
-		string GetAddress();
+		
+        std::string GetAddress();
 
-		virtual void Render(int i, GameObject* parent) = 0;
+		virtual void Render(int index, GameObject* parent) = 0;
 
 		LPD3DXEFFECT GetShader();
 	};

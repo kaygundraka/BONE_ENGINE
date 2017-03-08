@@ -87,6 +87,7 @@ namespace BONE_GRAPHICS
 			break;
 
 		case WM_DESTROY:
+            ReleaseFramework();
 			::PostQuitMessage(0);
 			break;
 
@@ -102,6 +103,8 @@ namespace BONE_GRAPHICS
 	{
 		WNDCLASS WndClass;
 
+        std::string windowsName = ConfigMgr->GetStr(".\\info", "WindowsName");
+
 		WndClass.cbClsExtra = 0;
 		WndClass.cbWndExtra = 0;
 		WndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
@@ -109,19 +112,19 @@ namespace BONE_GRAPHICS
 		WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 		WndClass.hInstance = hInstance;
 		WndClass.lpfnWndProc = (WNDPROC)FrameworkWndProc;
-		WndClass.lpszClassName = ConfigMgr->GetStr("Info", "WindowsName").c_str();
+		WndClass.lpszClassName = windowsName.c_str();
 		WndClass.lpszMenuName = NULL;
 		WndClass.style = CS_HREDRAW | CS_VREDRAW;
 		RegisterClass(&WndClass);
 
 		hWnd = CreateWindow(
-            ConfigMgr->GetStr("Info", "WindowsName").c_str(),
-            ConfigMgr->GetStr("Info", "WindowsName").c_str(), 
+            windowsName.c_str(),
+            windowsName.c_str(),
             WS_OVERLAPPEDWINDOW, 
             0, 
             0, 
-            ConfigMgr->GetFloat("Info", "WindowsWidth"),
-            ConfigMgr->GetFloat("Info", "WindowsHeight"),
+            ConfigMgr->GetFloat(".\\info", "WindowsWidth"),
+            ConfigMgr->GetFloat(".\\info", "WindowsHeight"),
 			NULL, 
             (HMENU)NULL, 
             hInstance, 
@@ -130,7 +133,7 @@ namespace BONE_GRAPHICS
 
 		ShowWindow(hWnd, SW_SHOW);
 
-		if (ConfigMgr->GetBool("Info", "ShowLogCmd"))
+		if (ConfigMgr->GetBool(".\\info", "ShowLogCmd"))
 		{
 			AllocConsole();
 			SetConsoleTitleA("[Debug]");
@@ -141,10 +144,10 @@ namespace BONE_GRAPHICS
 			HWND ConsolehWnd = GetConsoleWindow();
 			SetWindowPos(ConsolehWnd, 
                 0, 
-                ConfigMgr->GetFloat("Info", "WindowsWidth"), 
+                ConfigMgr->GetFloat(".\\info", "WindowsWidth"), 
                 0, 
-                ConfigMgr->GetFloat("Info", "WindowsWidth"),
-                ConfigMgr->GetFloat("Info", "WindowsHeight"), 
+                ConfigMgr->GetFloat(".\\info", "WindowsWidth"),
+                ConfigMgr->GetFloat(".\\info", "WindowsHeight"), 
                 0
             );
 		}
@@ -157,7 +160,7 @@ namespace BONE_GRAPHICS
 
 	bool InitializeFramework(HWND hWnd)
 	{
-		LogMgr->InitializeMembers(ConfigMgr->GetFloat("Info", "EnableLog"));
+		LogMgr->InitializeMembers(ConfigMgr->GetFloat(".\\info", "EnableLog"));
 		RenderMgr->InitializeMembers(hWnd);
 		InputMgr->InitializeMembers();
 		SceneMgr->InitializeMembers();
@@ -166,7 +169,7 @@ namespace BONE_GRAPHICS
 		RECT rect = { 0, 0, RenderMgr->GetWidth(), RenderMgr->GetHeight() };
 		etuImage LogoImage;
 		
-		if (!LogoImage.SetInformaition("LogoImage", "Resource\\GUI\\Logo.png", D3DXVECTOR3(0, 0, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), &rect, NULL))
+		if (!LogoImage.SetInformaition("LogoImage", "Resource\\Logo\\Logo.png", D3DXVECTOR3(0, 0, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), &rect, NULL))
 			return false;
 		
 		int Alpha = 0;

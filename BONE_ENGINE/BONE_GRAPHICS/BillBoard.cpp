@@ -150,14 +150,14 @@ namespace BONE_GRAPHICS
 		return true;
 	}
 
-	void BillBoard::SetTexturesAddress(string address, int width, int height)
+	void BillBoard::SetTexturesAddress(std::string address, int width, int height)
 	{
 		textureAddress = address;
 		this->width = width;
         this->height = height;
 	}
 
-	string	BillBoard::GetTexturesAddress()
+	std::string	BillBoard::GetTexturesAddress()
 	{
 		return textureAddress;
 	}

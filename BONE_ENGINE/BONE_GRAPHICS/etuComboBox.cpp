@@ -4,7 +4,7 @@
 
 namespace BONE_GRAPHICS
 {
-	bool etuComboBox::SetInformaition(string _Name, D3DXVECTOR3 _vec3Position)
+	bool etuComboBox::SetInformaition(std::string _Name, D3DXVECTOR3 _vec3Position)
 	{
 		m_sName = _Name;
 		m_sSelectItem = "NONE";
@@ -28,7 +28,7 @@ namespace BONE_GRAPHICS
 		return true;
 	}
 
-	bool etuComboBox::AddItems(string _String)
+	bool etuComboBox::AddItems(std::string _String)
 	{
 		for (int i = 0; i < m_pItems.size(); i++)
 		{
@@ -41,7 +41,7 @@ namespace BONE_GRAPHICS
 		return true;
 	}
 
-	bool etuComboBox::DeleteItems(string _String)
+	bool etuComboBox::DeleteItems(std::string _String)
 	{
 		for (auto Iter = m_pItems.begin(); Iter < m_pItems.end(); Iter++)
 		{
@@ -55,7 +55,7 @@ namespace BONE_GRAPHICS
 		return false;
 	}
 
-	string etuComboBox::GetSelectItems()
+	std::string etuComboBox::GetSelectItems()
 	{
 		return m_sSelectItem;
 	}
