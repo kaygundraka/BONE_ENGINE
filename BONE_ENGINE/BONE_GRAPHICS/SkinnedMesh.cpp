@@ -309,4 +309,10 @@ namespace BONE_GRAPHICS
 	{
 		return rootBone->pMeshContainer->MeshData.pMesh;
 	}
+
+    map<std::string, KEYFRAMERATE> SkinnedMesh::GetAnmimationSet()
+    {
+        return animationSet;
+    }
+
 }

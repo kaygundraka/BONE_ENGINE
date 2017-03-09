@@ -9,260 +9,300 @@
 
 namespace BONE_GRAPHICS
 {
-	TrailRenderer::TrailRenderer()
-	{
-		SetTypeName("TrailRenderer");
+    TrailRenderer::TrailRenderer()
+    {
+        SetTypeName("TrailRenderer");
 
-		vertexBuffer = nullptr;
-		indexBuffer = nullptr;
+        vertexBuffer = nullptr;
+        indexBuffer = nullptr;
 
-		liveCycle = 1;
-		createCycle = 2;
-		curCreateTime = 0;
+        liveCycle = 1;
+        createCycle = 2;
+        curCreateTime = 0;
 
-		pivot = Vector3(0, 0, 0);
-		upDir = Vector3(0, 1, 0);
+        pivot = Vector3(0, 0, 0);
+        upDir = Vector3(0, 1, 0);
 
-		startSize = 1;
-		endSize = 1;
+        startSize = 1;
+        endSize = 1;
 
-		renderMode = RENDER_ALPHA;
-		
+        renderMode = RENDER_ALPHA;
+
         IsActive = true;
-		IsInit = false;
-	}
+        IsInit = false;
+    }
 
-	TrailRenderer::~TrailRenderer()
-	{
-		if (vertexBuffer != nullptr)
-			vertexBuffer->Release();
+    TrailRenderer::~TrailRenderer()
+    {
+        if (vertexBuffer != nullptr)
+            vertexBuffer->Release();
 
-		if (indexBuffer != nullptr)
-			 indexBuffer->Release();
-	}
+        if (indexBuffer != nullptr)
+            indexBuffer->Release();
+    }
 
-	void TrailRenderer::LoadContent()
-	{
-		IsInit = true;
-	}
+    void TrailRenderer::LoadContent()
+    {
+        IsInit = true;
+    }
 
-	void TrailRenderer::SetTargetObject(GameObject* targetObject, Vector3 pivot)
-	{
-		target = targetObject;
-		this->pivot = pivot;
-	}
+    void TrailRenderer::SetTargetObject(GameObject* targetObject, Vector3 pivot)
+    {
+        target = targetObject;
+        this->pivot = pivot;
+    }
 
-	void TrailRenderer::SetSize(float start, float end)
-	{
-		startSize = start;
-		endSize = end;
-	}
+    void TrailRenderer::SetSize(float start, float end)
+    {
+        startSize = start;
+        endSize = end;
+    }
 
-	void TrailRenderer::SetCycle(float liveCycle, float createCycle)
-	{
-		if (liveCycle < 0)
+    void TrailRenderer::SetCycle(float liveCycle, float createCycle)
+    {
+        if (liveCycle < 0)
             this->liveCycle = 0;
-		else
+        else
             this->liveCycle = liveCycle;
 
-		if (createCycle < 0)
-			this->createCycle = 0;
-		else
+        if (createCycle < 0)
+            this->createCycle = 0;
+        else
             this->createCycle = createCycle;
-	}
-	
-	void TrailRenderer::UpdateStatus()
-	{
-		for (auto Iter = trailList.begin(); Iter != trailList.end(); Iter++)
-		{
-			if (liveCycle < (*Iter).curLiveTime)
-				Iter = trailList.erase(Iter);
-			else
-			{
-				float time = (*Iter).curLiveTime / liveCycle;
+    }
 
-				(*Iter).curSize = (-(startSize + endSize)) * time + (startSize + endSize) + endSize;
-				(*Iter).curLiveTime += SceneMgr->GetTimeDelta();
-			}
-		}
+    void TrailRenderer::UpdateStatus()
+    {
+        for (auto Iter = trailList.begin(); Iter != trailList.end(); Iter++)
+        {
+            if (liveCycle < (*Iter).curLiveTime)
+                Iter = trailList.erase(Iter);
+            else
+            {
+                float time = (*Iter).curLiveTime / liveCycle;
 
-		if (IsActive)
-		{
-			if (createCycle < curCreateTime)
-			{
-				TRAIL_MESH temp;
-				temp.curLiveTime = 0;
-				temp.curSize = startSize;
-				
-				Vector3 Posit = pivot;
-				D3DXVec3TransformCoord(&Posit, &Posit, &((Transform3D*)target->GetComponent("Transform3D"))->GetTransform());
-				temp.pivot = Posit;
+                (*Iter).curSize = (-(startSize + endSize)) * time + (startSize + endSize) + endSize;
+                (*Iter).curLiveTime += SceneMgr->GetTimeDelta();
+            }
+        }
 
-				Vector3 UpDir = upDir;
-				D3DXVec3TransformNormal(&UpDir, &UpDir, &((Transform3D*)target->GetComponent("Transform3D"))->GetTransform());
-				D3DXVec3Normalize(&UpDir, &UpDir);
-				temp.upDir = UpDir;
+        if (IsActive)
+        {
+            if (createCycle < curCreateTime)
+            {
+                TRAIL_MESH temp;
+                temp.curLiveTime = 0;
+                temp.curSize = startSize;
 
-				trailList.push_back(temp);
+                Vector3 Posit = pivot;
+                D3DXVec3TransformCoord(&Posit, &Posit, &((Transform3D*)target->GetComponent("Transform3D"))->GetTransform());
+                temp.pivot = Posit;
 
-				curCreateTime = 0;
-			}
+                Vector3 UpDir = upDir;
+                D3DXVec3TransformNormal(&UpDir, &UpDir, &((Transform3D*)target->GetComponent("Transform3D"))->GetTransform());
+                D3DXVec3Normalize(&UpDir, &UpDir);
+                temp.upDir = UpDir;
 
-			curCreateTime += SceneMgr->GetTimeDelta();
+                trailList.push_back(temp);
 
-			if (trailList.size() >= 2)
-				SetMeshBuffer();
+                curCreateTime = 0;
+            }
 
-		}
-	}
+            curCreateTime += SceneMgr->GetTimeDelta();
 
-	void TrailRenderer::SetMeshBuffer()
-	{
-		VERTEX* vertex;
-		vertex = new VERTEX[trailList.size() * 2];
+            if (trailList.size() >= 2)
+                SetMeshBuffer();
 
-		int index = 0;
+        }
+    }
 
-		for (int i = trailList.size() - 1; i >= 0 ; i--)
-		{
-			vertex[index].p = trailList[i].pivot + (trailList[i].upDir * trailList[i].curSize / 2);
-			vertex[index].n = vertex[index].p;
-			D3DXVec3Normalize(&vertex[index].n, &vertex[index].n);
-			vertex[index].uv.x = trailList.size() - 1 - i;
-			vertex[index++].uv.y = 0;
+    void TrailRenderer::SetMeshBuffer()
+    {
+        VERTEX* vertex;
+        vertex = new VERTEX[trailList.size() * 2];
 
-			vertex[index].p = trailList[i].pivot - (trailList[i].upDir * trailList[i].curSize / 2);
-			vertex[index].n = vertex[index].p;
-			D3DXVec3Normalize(&vertex[index].n, &vertex[index].n);
-			vertex[index].uv.x = trailList.size() - 1 - i;
-			vertex[index++].uv.y = 1;
-		}
+        int index = 0;
 
-		if (vertexBuffer != nullptr)
-		{
-			vertexBuffer->Release();
-			vertexBuffer = nullptr;
-		}
+        for (int i = trailList.size() - 1; i >= 0; i--)
+        {
+            vertex[index].p = trailList[i].pivot + (trailList[i].upDir * trailList[i].curSize / 2);
+            vertex[index].n = vertex[index].p;
+            D3DXVec3Normalize(&vertex[index].n, &vertex[index].n);
+            vertex[index].uv.x = trailList.size() - 1 - i;
+            vertex[index++].uv.y = 0;
 
-		if (FAILED(RenderMgr->GetDevice()->CreateVertexBuffer(
-			trailList.size() * 2 * sizeof(VERTEX), D3DUSAGE_WRITEONLY,
-			VERTEX::FVF, D3DPOOL_DEFAULT, &vertexBuffer, nullptr)))
-		{
-			return;
-		}
+            vertex[index].p = trailList[i].pivot - (trailList[i].upDir * trailList[i].curSize / 2);
+            vertex[index].n = vertex[index].p;
+            D3DXVec3Normalize(&vertex[index].n, &vertex[index].n);
+            vertex[index].uv.x = trailList.size() - 1 - i;
+            vertex[index++].uv.y = 1;
+        }
 
-		VOID* pVertices;
+        if (vertexBuffer != nullptr)
+        {
+            vertexBuffer->Release();
+            vertexBuffer = nullptr;
+        }
 
-		if (FAILED(vertexBuffer->Lock(0, trailList.size() * 2 * sizeof(VERTEX), (void**)&pVertices, 0)))
-			return;
+        if (FAILED(RenderMgr->GetDevice()->CreateVertexBuffer(
+            trailList.size() * 2 * sizeof(VERTEX), D3DUSAGE_WRITEONLY,
+            VERTEX::FVF, D3DPOOL_DEFAULT, &vertexBuffer, nullptr)))
+        {
+            return;
+        }
 
-		VERTEX* pV = (VERTEX*)pVertices;
+        VOID* pVertices;
 
-		for (int i = 0; i < trailList.size() * 2; i++)
-			*(pV++) = vertex[i];
+        if (FAILED(vertexBuffer->Lock(0, trailList.size() * 2 * sizeof(VERTEX), (void**)&pVertices, 0)))
+            return;
 
-		vertexBuffer->Unlock();
+        VERTEX* pV = (VERTEX*)pVertices;
 
-		delete[] vertex;
+        for (int i = 0; i < trailList.size() * 2; i++)
+            *(pV++) = vertex[i];
 
-		if (indexBuffer != nullptr)
-		{
-			indexBuffer->Release();
-			indexBuffer = nullptr;
-		}
+        vertexBuffer->Unlock();
 
-		if (FAILED(RenderMgr->GetDevice()->CreateIndexBuffer(
-			(trailList.size() * 2 - 2) * sizeof(VERTEX_INDEX),
-			0, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &indexBuffer, nullptr)))
-			return;
+        delete[] vertex;
 
-		VERTEX_INDEX IB;
-		int IB_Index = 0;
-		VOID* pVertices2;
+        if (indexBuffer != nullptr)
+        {
+            indexBuffer->Release();
+            indexBuffer = nullptr;
+        }
 
-		if (FAILED(indexBuffer->Lock(0, (trailList.size() * 2 - 2) * sizeof(VERTEX_INDEX), (void**)&pVertices2, 0)))
-			return;
+        if (FAILED(RenderMgr->GetDevice()->CreateIndexBuffer(
+            (trailList.size() * 2 - 2) * sizeof(VERTEX_INDEX),
+            0, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &indexBuffer, nullptr)))
+            return;
 
-		VERTEX_INDEX* pI = (VERTEX_INDEX*)pVertices2;
+        VERTEX_INDEX IB;
+        int IB_Index = 0;
+        VOID* pVertices2;
 
-		for (int i = 0; i < (trailList.size() * 2 - 2) / 2; i++)
-		{
-			IB._0 = IB_Index;
-			IB._1 = IB_Index + 1;
-			IB._2 = IB_Index + 2;
-			*(pI++) = IB;
+        if (FAILED(indexBuffer->Lock(0, (trailList.size() * 2 - 2) * sizeof(VERTEX_INDEX), (void**)&pVertices2, 0)))
+            return;
 
-			IB._0 = IB_Index + 2;
-			IB._1 = IB_Index + 1;
-			IB._2 = IB_Index + 3;
-			*(pI++) = IB;
+        VERTEX_INDEX* pI = (VERTEX_INDEX*)pVertices2;
 
-			IB_Index += 2;
-		}
+        for (int i = 0; i < (trailList.size() * 2 - 2) / 2; i++)
+        {
+            IB._0 = IB_Index;
+            IB._1 = IB_Index + 1;
+            IB._2 = IB_Index + 2;
+            *(pI++) = IB;
 
-		indexBuffer->Unlock();
-	}
+            IB._0 = IB_Index + 2;
+            IB._1 = IB_Index + 1;
+            IB._2 = IB_Index + 3;
+            *(pI++) = IB;
 
-	void TrailRenderer::SetUpVector(Vector3 upDir)
-	{
-		this->upDir = upDir;
-		D3DXVec3Normalize(&this->upDir, &this->upDir);
-	}
-	
-	void TrailRenderer::SetActive(bool active)
-	{
-		IsActive = active;
-	}
+            IB_Index += 2;
+        }
 
-	void TrailRenderer::SetRenderMode(int mode)
-	{
-		renderMode = mode;
-	}
+        indexBuffer->Unlock();
+    }
 
-	void TrailRenderer::Render(IShader* shaderOpt)
-	{
-		if (IsInit && trailList.size() >= 2 && IsActive)
-		{
-			if (renderMode == RENDER_ALPHA)
-			{
-				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
-				RenderMgr->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHAREF, 0);
+    void TrailRenderer::SetUpVector(Vector3 upDir)
+    {
+        this->upDir = upDir;
+        D3DXVec3Normalize(&this->upDir, &this->upDir);
+    }
 
-				RenderMgr->GetDevice()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTA_TEXTURE);
-			}
-			else if (renderMode == RENDER_STENCIL)
-			{
-				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHAREF, 0x00);
-				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+    void TrailRenderer::SetActive(bool active)
+    {
+        IsActive = active;
+    }
 
-			}
+    void TrailRenderer::SetRenderMode(int mode)
+    {
+        renderMode = mode;
+    }
 
-			Matrix World;
-			D3DXMatrixIdentity(&World);
-			RenderMgr->GetDevice()->SetTransform(D3DTS_WORLD, &World);
-			RenderMgr->GetDevice()->SetStreamSource(0, vertexBuffer, 0, sizeof(VERTEX));
-			RenderMgr->GetDevice()->SetIndices(indexBuffer);
-			RenderMgr->GetDevice()->SetTexture(0, ResourceMgr->LoadTexture(textureAddress));
-			RenderMgr->GetDevice()->SetFVF(VERTEX::FVF);
-			RenderMgr->GetDevice()->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0,
-				trailList.size() * 2, 0, (trailList.size() - 1) * 2);
+    void TrailRenderer::Render(IShader* shaderOpt)
+    {
+        if (IsInit && trailList.size() >= 2 && IsActive)
+        {
+            if (renderMode == RENDER_ALPHA)
+            {
+                RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+                RenderMgr->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+                RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHAREF, 0);
 
-			if (renderMode == RENDER_ALPHA)
-				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
-			else if (renderMode == RENDER_STENCIL)
-				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, false);
-		}
-	}
+                RenderMgr->GetDevice()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTA_TEXTURE);
+            }
+            else if (renderMode == RENDER_STENCIL)
+            {
+                RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+                RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHAREF, 0x00);
+                RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
-	void TrailRenderer::SetTexturesAddress(std::string address)
-	{
-		textureAddress = address;
-	}
+            }
 
-	std::string TrailRenderer::GetTexturesAddress()
-	{
-		return textureAddress;
-	}
+            Matrix World;
+            D3DXMatrixIdentity(&World);
+            RenderMgr->GetDevice()->SetTransform(D3DTS_WORLD, &World);
+            RenderMgr->GetDevice()->SetStreamSource(0, vertexBuffer, 0, sizeof(VERTEX));
+            RenderMgr->GetDevice()->SetIndices(indexBuffer);
+            RenderMgr->GetDevice()->SetTexture(0, ResourceMgr->LoadTexture(textureAddress));
+            RenderMgr->GetDevice()->SetFVF(VERTEX::FVF);
+            RenderMgr->GetDevice()->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0,
+                trailList.size() * 2, 0, (trailList.size() - 1) * 2);
+
+            if (renderMode == RENDER_ALPHA)
+                RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+            else if (renderMode == RENDER_STENCIL)
+                RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, false);
+        }
+    }
+
+    void TrailRenderer::SetTexturesAddress(std::string address)
+    {
+        textureAddress = address;
+    }
+
+    std::string TrailRenderer::GetTexturesAddress()
+    {
+        return textureAddress;
+    }
+
+    Vector3 TrailRenderer::GetPivot()
+    {
+        return pivot;
+    }
+
+    float TrailRenderer::GetStartSize()
+    {
+        return startSize;
+    }
+    
+    float TrailRenderer::GetEndSize()
+    {
+        return endSize;
+    }
+    
+    float TrailRenderer::GetLiveCycle()
+    {
+        return liveCycle;
+    }
+    
+    float TrailRenderer::GetCreateCycle()
+    {
+        return createCycle;
+    }
+    
+    Vector3 TrailRenderer::GetUpVector()
+    {
+        return upDir;
+    }
+    
+    bool TrailRenderer::Activated()
+    {
+        return IsActive;
+    }
+    
+    TrailRenderer::RENDER_MODE TrailRenderer::GetRenderMode()
+    {
+        return (RENDER_MODE)renderMode;
+    }
 }

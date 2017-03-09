@@ -23,7 +23,7 @@ namespace BONE_GRAPHICS
 		IDirect3DVertexBuffer9* vertexBuffer;
 		IDirect3DIndexBuffer9*	indexBuffer;
 		
-		std::string		textureAddress;
+		std::string	textureAddress;
 		GameObject*	target;
 
 		float liveCycle;
@@ -61,12 +61,20 @@ namespace BONE_GRAPHICS
 		void SetUpVector(Vector3 upDir);
         void SetActive(bool active);
 		void SetRenderMode(int mode);
+        void SetTexturesAddress(std::string address);
+        
+        Vector3 GetPivot();
+        Vector3 GetUpVector();
+        float GetStartSize();
+        float GetEndSize();
+        float GetLiveCycle();
+        float GetCreateCycle();
+        bool Activated();
+        RENDER_MODE GetRenderMode();
+        std::string GetTexturesAddress();
 
         void UpdateStatus();
 
         void Render(IShader* shaderOpt);
-
-		void SetTexturesAddress(std::string address);
-		std::string GetTexturesAddress();
 	};
 }

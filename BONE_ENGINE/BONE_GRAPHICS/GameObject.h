@@ -7,6 +7,7 @@ namespace BONE_GRAPHICS
 	class GameObject {
 	private:
 		std::string tag;
+        std::string name;
 		std::vector<Component*> components;
 
 		GameObject* parent;
@@ -43,7 +44,13 @@ namespace BONE_GRAPHICS
 		void AttachTag(std::string tag);
 		void DetachTag();
 		std::string Tag();
+        void SetName(std::string name);
+        std::string GetName();
 		void SetTag(std::string tag);
+
+        void SaveInMaps();
+        void LoadPrefab(std::string name);
+        void SavePrefab(std::string name);
 
 		Component* GetComponent(std::string typeName);
 		bool AddComponent(Component* component);

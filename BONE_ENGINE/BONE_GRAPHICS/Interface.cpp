@@ -181,7 +181,7 @@ namespace BONE_GRAPHICS
 
 		int Alpha = 0;
 
-		while (Alpha <= 255)
+		while (Alpha < 255)
 		{
 			RenderMgr->GetDevice()->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, RGB(0, 0, 0), 1.0f, 0);
 			RenderMgr->GetDevice()->BeginScene();
@@ -208,7 +208,7 @@ namespace BONE_GRAPHICS
 			RenderMgr->GetDevice()->EndScene();
 			RenderMgr->GetDevice()->Present(0, 0, 0, 0);
 
-            Sleep(10);
+            Sleep(5);
 		}
 
 		Sleep(2000);
@@ -243,7 +243,7 @@ namespace BONE_GRAPHICS
 			RenderMgr->GetDevice()->EndScene();
 			RenderMgr->GetDevice()->Present(0, 0, 0, 0);
 		
-            Sleep(10);
+            Sleep(5);
         }
 
 		return true;

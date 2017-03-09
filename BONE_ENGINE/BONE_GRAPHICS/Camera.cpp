@@ -95,6 +95,21 @@ namespace BONE_GRAPHICS
 		}
 	}
 
+    int Camera::GetScreenWidth()
+    {
+        return width;
+    }
+    
+    int Camera::GetScreenHeight()
+    {
+        return height;
+    }
+    
+    PROJECTION_TYPE Camera::GetProjectionType()
+    {
+        return type;
+    }
+
 	void Camera::SetFov(float fov)
 	{
 		this->fov = fov;

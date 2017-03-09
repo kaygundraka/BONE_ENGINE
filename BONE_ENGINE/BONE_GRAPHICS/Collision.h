@@ -5,26 +5,26 @@ namespace Collision
 {
 	struct tagBox
 	{
-		Vector3			vMin;		//좌 하단 값.
-		Vector3			vMax;		//우 상단 값.
-		Vector3			vPosition;	// 중심점.
+		Vector3	vMin;		//좌 하단 값.
+		Vector3	vMax;		//우 상단 값.
+		Vector3 vPosition;	// 중심점.
 
 		tagBox(void) : vMin(Vector3(0, 0, 0)), vMax(Vector3(0, 0, 0)), vPosition(Vector3(0, 0, 0)) {}
 	};
 
 	struct tagSphere
 	{
-		float			fRadius;		 // 반지름
-		Vector3			vPosition;		 // 중심점
+		float fRadius;		 // 반지름
+		Vector3 vPosition;		 // 중심점
 
 		tagSphere(void) : fRadius(0.0f), vPosition(Vector3(0, 0, 0)) {}
 	};
 
     struct tagOBB
 	{
-		Vector3			vPosition;			//중심점.
-		Vector3			vAxisDir[3];		// 상자의 평행한 세축의 단위 벡터
-		float			fAxisLen[3];		// 상자의 평행한 세축의 길이
+		Vector3 vPosition;			//중심점.
+		Vector3	vAxisDir[3];		// 상자의 평행한 세축의 단위 벡터
+		float fAxisLen[3];		// 상자의 평행한 세축의 길이
 		tagOBB(void) {
 			ZeroMemory(this, sizeof(tagOBB));
 		}
@@ -35,19 +35,19 @@ namespace Collision
 	BOOL GetDetectColl();
 	void SetDetectColl(BOOL dc);
 	//점 평면
-	bool	PointToRect(const POINT& _ptPos, const RECT& _rtRect);
+	bool PointToRect(const POINT& _ptPos, const RECT& _rtRect);
 	//벡터와 비회전박스.
-	bool	VectorToAABB(const Vector3& _vPos, const tagBox& _Box);
+	bool VectorToAABB(const Vector3& _vPos, const tagBox& _Box);
 	//비회전박스 비회전박스
-	bool	AABBToAABB(const tagBox& _Box1, const tagBox& _Box2);
+	bool AABBToAABB(const tagBox& _Box1, const tagBox& _Box2);
 	//벡터 구
-	bool	VectorToSphere(const Vector3& _vPos, const tagSphere& _Sphere);
+	bool VectorToSphere(const Vector3& _vPos, const tagSphere& _Sphere);
 	//구 구
-	bool	SphereToSphere(const tagSphere& _Sphere1, const tagSphere& _Sphere2);
+	bool SphereToSphere(const tagSphere& _Sphere1, const tagSphere& _Sphere2);
 	//비회전박스 회전박스 
-	bool	AABBToOBB(const tagBox& _Box, const tagOBB& _OBB);
+	bool AABBToOBB(const tagBox& _Box, const tagOBB& _OBB);
 	//회전박스 회전박스
-	bool	OBBToOBB(const tagOBB& _OBB1, const tagOBB& _OBB2);
+	bool OBBToOBB(const tagOBB& _OBB1, const tagOBB& _OBB2);
 
 	tagOBB ConvertAABBtoOBB(const tagBox& _Box, tagOBB R_OBB);
 

@@ -30,7 +30,9 @@ namespace BONE_GRAPHICS
         void SetFileAddress(std::string address);
 
         std::string GetFileAddress();
-
+        
+        map<std::string, KEYFRAMERATE> GetAnmimationSet();
+        
 		void CheckInRay(RAY *ray, Bone* bone, float& curDist);
 
 		std::string address;
@@ -50,7 +52,7 @@ namespace BONE_GRAPHICS
 		
         map<std::string, KEYFRAMERATE> animationSet;
 		std::string animationName;
-		
+        		
         bool IsPlay;
 		bool IsRotateLoop;
         bool IsInit;

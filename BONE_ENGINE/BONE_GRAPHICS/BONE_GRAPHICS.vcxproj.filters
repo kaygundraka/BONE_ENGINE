@@ -81,14 +81,14 @@
     <Filter Include="소스 파일\Management\Configuration">
       <UniqueIdentifier>{9c0d54b8-2d1b-4ade-ac20-2e352dd37980}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\GameObject\Components\Environment\Light">
-      <UniqueIdentifier>{148a6df0-bc60-49c7-9cb6-93937320c348}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\GameObject\Components\Effect\Basic">
       <UniqueIdentifier>{0c4d47e8-e2a4-473c-b8e2-5ec69485518e}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\GameObject\Components\Effect\Extension">
       <UniqueIdentifier>{8dc67a41-b40a-4c6e-8dbc-930eb223d273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GameObject\BasicGameObject">
+      <UniqueIdentifier>{6dc5c54d-b409-4b9d-87ca-efe90fc2e876}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -230,11 +230,11 @@
     <ClInclude Include="PhongShader.h">
       <Filter>소스 파일\GameObject\Components\Effect\Basic</Filter>
     </ClInclude>
-    <ClInclude Include="PointLight.h">
-      <Filter>소스 파일\GameObject\Components\Effect\Basic</Filter>
-    </ClInclude>
     <ClInclude Include="TrailRenderer.h">
       <Filter>소스 파일\GameObject\Components\Effect\Extension</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>소스 파일\GameObject\BasicGameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -373,11 +373,11 @@
     <ClCompile Include="PhongShader.cpp">
       <Filter>소스 파일\GameObject\Components\Effect\Basic</Filter>
     </ClCompile>
-    <ClCompile Include="PointLight.cpp">
-      <Filter>소스 파일\GameObject\Components\Effect\Basic</Filter>
-    </ClCompile>
     <ClCompile Include="TrailRenderer.cpp">
       <Filter>소스 파일\GameObject\Components\Effect\Extension</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>소스 파일\GameObject\BasicGameObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

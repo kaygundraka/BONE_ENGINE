@@ -13,9 +13,38 @@
 #include "ScreenImage.h"
 #include "ScreenButton.h"
 #include "PhongShader.h"
+#include "Material.h"
+#include "PointLight.h"
 
 namespace BONE_GRAPHICS
 {
+    GameObject::GameObject()
+    {
+        isActive = true;
+        isStatic = false;
+        name = "";
+
+        parent = nullptr;
+        std::vector<GameObject*> Child;
+    }
+
+    GameObject::~GameObject()
+    {
+        for (auto Iter = childs.begin(); Iter != childs.end();)
+        {
+            GameObject* Temp = (*Iter);
+            Iter = childs.erase(Iter);
+            delete Temp;
+        }
+
+        for (auto Iter = components.begin(); Iter != components.end();)
+        {
+            Component* Temp = (*Iter);
+            Iter = components.erase(Iter);
+            delete Temp;
+        }
+    }
+
 	void GameObject::SetStatic(bool _sStatic)
 	{
 		this->isStatic = isStatic;
@@ -52,32 +81,6 @@ namespace BONE_GRAPHICS
 		return isActive;
 	}
 
-	GameObject::GameObject()
-	{
-		isActive = true;
-		isStatic = false;
-
-		parent = nullptr;
-		std::vector<GameObject*> Child;
-	}
-
-	GameObject::~GameObject()
-	{
-		for (auto Iter = childs.begin(); Iter != childs.end();)
-		{
-			GameObject* Temp = (*Iter);
-			Iter = childs.erase(Iter);
-			delete Temp;
-		}
-
-		for (auto Iter = components.begin(); Iter != components.end();)
-		{
-			Component* Temp = (*Iter);
-			Iter = components.erase(Iter);
-			delete Temp;
-		}
-	}
-
 	void GameObject::Init()
 	{
 	}
@@ -96,6 +99,16 @@ namespace BONE_GRAPHICS
 	{
 		this->tag = tag;
 	}
+
+    void GameObject::SetName(std::string name)
+    {
+        this->name = name;
+    }
+    
+    std::string GameObject::GetName()
+    {
+        return name;
+    }
 
 	Component* GameObject::GetComponent(std::string typeName)
 	{
@@ -264,6 +277,245 @@ namespace BONE_GRAPHICS
 	{
 		return tag;
 	}
+
+    void GameObject::SaveInMaps()
+    {
+        std::string FullPath;
+        
+        if (!ResourceMgr->ExistFile(SceneMgr->CurrentScene()->GetName() + ".json", &FullPath))
+            return;
+
+        std::ifstream file(FullPath);
+        json j;
+        file >> j;
+
+        j[name]["Position"] = { 
+            ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().x,
+            ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().y,
+            ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().z
+        };
+
+        j[name]["Rotation"] = {
+            ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().x,
+            ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().y,
+            ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().z
+        };
+
+        j[name]["Scale"] = {
+            ((Transform3D*)(GetComponent("Transform3D")))->GetScale().x,
+            ((Transform3D*)(GetComponent("Transform3D")))->GetScale().y,
+            ((Transform3D*)(GetComponent("Transform3D")))->GetScale().z
+        };
+
+        file.close();
+    }
+
+    void GameObject::SavePrefab(std::string name)
+    {
+        json j;
+
+        j["Tag"] = tag;
+        j["Priority"] = priorty;
+        j["IsActive"] = isActive;
+        j["IsStatic"] = isStatic;
+
+        for (int i = 0; i < components.size(); i++)
+        {
+            std::string TypeName = components[i]->GetTypeName();
+
+            if (TypeName == "Transform3D")
+            {
+                auto Position = ((Transform3D*)(components[i]))->GetPosition();
+                auto Rotation = ((Transform3D*)(components[i]))->GetRotateAngle();
+                auto Scale = ((Transform3D*)(components[i]))->GetScale();
+                auto ForwardVector = ((Transform3D*)(components[i]))->GetForward();
+
+                j["Transform3D"]["Position"] = { Position.x, Position.y, Position.z };
+                j["Transform3D"]["Rotation"] = { Rotation.x, Rotation.y, Rotation.z };
+                j["Transform3D"]["Scale"] = { Scale.x, Scale.y, Scale.z };
+                j["Transform3D"]["ForwardVector"] = { ForwardVector.x, ForwardVector.y, ForwardVector.z };
+            }
+            else if (TypeName == "Camera")
+            {
+                j["Camera"]["ID"] = ((Camera*)(components[i]))->GetID();
+                j["Camera"]["Type"] = ((Camera*)(components[i]))->GetProjectionType();
+                j["Camera"]["Width"] = ((Camera*)(components[i]))->GetScreenWidth();
+                j["Camera"]["Height"] = ((Camera*)(components[i]))->GetScreenHeight();
+                j["Camera"]["farDist"] = ((Camera*)(components[i]))->GetFarDistance();
+                j["Camera"]["nearDist"] = ((Camera*)(components[i]))->GetNearDistance();
+                j["Camera"]["fov"] = ((Camera*)(components[i]))->GetFov();
+                j["Camera"]["UpVector"] = {
+                    ((Camera*)(components[i]))->GetCameraUp().x,
+                    ((Camera*)(components[i]))->GetCameraUp().y,
+                    ((Camera*)(components[i]))->GetCameraUp().z
+                };
+            }
+            else if (TypeName == "Material")
+            {
+                auto Ambient = ((Material*)(components[i]))->GetAmbient();
+                auto Diffuse = ((Material*)(components[i]))->GetDiffuse();
+                auto Emissive = ((Material*)(components[i]))->GetEmissive();
+                auto Specular = ((Material*)(components[i]))->GetSpecular();
+                auto Shininess = ((Material*)(components[i]))->GetShininess();
+
+                j["Material"]["Ambient"] = { Ambient.r, Ambient.g, Ambient.b, Ambient.a };
+                j["Material"]["Diffuse"] = { Diffuse.r, Diffuse.g, Diffuse.b, Diffuse.a };
+                j["Material"]["Emissive"] = { Emissive.r, Emissive.g, Emissive.b, Emissive.a };
+                j["Material"]["Specular"] = { Specular.r, Specular.g, Specular.b, Specular.a };
+                j["Material"]["Shininess"] = Shininess;
+            }
+            else if (TypeName == "StaticMesh")
+            {
+                j["StaticMesh"]["FileName"] = ((StaticMesh*)(components[i]))->GetFileAddress();
+            }
+            else if (TypeName == "SkinnedMesh")
+            {
+                j["SkinnedMesh"]["FileName"] = ((SkinnedMesh*)(components[i]))->GetFileAddress();
+
+                auto animationSet = ((SkinnedMesh*)(components[i]))->GetAnmimationSet();
+
+                for each(auto var in animationSet)
+                {
+                    j["SkinnedMesh"]["AnimationSet"][var.first]["Speed"] = var.second.AnimationSpeed;
+                    j["SkinnedMesh"]["AnimationSet"][var.first]["Index"] = var.second.Vertex_Index;
+                }
+            }
+        }
+
+        std::string fullPath = ".\\Engine\\Prefabs\\" + name + ".json";
+        std::ofstream o(fullPath);
+        o << std::setw(4) << j << std::endl;
+        o.close();
+    }
+
+    void GameObject::LoadPrefab(std::string name)
+    {
+        std::string FullPath;
+
+        if (!ResourceMgr->ExistFile(name + ".json", &FullPath))
+            return;
+
+        std::ifstream file(FullPath);
+        json j;
+        file >> j;
+
+        for (json::iterator it = j.begin(); it != j.end(); ++it) 
+        {
+            std::string TypeName = it.key();
+
+            if (TypeName == "Transform3D")
+            {
+                auto Position = j["Transform3D"]["Position"].get<std::vector<double>>();
+                auto Rotation = j["Transform3D"]["Rotation"].get<std::vector<double>>();
+                auto Scale = j["Transform3D"]["Scale"].get<std::vector<double>>();
+                auto ForwardVector = j["Transform3D"]["ForwardVector"].get<std::vector<double>>();
+
+                Transform3D* tr = (Transform3D*)GetComponent("Transform3D");
+
+                if (tr == nullptr)
+                {
+                    tr = new Transform3D();
+                    AddComponent(tr);
+                
+                    tr->SetPosition(Position[0], Position[1], Position[2]);
+                    tr->SetRotate(Rotation[0], Rotation[1], Rotation[2]);
+                    tr->SetScale(Scale[0], Scale[1], Scale[2]);
+                    tr->SetForward(ForwardVector[0], ForwardVector[1], ForwardVector[2]);
+                }
+            }
+            else if (TypeName == "Camera")
+            {
+                auto UpVector = j["Camera"]["UpVector"].get<std::vector<double>>();
+                
+                Camera* camera = (Camera*)GetComponent("Camera");
+
+                if (camera == nullptr)
+                {
+                    camera = new Camera(
+                        j["Camera"]["ID"],
+                        j["Camera"]["Type"],
+                        Vector3(UpVector[0], UpVector[1], UpVector[2]),
+                        j["Camera"]["Width"],
+                        j["Camera"]["Height"],
+                        j["Camera"]["farDist"],
+                        j["Camera"]["nearDist"],
+                        j["Camera"]["fov"]
+                    );
+
+                    AddComponent(camera);
+                }
+            }
+            else if (TypeName == "Material")
+            {
+                auto Ambient = j["Material"]["Ambient"].get<std::vector<double>>();
+                auto Diffuse = j["Material"]["Diffuse"].get<std::vector<double>>();
+                auto Emissive = j["Material"]["Emissive"].get<std::vector<double>>();
+                auto Specular = j["Material"]["Specular"].get<std::vector<double>>();
+
+                Material* material = (Material*)GetComponent("Material");
+
+                if (material == nullptr)
+                {
+                    material = new Material();
+
+                    material->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
+                    material->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
+                    material->SetEmissive(Emissive[0], Emissive[1], Emissive[2], Emissive[3]);
+                    material->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
+                    material->SetShininess(j["Material"]["Shininess"]);
+                    
+                    AddComponent(material);
+                }
+            }
+            else if (TypeName == "StaticMesh")
+            {
+                StaticMesh* staticMesh = (StaticMesh*)GetComponent("StaticMesh");
+
+                if (staticMesh == nullptr)
+                {
+                    staticMesh = new StaticMesh();
+
+                    staticMesh->SetFileAddress(j["StaticMesh"]["FileName"]);
+
+                    AddComponent(staticMesh);
+                }
+            }
+            else if (TypeName == "SkinnedMesh")
+            {
+                auto Attributes = j["SkinnedMesh"].get<std::vector<std::string>>();
+
+                for (auto iter = Attributes.begin(); iter != Attributes.end(); iter++)
+                {
+                    if (*iter == "FileName")
+                    {
+                        SkinnedMesh* skinnedMesh = (SkinnedMesh*)GetComponent("SkinnedMesh");
+
+                        if (skinnedMesh == nullptr)
+                        {
+                            skinnedMesh = new SkinnedMesh();
+
+                            skinnedMesh->SetFileAddress(j["SkinnedMesh"]["FileName"]);
+
+                            AddComponent(skinnedMesh);
+                        }
+                    }
+                    else if (*iter == "AnimationSet")
+                    {
+                        /*for 
+                        auto animationSet = ((SkinnedMesh*)(components[i]))->GetAnmimationSet();
+
+                        for each(auto var in animationSet)
+                        {
+                            j["SkinnedMesh"]["AnimationSet"][var.first]["Speed"] = var.second.AnimationSpeed;
+                            j["SkinnedMesh"]["AnimationSet"][var.first]["Index"] = var.second.Vertex_Index;
+                        }*/
+                    }
+                }
+            }
+        }
+
+        file.close();
+    }
 
 	void GameObject::Reference()
 	{

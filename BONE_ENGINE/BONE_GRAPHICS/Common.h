@@ -28,6 +28,7 @@
 #include <tinystr.h>
 #include <tinyxml.h>
 #include <MultiThreadSync.h>
+#include <json.hpp>
 
 #pragma comment(lib, "shlwapi")
 #pragma comment(lib, "comctl32.lib")
@@ -36,6 +37,7 @@
 #pragma warning (disable:4251)
 
 using namespace std;
+using json = nlohmann::json;
 
 #define Vector3 D3DXVECTOR3
 #define Vector2 D3DXVECTOR2

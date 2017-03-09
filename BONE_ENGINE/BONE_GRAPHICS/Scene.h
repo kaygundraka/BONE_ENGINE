@@ -14,15 +14,17 @@ namespace BONE_GRAPHICS
 	private:
 		std::list<GameObject*> objectList;
 		std::list<GameObject*> staticObjectList;
-		etuImage image_LoadingBackground;
-		bool IsFrameworkFlag;
-		int cameraIndex;
-		Skybox skybox;
-		bool CompleateLoading;
-        RGBA globalAmbient;
- 
         std::list<PointLight*> pointLightList;
 
+        etuImage image_LoadingBackground;
+		int cameraIndex;
+        bool IsFrameworkFlag;
+        bool CompleateLoading;
+        Skybox skybox;
+        
+        RGBA globalAmbient;
+        std::string name;
+         
 	public:
 		bool InitializeMembers();
 		void Reference();
@@ -36,13 +38,15 @@ namespace BONE_GRAPHICS
 		Scene();
 		~Scene();
 		
-		void AddObject(GameObject* object);
+		void AddObject(GameObject* object, std::string name);
 		void AddObjects(GameObject** objects, int size);
 
 		void SortPriorityObject();
 
 		std::tuple<GameObject**, int> FindObjectsByTag(std::string tag);
 		GameObject* FindObjectByTag(std::string tag);
+        GameObject* FindObjectByName(std::string name);
+
 		void Destroy(GameObject* gameObject);
 
 		GameObject* GetCurrentCamera();
@@ -56,8 +60,14 @@ namespace BONE_GRAPHICS
 		void SetSceneFlag(bool flag);
 		bool EndLoading();
 
+        void LoadSceneData();
+        void EditSceneMode(bool actvie);
+
 		void SetCameraIndex(int index);
 		int GetCameraIndex();
+        
+        void SetName(std::string name);
+        std::string GetName();
 
         void SetAmbientColor(float r, float g, float b, float a);
         void SetAmbientColor(RGBA color);

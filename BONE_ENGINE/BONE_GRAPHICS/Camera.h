@@ -38,6 +38,9 @@ namespace BONE_GRAPHICS
 		void SetTargetPosition(float x, float y, float z);
 
         int GetID();
+        int GetScreenWidth();
+        int GetScreenHeight();
+        PROJECTION_TYPE GetProjectionType();
         float GetFov();
         float GetNearDistance();
         float GetFarDistance();

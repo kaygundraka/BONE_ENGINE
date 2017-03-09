@@ -28,6 +28,7 @@ namespace BONE_GRAPHICS
 	{
 		ThreadSync sync;
 
+        scene->SetName(name);
 		sceneList.insert(std::pair<std::string, Scene*>(name, scene));
 	}
 
@@ -104,6 +105,7 @@ namespace BONE_GRAPHICS
 		LoadingThread.join();
 
 		sceneList[name]->Reference();
+        sceneList[name]->LoadSceneData();
 
 		sceneList[name]->SortPriorityObject();
 

@@ -12,12 +12,12 @@ namespace BONE_GRAPHICS
 	class StaticMesh : public Component
 	{
 	private:
-		MESH_INFO*		meshInfo;
+		MESH_INFO*  meshInfo;
+    	D3DMATERIAL9* meshMaterials;
 
-		std::string			address;
-		std::string*			textureAddress;
-		D3DMATERIAL9*	meshMaterials;
-				
+        std::string address;
+        std::string*  textureAddress;
+
 		int renderMode;
 		bool IsInit;
 

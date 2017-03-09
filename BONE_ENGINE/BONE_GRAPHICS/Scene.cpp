@@ -1,11 +1,13 @@
 #include "Common.h"
+#include "Scene.h"
 #include "LogManager.h"
 #include "RenderManager.h"
-#include "Scene.h"
 #include "SceneManager.h"
 #include "InputManager.h"
-#include "etuImage.h"
 #include "LogManager.h"
+#include "ResourceManager.h"
+#include "Transform3D.h"
+#include "etuImage.h"
 
 namespace BONE_GRAPHICS
 {
@@ -124,8 +126,10 @@ namespace BONE_GRAPHICS
 				(*Iter)->LateUpdate();
 	}
 
-	void Scene::AddObject(GameObject* object)
+	void Scene::AddObject(GameObject* object, std::string name)
 	{
+        object->SetName(name);
+
 		if (object->GetStatic())
 			staticObjectList.push_back(object);
 		else
@@ -187,6 +191,19 @@ namespace BONE_GRAPHICS
 
         return nullptr;
 	}
+
+    GameObject* Scene::FindObjectByName(std::string name)
+    {
+        for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
+            if (name == (*Iter)->GetName())
+                return (*Iter);
+
+        for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
+            if (name == (*Iter)->GetName())
+                return (*Iter);
+
+        return nullptr;
+    }
 
 	std::tuple<GameObject**, int> Scene::FindObjectsByTag(std::string tag)
 	{
@@ -258,6 +275,50 @@ namespace BONE_GRAPHICS
 	{
 		return cameraIndex;
 	}
+
+    void Scene::SetName(std::string name)
+    {
+        this->name = name;
+    }
+    
+    std::string Scene::GetName()
+    {
+        return name;
+    }
+
+    void Scene::LoadSceneData()
+    {
+        std::string FullPath;
+        
+        if (!ResourceMgr->ExistFile(name + ".json", &FullPath))
+            return;
+
+        std::ifstream file(FullPath);
+        json j;
+        file >> j;
+
+        for (json::iterator it = j.begin(); it != j.end(); ++it) {
+            auto Object = this->FindObjectByName(it.key());
+
+            if (Object == nullptr)
+                continue;
+            
+            auto Position = it->find("Position").value().get<std::vector<int>>();
+            ((Transform3D*)Object->GetComponent("Transform3D"))->SetPosition(Position[0], Position[1], Position[2]);
+
+            auto Rotation = it->find("Rotation").value().get<std::vector<int>>();
+            ((Transform3D*)Object->GetComponent("Transform3D"))->SetRotate(Position[0], Position[1], Position[2]);
+
+            auto Scale = it->find("Scale").value().get<std::vector<int>>();
+            ((Transform3D*)Object->GetComponent("Transform3D"))->SetScale(Position[0], Position[1], Position[2]);
+        }
+
+        file.close();
+    }
+
+    void Scene::EditSceneMode(bool actvie)
+    {
+    }
 
     void Scene::SetAmbientColor(float r, float g, float b, float a)
     {
