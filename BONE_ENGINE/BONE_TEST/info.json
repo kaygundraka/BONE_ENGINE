@@ -1,0 +1,18 @@
+{
+    "WindowsName":"BONE_ENGINE - Game",
+    "WindowsWidth":1024,
+    "WindowsHeight":768,
+    "ShowLogCmd":true,
+    "EnableLog":false,
+
+    "ResourcePaths":[
+        ".\\*",
+        ".\\Engine\\*",
+        ".\\Engine\\Shader\\*",
+        ".\\Engine\\Maps\\*",
+        ".\\Engine\\Prefabs\\*",
+        ".\\Resource\\Skybox\\*",
+        ".\\Resource\\Mesh\\*",
+        ".\\Resource\\Textures\\*"
+    ]
+}
