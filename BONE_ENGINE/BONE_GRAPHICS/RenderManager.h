@@ -25,12 +25,13 @@ namespace BONE_GRAPHICS
         int						width, height;
         ID3DXLine*				line;
         ID3DXFont*				font;
+        bool                    useImGUI;
 
     public:
         RenderManager() {}
         virtual ~RenderManager() {}
 
-        bool InitializeMembers(HWND hWnd);
+        bool InitializeMembers(HWND hWnd, bool useImGUI);
         virtual void ReleaseMembers();
 
         IDirect3DDevice9* GetDevice();
@@ -49,5 +50,7 @@ namespace BONE_GRAPHICS
         bool CheckRayInTriangle(RAY* ray, const D3DXMATRIX& matWorld, D3DXVECTOR3 p0, D3DXVECTOR3 p1, D3DXVECTOR3 p2, float* u, float* v, float* dist = nullptr);
 
         void SetupPixelFog(int color, int mode);
+
+        bool UseImGUI();
     };
 }

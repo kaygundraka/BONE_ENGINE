@@ -359,4 +359,14 @@ namespace BONE_GRAPHICS
     {
         return pointLightList;
     }
+
+    std::list<GameObject*> Scene::GetObjectList()
+    {
+        return objectList;
+    }
+    
+    std::list<GameObject*> Scene::GetStaticObjectList()
+    {
+        return staticObjectList;
+    }
 }

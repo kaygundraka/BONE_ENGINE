@@ -30,6 +30,9 @@
 #include <MultiThreadSync.h>
 #include <json.hpp>
 
+#include "imgui.h"
+#include "imgui_impl_dx9.h"
+
 #pragma comment(lib, "shlwapi")
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib, "dsound")

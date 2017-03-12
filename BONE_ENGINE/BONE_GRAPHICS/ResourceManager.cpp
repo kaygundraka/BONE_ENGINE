@@ -101,7 +101,10 @@ namespace BONE_GRAPHICS
         if (staticMeshList.find(name) != staticMeshList.end())
             return &(staticMeshList.find(name)->second);
         else
-            return nullptr;
+        {
+            return LoadMesh(name);
+        }
+
 	}
 
 	LPDIRECT3DTEXTURE9 ResourceManager::LoadTexture(std::string name)
@@ -185,10 +188,10 @@ namespace BONE_GRAPHICS
 
 		if (staticMeshList.find(name) != staticMeshList.end())
 		{
-			staticMeshList.erase(staticMeshList.find(name));
-			staticMeshList.find(name)->second.mesh->Release();
-			staticMeshList.find(name)->second.buffer->Release();
-			staticMeshList.find(name)->second.buffer->Release();
+            auto info = staticMeshList.find(name)->second;
+            info.mesh->Release();
+            info.buffer->Release();
+            staticMeshList.erase(staticMeshList.find(name));
 		}
 	}
 	
@@ -198,8 +201,8 @@ namespace BONE_GRAPHICS
 
 		if (textureList.find(name) != textureList.end())
 		{
+            textureList.find(name)->second->Release();
 			textureList.erase(textureList.find(name));
-			textureList.find(name)->second->Release();
 		}
 	}
 

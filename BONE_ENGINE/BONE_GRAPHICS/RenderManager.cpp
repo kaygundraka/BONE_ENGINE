@@ -9,7 +9,7 @@ namespace BONE_GRAPHICS
 {
     _RAY::_RAY() : origin(D3DXVECTOR3(0, 0, 0)), direction(D3DXVECTOR3(0, 0, 0)) {}
 
-    bool RenderManager::InitializeMembers(HWND hWnd)
+    bool RenderManager::InitializeMembers(HWND hWnd, bool useImgui)
     {
         ThreadSync sync;
 
@@ -66,6 +66,8 @@ namespace BONE_GRAPHICS
 
         Is_init = true;
         LogMgr->ShowMessage(LOG_MESSAGE, "RenderManager is initialized");
+
+        this->useImGUI = useImgui;
 
         return Is_init;
     }
@@ -302,5 +304,12 @@ namespace BONE_GRAPHICS
         if (d3d9) d3d9->Release();
 
         LogMgr->ShowMessage(LOG_MESSAGE, "Render Manager is Clear.");
+    }
+
+    bool RenderManager::UseImGUI()
+    {
+        ThreadSync sync;
+
+        return useImGUI;
     }
 }

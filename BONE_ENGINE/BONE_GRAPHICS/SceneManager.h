@@ -5,6 +5,11 @@
 
 namespace BONE_GRAPHICS 
 {
+    class GUI_Scene {
+    public:
+        virtual void UpdateFrame() = 0;
+    };
+
 	class SceneManager : public ISingleton <SceneManager>, public BONE_SYSTEM::MultiThreadSync<SceneManager>
 	{
 	private:
@@ -18,6 +23,8 @@ namespace BONE_GRAPHICS
 
 		double timeDelta;
 		int frame;
+
+        GUI_Scene* guiScene;
 
 	public:
 		void InitializeMembers();
@@ -36,6 +43,8 @@ namespace BONE_GRAPHICS
 		void SetLoadingScene(string name);
 		Scene* GetLoadScene();
 		void EndScene(string name);
+
+        void SetGUIScene(GUI_Scene* scene);
 
 		int GetFrame();
 		double GetTimeDelta();

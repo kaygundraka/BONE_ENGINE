@@ -32,6 +32,6 @@ void TestMesh::Init()
     Light1->SetSpecular(0.2f, 0.2f, 0.2f, 0.2f);
     Light1->SetLight(true);
     Light1->SetRadius(50);
-    Light1->SetPosition(Vector3(0, 30, 0), this);
-    this->AddComponent(Light1);
+    //Light1->SetPosition(Vector3(0, 30, 0), this);
+    //this->AddComponent(Light1);
 }

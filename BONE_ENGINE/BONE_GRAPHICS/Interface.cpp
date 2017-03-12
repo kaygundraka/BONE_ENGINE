@@ -8,10 +8,15 @@
 #include "ConfigManager.h"
 #include "PhyscisManager.h"
 
+extern LRESULT ImGui_ImplDX9_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 namespace BONE_GRAPHICS
 {
 	LRESULT CALLBACK FrameworkWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
+        if (ImGui_ImplDX9_WndProcHandler(hWnd, message, wParam, lParam))
+            return true;
+
 		POINT MousePosition;
 		RECT ClientRect;
 		int Active;
@@ -158,15 +163,18 @@ namespace BONE_GRAPHICS
 			return false;
 	}
 
-	bool InitializeFramework(HWND hWnd)
+	bool InitializeFramework(HWND hWnd, bool useImGUI)
 	{
 		LogMgr->InitializeMembers(ConfigMgr->GetFloat(".\\info", "EnableLog"));
-		RenderMgr->InitializeMembers(hWnd);
+		RenderMgr->InitializeMembers(hWnd, useImGUI);
 		InputMgr->InitializeMembers();
 		SceneMgr->InitializeMembers();
 		ResourceMgr->InitializeMembers();
         PhysicsMgr->InitializeMembers();
 
+        if (useImGUI)
+            ImGui_ImplDX9_Init(hWnd, RenderMgr->GetDevice());
+        
 		RECT rect = { 0, 0, 1600, 1200 };
 		
         LPDIRECT3DTEXTURE9 texture = ResourceMgr->LoadTexture("Logo.png");
@@ -210,7 +218,7 @@ namespace BONE_GRAPHICS
 			RenderMgr->GetDevice()->EndScene();
 			RenderMgr->GetDevice()->Present(0, 0, 0, 0);
 
-            Sleep(5);
+            Sleep(1);
 		}
 
 		Sleep(2000);
@@ -245,7 +253,7 @@ namespace BONE_GRAPHICS
 			RenderMgr->GetDevice()->EndScene();
 			RenderMgr->GetDevice()->Present(0, 0, 0, 0);
 		
-            Sleep(5);
+            Sleep(1);
         }
 
 		return true;
@@ -253,6 +261,9 @@ namespace BONE_GRAPHICS
 
 	bool ReleaseFramework()
 	{
+        if (RenderMgr->UseImGUI())
+            ImGui_ImplDX9_Shutdown();
+
         PhysicsMgr->ReleaseMembers();
 		SceneMgr->ReleaseMembers();
 		InputMgr->ReleaseMembers();

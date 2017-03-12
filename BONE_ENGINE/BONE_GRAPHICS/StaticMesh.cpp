@@ -123,7 +123,7 @@ namespace BONE_GRAPHICS
 			}
 			else if (renderMode == RENDER_STENCIL)
 			{
-				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, true);
 				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHAREF, 0x00);
 				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 			}

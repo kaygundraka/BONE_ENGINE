@@ -90,6 +90,12 @@
     <Filter Include="소스 파일\Management\PhysicsManager">
       <UniqueIdentifier>{da535f07-15b5-4757-b49d-98f9753e42bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\GUI_LIBRARY">
+      <UniqueIdentifier>{d069bd3a-4b9a-46e7-afc6-ff25a5ee4bdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GUI_LIBRARY\DX9">
+      <UniqueIdentifier>{099956fd-4d86-4a02-80b3-ce475c0d5cf2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -236,6 +242,27 @@
     <ClInclude Include="PhyscisManager.h">
       <Filter>소스 파일\Management\PhysicsManager</Filter>
     </ClInclude>
+    <ClInclude Include="stb_truetype.h">
+      <Filter>소스 파일\GUI_LIBRARY</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>소스 파일\GUI_LIBRARY</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>소스 파일\GUI_LIBRARY</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>소스 파일\GUI_LIBRARY</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_rect_pack.h">
+      <Filter>소스 파일\GUI_LIBRARY</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_textedit.h">
+      <Filter>소스 파일\GUI_LIBRARY</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_dx9.h">
+      <Filter>소스 파일\GUI_LIBRARY\DX9</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -381,6 +408,18 @@
     </ClCompile>
     <ClCompile Include="PhysicsManager.cpp">
       <Filter>소스 파일\Management\PhysicsManager</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>소스 파일\GUI_LIBRARY</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>소스 파일\GUI_LIBRARY</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>소스 파일\GUI_LIBRARY</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_dx9.cpp">
+      <Filter>소스 파일\GUI_LIBRARY\DX9</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

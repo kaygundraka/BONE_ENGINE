@@ -17,6 +17,8 @@ namespace BONE_GRAPHICS
         
         float radius;
         bool status;
+
+        bool IsInit;
         
     public:
         PointLight();
@@ -40,5 +42,6 @@ namespace BONE_GRAPHICS
         float GetRadius();
 
         virtual void Init();
+        virtual void Reference();
     };
 }

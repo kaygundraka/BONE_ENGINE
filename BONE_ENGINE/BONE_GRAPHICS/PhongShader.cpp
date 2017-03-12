@@ -67,8 +67,7 @@ namespace BONE_GRAPHICS
         PhongEffect->SetValue("material.specular", MatSpecular, sizeof(MatSpecular));
         PhongEffect->SetFloat("material.shininess", material->GetShininess());
         
-        Matrix MatWorld;
-        D3DXMatrixIdentity(&MatWorld);
+        Matrix MatWorld = ((Transform3D*)parent->transform3D)->GetTransform();
 
         auto Mesh = (StaticMesh*)parent->GetComponent("StaticMesh");
 

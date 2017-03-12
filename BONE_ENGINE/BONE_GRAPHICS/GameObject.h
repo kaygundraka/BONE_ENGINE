@@ -12,9 +12,6 @@ namespace BONE_GRAPHICS
 
 		GameObject* parent;
 
-        Component* transform3D;
-        Component* transform2D;
-
 		std::vector<GameObject*> childs;
 
 		int priorty;
@@ -23,6 +20,9 @@ namespace BONE_GRAPHICS
 		bool isActive;
 
 	public:
+        Component* transform3D;
+        Component* transform2D;
+
 		GameObject();
 		virtual ~GameObject();
 
@@ -45,6 +45,8 @@ namespace BONE_GRAPHICS
 		void DetachChildByTag(std::string tag);
 		GameObject* FindChildByTag(std::string tag);
 
+        std::vector<GameObject*> GetChileds();
+
 		void AttachTag(std::string tag);
 		void DetachTag();
 		std::string Tag();
@@ -57,6 +59,7 @@ namespace BONE_GRAPHICS
         void SavePrefab(std::string name);
 
 		Component* GetComponent(std::string typeName);
+        std::vector<Component*> GetComponents();
 		bool AddComponent(Component* component);
 
 		void LoadContents();

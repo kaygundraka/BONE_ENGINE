@@ -8,10 +8,9 @@ namespace BONE_GRAPHICS
 {
     PointLight::PointLight()
     {
-        SetTag("PointLight");
-        SetPriority(100);
-
         radius = 10;
+        this->status = false;
+        IsInit = false;
     }
 
     PointLight::~PointLight()
@@ -21,11 +20,24 @@ namespace BONE_GRAPHICS
 
     void PointLight::Init()
     {
+        SetTag("PointLight");
+        SetPriority(100);
+
         Transform3D* tr = new Transform3D();
         tr->SetPosition(pos);
         this->AddComponent(tr);
 
         this->tr = tr;
+
+        IsInit = true;
+    }
+
+    void PointLight::Reference()
+    {
+        if (this->status)
+            SceneMgr->CurrentScene()->AddPointLight(this);
+        else
+            SceneMgr->CurrentScene()->RemovePointLight(this);
     }
 
     void PointLight::SetLight(bool status)
@@ -34,6 +46,9 @@ namespace BONE_GRAPHICS
             return;
 
         this->status = status;
+
+        if (!IsInit)
+            return;
 
         if (this->status)
             SceneMgr->CurrentScene()->AddPointLight(this);

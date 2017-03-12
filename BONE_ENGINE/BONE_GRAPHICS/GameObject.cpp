@@ -45,7 +45,7 @@ namespace BONE_GRAPHICS
         }
     }
 
-	void GameObject::SetStatic(bool _sStatic)
+	void GameObject::SetStatic(bool isStatic)
 	{
 		this->isStatic = isStatic;
 	}
@@ -118,6 +118,11 @@ namespace BONE_GRAPHICS
 		
 		return nullptr;
 	}
+
+    std::vector<Component*> GameObject::GetComponents()
+    {
+        return components;
+    }
 
 	void GameObject::LoadContents()
 	{
@@ -203,7 +208,9 @@ namespace BONE_GRAPHICS
 
 	void GameObject::DetachParent()
 	{
-		parent->DetachChild(this);
+        if (parent != nullptr)
+    		parent->DetachChild(this);
+
 		parent = nullptr;
 	}
 
@@ -241,11 +248,17 @@ namespace BONE_GRAPHICS
 		{
 			if ((*Iter) == child)
 			{
+                childs.erase(Iter);
 				child->DetachParent();
 				break;
 			}
 		}
 	}
+
+    std::vector<GameObject*> GameObject::GetChileds()
+    {
+        return this->childs;
+    }
 
 	void GameObject::DetachChildByTag(std::string tag)
 	{

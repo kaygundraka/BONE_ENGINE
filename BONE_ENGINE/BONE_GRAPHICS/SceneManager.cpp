@@ -132,6 +132,13 @@ namespace BONE_GRAPHICS
 					double deltaTime = (currTime - lastTime) * 0.001f;
 					timeDelta = deltaTime;
 
+                    if (RenderMgr->UseImGUI())
+                    {
+                        ImGui_ImplDX9_NewFrame();
+
+                        guiScene->UpdateFrame();
+                    }
+
 					RenderMgr->GetDevice()->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, backColor, 1.0f, 0);
 					RenderMgr->GetDevice()->BeginScene();
 
@@ -142,6 +149,22 @@ namespace BONE_GRAPHICS
 						sceneList[name]->Render();
 						sceneList[name]->LateRender();
 					}
+
+                    if (RenderMgr->UseImGUI())
+                    {
+                        RenderMgr->GetDevice()->SetRenderState(D3DRS_ZENABLE, false);
+                        RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+                        RenderMgr->GetDevice()->SetRenderState(D3DRS_SCISSORTESTENABLE, false);
+                        DWORD temp;
+                        RenderMgr->GetDevice()->GetRenderState(D3DRS_FILLMODE, &temp);
+                        RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+
+                        ImGui::Render();
+
+                        RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, temp);
+                        RenderMgr->GetDevice()->SetRenderState(D3DRS_ZENABLE, true);
+                        RenderMgr->GetDevice()->SetRenderState(D3DRS_SCISSORTESTENABLE, true);
+                    }
 
 					RenderMgr->GetDevice()->EndScene();
 					RenderMgr->GetDevice()->Present(0, 0, 0, 0);
@@ -181,6 +204,11 @@ namespace BONE_GRAPHICS
 
 		return false;
 	}
+
+    void SceneManager::SetGUIScene(GUI_Scene* scene)
+    {
+        this->guiScene = scene;
+    }
 
 	void SceneManager::EndScene(std::string name)
 	{
