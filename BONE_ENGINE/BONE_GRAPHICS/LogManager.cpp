@@ -5,6 +5,18 @@
 
 namespace BONE_GRAPHICS
 {
+    void LogManager::InitializeMembers(bool outputLog)
+    {
+        ThreadSync sync;
+
+        index = 0;
+        logMessage = new char[100];
+        preMessage = new char[100];
+        SaveLog(outputLog);
+
+        ShowMessage(LOG_MESSAGE, "LogManager is initialized");
+    }
+
 	std::string GetTime()
 	{
 		std::string Time;
@@ -82,18 +94,6 @@ namespace BONE_GRAPHICS
 		}
 
 		doc.SaveFile(logFileName.c_str());
-	}
-
-	void LogManager::InitializeMembers(bool outputLog)
-	{
-		ThreadSync sync;
-
-		index = 0;
-		logMessage = new char[100];
-		preMessage = new char[100];
-		SaveLog(outputLog);
-
-		ShowMessage(LOG_MESSAGE, "LogManager is initialized");
 	}
 
 	void LogManager::ShowMessage(int _type, char* _log)

@@ -6,6 +6,7 @@
 #include "ResourceManager.h"
 #include "InputManager.h"
 #include "ConfigManager.h"
+#include "PhyscisManager.h"
 
 namespace BONE_GRAPHICS
 {
@@ -132,7 +133,7 @@ namespace BONE_GRAPHICS
 
 		ShowWindow(hWnd, SW_SHOW);
 
-		if (ConfigMgr->Getbool(".\\info", "ShowLogCmd"))
+		if (ConfigMgr->GetBool(".\\info", "ShowLogCmd"))
 		{
 			AllocConsole();
 			SetConsoleTitleA("[Debug]");
@@ -164,6 +165,7 @@ namespace BONE_GRAPHICS
 		InputMgr->InitializeMembers();
 		SceneMgr->InitializeMembers();
 		ResourceMgr->InitializeMembers();
+        PhysicsMgr->InitializeMembers();
 
 		RECT rect = { 0, 0, 1600, 1200 };
 		
@@ -251,6 +253,7 @@ namespace BONE_GRAPHICS
 
 	bool ReleaseFramework()
 	{
+        PhysicsMgr->ReleaseMembers();
 		SceneMgr->ReleaseMembers();
 		InputMgr->ReleaseMembers();
 		RenderMgr->ReleaseMembers();

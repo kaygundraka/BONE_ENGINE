@@ -72,9 +72,6 @@
     <Filter Include="소스 파일\GameObject\Components\GUI">
       <UniqueIdentifier>{bdb47526-6471-4ca3-ad09-57d765083ed6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Management\Coroutine">
-      <UniqueIdentifier>{ab158cc2-d310-45b2-b6c8-eed3b5a1e318}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Management\Configuration">
       <UniqueIdentifier>{9c0d54b8-2d1b-4ade-ac20-2e352dd37980}</UniqueIdentifier>
     </Filter>
@@ -89,6 +86,9 @@
     </Filter>
     <Filter Include="소스 파일\GameObject\Components\Physics">
       <UniqueIdentifier>{8bab1f0a-af5d-4822-91e7-910a26c67daf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Management\PhysicsManager">
+      <UniqueIdentifier>{da535f07-15b5-4757-b49d-98f9753e42bd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -215,9 +215,6 @@
     <ClInclude Include="ScreenButton.h">
       <Filter>소스 파일\GameObject\Components\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Coroutine.h">
-      <Filter>소스 파일\Management\Coroutine</Filter>
-    </ClInclude>
     <ClInclude Include="ConfigManager.h">
       <Filter>소스 파일\Management\Configuration</Filter>
     </ClInclude>
@@ -235,6 +232,9 @@
     </ClInclude>
     <ClInclude Include="PointLight.h">
       <Filter>소스 파일\GameObject\BasicGameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="PhyscisManager.h">
+      <Filter>소스 파일\Management\PhysicsManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -378,6 +378,9 @@
     </ClCompile>
     <ClCompile Include="PointLight.cpp">
       <Filter>소스 파일\GameObject\BasicGameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsManager.cpp">
+      <Filter>소스 파일\Management\PhysicsManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

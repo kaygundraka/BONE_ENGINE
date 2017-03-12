@@ -132,9 +132,9 @@
     <ClInclude Include="BillBoard.h" />
     <ClInclude Include="BoneHierarchyLoader.h" />
     <ClInclude Include="ConfigManager.h" />
-    <ClInclude Include="Coroutine.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="PhongShader.h" />
+    <ClInclude Include="PhyscisManager.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="ScreenButton.h" />
@@ -275,6 +275,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="PhongShader.cpp" />
+    <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="ScreenButton.cpp" />

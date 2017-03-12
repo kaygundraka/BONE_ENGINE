@@ -541,4 +541,19 @@ namespace BONE_GRAPHICS
 	{
 		// 비어있음
 	}
+
+    void GameObject::OnCollisionEnter(GameObject* otherObject)
+    {
+
+    }
+
+    void GameObject::OnCollisionStay(GameObject* otherObject)
+    {
+
+    }
+    
+    void GameObject::OnCollisionLeave(GameObject* otherObject)
+    {
+
+    }
 }

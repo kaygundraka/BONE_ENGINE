@@ -77,6 +77,7 @@ typedef struct _RGBA {
 #define InputMgr InputManager::GetInstance()
 #define ResourceMgr ResourceManager::GetInstance()
 #define ConfigMgr ConfigManager::GetInstance()
+#define PhysicsMgr PhysicsManager::GetInstance()
 //#define EMManager EnvironmentManager::GetInstance()
 //#define SDManager SoundManager::GetInstance()
 //#define PSManager PhysicsManager::GetInstance()
