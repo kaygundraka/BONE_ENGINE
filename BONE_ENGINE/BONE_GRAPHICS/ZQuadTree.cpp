@@ -54,7 +54,7 @@ namespace BONE_GRAPHICS
 	}
 
 	/// 4개의 코너값을 셋팅한다.
-	BOOL ZQuadTree::_SetCorners(int nCornerTL, int nCornerTR, int nCornerBL, int nCornerBR)
+	bool ZQuadTree::_SetCorners(int nCornerTL, int nCornerTR, int nCornerBL, int nCornerBR)
 	{
 		m_nCorner[CORNER_TL] = nCornerTL;
 		m_nCorner[CORNER_TR] = nCornerTR;
@@ -78,7 +78,7 @@ namespace BONE_GRAPHICS
 	}
 
 	/// 현재 노드가 LOD등급으로 볼때  출력이 가능한 노드인가?
-	BOOL ZQuadTree::IsVisible(VERTEX* pHeightMap, D3DXVECTOR3* pCamera, float fLODRatio)
+	bool ZQuadTree::IsVisible(VERTEX* pHeightMap, D3DXVECTOR3* pCamera, float fLODRatio)
 	{
 		return ((m_nCorner[CORNER_TR] - m_nCorner[CORNER_TL]) <= _GetLODLevel(pHeightMap, pCamera, fLODRatio));
 	}
@@ -103,7 +103,7 @@ namespace BONE_GRAPHICS
 	}
 
 	/// Quadtree를 4개의 자식 트리로 부분분할(subdivide)한다.
-	BOOL ZQuadTree::_SubDivide()
+	bool ZQuadTree::_SubDivide()
 	{
 		int nTopEdgeCenter;
 		int nBottomEdgeCenter;
@@ -173,7 +173,7 @@ namespace BONE_GRAPHICS
 				return nTris;
 			}
 
-			BOOL    b[4];
+			bool    b[4];
 			// 상단 이웃노드(neightbor node)가 출력가능한가?
 			if (m_pNeighbor[EDGE_UP]) b[EDGE_UP] = m_pNeighbor[EDGE_UP]->IsVisible(pHeightMap, &pFrustum->GetPos(), fLODRatio);
 			// 하단 이웃노드(neightbor node)가 출력가능한가?
@@ -264,8 +264,8 @@ namespace BONE_GRAPHICS
 
 	int ZQuadTree::_IsInFrustum(VERTEX* pHeightMap, ZFrustum* pFrustum)
 	{
-		BOOL    b[4];
-		BOOL    bInSphere;
+		bool    b[4];
+		bool    bInSphere;
 
 		// 경계구안에 있는가?
 		//if( m_fRadius == 0.0f )
@@ -371,7 +371,7 @@ namespace BONE_GRAPHICS
 		return n;
 	}
 
-	BOOL IsInRect(RECT* rc, POINT pt)
+	bool IsInRect(RECT* rc, POINT pt)
 	{
 		if (rc->left <= pt.x && rc->right >= pt.x)
 		{
@@ -474,7 +474,7 @@ namespace BONE_GRAPHICS
 	}
 
 	// 쿼드트리를 만든다.(Build()함수에서 불린다)
-	BOOL ZQuadTree::_BuildQuadTree(VERTEX* pHeightMap)
+	bool ZQuadTree::_BuildQuadTree(VERTEX* pHeightMap)
 	{
 		if (_SubDivide())
 		{
@@ -493,7 +493,7 @@ namespace BONE_GRAPHICS
 	}
 
 	/// QuadTree를 구축한다.
-	BOOL ZQuadTree::Build(VERTEX* pHeightMap)
+	bool ZQuadTree::Build(VERTEX* pHeightMap)
 	{
 		// 쿼드트리 구축
 		_BuildQuadTree(pHeightMap);

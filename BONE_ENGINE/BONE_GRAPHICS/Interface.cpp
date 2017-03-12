@@ -132,7 +132,7 @@ namespace BONE_GRAPHICS
 
 		ShowWindow(hWnd, SW_SHOW);
 
-		if (ConfigMgr->GetBool(".\\info", "ShowLogCmd"))
+		if (ConfigMgr->Getbool(".\\info", "ShowLogCmd"))
 		{
 			AllocConsole();
 			SetConsoleTitleA("[Debug]");

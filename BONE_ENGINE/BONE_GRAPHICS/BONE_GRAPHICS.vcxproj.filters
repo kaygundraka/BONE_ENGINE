@@ -54,9 +54,6 @@
     <Filter Include="소스 파일\Management\Log">
       <UniqueIdentifier>{41162b24-2d9f-4068-873e-cd4dd6284712}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Management\Physics">
-      <UniqueIdentifier>{8bab1f0a-af5d-4822-91e7-910a26c67daf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Management\Render">
       <UniqueIdentifier>{273739f9-9b8a-4b1f-b8e8-dce7f749602f}</UniqueIdentifier>
     </Filter>
@@ -89,6 +86,9 @@
     </Filter>
     <Filter Include="소스 파일\GameObject\BasicGameObject">
       <UniqueIdentifier>{6dc5c54d-b409-4b9d-87ca-efe90fc2e876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GameObject\Components\Physics">
+      <UniqueIdentifier>{8bab1f0a-af5d-4822-91e7-910a26c67daf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -174,7 +174,7 @@
       <Filter>소스 파일\Management\Log</Filter>
     </ClInclude>
     <ClInclude Include="Collision.h">
-      <Filter>소스 파일\Management\Physics</Filter>
+      <Filter>소스 파일\GameObject\Components\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>소스 파일\GameObject\Components</Filter>
@@ -314,7 +314,7 @@
       <Filter>소스 파일\Management\Log</Filter>
     </ClCompile>
     <ClCompile Include="Collision.cpp">
-      <Filter>소스 파일\Management\Physics</Filter>
+      <Filter>소스 파일\GameObject\Components\Physics</Filter>
     </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>소스 파일\GameObject\Components</Filter>

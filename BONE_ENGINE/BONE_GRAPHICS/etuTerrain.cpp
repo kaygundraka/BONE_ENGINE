@@ -491,7 +491,7 @@ namespace BONE_GRAPHICS
 		}
 	}
 
-	BOOL etuTerrain::CreateAlphaMaps()
+	bool etuTerrain::CreateAlphaMaps()
 	{
 		for (int i = 0; i<4; ++i)
 		{

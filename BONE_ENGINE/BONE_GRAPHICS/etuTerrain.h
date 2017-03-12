@@ -85,7 +85,7 @@ namespace BONE_GRAPHICS
 
 		bool DrawAlphamaps(int nIndex);
 		void MiniAlphaTextureRender();
-		BOOL CreateAlphaMaps();
+		bool CreateAlphaMaps();
 		void RenderFrustum();
 
 		void SaveAlphaMap();

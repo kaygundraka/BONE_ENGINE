@@ -12,7 +12,7 @@ namespace BONE_GRAPHICS
 	}
 
 	/// 카메라(view) * 프로젝션(projection)행렬을 입력받아 6개의 평면을 만든다.
-	BOOL ZFrustum::Make(D3DXMATRIXA16* pmatViewProj, D3DXVECTOR3 _vec3CameraPos)
+	bool ZFrustum::Make(D3DXMATRIXA16* pmatViewProj, D3DXVECTOR3 _vec3CameraPos)
 	{
 		int i;
 		D3DXMATRIXA16 matInv;
@@ -55,7 +55,7 @@ namespace BONE_GRAPHICS
 	}
 
 	/// 한점 v가 프러스텀안에 있으면 TRUE를 반환, 아니면 FALSE를 반환한다.
-	BOOL ZFrustum::IsIn(D3DXVECTOR3* pv)
+	bool ZFrustum::IsIn(D3DXVECTOR3* pv)
 	{
 		float fDist;
 
@@ -74,7 +74,7 @@ namespace BONE_GRAPHICS
 
 	/** 중심(v)와 반지름(radius)를 갖는 경계구(bounding sphere)가 프러스텀안에 있으면
 	   TRUE를 반환, 아니면 FALSE를 반환한다. */
-	BOOL ZFrustum::IsInSphere(D3DXVECTOR3* pv, float radius)
+	bool ZFrustum::IsInSphere(D3DXVECTOR3* pv, float radius)
 	{
 		float fDist;
 
@@ -97,7 +97,7 @@ namespace BONE_GRAPHICS
 	}
 
 	/// 프러스텀을 화면에 그려준다.
-	BOOL ZFrustum::Draw(LPDIRECT3DDEVICE9 pDev)
+	bool ZFrustum::Draw(LPDIRECT3DDEVICE9 pDev)
 	{
 		WORD index[] = { 0, 1, 2,
 			0, 2, 3,

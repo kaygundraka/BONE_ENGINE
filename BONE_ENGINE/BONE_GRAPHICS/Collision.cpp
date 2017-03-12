@@ -3,130 +3,125 @@
 #include "LogManager.h"
 using namespace BONE_GRAPHICS;
 
-bool Collision::PointToRect(const POINT& _ptPos, const RECT& _rtRect)
+bool BONE_GRAPHICS::PointToRect(const Vector2& pos, const RECT& rect)
 {
-	if (_ptPos.x > _rtRect.right)	return false;
-	if (_ptPos.x < _rtRect.left)	return false;
-	if (_ptPos.y < _rtRect.top)	return false;
-	if (_ptPos.y > _rtRect.bottom)	return false;
+	if (pos.x > rect.right)	    return false;
+	if (pos.x < rect.left)	    return false;
+	if (pos.y < rect.top)	    return false;
+	if (pos.y > rect.bottom)	return false;
 
 	return true;
 }
 
-bool Collision::VectorToAABB(const Vector3& _vPos, const tagBox& _Box)
+bool BONE_GRAPHICS::VectorToAABB(const Vector3& pos, const TAG_BOX& box)
 {
-	if (_vPos.x > _Box.vMax.x)	return false;
-	if (_vPos.x < _Box.vMin.x)	return false;
-	if (_vPos.y > _Box.vMax.y)	return false;
-	if (_vPos.y < _Box.vMin.y)	return false;
-	if (_vPos.z > _Box.vMax.z)	return false;
-	if (_vPos.z < _Box.vMin.z)	return false;
+	if (pos.x > box.rightTop.x)	    return false;
+	if (pos.x < box.leftBottom.x)	return false;
+	if (pos.y > box.rightTop.y)	    return false;
+	if (pos.y < box.leftBottom.y)	return false;
+	if (pos.z > box.rightTop.z)	    return false;
+	if (pos.z < box.leftBottom.z)	return false;
 
 	return true;
 }
 
-bool Collision::AABBToAABB(const tagBox& _Box1, const tagBox& _Box2)
+bool BONE_GRAPHICS::AABBToAABB(const TAG_BOX& box1, const TAG_BOX& box2)
 {
-	if (_Box1.vMin.x + _Box1.vPosition.x  > _Box2.vMax.x + _Box2.vPosition.x
-		|| _Box1.vMax.x + _Box1.vPosition.x < _Box2.vMin.x + _Box2.vPosition.x)
+	if (box1.leftBottom.x + box1.pivot.x  > box2.rightTop.x + box2.pivot.x
+		|| box1.rightTop.x + box1.pivot.x < box2.leftBottom.x + box2.pivot.x)
 		return false;
 
-	if (_Box1.vMin.y + _Box1.vPosition.y > _Box2.vMax.y + _Box2.vPosition.y
-		|| _Box1.vMax.y + _Box1.vPosition.y < _Box2.vMin.y + _Box2.vPosition.y)
+	if (box1.leftBottom.y + box1.pivot.y > box2.rightTop.y + box2.pivot.y
+		|| box1.rightTop.y + box1.pivot.y < box2.leftBottom.y + box2.pivot.y)
 		return false;
 
-	if (_Box1.vMin.z + _Box1.vPosition.z > _Box2.vMax.z + _Box2.vPosition.z
-		|| _Box1.vMax.z + _Box1.vPosition.z < _Box2.vMin.z + _Box2.vPosition.z)
+	if (box1.leftBottom.z + box1.pivot.z > box2.rightTop.z + box2.pivot.z
+		|| box1.rightTop.z + box1.pivot.z < box2.leftBottom.z + box2.pivot.z)
 		return false;
 
 	return true;
 }
 
-bool Collision::VectorToSphere(const Vector3& _vPos, const tagSphere& _Sphere)
+bool BONE_GRAPHICS::VectorToSphere(const Vector3& pos, const TAG_SPHERE& sphere)
 {
 	Vector3 RVec(Vector3(0, 0, 0));
 
-    D3DXVec3Subtract(&RVec, &(_vPos), &(_Sphere.vPosition));
+    D3DXVec3Subtract(&RVec, &(pos), &(sphere.pivot));
 
 	float C = D3DXVec3Dot(&RVec, &RVec);
-	float distans = _Sphere.fRadius * _Sphere.fRadius;
+	float distans = sphere.radius * sphere.radius;
 
 	if (distans > C)
-		return true; // 충돌
+		return true;
 	else
-		return false; // 비충돌
+		return false;
 }
 
-bool Collision::SphereToSphere(const tagSphere& _Sphere1, const tagSphere& _Sphere2)
+bool BONE_GRAPHICS::SphereToSphere(const TAG_SPHERE& sphere1, const TAG_SPHERE& sphere2)
 {
 	Vector3 RVec(Vector3(0, 0, 0));
 
-	//중심점간 뺄셈
-	D3DXVec3Subtract(&RVec, &(_Sphere1.vPosition), &(_Sphere2.vPosition));
+	D3DXVec3Subtract(&RVec, &(sphere1.pivot), &(sphere2.pivot));
 
-	//거리계산
 	float C = D3DXVec3Length(&RVec);
-	float distans = _Sphere1.fRadius + _Sphere2.fRadius; //반지름 합
-														 //distans *= distans; //제곱
-
+	float distans = sphere1.radius + sphere2.radius;
+	
 	if (distans >= C)
-		return true; // 충돌
+		return true;
 	else
-		return false; // 비충돌
+		return false;
 }
-Collision::tagOBB Collision::ConvertAABBtoOBB(const tagBox& _Box, tagOBB R_OBB)
+BONE_GRAPHICS::TAG_OBB BONE_GRAPHICS::ConvertAABBtoOBB(const TAG_BOX& box, TAG_OBB obb)
 {
+	obb.pivot = (box.leftBottom + box.rightTop) / 2.0f;
 
-	R_OBB.vPosition = (_Box.vMin + _Box.vMax) / 2.0f;
+	Vector3 X(box.rightTop.x, box.leftBottom.y, box.leftBottom.z);
+	Vector3 Y(box.leftBottom.x, box.rightTop.y, box.leftBottom.z);
+	Vector3 Z(box.leftBottom.x, box.leftBottom.y, box.rightTop.z);
 
-	Vector3 vX(_Box.vMax.x, _Box.vMin.y, _Box.vMin.z); // x축
-	Vector3 vY(_Box.vMin.x, _Box.vMax.y, _Box.vMin.z); // y축
-	Vector3 vZ(_Box.vMin.x, _Box.vMin.y, _Box.vMax.z); // z축
+	obb.axisDir[0] = X - box.leftBottom;
+	D3DXVec3Normalize(&obb.axisDir[0], &obb.axisDir[0]);
 
-	R_OBB.vAxisDir[0] = vX - _Box.vMin;
-	D3DXVec3Normalize(&R_OBB.vAxisDir[0], &R_OBB.vAxisDir[0]);
+	obb.axisDir[1] = Y - box.leftBottom;
+	D3DXVec3Normalize(&obb.axisDir[1], &obb.axisDir[1]);
 
-	R_OBB.vAxisDir[1] = vY - _Box.vMin;
-	D3DXVec3Normalize(&R_OBB.vAxisDir[1], &R_OBB.vAxisDir[1]);
+	obb.axisDir[2] = Z - box.leftBottom;
+	D3DXVec3Normalize(&obb.axisDir[2], &obb.axisDir[2]);
 
-	R_OBB.vAxisDir[2] = vZ - _Box.vMin;
-	D3DXVec3Normalize(&R_OBB.vAxisDir[2], &R_OBB.vAxisDir[2]);
+	obb.axisLen[0] = D3DXVec3Length(&obb.axisDir[0]) * 0.5f;
+	obb.axisLen[1] = D3DXVec3Length(&obb.axisDir[1]) * 0.5f;
+	obb.axisLen[2] = D3DXVec3Length(&obb.axisDir[2]) * 0.5f;
 
-	R_OBB.fAxisLen[0] = D3DXVec3Length(&R_OBB.vAxisDir[0]) * 0.5f;
-	R_OBB.fAxisLen[1] = D3DXVec3Length(&R_OBB.vAxisDir[1]) * 0.5f;
-	R_OBB.fAxisLen[2] = D3DXVec3Length(&R_OBB.vAxisDir[2]) * 0.5f;
-
-	return R_OBB;
-}
-
-bool Collision::AABBToOBB(const tagBox& _Box, const tagOBB& _OBB)
-{
-	tagOBB OBB;
-	OBB.vPosition = (_Box.vMin + _Box.vMax) / 2.0f;
-
-	Vector3 vX(_Box.vMax.x, _Box.vMin.y, _Box.vMin.z);
-	Vector3 vY(_Box.vMin.x, _Box.vMax.y, _Box.vMin.z);
-	Vector3 vZ(_Box.vMin.x, _Box.vMin.y, _Box.vMax.z);
-
-	OBB.vAxisDir[0] = vX - _Box.vMin;
-	D3DXVec3Normalize(&OBB.vAxisDir[0], &OBB.vAxisDir[0]);
-
-	OBB.vAxisDir[1] = vY - _Box.vMin;
-	D3DXVec3Normalize(&OBB.vAxisDir[1], &OBB.vAxisDir[1]);
-
-	OBB.vAxisDir[2] = vZ - _Box.vMin;
-	D3DXVec3Normalize(&OBB.vAxisDir[2], &OBB.vAxisDir[2]);
-
-	OBB.fAxisLen[0] = D3DXVec3Length(&OBB.vAxisDir[0]) * 0.5f;
-	OBB.fAxisLen[1] = D3DXVec3Length(&OBB.vAxisDir[1]) * 0.5f;
-	OBB.fAxisLen[2] = D3DXVec3Length(&OBB.vAxisDir[2]) * 0.5f;
-
-	return OBBToOBB(_OBB, OBB);
+	return obb;
 }
 
-bool Collision::OBBToOBB(const tagOBB& _OBB1, const tagOBB& _OBB2)
+bool BONE_GRAPHICS::AABBToOBB(const TAG_BOX& box, const TAG_OBB& obb)
 {
-	//
+	TAG_OBB OBB;
+	OBB.pivot = (box.leftBottom + box.rightTop) / 2.0f;
+
+	Vector3 vX(box.rightTop.x, box.leftBottom.y, box.leftBottom.z);
+	Vector3 vY(box.leftBottom.x, box.rightTop.y, box.leftBottom.z);
+	Vector3 vZ(box.leftBottom.x, box.leftBottom.y, box.rightTop.z);
+
+	OBB.axisDir[0] = vX - box.leftBottom;
+	D3DXVec3Normalize(&OBB.axisDir[0], &OBB.axisDir[0]);
+
+	OBB.axisDir[1] = vY - box.leftBottom;
+	D3DXVec3Normalize(&OBB.axisDir[1], &OBB.axisDir[1]);
+
+	OBB.axisDir[2] = vZ - box.leftBottom;
+	D3DXVec3Normalize(&OBB.axisDir[2], &OBB.axisDir[2]);
+
+	OBB.axisLen[0] = D3DXVec3Length(&OBB.axisDir[0]) * 0.5f;
+	OBB.axisLen[1] = D3DXVec3Length(&OBB.axisDir[1]) * 0.5f;
+	OBB.axisLen[2] = D3DXVec3Length(&OBB.axisDir[2]) * 0.5f;
+
+	return OBBToOBB(obb, OBB);
+}
+
+bool BONE_GRAPHICS::OBBToOBB(const TAG_OBB& obb1, const TAG_OBB& obb2)
+{
 	double c[3][3];
 
 	double absC[3][3];
@@ -139,75 +134,73 @@ bool Collision::OBBToOBB(const tagOBB& _OBB1, const tagOBB& _OBB2)
 	const double cutoff = 0.999999;
 	bool existsParallelPair = false;
 
-	Vector3 diff = _OBB1.vPosition - _OBB2.vPosition;
+	Vector3 diff = obb1.pivot - obb2.pivot;
 
-
-	//
-	for (i = 0; i < 3; ++i)
+    for (i = 0; i < 3; ++i)
 	{
-		c[0][i] = D3DXVec3Dot(&_OBB1.vAxisDir[0], &_OBB2.vAxisDir[i]);
+		c[0][i] = D3DXVec3Dot(&obb1.axisDir[0], &obb2.axisDir[i]);
 		absC[0][i] = abs(c[0][i]);
 		if (absC[0][i] > cutoff)
 			existsParallelPair = true;
 	}
 
-	d[0] = D3DXVec3Dot(&diff, &_OBB1.vAxisDir[0]);
+	d[0] = D3DXVec3Dot(&diff, &obb1.axisDir[0]);
 	r = abs(d[0]);
-	r0 = _OBB1.fAxisLen[0];
-	r1 = _OBB2.fAxisLen[0] * absC[0][0] + _OBB2.fAxisLen[1] * absC[0][1] + _OBB2.fAxisLen[2] * absC[0][2];
+	r0 = obb1.axisLen[0];
+	r1 = obb2.axisLen[0] * absC[0][0] + obb2.axisLen[1] * absC[0][1] + obb2.axisLen[2] * absC[0][2];
 
 	if (r > r0 + r1)
 		return false;
 
 	for (i = 0; i < 3; ++i)
 	{
-		c[1][i] = D3DXVec3Dot(&_OBB1.vAxisDir[1], &_OBB2.vAxisDir[i]);
+		c[1][i] = D3DXVec3Dot(&obb1.axisDir[1], &obb2.axisDir[i]);
 		absC[1][i] = abs(c[1][i]);
 		if (absC[1][i] > cutoff)
 			existsParallelPair = true;
 	}
 
-	d[1] = D3DXVec3Dot(&diff, &_OBB1.vAxisDir[1]);
+	d[1] = D3DXVec3Dot(&diff, &obb1.axisDir[1]);
 	r = abs(d[1]);
-	r0 = _OBB1.fAxisLen[1];
-	r1 = _OBB2.fAxisLen[0] * absC[1][0] + _OBB2.fAxisLen[1] * absC[1][1] + _OBB2.fAxisLen[2] * absC[1][2];
+	r0 = obb1.axisLen[1];
+	r1 = obb2.axisLen[0] * absC[1][0] + obb2.axisLen[1] * absC[1][1] + obb2.axisLen[2] * absC[1][2];
 
 	if (r > r0 + r1)
 		return false;
 
 	for (i = 0; i < 3; ++i)
 	{
-		c[2][i] = D3DXVec3Dot(&_OBB1.vAxisDir[2], &_OBB2.vAxisDir[i]);
+		c[2][i] = D3DXVec3Dot(&obb1.axisDir[2], &obb2.axisDir[i]);
 		absC[2][i] = abs(c[2][i]);
 		if (absC[2][i] > cutoff)
 			existsParallelPair = true;
 	}
 
-	d[2] = D3DXVec3Dot(&diff, &_OBB1.vAxisDir[2]);
+	d[2] = D3DXVec3Dot(&diff, &obb1.axisDir[2]);
 	r = abs(d[2]);
-	r0 = _OBB1.fAxisLen[2];
-	r1 = _OBB2.fAxisLen[0] * absC[2][0] + _OBB2.fAxisLen[1] * absC[2][1] + _OBB2.fAxisLen[2] * absC[2][2];
+	r0 = obb1.axisLen[2];
+	r1 = obb2.axisLen[0] * absC[2][0] + obb2.axisLen[1] * absC[2][1] + obb2.axisLen[2] * absC[2][2];
 
 	if (r > r0 + r1)
 		return false;
 
-	r = abs(D3DXVec3Dot(&diff, &_OBB2.vAxisDir[0]));
-	r0 = _OBB1.fAxisLen[0] * absC[0][0] + _OBB1.fAxisLen[1] * absC[1][0] + _OBB1.fAxisLen[2] * absC[2][0];
-	r1 = _OBB2.fAxisLen[0];
+	r = abs(D3DXVec3Dot(&diff, &obb2.axisDir[0]));
+	r0 = obb1.axisLen[0] * absC[0][0] + obb1.axisLen[1] * absC[1][0] + obb1.axisLen[2] * absC[2][0];
+	r1 = obb2.axisLen[0];
 
 	if (r > r0 + r1)
 		return false;
 
-	r = abs(D3DXVec3Dot(&diff, &_OBB2.vAxisDir[1]));
-	r0 = _OBB1.fAxisLen[0] * absC[0][1] + _OBB1.fAxisLen[1] * absC[1][1] + _OBB1.fAxisLen[2] * absC[2][1];
-	r1 = _OBB2.fAxisLen[1];
+	r = abs(D3DXVec3Dot(&diff, &obb2.axisDir[1]));
+	r0 = obb1.axisLen[0] * absC[0][1] + obb1.axisLen[1] * absC[1][1] + obb1.axisLen[2] * absC[2][1];
+	r1 = obb2.axisLen[1];
 
 	if (r > r0 + r1)
 		return false;
 
-	r = abs(D3DXVec3Dot(&diff, &_OBB2.vAxisDir[2]));
-	r0 = _OBB1.fAxisLen[0] * absC[0][2] + _OBB1.fAxisLen[1] * absC[1][2] + _OBB1.fAxisLen[2] * absC[2][2];
-	r1 = _OBB2.fAxisLen[2];
+	r = abs(D3DXVec3Dot(&diff, &obb2.axisDir[2]));
+	r0 = obb1.axisLen[0] * absC[0][2] + obb1.axisLen[1] * absC[1][2] + obb1.axisLen[2] * absC[2][2];
+	r1 = obb2.axisLen[2];
 
 	if (r > r0 + r1)
 		return false;
@@ -216,113 +209,108 @@ bool Collision::OBBToOBB(const tagOBB& _OBB1, const tagOBB& _OBB2)
 		return true;
 
 	r = abs(d[2] * c[1][0] - d[1] * c[2][0]);
-	r0 = _OBB1.fAxisLen[1] * absC[2][0] + _OBB1.fAxisLen[2] * absC[1][0];
-	r1 = _OBB2.fAxisLen[1] * absC[0][2] + _OBB2.fAxisLen[2] * absC[0][1];
+	r0 = obb1.axisLen[1] * absC[2][0] + obb1.axisLen[2] * absC[1][0];
+	r1 = obb2.axisLen[1] * absC[0][2] + obb2.axisLen[2] * absC[0][1];
 	if (r > r0 + r1)
 		return false;
 
 	r = abs(d[2] * c[1][1] - d[1] * c[2][1]);
-	r0 = _OBB1.fAxisLen[1] * absC[2][1] + _OBB1.fAxisLen[2] * absC[1][1];
-	r1 = _OBB2.fAxisLen[0] * absC[0][2] + _OBB2.fAxisLen[2] * absC[0][0];
+	r0 = obb1.axisLen[1] * absC[2][1] + obb1.axisLen[2] * absC[1][1];
+	r1 = obb2.axisLen[0] * absC[0][2] + obb2.axisLen[2] * absC[0][0];
 	if (r > r0 + r1)
 		return false;
 
 	r = abs(d[2] * c[1][2] - d[1] * c[2][2]);
-	r0 = _OBB1.fAxisLen[1] * absC[2][2] + _OBB1.fAxisLen[2] * absC[1][2];
-	r1 = _OBB2.fAxisLen[0] * absC[0][1] + _OBB2.fAxisLen[1] * absC[0][0];
+	r0 = obb1.axisLen[1] * absC[2][2] + obb1.axisLen[2] * absC[1][2];
+	r1 = obb2.axisLen[0] * absC[0][1] + obb2.axisLen[1] * absC[0][0];
 	if (r > r0 + r1)
 		return false;
 
 	r = abs(d[0] * c[2][0] - d[2] * c[0][0]);
-	r0 = _OBB1.fAxisLen[0] * absC[2][0] + _OBB1.fAxisLen[2] * absC[0][0];
-	r1 = _OBB2.fAxisLen[1] * absC[1][2] + _OBB2.fAxisLen[2] * absC[1][1];
+	r0 = obb1.axisLen[0] * absC[2][0] + obb1.axisLen[2] * absC[0][0];
+	r1 = obb2.axisLen[1] * absC[1][2] + obb2.axisLen[2] * absC[1][1];
 	if (r > r0 + r1)
 		return false;
 
 	r = abs(d[0] * c[2][1] - d[2] * c[0][1]);
-	r0 = _OBB1.fAxisLen[0] * absC[2][1] + _OBB1.fAxisLen[2] * absC[0][1];
-	r1 = _OBB2.fAxisLen[0] * absC[1][2] + _OBB2.fAxisLen[2] * absC[1][0];
+	r0 = obb1.axisLen[0] * absC[2][1] + obb1.axisLen[2] * absC[0][1];
+	r1 = obb2.axisLen[0] * absC[1][2] + obb2.axisLen[2] * absC[1][0];
 	if (r > r0 + r1)
 		return false;
 
 	r = abs(d[0] * c[2][2] - d[2] * c[0][2]);
-	r0 = _OBB1.fAxisLen[0] * absC[2][2] + _OBB1.fAxisLen[2] * absC[0][2];
-	r1 = _OBB2.fAxisLen[0] * absC[1][1] + _OBB2.fAxisLen[1] * absC[1][0];
+	r0 = obb1.axisLen[0] * absC[2][2] + obb1.axisLen[2] * absC[0][2];
+	r1 = obb2.axisLen[0] * absC[1][1] + obb2.axisLen[1] * absC[1][0];
 	if (r > r0 + r1)
 		return false;
-
 
 
 	r = abs(d[1] * c[0][0] - d[0] * c[1][0]);
-	r0 = _OBB1.fAxisLen[0] * absC[1][0] + _OBB1.fAxisLen[1] * absC[0][0];
-	r1 = _OBB2.fAxisLen[1] * absC[2][2] + _OBB2.fAxisLen[2] * absC[2][1];
+	r0 = obb1.axisLen[0] * absC[1][0] + obb1.axisLen[1] * absC[0][0];
+	r1 = obb2.axisLen[1] * absC[2][2] + obb2.axisLen[2] * absC[2][1];
 	if (r > r0 + r1)
 		return false;
-
-
 
 	r = abs(d[1] * c[0][1] - d[0] * c[1][1]);
-	r0 = _OBB1.fAxisLen[0] * absC[1][1] + _OBB1.fAxisLen[1] * absC[0][1];
-	r1 = _OBB2.fAxisLen[0] * absC[2][2] + _OBB2.fAxisLen[2] * absC[2][0];
+	r0 = obb1.axisLen[0] * absC[1][1] + obb1.axisLen[1] * absC[0][1];
+	r1 = obb2.axisLen[0] * absC[2][2] + obb2.axisLen[2] * absC[2][0];
 	if (r > r0 + r1)
 		return false;
 
-
-
 	r = abs(d[1] * c[0][2] - d[0] * c[1][2]);
-	r0 = _OBB1.fAxisLen[0] * absC[1][2] + _OBB1.fAxisLen[1] * absC[0][2];
-	r1 = _OBB2.fAxisLen[0] * absC[2][1] + _OBB2.fAxisLen[1] * absC[2][0];
+	r0 = obb1.axisLen[0] * absC[1][2] + obb1.axisLen[1] * absC[0][2];
+	r1 = obb2.axisLen[0] * absC[2][1] + obb2.axisLen[1] * absC[2][0];
 	if (r > r0 + r1)
 		return false;
 
 	return true;
 }
 
-HRESULT Collision::ComputeBoundingBox(LPD3DXMESH _lpMesh, tagBox& _Box)
+HRESULT BONE_GRAPHICS::ComputeBoundingBox(LPD3DXMESH mesh, TAG_BOX& box)
 {
 	LPVOID pVertices(nullptr);
-	_lpMesh->LockVertexBuffer(D3DLOCK_NOSYSLOCK, &pVertices);
+	mesh->LockVertexBuffer(D3DLOCK_NOSYSLOCK, &pVertices);
 
 	if (FAILED(D3DXComputeBoundingBox((Vector3*)pVertices,
-		_lpMesh->GetNumVertices(),
-		D3DXGetFVFVertexSize(_lpMesh->GetFVF()),
-		&_Box.vMin,
-		&_Box.vMax)))
+		mesh->GetNumVertices(),
+		D3DXGetFVFVertexSize(mesh->GetFVF()),
+		&box.leftBottom,
+		&box.rightTop)))
 	{
 		LogMgr->ShowMessage(LOG_ERROR, "Compute BoundingBox Failed..");
-		_lpMesh->UnlockVertexBuffer();
+		mesh->UnlockVertexBuffer();
 		return E_FAIL;
 	}
 
-	_lpMesh->UnlockVertexBuffer();
+	mesh->UnlockVertexBuffer();
 
 	return S_OK;
 }
 
-HRESULT Collision::ComputeBoundingSphere(LPD3DXMESH _lpMesh, tagSphere& _Sphere)
+HRESULT BONE_GRAPHICS::ComputeBoundingSphere(LPD3DXMESH mesh, TAG_SPHERE& sphere)
 {
 	LPVOID pVertices(nullptr);
-	_lpMesh->LockVertexBuffer(D3DLOCK_NOSYSLOCK, &pVertices);
+	mesh->LockVertexBuffer(D3DLOCK_NOSYSLOCK, &pVertices);
 
 	if (FAILED(D3DXComputeBoundingSphere((Vector3*)pVertices,
-		_lpMesh->GetNumVertices(),
-		D3DXGetFVFVertexSize(_lpMesh->GetFVF()),
-		&_Sphere.vPosition,
-		&_Sphere.fRadius)))
+		mesh->GetNumVertices(),
+		D3DXGetFVFVertexSize(mesh->GetFVF()),
+		&sphere.pivot,
+		&sphere.radius)))
 	{
 		LogMgr->ShowMessage(LOG_ERROR, "Compute BoundingShere Failed..");
-		_lpMesh->UnlockVertexBuffer();
+		mesh->UnlockVertexBuffer();
 		return E_FAIL;
 	}
 
-	_lpMesh->UnlockVertexBuffer();
+	mesh->UnlockVertexBuffer();
 
 	return S_OK;
 }
 
-HRESULT Collision::ComputeBoundingSphere(LPD3DXFRAME _lpFrame, tagSphere& _Sphere)
+HRESULT BONE_GRAPHICS::ComputeBoundingSphere(LPD3DXFRAME _lpFrame, TAG_SPHERE& sphere)
 {
-	if (FAILED(D3DXFrameCalculateBoundingSphere(_lpFrame, &_Sphere.vPosition, &_Sphere.fRadius)))
+	if (FAILED(D3DXFrameCalculateBoundingSphere(_lpFrame, &sphere.pivot, &sphere.radius)))
 	{
 		LogMgr->ShowMessage(LOG_ERROR, "Compute BoundingShere Failed..");
 
@@ -332,17 +320,17 @@ HRESULT Collision::ComputeBoundingSphere(LPD3DXFRAME _lpFrame, tagSphere& _Spher
 	return S_OK;
 }
 
-HRESULT Collision::ComputeOBB(const tagBox& _Box, tagOBB& _OBB)
+HRESULT BONE_GRAPHICS::ComputeOBB(const TAG_BOX& box, TAG_OBB& obb)
 {
 	return S_OK;
 }
 
-BOOL Collision::GetDetectColl()
+bool BONE_GRAPHICS::GetDetectColl()
 {
-	return DetectCollision;
+	return DetectBONE_GRAPHICS;
 }
 
-void Collision::SetDetectColl(BOOL dc)
+void BONE_GRAPHICS::SetDetectColl(bool dc)
 {
-	DetectCollision = dc;
+	DetectBONE_GRAPHICS = dc;
 }

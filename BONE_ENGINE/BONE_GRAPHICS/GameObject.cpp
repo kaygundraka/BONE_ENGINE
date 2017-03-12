@@ -131,6 +131,11 @@ namespace BONE_GRAPHICS
 			if ((*Iter)->GetTypeName() == component->GetTypeName())
 				return false;
 		
+        if (component->GetTypeName() == "Transform3D")
+            transform3D = (Transform3D*)component;
+        else if (component->GetTypeName() == "Transform2D")
+            transform2D = (Transform2D*)component;
+
 		components.push_back(component);
 
 		return true;

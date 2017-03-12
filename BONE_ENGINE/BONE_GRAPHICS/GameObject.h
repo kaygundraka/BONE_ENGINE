@@ -1,6 +1,8 @@
 #pragma once
 #include "Common.h"
 #include "Component.h"
+#include "Transform3D.h"
+#include "Transform2D.h"
 
 namespace BONE_GRAPHICS 
 {
@@ -11,6 +13,9 @@ namespace BONE_GRAPHICS
 		std::vector<Component*> components;
 
 		GameObject* parent;
+        Transform3D* transform3D;
+        Transform2D* transform2D;
+
 		std::vector<GameObject*> childs;
 
 		int priorty;
@@ -63,6 +68,10 @@ namespace BONE_GRAPHICS
 		virtual void Update();
 		virtual void LateUpdate();
 		virtual void LateRender();
+        
+        virtual void OnCollisionEnter(GameObject* otherObject);
+        virtual void OnCollisionStay(GameObject* otherObject);
+        virtual void OnCollisionLeave(GameObject* otherObject);
 
 		void Render();
 	};

@@ -199,7 +199,7 @@ namespace BONE_GRAPHICS
         D3DXVec3TransformCoord(&vOrg, &ray->origin, &Inversemat);
         D3DXVec3TransformNormal(&vDir, &ray->direction, &Inversemat);
 
-        BOOL bHit = FALSE;
+        bool bHit = FALSE;
         D3DXIntersect(mesh, &vOrg, &vDir, &bHit, nullptr, nullptr, nullptr, dist, nullptr, nullptr);
 
         return bHit;
@@ -217,7 +217,7 @@ namespace BONE_GRAPHICS
         D3DXVec3TransformCoord(&vOrg, &ray->origin, &Inversemat);
         D3DXVec3TransformNormal(&vDir, &ray->direction, &Inversemat);
 
-        BOOL bHit;
+        bool bHit;
         bHit = D3DXIntersectTri(&p0, &p1, &p2, &vOrg, &vDir, u, v, dist);
 
         return bHit;
