@@ -22,7 +22,7 @@ namespace BONE_GRAPHICS
 
 		LogMgr->ShowMessage(LOG_MESSAGE, "InputManager is initialized");
 	}
-
+    
 	void InputManager::SelectObject(std::string name)
 	{
 		ThreadSync sync;

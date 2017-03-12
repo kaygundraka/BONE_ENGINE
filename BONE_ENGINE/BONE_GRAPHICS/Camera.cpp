@@ -72,16 +72,21 @@ namespace BONE_GRAPHICS
 
 	void Camera::FixedUpdate(GameObject* owner)
 	{
+        this->owner = owner;
+
 		if (SceneMgr->CurrentScene()->GetCameraIndex() == ID)
 		{
 			Transform3D* Tr = ((Transform3D*)owner->GetComponent("Transform3D"));
-			
+            
 			Vector3 Position(0, 0, 0);
 
 			if (Tr != nullptr)
 				Position = Tr->GetWorldPositon();
 			else
 				LogMgr->ShowMessage(LOG_ERROR, "Camera %d - Don't Exist Transform3D Component.", ID);
+
+            D3DXVec3Normalize(&viewVector, &(targetPosition - Tr->GetWorldPositon()));
+            D3DXVec3Cross(&crossVector, &cameraUp, &viewVector);
 
 			D3DXMatrixLookAtLH(&viewMatrix, &Position, &targetPosition, &cameraUp);
 			RenderMgr->GetDevice()->SetTransform(D3DTS_VIEW, &viewMatrix);
@@ -149,4 +154,47 @@ namespace BONE_GRAPHICS
 	{
 		return ID;
 	}
+
+    void Camera::RotateLocalX(float angle)
+    {
+        D3DXMATRIXA16 matRot;
+        D3DXMatrixRotationAxis(&matRot, &crossVector, angle);
+
+        D3DXVECTOR3 vNewDst, vNewUp;
+        D3DXVec3TransformCoord(&vNewDst, &viewVector, &matRot);
+      
+        Transform3D* Tr = ((Transform3D*)owner->GetComponent("Transform3D"));
+        auto EyePos = Tr->GetPosition();
+        vNewDst += EyePos;
+        targetPosition = vNewDst;
+
+        D3DXVec3Normalize(&viewVector, &(targetPosition - Tr->GetWorldPositon()));
+        D3DXVec3Cross(&crossVector, &cameraUp, &viewVector);
+    }
+
+    void Camera::RotateLocalY(float angle)
+    {
+        D3DXMATRIXA16 matRot;
+        D3DXMatrixRotationAxis(&matRot, &cameraUp, angle);
+
+        D3DXVECTOR3 vNewDst;
+        D3DXVec3TransformCoord(&vNewDst, &viewVector, &matRot);
+        Transform3D* Tr = ((Transform3D*)owner->GetComponent("Transform3D"));
+        auto EyePos = Tr->GetPosition();
+        vNewDst += EyePos;
+        targetPosition = vNewDst;
+
+        D3DXVec3Normalize(&viewVector, &(targetPosition - Tr->GetWorldPositon()));
+        D3DXVec3Cross(&crossVector, &cameraUp, &viewVector);
+    }
+
+    Vector3 Camera::GetViewVector()
+    {
+        return viewVector;
+    }
+
+    Vector3 Camera::GetCrossVector()
+    {
+        return crossVector;
+    }
 }

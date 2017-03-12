@@ -16,6 +16,8 @@ namespace BONE_GRAPHICS
 
 		Vector3 targetPosition;
 		Vector3 cameraUp;
+        Vector3 viewVector;
+        Vector3 crossVector;
 		Matrix viewMatrix;
 		Matrix projectionMatrix;
 
@@ -24,6 +26,8 @@ namespace BONE_GRAPHICS
 		float fov;
 		
 		PROJECTION_TYPE type;
+
+        GameObject* owner;
 
 		int width;
 		int height;
@@ -48,6 +52,12 @@ namespace BONE_GRAPHICS
         Vector3 GetTargetPosition();
 		Matrix GetViewMatrix(GameObject* owner);
 		Matrix GetProjectionMatrix();
+
+        void RotateLocalX(float angle);
+        void RotateLocalY(float angle);
+
+        Vector3 GetViewVector();
+        Vector3 GetCrossVector();
 
 		virtual void FixedUpdate(GameObject* owner);
 	};

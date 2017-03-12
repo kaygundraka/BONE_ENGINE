@@ -6,10 +6,14 @@ using namespace BONE_GRAPHICS;
 
 class CameraObject : public GameObject {
 private:
-    Transform3D* transform;
     Camera* mainCamera;
+    int mouseX;
+    int mouseY;
+
+    bool cameraMove;
 
 public:
     virtual void Init();
+    virtual void Update();
     virtual void LateUpdate();
 };

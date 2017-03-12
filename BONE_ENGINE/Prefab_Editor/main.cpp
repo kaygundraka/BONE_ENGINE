@@ -6,6 +6,7 @@
 #include <Transform3D.h>
 #include <PointLight.h>
 #include <StaticMesh.h>
+#include <InputManager.h>
 
 #include "EditorUI.h"
 #include "CameraObject.h"
@@ -25,7 +26,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
     bool flag = false;
 
     RenderMgr->GetDevice()->SetRenderState(D3DRS_LIGHTING, FALSE);
-        
+    InputMgr->SetFocusWindow(true);
+
     auto_ptr<EditorUI> gui(new EditorUI);
     SceneMgr->SetGUIScene(gui.get());
 

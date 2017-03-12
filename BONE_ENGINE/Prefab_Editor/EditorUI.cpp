@@ -1,4 +1,5 @@
 #include "EditorUI.h"
+#include <Common.h>
 #include <SceneManager.h>
 #include <Transform3D.h>
 #include <Camera.h>
@@ -10,6 +11,7 @@
 #include <SkinnedMesh.h>
 #include <Collision.h>
 #include <GameObject.h>
+#include <InputManager.h>
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
@@ -125,6 +127,11 @@ void EditorUI::AllChildCheck(GameObject* parent)
 
 void EditorUI::UpdateFrame()
 {
+    if (!ImGui::IsWindowFocused())
+        InputMgr->SetFocusWindow(true);
+    else
+        InputMgr->SetFocusWindow(false);
+
     {
         if (!ImGui::Begin("Editor", &open, ImGuiWindowFlags_MenuBar))
         {

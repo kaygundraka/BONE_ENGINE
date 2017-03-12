@@ -14,8 +14,8 @@ namespace BONE_GRAPHICS
 {
 	LRESULT CALLBACK FrameworkWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
-        if (ImGui_ImplDX9_WndProcHandler(hWnd, message, wParam, lParam))
-            return true;
+        ImGui_ImplDX9_WndProcHandler(hWnd, message, wParam, lParam);
+        //    return true;
 
 		POINT MousePosition;
 		RECT ClientRect;
