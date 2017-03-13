@@ -152,11 +152,13 @@
   <ItemGroup>
     <ClCompile Include="CameraObject.cpp" />
     <ClCompile Include="EditorUI.cpp" />
+    <ClCompile Include="SceneInfoUI.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraObject.h" />
     <ClInclude Include="EditorUI.h" />
+    <ClInclude Include="SceneInfoUI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

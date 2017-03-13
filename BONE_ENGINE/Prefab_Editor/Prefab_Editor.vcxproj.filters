@@ -26,6 +26,9 @@
     <ClCompile Include="CameraObject.cpp">
       <Filter>소스 파일\CameraObject</Filter>
     </ClCompile>
+    <ClCompile Include="SceneInfoUI.cpp">
+      <Filter>소스 파일\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EditorUI.h">
@@ -33,6 +36,9 @@
     </ClInclude>
     <ClInclude Include="CameraObject.h">
       <Filter>소스 파일\CameraObject</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneInfoUI.h">
+      <Filter>소스 파일\GUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
