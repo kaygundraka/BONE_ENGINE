@@ -286,6 +286,10 @@ namespace BONE_GRAPHICS
         return name;
     }
 
+    void Scene::SaveSceneData()
+    {
+    }
+
     void Scene::LoadSceneData()
     {
         std::string FullPath;
@@ -301,8 +305,15 @@ namespace BONE_GRAPHICS
             auto Object = this->FindObjectByName(it.key());
 
             if (Object == nullptr)
-                continue;
-            
+            {
+                Object = new GameObject();
+                Transform3D* tr = new Transform3D();
+                Object->AddComponent(tr);
+            }
+
+            Object->SetPrfabName(it->find("PrefabName").value().get<std::string>());
+            Object->LoadPrefab();
+
             auto Position = it->find("Position").value().get<std::vector<int>>();
             ((Transform3D*)Object->GetComponent("Transform3D"))->SetPosition(Position[0], Position[1], Position[2]);
 

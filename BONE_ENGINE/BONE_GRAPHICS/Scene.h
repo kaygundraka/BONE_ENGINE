@@ -60,6 +60,7 @@ namespace BONE_GRAPHICS
 		void SetSceneFlag(bool flag);
 		bool EndLoading();
 
+        void SaveSceneData();
         void LoadSceneData();
         void EditSceneMode(bool actvie);
 

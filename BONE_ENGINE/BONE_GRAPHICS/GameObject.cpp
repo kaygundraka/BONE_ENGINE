@@ -307,6 +307,8 @@ namespace BONE_GRAPHICS
         json j;
         file >> j;
 
+        j[name]["PrefabName"] = prefab;
+
         j[name]["Position"] = { 
             ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().x,
             ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().y,
@@ -328,7 +330,7 @@ namespace BONE_GRAPHICS
         file.close();
     }
 
-    void GameObject::SavePrefab(std::string name)
+    void GameObject::SavePrefab()
     {
         json j;
 
@@ -400,17 +402,17 @@ namespace BONE_GRAPHICS
             }
         }
 
-        std::string fullPath = ".\\Engine\\Prefabs\\" + name + ".json";
+        std::string fullPath = ".\\Engine\\Prefabs\\" + prefab + ".json";
         std::ofstream o(fullPath);
         o << std::setw(4) << j << std::endl;
         o.close();
     }
 
-    void GameObject::LoadPrefab(std::string name)
+    void GameObject::LoadPrefab()
     {
         std::string FullPath;
 
-        if (!ResourceMgr->ExistFile(name + ".json", &FullPath))
+        if (!ResourceMgr->ExistFile(prefab + ".json", &FullPath))
             return;
 
         std::ifstream file(FullPath);
@@ -533,6 +535,16 @@ namespace BONE_GRAPHICS
         }
 
         file.close();
+    }
+
+    void GameObject::SetPrfabName(std::string prefabName)
+    {
+        this->prefab = prefabName;
+    }
+    
+    std::string GameObject::GetPrfabName()
+    {
+        return prefab;
     }
 
 	void GameObject::Reference()

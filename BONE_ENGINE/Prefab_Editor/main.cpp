@@ -40,24 +40,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
         Light->SetSpecular(0.5f, 0.5f, 0.5f, 0.5f);
         Light->SetRadius(200);
         Light->SetLight(true);
+        Light->SetPrfabName("PointLight");
         Light->SetPosition(Vector3(0, 200, 0));
-        
-        auto_ptr<GameObject> MainObject(new GameObject);
-        MainObject->SetName("New Object");
-        MainObject->SetPriority(1);
-        MainObject->SetTag("");
-
-        StaticMesh* sm = new StaticMesh();
-        sm->SetFileAddress("TestMesh.X");
-        MainObject->AddComponent(sm);
-        
-        Transform3D* tr = new Transform3D();
-        MainObject->AddComponent(tr);
 
         auto_ptr<CameraObject> MainCamera(new CameraObject);
 
-        ViewScene->AddObject(MainObject.get(), "New Object");
-        ViewScene->AddObject(MainCamera.get(), "MainCamera");
+        ViewScene->AddObject(MainCamera.get(), "EditorCamera");
         ViewScene->AddObject(Light.get(), "PointLight");
         ViewScene->SetAmbientColor(1.0f, 1.0f, 1.0f, 1.0f);
         

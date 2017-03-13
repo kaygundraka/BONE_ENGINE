@@ -13,6 +13,8 @@
 #include <GameObject.h>
 #include <InputManager.h>
 
+using namespace BONE_GRAPHICS;
+
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
 EditorUI::EditorUI() {
@@ -27,11 +29,34 @@ EditorUI::EditorUI() {
 
 void EditorUI::ShowFileMenu()
 {
-    if (ImGui::MenuItem("New")) {}
-    if (ImGui::MenuItem("Open", "Ctrl+O")) {}
-    if (ImGui::MenuItem("Save", "Ctrl+S")) {}
-    if (ImGui::MenuItem("Save As..")) {}
-    if (ImGui::MenuItem("Quit", "Alt+F4")) {}
+    if (ImGui::MenuItem("New")) 
+    {
+    }
+    
+    if (ImGui::MenuItem("Open", "Ctrl+O")) 
+    {
+    }
+    
+    if (ImGui::MenuItem("Save", "Ctrl+S")) 
+    {
+        auto DyamicObjectList = SceneMgr->CurrentScene()->GetObjectList();
+        auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
+        
+        for each(auto var in DyamicObjectList)
+            if (var->GetName() != "EditorCamera")
+                var->SavePrefab();
+
+        for each(auto var in StaticObjectList)
+            var->SavePrefab();
+    }
+    
+    if (ImGui::MenuItem("Save As..")) 
+    {
+    }
+    
+    if (ImGui::MenuItem("Quit", "Alt+F4")) 
+    {
+    }
 }
 
 void EditorUI::ShowOpitionMenu()
@@ -127,17 +152,17 @@ void EditorUI::AllChildCheck(GameObject* parent)
 
 void EditorUI::UpdateFrame()
 {
-    if (!ImGui::IsWindowFocused())
-        InputMgr->SetFocusWindow(true);
-    else
-        InputMgr->SetFocusWindow(false);
-
     {
         if (!ImGui::Begin("Editor", &open, ImGuiWindowFlags_MenuBar))
         {
             ImGui::End();
             return;
         }
+
+        if (ImGui::IsRootWindowOrAnyChildFocused())
+            InputMgr->SetFocusWindow(false);
+        else
+            InputMgr->SetFocusWindow(true);
 
         std::list<GameObject*> ObjectList = SceneMgr->CurrentScene()->GetObjectList();
         auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
@@ -174,7 +199,7 @@ void EditorUI::UpdateFrame()
 
             for (auto iter = ObjectList.begin(); iter != ObjectList.end(); iter++)
             {
-                if ((*iter)->GetParent() != nullptr)
+                if ((*iter)->GetParent() != nullptr || (*iter)->GetName() == "EditorCamera")
                     continue;
 
                 if (FindOption)
@@ -218,38 +243,71 @@ void EditorUI::UpdateFrame()
 
                     if (ImGui::TreeNode("Prefab"))
                     {
-                        char PrefabName[64] = "";
-                        ImGui::InputText("PrefabName", PrefabName, 64);
-                        std::string temp;
-
-                        if (ImGui::SmallButton("New Prfab"))
-                        {
-
-                        }
+                        auto Prefabs = ResourceMgr->ExistFiles(".\\Engine\\Prefabs\\*");
+                            
+                        const int Size = Prefabs.size();
+                        char** ComboBoxItems = new char*[Size];
                         
-                        ImGui::SameLine();
-
-                        if (ImGui::SmallButton("Save Prfab"))
+                        int i = 0;
+                        for each(auto item in Prefabs)
                         {
+                            ComboBoxItems[i] = new char[64];
+                            strcpy(ComboBoxItems[i], Prefabs[i].c_str());
+                            i++;
+                        }
 
+                        static int CurItem = 0;
+                        
+                        for (int i = 0; i < Size; i++)
+                            if ((*iter)->GetPrfabName() + ".json" == Prefabs[i])
+                            {
+                                CurItem = i;
+                                break;
+                            }
+                        
+                        ImGui::Combo("Prefabs", &CurItem, ComboBoxItems, Size);
+                        
+                        static char PrefabName[64] = "";
+                        ImGui::InputText("PrefabName", PrefabName, 64);
+                        
+                        if (ImGui::SmallButton("New File"))
+                        {
+                            (*iter)->SetPrfabName(PrefabName);
+                            (*iter)->SavePrefab();
                         }
                         
                         if (ImGui::SmallButton("Edit Prfab"))
                         {
-                            if (!ResourceMgr->ExistFile(PrefabName, &temp))
+                            for (int i = Prefabs[CurItem].size(); i >= 0; i--)
                             {
-                                showPrefabHierarchical = true;
-                                currentObjectName = (*iter)->GetName();
+                                if (ComboBoxItems[CurItem][i] != '.')
+                                    ComboBoxItems[CurItem][i] = '\0';
+                                else
+                                {
+                                    ComboBoxItems[CurItem][i] = '\0';
+                                    break;
+                                }
                             }
+                            (*iter)->SetPrfabName(ComboBoxItems[CurItem]);
+
+                            showPrefabHierarchical = true;
+                            currentObjectName = (*iter)->GetName();
                         }
+
+                        for (int i = 0; i < Size; i++)
+                            delete ComboBoxItems[i];
+                        delete[] ComboBoxItems;
                     
                         ImGui::TreePop();
                     }
                     
-                    if (ImGui::TreeNode("Childs"))
+                    if ((*iter)->GetChileds().size() != 0)
                     {
-                        AllChildCheck((*iter));
-                        ImGui::TreePop();
+                        if (ImGui::TreeNode("Childs"))
+                        {
+                            AllChildCheck((*iter));
+                            ImGui::TreePop();
+                        }
                     }
 
                     if (ImGui::SmallButton("Remove Object"))
@@ -265,8 +323,77 @@ void EditorUI::UpdateFrame()
                 }
             }
 
-            if (ImGui::Button("New GameObject"))
+            if (ImGui::TreeNode("New GameObject"))
             {
+                auto Prefabs = ResourceMgr->ExistFiles(".\\Engine\\Prefabs\\*");
+
+                const int Size = Prefabs.size();
+                char** ComboBoxItems = new char*[Size];
+
+                int i = 0;
+                for each(auto item in Prefabs)
+                {
+                    ComboBoxItems[i] = new char[64];
+                    strcpy(ComboBoxItems[i], Prefabs[i].c_str());
+                    i++;
+                }
+
+                static int CurItem = 0;
+                ImGui::Combo("Prefabs", &CurItem, ComboBoxItems, Size);
+
+                static char PrefabName[64] = "";
+                static bool NewPrefabs = false;
+                ImGui::InputText("PrefabName", PrefabName, 64);
+                ImGui::Checkbox("New Prefab", &NewPrefabs);
+
+                if (ImGui::Button("Create"))
+                {
+                    GameObject* Object = new GameObject;
+
+                    std::string ObjectName = "GameObject";
+                    static int ObjectNum = 0;
+
+                    char temp[10] = "";
+                    itoa(ObjectNum, temp, 10);
+                    ObjectName += temp;
+                    ObjectNum++;
+
+                    if (NewPrefabs)
+                    {
+                        Object->SetName(ObjectName);
+                        Object->SetPriority(1);
+                        Object->SetTag("");
+
+                        Transform3D* tr = new Transform3D();
+                        Object->AddComponent(tr);
+                        Object->SetPrfabName(PrefabName);
+                        Object->SavePrefab();
+                        SceneMgr->CurrentScene()->AddObject(Object, ObjectName);
+                    }
+                    else if (Size != 0)
+                    {
+                        for (int i = Prefabs[CurItem].size(); i >= 0; i--)
+                        {
+                            if (ComboBoxItems[CurItem][i] != '.')
+                                ComboBoxItems[CurItem][i] = '\0';
+                            else
+                            {
+                                ComboBoxItems[CurItem][i] = '\0';
+                                break;
+                            }
+                        }
+                        Object->SetPrfabName(ComboBoxItems[CurItem]);
+                        Object->LoadPrefab();
+
+                        SceneMgr->CurrentScene()->AddObject(Object, ObjectName);
+                    }
+                }
+
+                for (int i = 0; i < Size; i++)
+                    delete ComboBoxItems[i];
+                delete[] ComboBoxItems;
+
+                ImGui::TreePop();
             }
         }
         

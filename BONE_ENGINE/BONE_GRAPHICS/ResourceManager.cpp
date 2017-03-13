@@ -66,6 +66,33 @@ namespace BONE_GRAPHICS
         return false;
     }
 
+    std::vector<std::string> ResourceManager::ExistFiles(std::string path)
+    {
+        char Path[MAX_PATH];
+        strcpy(Path, path.c_str());
+
+        std::vector<std::string> resultFiles;
+
+        WIN32_FIND_DATA FindData;
+        HANDLE FindHandle;
+
+        FindHandle = FindFirstFile((LPCSTR)Path, &FindData);
+
+        if (FindHandle == INVALID_HANDLE_VALUE)
+            return resultFiles;
+        do {
+            if (!strcmp(FindData.cFileName, ".") || !strcmp(FindData.cFileName, ".."))
+                continue;
+
+            resultFiles.push_back(FindData.cFileName);
+
+        } while (FindNextFile(FindHandle, &FindData));
+
+        FindClose(FindHandle);
+
+        return resultFiles;
+    }
+
 	MESH_INFO* ResourceManager::LoadMesh(std::string name)
 	{
 		ThreadSync sync;

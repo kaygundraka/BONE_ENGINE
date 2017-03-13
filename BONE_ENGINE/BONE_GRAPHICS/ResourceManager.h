@@ -27,6 +27,7 @@ namespace BONE_GRAPHICS
 
 	public:
         bool ExistFile(std::string name, std::string* full_path);
+        std::vector<std::string> ExistFiles(std::string path);
 
 		MESH_INFO*			 LoadMesh(std::string name);
 		MESH_INFO*			 FindMesh(std::string name);

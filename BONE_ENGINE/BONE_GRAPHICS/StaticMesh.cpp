@@ -29,52 +29,49 @@ namespace BONE_GRAPHICS
 		strcpy_s(Address, address.c_str());
 
 		try {
-			if (IsInit)
-			{
-				meshInfo = ResourceMgr->LoadMesh(address);
+            meshInfo = ResourceMgr->LoadMesh(address);
 
-				if(meshInfo == nullptr)
-				{
-					LogMgr->ShowMessage(LOG_ERROR, "%s : Could Not Find Xfile.", Address);
-					throw;
-				}
+            if (meshInfo == nullptr)
+            {
+                LogMgr->ShowMessage(LOG_ERROR, "%s : Could Not Find Xfile.", Address);
+                throw;
+            }
 
-				int MaterialSize = meshInfo->numMaterials;
+            int MaterialSize = meshInfo->numMaterials;
 
-				textureAddress = new string[MaterialSize];
+            textureAddress = new string[MaterialSize];
 
-				D3DXMATERIAL* d3dxMaterials = (D3DXMATERIAL*)meshInfo->buffer->GetBufferPointer();
+            D3DXMATERIAL* d3dxMaterials = (D3DXMATERIAL*)meshInfo->buffer->GetBufferPointer();
 
-				meshMaterials = new D3DMATERIAL9[MaterialSize];
+            meshMaterials = new D3DMATERIAL9[MaterialSize];
 
-				for (int i = 0; i < MaterialSize; i++)
-				{
-					// 재질 정보 복사
-					meshMaterials[i] = d3dxMaterials[i].MatD3D;
+            for (int i = 0; i < MaterialSize; i++)
+            {
+                // 재질 정보 복사
+                meshMaterials[i] = d3dxMaterials[i].MatD3D;
 
-					// 재질용 주변광 색깔 설정(D3DX에서 직접해주지 않음)
-					meshMaterials[i].Ambient = meshMaterials[i].Diffuse;
-                    
-                    char* filename = PathFindFileName(d3dxMaterials[i].pTextureFilename);
+                // 재질용 주변광 색깔 설정(D3DX에서 직접해주지 않음)
+                meshMaterials[i].Ambient = meshMaterials[i].Diffuse;
 
-					if (d3dxMaterials[i].pTextureFilename != nullptr && lstrlenA(d3dxMaterials[i].pTextureFilename) > 0)
-					{
-						textureAddress[i] = filename;
+                char* filename = PathFindFileName(d3dxMaterials[i].pTextureFilename);
 
-						// 텍스쳐 생성
-						if (ResourceMgr->LoadTexture(filename) == nullptr)
-						{
-							LogMgr->ShowMessage(LOG_ERROR, "%s : Could Not Find TextureFile.", filename);
-							throw;
-						}
-					}
-				}
+                if (d3dxMaterials[i].pTextureFilename != nullptr && lstrlenA(d3dxMaterials[i].pTextureFilename) > 0)
+                {
+                    textureAddress[i] = filename;
 
-				// 재질 버퍼 사용 완료;
-				//(D3DXMATERIAL*)meshInfo->_buffer->Release();
+                    // 텍스쳐 생성
+                    if (ResourceMgr->LoadTexture(filename) == nullptr)
+                    {
+                        LogMgr->ShowMessage(LOG_ERROR, "%s : Could Not Find TextureFile.", filename);
+                        throw;
+                    }
+                }
+            }
 
-				IsInit = true;
-			}
+            // 재질 버퍼 사용 완료;
+            //(D3DXMATERIAL*)meshInfo->_buffer->Release();
+
+            IsInit = true;
 		}
 		catch (...)
 		{
