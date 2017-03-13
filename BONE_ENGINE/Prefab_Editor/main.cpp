@@ -9,6 +9,7 @@
 #include <InputManager.h>
 
 #include "EditorUI.h"
+#include "SceneInfoUI.h"
 #include "CameraObject.h"
 
 using namespace BONE_GRAPHICS;
@@ -28,10 +29,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
     RenderMgr->GetDevice()->SetRenderState(D3DRS_LIGHTING, FALSE);
     InputMgr->SetFocusWindow(true);
 
-    auto_ptr<EditorUI> gui(new EditorUI);
-    SceneMgr->SetGUIScene(gui.get());
+    /*{
+        auto_ptr<EditorUI> gui(new EditorUI);
+        SceneMgr->SetGUIScene(gui.get());
 
-    {
         auto_ptr<Scene> ViewScene(new Scene);
 
         auto_ptr<PointLight> Light(new PointLight);
@@ -51,6 +52,16 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
         
         SceneMgr->AddScene("ViewScene", ViewScene.get());
         flag = SceneMgr->StartScene("ViewScene");
+    }*/
+
+    {
+        auto_ptr<SceneInfoUI> gui(new SceneInfoUI);
+        SceneMgr->SetGUIScene(gui.get());
+
+        auto_ptr<Scene> SceneInfo(new Scene);
+
+        SceneMgr->AddScene("InfoScene", SceneInfo.get());
+        flag = SceneMgr->StartScene("InfoScene");
     }
 
     return 0;
