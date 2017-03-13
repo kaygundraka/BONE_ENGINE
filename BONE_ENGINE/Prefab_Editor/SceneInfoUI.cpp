@@ -5,7 +5,7 @@ using namespace BONE_GRAPHICS;
 
 SceneInfoUI::SceneInfoUI()
 {
-
+    endScene = false;
 }
 
 void SceneInfoUI::UpdateFrame()
@@ -17,35 +17,67 @@ void SceneInfoUI::UpdateFrame()
             return;
         }
 
-        if (ImGui::CollapsingHeader("[New Scene]", ImGuiTreeNodeFlags_DefaultOpen))
-        {
+        static char FileName[64] = "Scene Name";
+        ImGui::InputText("New File Name", FileName, 64);
 
+        if (ImGui::Button("New Scene"))
+        {
+            endScene = true;
+            isNewScene = true;
+            openSceneName = FileName;
         }
 
-        if (ImGui::CollapsingHeader("[Open Scene]", ImGuiTreeNodeFlags_DefaultOpen))
+        auto Scenes = ResourceMgr->ExistFiles(".\\Engine\\Maps\\*");
+
+        const int Size = Scenes.size();
+        char** ComboBoxItems = new char*[Size];
+
+        int i = 0;
+        for each(auto item in Scenes)
         {
-            auto Scenes = ResourceMgr->ExistFiles(".\\Engine\\Maps\\*");
+            ComboBoxItems[i] = new char[64];
+            strcpy(ComboBoxItems[i], Scenes[i].c_str());
+            i++;
+        }
 
-            const int Size = Scenes.size();
-            char** ComboBoxItems = new char*[Size];
+        static int CurItem = 0;
+        ImGui::Combo("Scene List", &CurItem, ComboBoxItems, Size);
 
-            int i = 0;
-            for each(auto item in Scenes)
+        if (ImGui::Button("Open Scene"))
+        {
+            isNewScene = false;
+            endScene = true;
+
+            for (int i = strlen(ComboBoxItems[CurItem]) - 1; i >= 0; i--)
             {
-                ComboBoxItems[i] = new char[64];
-                strcpy(ComboBoxItems[i], Scenes[i].c_str());
-                i++;
+                if (ComboBoxItems[CurItem][i] != '.')
+                    ComboBoxItems[CurItem][i] = '\0';
+                else
+                {
+                    ComboBoxItems[CurItem][i] = '\0';
+                    break;
+                }
             }
 
-            static int CurItem = 0;
-            ImGui::Combo("Scenes", &CurItem, ComboBoxItems, Size);
-
-            if (ImGui::Button("Load Scene"))
-            {
-
-            }
+            openSceneName = ComboBoxItems[CurItem];
         }
 
         ImGui::End();
+
+        if (endScene)
+        {
+            SceneMgr->CurrentScene()->SetSceneFlag(true);
+            SceneMgr->EndScene("InfoScene");
+        }
     }
+}
+
+bool SceneInfoUI::IsNewScene()
+{
+    return isNewScene;
+}
+
+std::string SceneInfoUI::GetSceneName()
+{
+    return openSceneName;
 }

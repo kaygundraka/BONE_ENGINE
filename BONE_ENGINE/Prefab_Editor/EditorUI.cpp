@@ -19,8 +19,7 @@ using namespace BONE_GRAPHICS;
 
 EditorUI::EditorUI() {
     open = true;
-    rootObjectName = "New Object";
-    currentObjectName = rootObjectName;
+    currentObjectName;
     showAddComponent = false;
     showObjectInfo = false;
     childSize = 0;
@@ -39,15 +38,28 @@ void EditorUI::ShowFileMenu()
     
     if (ImGui::MenuItem("Save", "Ctrl+S")) 
     {
+        SceneMgr->CurrentScene()->ClearSceneData();
+
         auto DyamicObjectList = SceneMgr->CurrentScene()->GetObjectList();
         auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
         
         for each(auto var in DyamicObjectList)
+        {
             if (var->GetName() != "EditorCamera")
+            {
                 var->SavePrefab();
+                var->SaveInMaps();
+            }
+        }
 
         for each(auto var in StaticObjectList)
-            var->SavePrefab();
+        {
+            if (var->GetName() != "EditorCamera")
+            {
+                var->SavePrefab();
+                var->SaveInMaps();
+            }
+        }
     }
     
     if (ImGui::MenuItem("Save As..")) 
@@ -56,6 +68,8 @@ void EditorUI::ShowFileMenu()
     
     if (ImGui::MenuItem("Quit", "Alt+F4")) 
     {
+        SceneMgr->CurrentScene()->SetSceneFlag(true);
+        SceneMgr->EndScene(SceneMgr->CurrentScene()->GetName());
     }
 }
 
@@ -101,7 +115,7 @@ void EditorUI::ShowGameObjectTree(std::string treeName)
             showObjectInfo = true;
         }
 
-        if (treeName != rootObjectName)
+        if (treeName != currentObjectName)
         {
             if (ImGui::SmallButton("Remove Object"))
             {
@@ -259,12 +273,14 @@ void EditorUI::UpdateFrame()
                         static int CurItem = 0;
                         
                         for (int i = 0; i < Size; i++)
+                        {
                             if ((*iter)->GetPrfabName() + ".json" == Prefabs[i])
                             {
                                 CurItem = i;
                                 break;
                             }
-                        
+                        }
+
                         ImGui::Combo("Prefabs", &CurItem, ComboBoxItems, Size);
                         
                         static char PrefabName[64] = "";
@@ -460,18 +476,22 @@ void EditorUI::UpdateFrame()
         ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiSetCond_FirstUseEver);
         ImGui::Begin(WindowName.c_str(), &showObjectInfo);
 
+        if (ImGui::IsRootWindowOrAnyChildFocused())
+            InputMgr->SetFocusWindow(false);
+        else
+            InputMgr->SetFocusWindow(true);
+
         if (ImGui::CollapsingHeader("[GameObject Info]", ImGuiTreeNodeFlags_DefaultOpen))
         {
             static char buf[64] = "";
-            strcpy(buf, currentObjectName.c_str());
+            //strcpy(buf, currentObjectName.c_str());
             ImGui::InputText("Name", buf, 64);
             ImGui::SameLine();
+
             if (ImGui::Button("Change"))
             {
                 auto object = SceneMgr->CurrentScene()->FindObjectByName(currentObjectName);
-                if (currentObjectName == rootObjectName)
-                    rootObjectName = buf;
-
+                
                 currentObjectName = buf;
 
                 object->SetName(currentObjectName);
@@ -516,11 +536,21 @@ void EditorUI::UpdateFrame()
                     }
                     else if ((*iter)->GetTypeName() == "StaticMesh")
                     {
-                        static char buf[64] = "";
+                        auto Meshes = ResourceMgr->ExistFiles(".\\Resource\\Mesh\\*");
+                            
+                        const int Size = Meshes.size();
+                        char** ComboBoxItems = new char*[Size];
+                        
+                        int i = 0;
+                        for each(auto item in Meshes)
+                        {
+                            ComboBoxItems[i] = new char[64];
+                            strcpy(ComboBoxItems[i], Meshes[i].c_str());
+                            i++;
+                        }
 
-                        strcpy(buf, ((StaticMesh*)(*iter))->GetFileAddress().c_str());
-
-                        ImGui::InputText("File Name", buf, 64);
+                        static int CurItem = 0;
+                        ImGui::Combo("Meshes", &CurItem, ComboBoxItems, Size);
                         
                         if (ImGui::Button("Chanage"))
                         {
@@ -533,6 +563,10 @@ void EditorUI::UpdateFrame()
                         {
 
                         }
+
+                        for (int i = 0; i < Size; i++)
+                            delete ComboBoxItems[i];
+                        delete[] ComboBoxItems;
                     }
                     else if ((*iter)->GetTypeName() == "Material")
                     {
@@ -578,6 +612,11 @@ void EditorUI::UpdateFrame()
         ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiSetCond_FirstUseEver);
         ImGui::Begin(WindowName.c_str(), &showPrefabHierarchical);
 
+        if (ImGui::IsRootWindowOrAnyChildFocused())
+            InputMgr->SetFocusWindow(false);
+        else
+            InputMgr->SetFocusWindow(true);
+
         ShowGameObjectTree(currentObjectName);
 
         ImGui::End();
@@ -590,6 +629,11 @@ void EditorUI::UpdateFrame()
         ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiSetCond_FirstUseEver);
         ImGui::Begin(WindowName.c_str(), &showAddComponent);
 
+        if (ImGui::IsRootWindowOrAnyChildFocused())
+            InputMgr->SetFocusWindow(false);
+        else
+            InputMgr->SetFocusWindow(true);
+
         const char* listbox_items[] = { "StaticMesh", "SkinnedMesh", "Camera", "Material", "TrailRenderer", "BillBoard", "SpriteBillBoard", "Collision" };
         static int listbox_item_current = 0;
         ImGui::ListBox("Component\nTypes\n", &listbox_item_current, listbox_items, IM_ARRAYSIZE(listbox_items), 4);
@@ -597,18 +641,30 @@ void EditorUI::UpdateFrame()
         switch (listbox_item_current) {
         case 0:
         {
-            static char buf[64] = "";
-            ImGui::InputText("FileName", buf, 64);
-            ImGui::SameLine();
+            auto Meshes = ResourceMgr->ExistFiles(".\\Resource\\Mesh\\*");
+
+            const int Size = Meshes.size();
+            char** ComboBoxItems = new char*[Size];
+
+            int i = 0;
+            for each(auto item in Meshes)
+            {
+                ComboBoxItems[i] = new char[64];
+                strcpy(ComboBoxItems[i], Meshes[i].c_str());
+                i++;
+            }
+
+            static int CurItem = 0;
+            ImGui::Combo("Meshes", &CurItem, ComboBoxItems, Size);
             
             if (ImGui::Button("Add Component"))
             {
                 std::string fullpath = "";
-                if (!ResourceMgr->ExistFile(buf, &fullpath))
+                if (!ResourceMgr->ExistFile(ComboBoxItems[CurItem], &fullpath))
                     break;
 
                 StaticMesh* Mesh = new StaticMesh();
-                Mesh->SetFileAddress(buf);
+                Mesh->SetFileAddress(ComboBoxItems[CurItem]);
                 Mesh->LoadContent();
                 auto object = SceneMgr->CurrentScene()->FindObjectByName(currentObjectName);
                 object->AddComponent(Mesh);

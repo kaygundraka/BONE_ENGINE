@@ -298,36 +298,68 @@ namespace BONE_GRAPHICS
 
     void GameObject::SaveInMaps()
     {
+        bool isNewMap = false;
         std::string FullPath;
         
         if (!ResourceMgr->ExistFile(SceneMgr->CurrentScene()->GetName() + ".json", &FullPath))
-            return;
+            isNewMap = true;
 
-        std::ifstream file(FullPath);
         json j;
-        file >> j;
 
-        j[name]["PrefabName"] = prefab;
+        if (!isNewMap)
+        {
+            std::ifstream file(FullPath);
+            file >> j;
 
-        j[name]["Position"] = { 
-            ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().x,
-            ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().y,
-            ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().z
-        };
+            j[name]["PrefabName"] = prefab;
 
-        j[name]["Rotation"] = {
-            ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().x,
-            ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().y,
-            ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().z
-        };
+            j[name]["Position"] = {
+                ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().x,
+                ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().y,
+                ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().z
+            };
 
-        j[name]["Scale"] = {
-            ((Transform3D*)(GetComponent("Transform3D")))->GetScale().x,
-            ((Transform3D*)(GetComponent("Transform3D")))->GetScale().y,
-            ((Transform3D*)(GetComponent("Transform3D")))->GetScale().z
-        };
+            j[name]["Rotation"] = {
+                ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().x,
+                ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().y,
+                ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().z
+            };
 
-        file.close();
+            j[name]["Scale"] = {
+                ((Transform3D*)(GetComponent("Transform3D")))->GetScale().x,
+                ((Transform3D*)(GetComponent("Transform3D")))->GetScale().y,
+                ((Transform3D*)(GetComponent("Transform3D")))->GetScale().z
+            };
+
+            file.close();
+        }
+        else
+        {
+            j[name]["PrefabName"] = prefab;
+
+            j[name]["Position"] = {
+                ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().x,
+                ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().y,
+                ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().z
+            };
+
+            j[name]["Rotation"] = {
+                ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().x,
+                ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().y,
+                ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().z
+            };
+
+            j[name]["Scale"] = {
+                ((Transform3D*)(GetComponent("Transform3D")))->GetScale().x,
+                ((Transform3D*)(GetComponent("Transform3D")))->GetScale().y,
+                ((Transform3D*)(GetComponent("Transform3D")))->GetScale().z
+            };
+        }
+
+        std::string fullPath = ".\\Engine\\Maps\\" + SceneMgr->CurrentScene()->GetName() + ".json";
+        std::ofstream o(fullPath);
+        o << std::setw(4) << j << std::endl;
+        o.close();
     }
 
     void GameObject::SavePrefab()
@@ -403,7 +435,7 @@ namespace BONE_GRAPHICS
         }
 
         std::string fullPath = ".\\Engine\\Prefabs\\" + prefab + ".json";
-        std::ofstream o(fullPath);
+        std::ofstream o(fullPath, ios::trunc);
         o << std::setw(4) << j << std::endl;
         o.close();
     }

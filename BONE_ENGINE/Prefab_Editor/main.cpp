@@ -29,40 +29,60 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
     RenderMgr->GetDevice()->SetRenderState(D3DRS_LIGHTING, FALSE);
     InputMgr->SetFocusWindow(true);
 
-    /*{
-        auto_ptr<EditorUI> gui(new EditorUI);
-        SceneMgr->SetGUIScene(gui.get());
+    std::string OpenSceneName = "";
+    bool IsNewScene = false;
 
-        auto_ptr<Scene> ViewScene(new Scene);
+    do {
+        {
+            auto_ptr<SceneInfoUI> gui(new SceneInfoUI);
+            SceneMgr->SetGUIScene(gui.get());
 
-        auto_ptr<PointLight> Light(new PointLight);
-        Light->SetAmbient(1.0f, 1.0f, 1.0f, 1.0f);
-        Light->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
-        Light->SetSpecular(0.5f, 0.5f, 0.5f, 0.5f);
-        Light->SetRadius(200);
-        Light->SetLight(true);
-        Light->SetPrfabName("PointLight");
-        Light->SetPosition(Vector3(0, 200, 0));
+            auto_ptr<Scene> SceneInfo(new Scene);
 
-        auto_ptr<CameraObject> MainCamera(new CameraObject);
+            SceneMgr->AddScene("InfoScene", SceneInfo.get());
+            flag = SceneMgr->StartScene("InfoScene");
 
-        ViewScene->AddObject(MainCamera.get(), "EditorCamera");
-        ViewScene->AddObject(Light.get(), "PointLight");
-        ViewScene->SetAmbientColor(1.0f, 1.0f, 1.0f, 1.0f);
-        
-        SceneMgr->AddScene("ViewScene", ViewScene.get());
-        flag = SceneMgr->StartScene("ViewScene");
-    }*/
+            OpenSceneName = gui->GetSceneName();
+            IsNewScene = gui->IsNewScene();
+        }
 
-    {
-        auto_ptr<SceneInfoUI> gui(new SceneInfoUI);
-        SceneMgr->SetGUIScene(gui.get());
+        if (flag)
+        {
+            auto_ptr<EditorUI> gui(new EditorUI);
+            SceneMgr->SetGUIScene(gui.get());
 
-        auto_ptr<Scene> SceneInfo(new Scene);
+            auto_ptr<Scene> ViewScene(new Scene);
 
-        SceneMgr->AddScene("InfoScene", SceneInfo.get());
-        flag = SceneMgr->StartScene("InfoScene");
-    }
+            auto_ptr<PointLight> Light(new PointLight);
+
+            if (IsNewScene)
+            {
+                Light->SetAmbient(1.0f, 1.0f, 1.0f, 1.0f);
+                Light->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+                Light->SetSpecular(0.5f, 0.5f, 0.5f, 0.5f);
+                Light->SetRadius(200);
+                Light->SetLight(true);
+                Light->SetPrfabName("PointLight");
+                Light->SetPosition(Vector3(0, 200, 0));
+            
+                ViewScene->AddObject(Light.get(), "PointLight");
+            }
+
+            auto_ptr<CameraObject> MainCamera(new CameraObject);
+
+            ViewScene->AddObject(MainCamera.get(), "EditorCamera");
+            
+            ViewScene->SetAmbientColor(1.0f, 1.0f, 1.0f, 1.0f);
+            ViewScene->SetName(OpenSceneName);
+
+            SceneMgr->AddScene(OpenSceneName, ViewScene.get());
+            
+            if (!IsNewScene)
+                ViewScene->OnLoadSceneData();
+
+            flag = SceneMgr->StartScene(OpenSceneName);
+        }
+    } while (flag);
 
     return 0;
 }

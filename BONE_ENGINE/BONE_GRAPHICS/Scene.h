@@ -21,6 +21,7 @@ namespace BONE_GRAPHICS
         bool IsFrameworkFlag;
         bool CompleateLoading;
         Skybox skybox;
+        bool onLoadScene;
         
         RGBA globalAmbient;
         std::string name;
@@ -62,7 +63,9 @@ namespace BONE_GRAPHICS
 
         void SaveSceneData();
         void LoadSceneData();
-        void EditSceneMode(bool actvie);
+        void ClearSceneData();
+        
+        void OnLoadSceneData();
 
 		void SetCameraIndex(int index);
 		int GetCameraIndex();

@@ -16,6 +16,7 @@ namespace BONE_GRAPHICS
 		IsFrameworkFlag = false;
 		cameraIndex = 0;
 		CompleateLoading = false;
+        onLoadScene = false;
 
         globalAmbient.r = 1.0f;
         globalAmbient.g = 1.0f;
@@ -47,7 +48,6 @@ namespace BONE_GRAPHICS
 
 	bool Scene::InitializeMembers()
 	{
-
 		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
 			(*Iter)->Init();
 
@@ -290,10 +290,23 @@ namespace BONE_GRAPHICS
     {
     }
 
-    void Scene::LoadSceneData()
+    void Scene::ClearSceneData()
     {
         std::string FullPath;
-        
+
+        if (!ResourceMgr->ExistFile(name + ".json", &FullPath))
+            return;
+
+        _unlink(FullPath.c_str());
+    }
+
+    void Scene::LoadSceneData()
+    {
+        if (!onLoadScene)
+            return;
+
+        std::string FullPath;
+
         if (!ResourceMgr->ExistFile(name + ".json", &FullPath))
             return;
 
@@ -306,29 +319,75 @@ namespace BONE_GRAPHICS
 
             if (Object == nullptr)
             {
-                Object = new GameObject();
-                Transform3D* tr = new Transform3D();
-                Object->AddComponent(tr);
+                if (it.key() == "PointLight")
+                {
+                    PointLight* Object = new PointLight();
+                    
+                    Object->SetRadius(200);
+
+                    Object->SetName(it.key());
+
+                    Object->SetPriority(1);
+                    Object->SetTag("");
+                    Object->SetLight(true);
+
+                    Object->SetPrfabName(it->find("PrefabName").value().get<std::string>());
+                    Object->LoadPrefab();
+
+                    this->AddObject(Object, it.key());
+
+                    auto Position = it->find("Position").value().get<std::vector<float>>();
+                    ((Transform3D*)Object->GetComponent("Transform3D"))->SetPosition(Position[0], Position[1], Position[2]);
+
+                    auto Rotation = it->find("Rotation").value().get<std::vector<float>>();
+                    ((Transform3D*)Object->GetComponent("Transform3D"))->SetRotate(Rotation[0], Rotation[1], Rotation[2]);
+
+                    auto Scale = it->find("Scale").value().get<std::vector<float>>();
+                    ((Transform3D*)Object->GetComponent("Transform3D"))->SetScale(Scale[0], Scale[1], Scale[2]);
+                }
+                else
+                {
+                    Object = new GameObject();
+                    Transform3D* tr = new Transform3D();
+                    Object->AddComponent(tr);
+
+                    Object->SetName(it.key());
+
+                    Object->SetPriority(1);
+                    Object->SetTag("");
+
+                    Object->SetPrfabName(it->find("PrefabName").value().get<std::string>());
+                    Object->LoadPrefab();
+                    
+                    this->AddObject(Object, it.key());
+
+                    auto Position = it->find("Position").value().get<std::vector<float>>();
+                    ((Transform3D*)Object->GetComponent("Transform3D"))->SetPosition(Position[0], Position[1], Position[2]);
+
+                    auto Rotation = it->find("Rotation").value().get<std::vector<float>>();
+                    ((Transform3D*)Object->GetComponent("Transform3D"))->SetRotate(Rotation[0], Rotation[1], Rotation[2]);
+
+                    auto Scale = it->find("Scale").value().get<std::vector<float>>();
+                    ((Transform3D*)Object->GetComponent("Transform3D"))->SetScale(Scale[0], Scale[1], Scale[2]);
+                }
             }
+            else
+            {
+                Object->SetPrfabName(it->find("PrefabName").value().get<std::string>());
+                Object->LoadPrefab();
+            
+                auto Position = it->find("Position").value().get<std::vector<float>>();
+                ((Transform3D*)Object->GetComponent("Transform3D"))->SetPosition(Position[0], Position[1], Position[2]);
 
-            Object->SetPrfabName(it->find("PrefabName").value().get<std::string>());
-            Object->LoadPrefab();
+                auto Rotation = it->find("Rotation").value().get<std::vector<float>>();
+                ((Transform3D*)Object->GetComponent("Transform3D"))->SetRotate(Rotation[0], Rotation[1], Rotation[2]);
 
-            auto Position = it->find("Position").value().get<std::vector<int>>();
-            ((Transform3D*)Object->GetComponent("Transform3D"))->SetPosition(Position[0], Position[1], Position[2]);
-
-            auto Rotation = it->find("Rotation").value().get<std::vector<int>>();
-            ((Transform3D*)Object->GetComponent("Transform3D"))->SetRotate(Position[0], Position[1], Position[2]);
-
-            auto Scale = it->find("Scale").value().get<std::vector<int>>();
-            ((Transform3D*)Object->GetComponent("Transform3D"))->SetScale(Position[0], Position[1], Position[2]);
+                auto Scale = it->find("Scale").value().get<std::vector<float>>();
+                ((Transform3D*)Object->GetComponent("Transform3D"))->SetScale(Scale[0], Scale[1], Scale[2]);
+            }
         }
 
         file.close();
-    }
-
-    void Scene::EditSceneMode(bool actvie)
-    {
     }
 
     void Scene::SetAmbientColor(float r, float g, float b, float a)
@@ -347,6 +406,11 @@ namespace BONE_GRAPHICS
     RGBA Scene::GetAmbientColor()
     {
         return globalAmbient;
+    }
+
+    void Scene::OnLoadSceneData()
+    {
+        onLoadScene = true;
     }
 
     void Scene::AddPointLight(PointLight* object)

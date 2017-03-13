@@ -106,7 +106,7 @@ namespace BONE_GRAPHICS
 
 		sceneList[name]->Reference();
         sceneList[name]->LoadSceneData();
-
+        
 		sceneList[name]->SortPriorityObject();
 
 		lastTime = (double)timeGetTime();
