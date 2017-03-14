@@ -45,10 +45,18 @@ namespace BONE_GRAPHICS
         GameObject* object;
 
         COLLISION_TYPE type;
+        Color color;
+        bool isShow;
 
     public:
         Collision(GameObject* attachObject);
         virtual ~Collision();
+
+        void SetShow(bool render, D3DXCOLOR color = COLOR::WHITE);
+        bool IsShow();
+
+        void Update();
+        void Render(GameObject* object);
 
         bool CreateAABB(Vector3 leftBottom, Vector3 rightTop, Vector3 pivot);
         bool CreateSphere(float radius, Vector3 pivot);

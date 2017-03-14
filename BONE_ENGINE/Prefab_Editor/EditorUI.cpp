@@ -12,6 +12,7 @@
 #include <Collision.h>
 #include <GameObject.h>
 #include <InputManager.h>
+#include <Collision.h>
 
 using namespace BONE_GRAPHICS;
 
@@ -667,8 +668,8 @@ void EditorUI::UpdateFrame()
         else
             InputMgr->SetFocusWindow(true);
 
-        const char* listbox_items[] = { "StaticMesh", "SkinnedMesh", "Camera", "Material", "TrailRenderer", "BillBoard", "SpriteBillBoard", "Collision" };
-        int listbox_item_current = 0;
+        const char* listbox_items[] = { "StaticMesh", "Collision", "SkinnedMesh", "Camera", "Material", "TrailRenderer", "BillBoard", "SpriteBillBoard" };
+        static int listbox_item_current = 0;
         ImGui::ListBox("Component\nTypes\n", &listbox_item_current, listbox_items, IM_ARRAYSIZE(listbox_items), 4);
 
         switch (listbox_item_current) {
@@ -699,8 +700,30 @@ void EditorUI::UpdateFrame()
                 StaticMesh* Mesh = new StaticMesh();
                 Mesh->SetFileAddress(ComboBoxItems[CurItem]);
                 Mesh->LoadContent();
-                auto object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
-                object->AddComponent(Mesh);
+                auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+                Object->AddComponent(Mesh);
+
+                showAddComponent = false;
+            }
+        }
+        break;
+
+        case 1:
+        {
+            char* ComboBoxItems[] = { "AABB", "SPHERE", "OBB" };
+            
+            static int CurItem = 0;
+            ImGui::Combo("Meshes", &CurItem, ComboBoxItems, 3);
+
+            if (ImGui::Button("Add Component"))
+            {
+                auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+                
+                Collision* Coll = new Collision(Object);
+                Coll->ComputeBoundingBox(ResourceMgr->LoadMesh(((StaticMesh*)Object->GetComponent("StaticMesh"))->GetFileAddress())->mesh);
+                Coll->LoadContent();
+                
+                Object->AddComponent(Coll);
 
                 showAddComponent = false;
             }

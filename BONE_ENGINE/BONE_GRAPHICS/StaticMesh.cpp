@@ -79,11 +79,11 @@ namespace BONE_GRAPHICS
 		}
 	}
 
-	bool StaticMesh::CheckMouseRayInMesh(Transform3D* tr)
+	bool StaticMesh::CheckMouseRayInMesh(Transform3D* tr, float* dist)
 	{
 		RAY ray = RenderMgr->GetPickingRayToView(false);
 
-		bool Result = RenderMgr->CheckRayInMesh(&ray, tr->GetTransform(), ResourceMgr->FindMesh(address)->mesh, 0);
+		bool Result = RenderMgr->CheckRayInMesh(&ray, tr->GetTransform(), ResourceMgr->FindMesh(address)->mesh, dist);
 
 		return Result;
 	}

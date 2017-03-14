@@ -10,6 +10,8 @@ private:
     int mouseX;
     int mouseY;
 
+    std::string selectObject;
+
     bool cameraMove;
 
 public:

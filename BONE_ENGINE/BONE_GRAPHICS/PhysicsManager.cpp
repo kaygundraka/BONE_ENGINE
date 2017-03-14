@@ -53,6 +53,9 @@ namespace BONE_GRAPHICS
         {
             ThreadSync sync;
 
+            for (auto iter = collisionList.begin(); iter != collisionList.end(); iter++)
+                (*iter)->Update();
+
             auto iter1 = collisionList.begin();
 
             while(iter1 != collisionList.end())

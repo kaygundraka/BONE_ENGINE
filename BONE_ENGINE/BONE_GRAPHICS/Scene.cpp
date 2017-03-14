@@ -314,8 +314,6 @@ namespace BONE_GRAPHICS
         json j;
         file >> j;
 
-        //j[name]["TreeDepth"]
-
         for (json::iterator it = j.begin(); it != j.end(); ++it) {
             auto Object = this->FindObjectByName(it.key());
 
@@ -349,6 +347,9 @@ namespace BONE_GRAPHICS
                 }
                 else
                 {
+                    if (it->find("IsChild").value().get<bool>())
+                        continue;
+
                     Object = new GameObject();
                     Transform3D* tr = new Transform3D();
                     Object->AddComponent(tr);

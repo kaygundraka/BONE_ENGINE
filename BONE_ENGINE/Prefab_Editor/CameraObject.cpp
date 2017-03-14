@@ -1,6 +1,8 @@
 #include "CameraObject.h"
 #include <InputManager.h>
 #include <SceneManager.h>
+#include <StaticMesh.h>
+using namespace BONE_GRAPHICS;
 
 void CameraObject::Init()
 {
@@ -22,6 +24,8 @@ void CameraObject::Init()
     mouseX = 0;
     mouseY = 0;
 
+    selectObject = "";
+
     cameraMove = false;
 }
 
@@ -36,6 +40,78 @@ void CameraObject::Update()
     {
         ShowCursor(true);
         cameraMove = false;
+    }
+
+    if (InputMgr->GetMouseLBButtonStatus() == MOUSE_STATUS::MOUSE_LBDOWN)
+    {
+        auto ObjectList = SceneMgr->CurrentScene()->GetObjectList();
+        auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
+       
+        float MinDist = -1;
+        
+        for each(auto item in ObjectList)
+        {
+            StaticMesh* mesh = (StaticMesh*)(item->GetComponent("StaticMesh"));
+
+            if (mesh != nullptr)
+            {
+                float Dist = 0;
+
+                if (mesh->CheckMouseRayInMesh((Transform3D*)item->transform3D, &Dist))
+                {
+                    if (MinDist == -1)
+                    {
+                        selectObject = item->GetName();
+                        MinDist = Dist;
+                    }
+
+                    if (MinDist >= Dist)
+                    {
+                        MinDist = Dist;
+                        selectObject = item->GetName();
+                    }
+                }
+            }
+        }
+
+        for each(auto item in StaticObjectList)
+        {
+            StaticMesh* mesh = (StaticMesh*)(item->GetComponent("StaticMesh"));
+
+            if (mesh != nullptr)
+            {
+                float Dist = 0;
+
+                if (mesh->CheckMouseRayInMesh((Transform3D*)item->transform3D, &Dist))
+                {
+                    if (MinDist == -1)
+                    {
+                        selectObject = item->GetName();
+                        MinDist = Dist;
+                    }
+
+                    if (MinDist >= Dist)
+                    {
+                        MinDist = Dist;
+                        selectObject = item->GetName();
+                    }
+                }
+            }
+        }
+    }
+
+    if (InputMgr->KeyDown('F', true))
+    {
+        auto Object = SceneMgr->CurrentScene()->FindObjectByName(selectObject);
+
+        if (Object != nullptr)
+        {
+            auto Position = ((Transform3D*)Object->transform3D)->GetPosition();
+            mainCamera->SetTargetPosition(Position);
+            ((Transform3D*)transform3D)->SetPosition(
+                ((Transform3D*)transform3D)->GetPosition() + Position
+            );
+        }
     }
 
     if (cameraMove)
@@ -121,6 +197,7 @@ void CameraObject::Update()
             SceneMgr->GetTimeDelta() * 100
         );
     }
+    
 }
 
 void CameraObject::LateUpdate()

@@ -51,6 +51,8 @@ namespace BONE_GRAPHICS
 
         void SetupPixelFog(int color, int mode);
 
+        void DrawLine(D3DXVECTOR3 start, D3DXVECTOR3 end, D3DCOLOR Color);
+
         bool UseImGUI();
     };
 }

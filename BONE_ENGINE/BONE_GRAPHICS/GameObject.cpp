@@ -15,6 +15,7 @@
 #include "PhongShader.h"
 #include "Material.h"
 #include "PointLight.h"
+#include "Collision.h"
 
 namespace BONE_GRAPHICS
 {
@@ -186,6 +187,9 @@ namespace BONE_GRAPHICS
             Shader->GetShader()->EndPass();
         }
 
+        if (GetComponent("Collision") != nullptr)
+            ((Collision*)GetComponent("Collision"))->Render(this);
+
         if (GetComponent("ScreenSprite") != nullptr)
 			((ScreenSprite*)GetComponent("ScreenSprite"))->Render(this);
 
@@ -325,6 +329,11 @@ namespace BONE_GRAPHICS
             std::ifstream file(FullPath);
             file >> j;
 
+            if (parent == nullptr)
+                j[name]["IsChild"] = false;
+            else
+                j[name]["IsChild"] = true;
+
             j[name]["PrefabName"] = prefab;
             j[name]["TreeDepth"] = TreeDepth;
 
@@ -350,6 +359,11 @@ namespace BONE_GRAPHICS
         }
         else
         {
+            if (parent == nullptr)
+                j[name]["IsChild"] = false;
+            else
+                j[name]["IsChild"] = true;
+
             j[name]["PrefabName"] = prefab;
             j[name]["TreeDepth"] = TreeDepth;
 
@@ -387,9 +401,9 @@ namespace BONE_GRAPHICS
         j["IsActive"] = isActive;
         j["IsStatic"] = isStatic;
         
-        if (parent != nullptr) 
-            j["ParentObject"] = parent->GetName();
-
+        for (auto iter = childs.begin(); iter != childs.end(); iter++)
+            j["ChildObjects"].push_back((*iter)->GetPrfabName());
+        
         for (int i = 0; i < components.size(); i++)
         {
             std::string TypeName = components[i]->GetTypeName();
@@ -489,6 +503,20 @@ namespace BONE_GRAPHICS
             else if (TypeName == "IsStatic")
             {
                 this->SetStatic(j["IsStatic"].get<bool>());
+            }
+            else if (TypeName == "ChildObjects")
+            {
+                auto Childs = j["ChildObjects"].get<std::vector<std::string>>();
+
+                for (auto iter = Childs.begin(); iter != Childs.end(); iter++)
+                {
+                    auto ChildObject = new GameObject();
+
+                    ChildObject->SetPrfabName((*iter));
+                    ChildObject->LoadPrefab();
+                    ChildObject->AttachParent(this);
+                    SceneMgr->CurrentScene()->AddObject(ChildObject, (*iter));
+                }
             }
             else if (TypeName == "ParentObject")
             {

@@ -36,7 +36,7 @@ namespace BONE_GRAPHICS
         void SetTexturesAddress(std::string* address);
         void SetFileAddress(std::string address);
 
-        bool CheckMouseRayInMesh(Transform3D* tr);
+        bool CheckMouseRayInMesh(Transform3D* tr, float *dist);
 		
 		std::string* GetTexturesAddress();
 		std::string GetFileAddress();

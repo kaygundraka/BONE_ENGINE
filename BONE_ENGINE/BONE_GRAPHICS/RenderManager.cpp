@@ -207,6 +207,32 @@ namespace BONE_GRAPHICS
         return bHit;
     }
 
+    struct line_vertex
+    {
+        float x, y, z;
+        DWORD color;
+    };
+
+    void RenderManager::DrawLine(D3DXVECTOR3 start, D3DXVECTOR3 end, D3DCOLOR Color)
+    {
+        line_vertex line_vertices[2];
+
+        const DWORD line_fvf = D3DFVF_XYZ | D3DFVF_DIFFUSE;
+
+        line_vertices[0].x = start.x;
+        line_vertices[0].y = start.y;
+        line_vertices[0].z = start.z;
+        line_vertices[0].color = Color;
+
+        line_vertices[1].x = end.x;
+        line_vertices[1].y = end.y;
+        line_vertices[1].z = end.z;
+        line_vertices[1].color = Color;
+
+        D3D_DEVICE->SetFVF(line_fvf);
+        D3D_DEVICE->DrawPrimitiveUP(D3DPT_LINELIST, 1, line_vertices, sizeof(line_vertex));
+    }
+
     bool RenderManager::CheckRayInTriangle(RAY* ray, const D3DXMATRIX& matWorld, D3DXVECTOR3 p0, D3DXVECTOR3 p1, D3DXVECTOR3 p2, float* u, float* v, float* dist)
     {
         ThreadSync sync;
