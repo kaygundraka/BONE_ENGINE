@@ -154,6 +154,9 @@ namespace BONE_GRAPHICS
         if (Shader == nullptr)
             Shader = &phongShader;
 
+        if (GetComponent("StaticMesh") != nullptr)
+            ((StaticMesh*)GetComponent("StaticMesh"))->Render(nullptr, this);
+
         UINT numPasses = 0;
 
         Shader->GetShader()->Begin(&numPasses, 0);
@@ -162,8 +165,8 @@ namespace BONE_GRAPHICS
             {
                 Shader->GetShader()->BeginPass(i);
                 {
-                    if (GetComponent("StaticMesh") != nullptr)
-                        ((StaticMesh*)GetComponent("StaticMesh"))->Render(Shader, this);
+                    /*if (GetComponent("StaticMesh") != nullptr)
+                        ((StaticMesh*)GetComponent("StaticMesh"))->Render(Shader, this);*/
 
                     if (GetComponent("BillBoard") != nullptr)
                         ((BillBoard*)GetComponent("BillBoard"))->Render(Shader, this);
@@ -304,6 +307,17 @@ namespace BONE_GRAPHICS
         if (!ResourceMgr->ExistFile(SceneMgr->CurrentScene()->GetName() + ".json", &FullPath))
             isNewMap = true;
 
+        int TreeDepth = 0;
+
+        GameObject* pt = parent;
+
+        while (pt != nullptr)
+        {
+            TreeDepth++;
+
+            pt = pt->GetParent();
+        }
+
         json j;
 
         if (!isNewMap)
@@ -312,6 +326,7 @@ namespace BONE_GRAPHICS
             file >> j;
 
             j[name]["PrefabName"] = prefab;
+            j[name]["TreeDepth"] = TreeDepth;
 
             j[name]["Position"] = {
                 ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().x,
@@ -336,6 +351,7 @@ namespace BONE_GRAPHICS
         else
         {
             j[name]["PrefabName"] = prefab;
+            j[name]["TreeDepth"] = TreeDepth;
 
             j[name]["Position"] = {
                 ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().x,
@@ -370,6 +386,9 @@ namespace BONE_GRAPHICS
         j["Priority"] = priorty;
         j["IsActive"] = isActive;
         j["IsStatic"] = isStatic;
+        
+        if (parent != nullptr) 
+            j["ParentObject"] = parent->GetName();
 
         for (int i = 0; i < components.size(); i++)
         {
@@ -455,7 +474,29 @@ namespace BONE_GRAPHICS
         {
             std::string TypeName = it.key();
 
-            if (TypeName == "Transform3D")
+            if (TypeName == "Tag")
+            {
+                this->SetTag(j["Tag"].get<std::string>());
+            }
+            else if (TypeName == "Priority")
+            {
+                this->SetPriority(j["Priority"].get<int>());
+            }
+            else if (TypeName == "IsActive")
+            {
+                this->SetActive(j["IsActive"].get<bool>());
+            }
+            else if (TypeName == "IsStatic")
+            {
+                this->SetStatic(j["IsStatic"].get<bool>());
+            }
+            else if (TypeName == "ParentObject")
+            {
+                auto Parent = SceneMgr->CurrentScene()->FindObjectByName(j["ParentObject"].get<std::string>());
+            
+                this->AttachParent(Parent);
+            }
+            else if (TypeName == "Transform3D")
             {
                 auto Position = j["Transform3D"]["Position"].get<std::vector<double>>();
                 auto Rotation = j["Transform3D"]["Rotation"].get<std::vector<double>>();

@@ -314,6 +314,8 @@ namespace BONE_GRAPHICS
         json j;
         file >> j;
 
+        //j[name]["TreeDepth"]
+
         for (json::iterator it = j.begin(); it != j.end(); ++it) {
             auto Object = this->FindObjectByName(it.key());
 

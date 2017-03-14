@@ -32,7 +32,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
     std::string OpenSceneName = "";
     bool IsNewScene = false;
 
-    do {
+    do 
+    {
         {
             auto_ptr<SceneInfoUI> gui(new SceneInfoUI);
             SceneMgr->SetGUIScene(gui.get());
@@ -52,7 +53,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
             SceneMgr->SetGUIScene(gui.get());
 
             auto_ptr<Scene> ViewScene(new Scene);
-
             auto_ptr<PointLight> Light(new PointLight);
 
             if (IsNewScene)

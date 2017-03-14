@@ -10,6 +10,8 @@ private:
     bool showAddComponent;
     bool showPrefabHierarchical;
 
+    std::string currentShowInfoObject;
+
     int childSize;
 
     std::string currentObjectName;
