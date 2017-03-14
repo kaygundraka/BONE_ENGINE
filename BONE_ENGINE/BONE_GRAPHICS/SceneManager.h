@@ -24,6 +24,8 @@ namespace BONE_GRAPHICS
 		double timeDelta;
 		int frame;
 
+        D3DXCOLOR color;
+
         GUI_Scene* guiScene;
 
 	public:
@@ -43,6 +45,8 @@ namespace BONE_GRAPHICS
 		void SetLoadingScene(string name);
 		Scene* GetLoadScene();
 		void EndScene(string name);
+        
+        void SetClearColor(D3DXCOLOR color);
 
         void SetGUIScene(GUI_Scene* scene);
 

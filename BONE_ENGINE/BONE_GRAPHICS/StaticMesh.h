@@ -20,6 +20,9 @@ namespace BONE_GRAPHICS
 
 		int renderMode;
 		bool IsInit;
+        bool showBox;
+
+        D3DXCOLOR color;
 
 	public:
 		enum RENDER_MODE {
@@ -33,6 +36,9 @@ namespace BONE_GRAPHICS
 		void Render(IShader* shaderOpt, GameObject* object);
 
         void SetRenderMode(int mode);
+        void ShowMeshBox(bool show);
+        bool IsShowMeshBOx();
+        void SetMeshBoxColor(D3DXCOLOR color);
         void SetTexturesAddress(std::string* address);
         void SetFileAddress(std::string address);
 

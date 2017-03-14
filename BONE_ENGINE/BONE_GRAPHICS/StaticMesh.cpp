@@ -12,6 +12,9 @@ namespace BONE_GRAPHICS
 		SetTypeName("StaticMesh");
 
 		renderMode = RENDER_DEFAULT;
+        showBox = false;
+
+        color = COLOR::WHITE;
 	}
 
 	StaticMesh::~StaticMesh()
@@ -103,6 +106,21 @@ namespace BONE_GRAPHICS
 		textureAddress = address;
 	}
 
+    void StaticMesh::ShowMeshBox(bool show)
+    {
+        this->showBox = show;
+    }
+
+    void StaticMesh::SetMeshBoxColor(D3DXCOLOR color)
+    {
+        this->color = color;
+    }
+
+    bool StaticMesh::IsShowMeshBOx()
+    {
+        return showBox;
+    }
+
 	void StaticMesh::Render(IShader* shaderOpt, GameObject* object)
 	{
 		if (IsInit)
@@ -148,7 +166,10 @@ namespace BONE_GRAPHICS
 				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 			else if (renderMode == RENDER_STENCIL)
 				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, false);
-		}
+		
+            if (showBox)
+                RenderMgr->DrawMeshBox(ResourceMgr->FindMesh(address)->mesh, ((Transform3D*)object->GetComponent("Transform3D"))->GetPosition(), color);
+        }
 	}
 
 	void StaticMesh::SetFileAddress(string address)

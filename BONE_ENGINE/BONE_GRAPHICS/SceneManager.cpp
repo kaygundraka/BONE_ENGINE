@@ -12,6 +12,10 @@ namespace BONE_GRAPHICS
 		loadingBarValue = 0;
 		loadScene = "";
 		frame = 0;
+
+        backColor.r = 247.0f / 255.0f;
+        backColor.g = 204.0f / 255.0f;
+        backColor.b = 130.0f / 255.0f;
 	}
 
 	void SceneManager::LoadingRender() 
@@ -58,6 +62,11 @@ namespace BONE_GRAPHICS
 	{
 		return timeDelta;
 	}
+
+    void SceneManager::SetClearColor(D3DXCOLOR color)
+    {
+        backColor = color;
+    }
 	
 	bool SceneManager::StartScene(std::string name)
 	{

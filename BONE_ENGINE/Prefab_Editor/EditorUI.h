@@ -24,6 +24,7 @@ public:
     void ShowOpitionMenu();
     void ShowHelpMenu();
 
+    void ShowObjectInfo(std::string name);
     void ShowGameObjectTree(std::string treeName);
 
     void AllChildCheck(GameObject* parent);

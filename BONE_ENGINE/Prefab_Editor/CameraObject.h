@@ -17,5 +17,6 @@ private:
 public:
     virtual void Init();
     virtual void Update();
+    virtual void LateRender();
     virtual void LateUpdate();
 };

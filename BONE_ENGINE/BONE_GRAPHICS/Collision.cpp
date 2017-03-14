@@ -52,59 +52,9 @@ namespace BONE_GRAPHICS {
             if (type == COLLISION_TYPE::AABB)
             {
                 auto AABB = (TAG_BOX*)collision;
-
                 auto Pivot = ((Transform3D*)object->transform3D)->GetPosition();
 
-                Vector3 Vertex[8];
                 
-                Vertex[0].x = AABB->leftBottom.x;
-                Vertex[0].y = AABB->leftBottom.y;
-                Vertex[0].z = AABB->leftBottom.z;
-                
-                Vertex[1].x = AABB->rightTop.x;
-                Vertex[1].y = AABB->leftBottom.y;
-                Vertex[1].z = AABB->leftBottom.z;
-
-                Vertex[2].x = AABB->leftBottom.x;
-                Vertex[2].y = AABB->rightTop.y;
-                Vertex[2].z = AABB->leftBottom.z;
-
-                Vertex[3].x = AABB->leftBottom.x;
-                Vertex[3].y = AABB->leftBottom.y;
-                Vertex[3].z = AABB->rightTop.z;
-
-                Vertex[4].x = AABB->rightTop.x;
-                Vertex[4].y = AABB->rightTop.y;
-                Vertex[4].z = AABB->leftBottom.z;
-
-                Vertex[5].x = AABB->rightTop.x;
-                Vertex[5].y = AABB->leftBottom.y;
-                Vertex[5].z = AABB->rightTop.z;
-
-                Vertex[6].x = AABB->leftBottom.x;
-                Vertex[6].y = AABB->rightTop.y;
-                Vertex[6].z = AABB->rightTop.z;
-
-                Vertex[7].x = AABB->rightTop.x;
-                Vertex[7].y = AABB->rightTop.y;
-                Vertex[7].z = AABB->rightTop.z;
-
-                for (int i = 0; i < 8; i++)
-                    Vertex[i] += Pivot;
-
-                RenderMgr->DrawLine(Vertex[0], Vertex[1], color);
-                RenderMgr->DrawLine(Vertex[0], Vertex[2], color);
-                RenderMgr->DrawLine(Vertex[0], Vertex[3], color);
-
-                RenderMgr->DrawLine(Vertex[7], Vertex[4], color);
-                RenderMgr->DrawLine(Vertex[7], Vertex[5], color);
-                RenderMgr->DrawLine(Vertex[7], Vertex[6], color);
-
-                RenderMgr->DrawLine(Vertex[2], Vertex[4], color);
-                RenderMgr->DrawLine(Vertex[2], Vertex[6], color);
-
-                RenderMgr->DrawLine(Vertex[5], Vertex[1], color);
-                RenderMgr->DrawLine(Vertex[5], Vertex[3], color);
             }
         }
     }

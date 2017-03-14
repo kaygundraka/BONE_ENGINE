@@ -84,11 +84,36 @@ void EditorUI::ShowOpitionMenu()
         
         if (ImGui::MenuItem("WIRE_FRAME")) 
             RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-        
+
         ImGui::EndMenu();
     }
 
-    if (ImGui::MenuItem("Show Collision")) {}
+    if (ImGui::MenuItem("Show/Hide Collision"))
+    {
+        auto DyamicObjectList = SceneMgr->CurrentScene()->GetObjectList();
+        auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
+
+        static bool EnableMeshBox = false;
+
+        if (!EnableMeshBox)
+            EnableMeshBox = true;
+        else
+            EnableMeshBox = false;
+
+        for each(auto var in DyamicObjectList)
+        {
+            auto sm = ((StaticMesh*)var->GetComponent("StaticMesh"));
+            if (sm != nullptr)
+                sm->ShowMeshBox(EnableMeshBox);
+        }
+
+        for each(auto var in StaticObjectList)
+        {
+            auto sm = ((StaticMesh*)var->GetComponent("StaticMesh"));
+            if (sm != nullptr)
+                sm->ShowMeshBox(EnableMeshBox);
+        }
+    }
 }
 
 void EditorUI::ShowHelpMenu()
@@ -104,16 +129,143 @@ void EditorUI::ShowHelpMenu()
     if (ImGui::MenuItem("Show Collision")) {}
 }
 
+void EditorUI::ShowObjectInfo(std::string name)
+{
+    if (ImGui::CollapsingHeader("[GameObject Info]", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        static char buf[64] = "";
+        ImGui::InputText("Name", buf, 64);
+        ImGui::SameLine();
+
+        if (ImGui::Button("Change"))
+        {
+            auto object = SceneMgr->CurrentScene()->FindObjectByName(name);
+            name = buf;
+
+            object->SetName(name);
+        }
+    }
+
+    if (ImGui::CollapsingHeader("[Components]"), ImGuiTreeNodeFlags_DefaultOpen)
+    {
+        GameObject* object = SceneMgr->CurrentScene()->FindObjectByName(name);
+        std::vector<Component*> components = object->GetComponents();
+
+        for (auto iter = components.begin(); iter != components.end(); iter++)
+        {
+            if (ImGui::TreeNode((*iter)->GetTypeName().c_str()))
+            {
+                if ((*iter)->GetTypeName() == "Transform3D")
+                {
+                    Vector3 oriPos = ((Transform3D*)object->transform3D)->GetPosition();
+                    Vector3 oriRot = ((Transform3D*)object->transform3D)->GetRotateAngle();
+                    Vector3 oriScale = ((Transform3D*)object->transform3D)->GetScale();
+                    Vector3 oriForward = ((Transform3D*)object->transform3D)->GetForward();
+
+                    float pos[3] = { oriPos.x, oriPos.y, oriPos.z };
+                    float rot[3] = { oriRot.x, oriRot.y, oriRot.z };
+                    float scale[3] = { oriScale.x, oriScale.y, oriScale.z };
+                    float forward[3] = { oriForward.x, oriForward.y, oriForward.z };
+
+                    ImGui::InputFloat3("Position", pos);
+                    ImGui::InputFloat3("Rotation", rot);
+                    ImGui::InputFloat3("Scale", scale);
+                    ImGui::InputFloat3("Forward", forward);
+
+                    ((Transform3D*)object->transform3D)->SetPosition(pos[0], pos[1], pos[2]);
+                    ((Transform3D*)object->transform3D)->SetRotate(rot[0], rot[1], rot[2]);
+                    ((Transform3D*)object->transform3D)->SetScale(scale[0], scale[1], scale[2]);
+                    ((Transform3D*)object->transform3D)->SetForward(forward[0], forward[1], forward[2]);
+                }
+                else if ((*iter)->GetTypeName() == "StaticMesh")
+                {
+                    auto MeshName = ((StaticMesh*)(*iter))->GetFileAddress();
+                    auto Meshes = ResourceMgr->ExistFiles(".\\Resource\\Mesh\\*");
+
+                    const int Size = Meshes.size();
+                    char** ComboBoxItems = new char*[Size];
+
+                    int CurItem = 0;
+
+                    int i = 0;
+                    for each(auto item in Meshes)
+                    {
+                        ComboBoxItems[i] = new char[64];
+                        strcpy(ComboBoxItems[i], Meshes[i].c_str());
+
+                        if (MeshName == ComboBoxItems[i])
+                            CurItem = i;
+
+                        i++;
+                    }
+
+                    ImGui::Combo("Meshes", &CurItem, ComboBoxItems, Size);
+
+                    if (ImGui::Button("Chanage"))
+                    {
+
+                    }
+
+                    ImGui::SameLine();
+
+                    if (ImGui::Button("Remove"))
+                    {
+
+                    }
+
+                    for (int i = 0; i < Size; i++)
+                        delete ComboBoxItems[i];
+                    delete[] ComboBoxItems;
+                }
+                else if ((*iter)->GetTypeName() == "Material")
+                {
+                    RGBA OriAmbient = ((Material*)(*iter))->GetAmbient();
+                    RGBA OriDiffuse = ((Material*)(*iter))->GetDiffuse();
+                    RGBA OriEmissive = ((Material*)(*iter))->GetEmissive();
+                    RGBA OriSpecular = ((Material*)(*iter))->GetSpecular();
+                    float OriShininess = ((Material*)(*iter))->GetShininess();
+
+                    float Ambient[4] = { OriAmbient.r, OriAmbient.g, OriAmbient.b, OriAmbient.a };
+                    float Diffuse[4] = { OriDiffuse.r, OriDiffuse.g, OriDiffuse.b, OriDiffuse.a };
+                    float Emissive[4] = { OriEmissive.r, OriEmissive.g, OriEmissive.b, OriEmissive.a };
+                    float Specular[4] = { OriSpecular.r, OriSpecular.g, OriSpecular.b, OriSpecular.a };
+                    float Shininess = OriShininess;
+
+                    ImGui::InputFloat3("Ambient", Ambient);
+                    ImGui::InputFloat3("Diffuse", Diffuse);
+                    ImGui::InputFloat3("Emissive", Emissive);
+                    ImGui::InputFloat3("Specular", Specular);
+                    ImGui::InputFloat("Shininess", &Shininess);
+
+                    ((Material*)(*iter))->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
+                    ((Material*)(*iter))->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
+                    ((Material*)(*iter))->SetEmissive(Emissive[0], Emissive[1], Emissive[2], Emissive[3]);
+                    ((Material*)(*iter))->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
+                    ((Material*)(*iter))->SetShininess(Shininess);
+                }
+
+                ImGui::TreePop();
+            }
+        }
+
+        if (ImGui::SmallButton("Add Component"))
+        {
+            currentShowInfoObject = name;
+            showAddComponent = true;
+        }
+    }
+}
+
 void EditorUI::ShowGameObjectTree(std::string treeName)
 {
     if (ImGui::TreeNode(treeName.c_str()))
     {
         auto parent = SceneMgr->CurrentScene()->FindObjectByName(treeName);
         
-        if (ImGui::SmallButton("Show Infos"))
+        if (ImGui::TreeNode("Show Infos"))
         {
-            currentShowInfoObject = treeName;
-            showObjectInfo = true;
+            ShowObjectInfo(treeName);
+            ImGui::TreePop();
         }
 
         if (treeName != currentObjectName)
@@ -190,17 +342,22 @@ void EditorUI::AllChildCheck(GameObject* parent)
 
 void EditorUI::UpdateFrame()
 {
+    bool isFocusedWindow = false;
+
     {
-        if (!ImGui::Begin("Editor", &open, ImGuiWindowFlags_MenuBar))
+        if (!ImGui::Begin("Editor", &open, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_AlwaysAutoResize))
         {
             ImGui::End();
             return;
         }
 
+        ImVec2 Position(-ImGui::GetWindowSize().x, 0);
+        Position.x += RenderMgr->GetWidth();
+
+        ImGui::SetWindowPos(Position);
+
         if (ImGui::IsRootWindowOrAnyChildFocused())
-            InputMgr->SetFocusWindow(false);
-        else
-            InputMgr->SetFocusWindow(true);
+            isFocusedWindow = true;
 
         std::list<GameObject*> ObjectList = SceneMgr->CurrentScene()->GetObjectList();
         auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
@@ -266,21 +423,20 @@ void EditorUI::UpdateFrame()
                         auto Priority = (*iter)->GetPriority();
                         ImGui::InputInt("Priority", &Priority);
 
+                        (*iter)->SetActive(IsActive);
+                        (*iter)->SetStatic(IsStatic);
+                        (*iter)->SetPriority(Priority);
+
                         auto Tag = (*iter)->Tag();
                         char TagStr[64] = "";
                         strcpy(TagStr, Tag.c_str());
                         ImGui::InputText("Tag", TagStr, 64);
-
-                        (*iter)->SetActive(IsActive);
-                        (*iter)->SetStatic(IsStatic);
-                        (*iter)->SetPriority(Priority);
-                        (*iter)->SetTag(Tag);
+                        if (ImGui::Button("Change Tag"))
+                            (*iter)->SetTag(Tag);
 
                         static char buf[64] = "";
                         ImGui::InputText("Name", buf, 64);
-                        ImGui::SameLine();
-
-                        if (ImGui::Button("Change"))
+                        if (ImGui::Button("Change Name"))
                         {
                             auto object = SceneMgr->CurrentScene()->FindObjectByName((*iter)->GetName().c_str());
                             object->SetName(buf);
@@ -292,10 +448,10 @@ void EditorUI::UpdateFrame()
                     if (ImGui::TreeNode("Prefab"))
                     {
                         auto Prefabs = ResourceMgr->ExistFiles(".\\Engine\\Prefabs\\*");
-                            
+                        
                         const int Size = Prefabs.size();
                         char** ComboBoxItems = new char*[Size];
-                        
+
                         int i = 0;
                         for each(auto item in Prefabs)
                         {
@@ -305,7 +461,7 @@ void EditorUI::UpdateFrame()
                         }
 
                         static int CurItem = 0;
-                        
+
                         for (int i = 0; i < Size; i++)
                         {
                             if ((*iter)->GetPrfabName() + ".json" == Prefabs[i])
@@ -316,17 +472,19 @@ void EditorUI::UpdateFrame()
                         }
 
                         ImGui::Combo("Prefabs", &CurItem, ComboBoxItems, Size);
-                        
+
                         static char PrefabName[64] = "";
-                        ImGui::InputText("PrefabName", PrefabName, 64);
-                        
+                        ImGui::InputText("Name", PrefabName, 64);
+
                         if (ImGui::SmallButton("New File"))
                         {
                             (*iter)->SetPrfabName(PrefabName);
                             (*iter)->SavePrefab();
                         }
-                        
-                        if (ImGui::SmallButton("Edit Prfab"))
+
+                        ImGui::SameLine();
+
+                        if (ImGui::SmallButton("Change File"))
                         {
                             for (int i = Prefabs[CurItem].size(); i >= 0; i--)
                             {
@@ -339,19 +497,15 @@ void EditorUI::UpdateFrame()
                                 }
                             }
                             (*iter)->SetPrfabName(ComboBoxItems[CurItem]);
-
-                            showPrefabHierarchical = true;
-
-                            currentObjectName = (*iter)->GetName();
                         }
-                        
+
                         for (int i = 0; i < Size; i++)
                             delete ComboBoxItems[i];
                         delete[] ComboBoxItems;
-                    
+
                         ImGui::TreePop();
                     }
-                    
+
                     if ((*iter)->GetChileds().size() != 0)
                     {
                         if (ImGui::TreeNode("Childs"))
@@ -361,6 +515,13 @@ void EditorUI::UpdateFrame()
                         }
                     }
 
+                    if (ImGui::SmallButton("Edit Object"))
+                    {
+                        showPrefabHierarchical = true;
+
+                        currentObjectName = (*iter)->GetName();
+                    }
+
                     if (ImGui::SmallButton("Remove Object"))
                     {
                         SceneMgr->CurrentScene()->Destroy((*iter));
@@ -368,6 +529,14 @@ void EditorUI::UpdateFrame()
 
                     if (ImGui::SmallButton("Focus On"))
                     {
+                        auto FocusObject = SceneMgr->CurrentScene()->FindObjectByName((*iter)->GetName().c_str());
+                        
+                        if (FocusObject != nullptr)
+                        {
+                            auto Position = ((Transform3D*)FocusObject->transform3D)->GetPosition();
+                            ((Camera*)(SceneMgr->CurrentScene()->GetCurrentCamera()->GetComponent("Camera")))->SetTargetPosition(Position);
+                            ((Transform3D*)SceneMgr->CurrentScene()->GetCurrentCamera()->transform3D)->Translate(Position + Vector3(100, 100, 100));
+                        }
                     }
 
                     ImGui::TreePop();
@@ -394,8 +563,11 @@ void EditorUI::UpdateFrame()
 
                 static char PrefabName[64] = "";
                 static bool NewPrefabs = false;
-                ImGui::InputText("PrefabName", PrefabName, 64);
+                if (NewPrefabs)
+                    ImGui::InputText("Name", PrefabName, 64);
+                
                 ImGui::Checkbox("New Prefab", &NewPrefabs);
+                ImGui::SameLine();
 
                 if (ImGui::Button("Create"))
                 {
@@ -477,6 +649,21 @@ void EditorUI::UpdateFrame()
                 ImGui::TreePop();
             }
 
+            if (ImGui::TreeNode("Clear Color"))
+            {
+                static ImVec4 clear_col(247.0f / 255.0f, 204.0f / 255.0f, 130.0f / 255.0f, 1);
+                ImGui::ColorEdit3("clear color", (float*)&clear_col);
+
+                D3DXCOLOR color;
+                color.r = clear_col.x;
+                color.g = clear_col.y;
+                color.b = clear_col.z;
+                color.a = 1.0f;
+                SceneMgr->SetClearColor(color);
+
+                ImGui::TreePop();
+            }
+
             if (ImGui::TreeNode("Terrain"))
             {
                 ImGui::TreePop();
@@ -508,165 +695,24 @@ void EditorUI::UpdateFrame()
     if (showPrefabHierarchical)
     {
         std::string WindowName = "Prefab Inspector : " + currentObjectName;
-        ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiSetCond_FirstUseEver);
-        ImGui::Begin(WindowName.c_str(), &showPrefabHierarchical);
+
+        ImGui::Begin(WindowName.c_str(), &showPrefabHierarchical, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_AlwaysAutoResize);
 
         if (ImGui::IsRootWindowOrAnyChildFocused())
-            InputMgr->SetFocusWindow(false);
-        else
-            InputMgr->SetFocusWindow(true);
+            isFocusedWindow = true;
 
         ShowGameObjectTree(currentObjectName);
 
         ImGui::End();
     }
-
-    if (showObjectInfo)
-    {
-        std::string WindowName = "GameObject Info : " + currentShowInfoObject;
-        ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiSetCond_FirstUseEver);
-        ImGui::Begin(WindowName.c_str(), &showObjectInfo);
-
-        if (ImGui::IsRootWindowOrAnyChildFocused())
-            InputMgr->SetFocusWindow(false);
-        else
-            InputMgr->SetFocusWindow(true);
-
-        if (ImGui::CollapsingHeader("[GameObject Info]", ImGuiTreeNodeFlags_DefaultOpen))
-        {
-            static char buf[64] = "";
-            ImGui::InputText("Name", buf, 64);
-            ImGui::SameLine();
-
-            if (ImGui::Button("Change"))
-            {
-                auto object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
-                currentShowInfoObject = buf;
-
-                object->SetName(currentShowInfoObject);
-            }
-        }
-
-        if (ImGui::CollapsingHeader("[Components]"), ImGuiTreeNodeFlags_DefaultOpen)
-        {
-            if (ImGui::SmallButton("Add Component"))
-                showAddComponent = true;
-            
-            GameObject* object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
-            std::vector<Component*> components = object->GetComponents();
-
-            for (auto iter = components.begin(); iter != components.end(); iter++)
-            {
-                if (ImGui::TreeNode((*iter)->GetTypeName().c_str()))
-                {
-                    if ((*iter)->GetTypeName() == "Transform3D")
-                    {
-                        Vector3 oriPos = ((Transform3D*)object->transform3D)->GetPosition();
-                        Vector3 oriRot = ((Transform3D*)object->transform3D)->GetRotateAngle();
-                        Vector3 oriScale = ((Transform3D*)object->transform3D)->GetScale();
-                        Vector3 oriForward = ((Transform3D*)object->transform3D)->GetForward();
-
-                        float pos[3] = { oriPos.x, oriPos.y, oriPos.z };
-                        float rot[3] = { oriRot.x, oriRot.y, oriRot.z };
-                        float scale[3] = { oriScale.x, oriScale.y, oriScale.z };
-                        float forward[3] = { oriForward.x, oriForward.y, oriForward.z };
-                        
-                        ImGui::InputFloat3("Position", pos);
-                        ImGui::InputFloat3("Rotation", rot);
-                        ImGui::InputFloat3("Scale", scale);
-                        ImGui::InputFloat3("Forward", forward);
-                        
-                        ((Transform3D*)object->transform3D)->SetPosition(pos[0], pos[1], pos[2]);
-                        ((Transform3D*)object->transform3D)->SetRotate(rot[0], rot[1], rot[2]);
-                        ((Transform3D*)object->transform3D)->SetScale(scale[0], scale[1], scale[2]);
-                        ((Transform3D*)object->transform3D)->SetForward(forward[0], forward[1], forward[2]);
-                    }
-                    else if ((*iter)->GetTypeName() == "StaticMesh")
-                    {
-                        auto MeshName = ((StaticMesh*)(*iter))->GetFileAddress();
-                        auto Meshes = ResourceMgr->ExistFiles(".\\Resource\\Mesh\\*");
-                        
-                        const int Size = Meshes.size();
-                        char** ComboBoxItems = new char*[Size];
-                        
-                        int CurItem = 0;
-
-                        int i = 0;
-                        for each(auto item in Meshes)
-                        {
-                            ComboBoxItems[i] = new char[64];
-                            strcpy(ComboBoxItems[i], Meshes[i].c_str());
-                            
-                            if (MeshName == ComboBoxItems[i]) 
-                                CurItem = i;
-
-                            i++;
-                        }
-
-                        ImGui::Combo("Meshes", &CurItem, ComboBoxItems, Size);
-                        
-                        if (ImGui::Button("Chanage"))
-                        {
-                            
-                        }
-
-                        ImGui::SameLine();
-
-                        if (ImGui::Button("Remove"))
-                        {
-
-                        }
-
-                        for (int i = 0; i < Size; i++)
-                            delete ComboBoxItems[i];
-                        delete[] ComboBoxItems;
-                    }
-                    else if ((*iter)->GetTypeName() == "Material")
-                    {
-                        RGBA OriAmbient = ((Material*)(*iter))->GetAmbient();
-                        RGBA OriDiffuse = ((Material*)(*iter))->GetDiffuse();
-                        RGBA OriEmissive = ((Material*)(*iter))->GetEmissive();
-                        RGBA OriSpecular = ((Material*)(*iter))->GetSpecular();
-                        float OriShininess = ((Material*)(*iter))->GetShininess();
-
-                        float Ambient[4] = { OriAmbient.r, OriAmbient.g, OriAmbient.b, OriAmbient.a };
-                        float Diffuse[4] = { OriDiffuse.r, OriDiffuse.g, OriDiffuse.b, OriDiffuse.a };
-                        float Emissive[4] = { OriEmissive.r, OriEmissive.g, OriEmissive.b, OriEmissive.a };
-                        float Specular[4] = { OriSpecular.r, OriSpecular.g, OriSpecular.b, OriSpecular.a };
-                        float Shininess = OriShininess;
-
-                        ImGui::InputFloat3("Ambient", Ambient);
-                        ImGui::InputFloat3("Diffuse", Diffuse);
-                        ImGui::InputFloat3("Emissive", Emissive);
-                        ImGui::InputFloat3("Specular", Specular);
-                        ImGui::InputFloat("Shininess", &Shininess);
-
-                        ((Material*)(*iter))->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
-                        ((Material*)(*iter))->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
-                        ((Material*)(*iter))->SetEmissive(Emissive[0], Emissive[1], Emissive[2], Emissive[3]);
-                        ((Material*)(*iter))->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
-                        ((Material*)(*iter))->SetShininess(Shininess);
-                    }
-
-                    ImGui::TreePop();
-                }
-            }
-        }
-
-        ImGui::End();
-    }
-
+    
     if (showAddComponent)
     {
         std::string WindowName = "Add Component : " + currentShowInfoObject;
-
-        ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiSetCond_FirstUseEver);
-        ImGui::Begin(WindowName.c_str(), &showAddComponent);
+        ImGui::Begin(WindowName.c_str(), &showAddComponent, ImGuiWindowFlags_AlwaysAutoResize);
 
         if (ImGui::IsRootWindowOrAnyChildFocused())
-            InputMgr->SetFocusWindow(false);
-        else
-            InputMgr->SetFocusWindow(true);
+            isFocusedWindow = true;
 
         const char* listbox_items[] = { "StaticMesh", "Collision", "SkinnedMesh", "Camera", "Material", "TrailRenderer", "BillBoard", "SpriteBillBoard" };
         static int listbox_item_current = 0;
@@ -733,4 +779,9 @@ void EditorUI::UpdateFrame()
 
         ImGui::End();
     }
+
+    if (isFocusedWindow)
+        InputMgr->SetFocusWindow(false);
+    else
+        InputMgr->SetFocusWindow(true);
 }

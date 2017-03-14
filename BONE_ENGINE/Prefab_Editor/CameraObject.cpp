@@ -48,6 +48,7 @@ void CameraObject::Update()
         auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
        
         float MinDist = -1;
+        bool NoSelect = true;
         
         for each(auto item in ObjectList)
         {
@@ -64,12 +65,13 @@ void CameraObject::Update()
                         selectObject = item->GetName();
                         MinDist = Dist;
                     }
-
-                    if (MinDist >= Dist)
+                    else if (MinDist >= Dist)
                     {
                         MinDist = Dist;
                         selectObject = item->GetName();
                     }
+
+                    NoSelect = false;
                 }
             }
         }
@@ -89,13 +91,32 @@ void CameraObject::Update()
                         selectObject = item->GetName();
                         MinDist = Dist;
                     }
-
-                    if (MinDist >= Dist)
+                    else if (MinDist >= Dist)
                     {
                         MinDist = Dist;
                         selectObject = item->GetName();
                     }
                 }
+
+                NoSelect = false;
+            }
+        }
+
+        auto Object = SceneMgr->CurrentScene()->FindObjectByName(selectObject);
+
+        if (Object != nullptr)
+        {
+            auto sm = ((StaticMesh*)Object->GetComponent("StaticMesh"));
+            
+            if (NoSelect)
+            {
+                sm->ShowMeshBox(true);
+                sm->SetMeshBoxColor(COLOR::GREEN);
+            }
+            else
+            {
+                sm->ShowMeshBox(false);
+                sm->SetMeshBoxColor(COLOR::WHITE);
             }
         }
     }
@@ -198,6 +219,40 @@ void CameraObject::Update()
         );
     }
     
+}
+
+void CameraObject::LateRender()
+{
+    Vector3 Pos[2];
+
+    Pos[0].y = 0;
+    Pos[1].y = 0;
+
+    for (int i = 0; i < 9; i++) 
+    {
+        Pos[0].x = -40 + i * 10;
+        Pos[1].x = -40 + i * 10;
+        Pos[0].z = -40;
+        Pos[1].z = 40;
+
+        if (i == 4)
+            RenderMgr->DrawLine(Pos[0], Pos[1], COLOR::RED);
+        else
+            RenderMgr->DrawLine(Pos[0], Pos[1], COLOR::WHITE);
+    }
+
+    for (int i = 0; i < 9; i++)
+    {
+        Pos[0].z = -40 + i * 10;
+        Pos[1].z = -40 + i * 10;
+        Pos[0].x = -40;
+        Pos[1].x = 40;
+
+        if (i == 4)
+            RenderMgr->DrawLine(Pos[0], Pos[1], COLOR::BLUE);
+        else
+            RenderMgr->DrawLine(Pos[0], Pos[1], COLOR::WHITE);
+    }
 }
 
 void CameraObject::LateUpdate()
