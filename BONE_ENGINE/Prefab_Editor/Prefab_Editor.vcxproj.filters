@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\GUI">
+      <UniqueIdentifier>{68734888-40e3-4525-b5e6-e4ab579f4568}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\CameraObject">
+      <UniqueIdentifier>{5575abae-76d6-416c-987b-592c5863556d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorUI.cpp">
+      <Filter>소스 파일\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraObject.cpp">
+      <Filter>소스 파일\CameraObject</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneInfoUI.cpp">
+      <Filter>소스 파일\GUI</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="EditorUI.h">
+      <Filter>소스 파일\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraObject.h">
+      <Filter>소스 파일\CameraObject</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneInfoUI.h">
+      <Filter>소스 파일\GUI</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

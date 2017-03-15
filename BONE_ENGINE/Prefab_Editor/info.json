@@ -1,0 +1,18 @@
+{
+    "WindowsName":"BONE_ENGINE - Bone Editor",
+    "WindowsWidth":1024,
+    "WindowsHeight":768,
+    "ShowLogCmd":false,
+    "EnableLog":false,
+
+    "ResourcePaths":[
+        ".\\*",
+        ".\\Engine\\*",
+        ".\\Engine\\Shader\\*",
+        ".\\Engine\\Maps\\*",
+        ".\\Engine\\Prefabs\\*",
+        ".\\Resource\\Skybox\\*",
+        ".\\Resource\\Mesh\\*",
+        ".\\Resource\\Textures\\*"
+    ]
+}
