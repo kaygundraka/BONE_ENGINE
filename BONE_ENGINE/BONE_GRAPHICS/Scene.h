@@ -32,6 +32,8 @@ namespace BONE_GRAPHICS
         float fogDensity;
         int fogMode;
 
+        float loadPerTime;
+
         D3DXCOLOR fogColor;
  
 	public:
@@ -80,6 +82,8 @@ namespace BONE_GRAPHICS
         
         void SetName(std::string name);
         std::string GetName();
+
+        float GetLoadPerTime();
 
         void SetAmbientColor(float r, float g, float b, float a);
         void SetAmbientColor(RGBA color);

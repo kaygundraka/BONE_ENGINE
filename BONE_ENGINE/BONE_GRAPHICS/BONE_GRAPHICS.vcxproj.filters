@@ -111,6 +111,9 @@
     <Filter Include="소스 파일\Library\ImGUI\DX9">
       <UniqueIdentifier>{099956fd-4d86-4a02-80b3-ce475c0d5cf2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Editor\Scene">
+      <UniqueIdentifier>{ad79331f-ac67-4f15-a087-dd17736a07f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -266,9 +269,6 @@
     <ClInclude Include="BoneEditor.h">
       <Filter>소스 파일\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="SceneInfo.h">
-      <Filter>소스 파일\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="imconfig.h">
       <Filter>소스 파일\Library\ImGUI</Filter>
     </ClInclude>
@@ -289,6 +289,12 @@
     </ClInclude>
     <ClInclude Include="EditorCameraScript.h">
       <Filter>소스 파일\Editor\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneInfo.h">
+      <Filter>소스 파일\Editor\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorLoadScene.h">
+      <Filter>소스 파일\Editor\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -445,9 +451,6 @@
     <ClCompile Include="BoneEditor.cpp">
       <Filter>소스 파일\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="SceneInfo.cpp">
-      <Filter>소스 파일\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="imgui.cpp">
       <Filter>소스 파일\Library\ImGUI</Filter>
     </ClCompile>
@@ -459,6 +462,12 @@
     </ClCompile>
     <ClCompile Include="EditorCameraScript.cpp">
       <Filter>소스 파일\Editor\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneInfo.cpp">
+      <Filter>소스 파일\Editor\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorLoadScene.cpp">
+      <Filter>소스 파일\Editor\Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

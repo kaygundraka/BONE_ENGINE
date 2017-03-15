@@ -1,19 +1,12 @@
 {
-    "IsActive": true,
-    "IsStatic": false,
-    "Priority": 1,
-    "Tag": "",
-    "Transform3D": {
-        "ForwardVector": [
-            0.0,
-            0.0,
-            -0.999999940395355
-        ],
+    "TestObject": {
+        "IsChild": false,
         "Position": [
             0.0,
             0.0,
             0.0
         ],
+        "PrefabName": "TestObject",
         "Rotation": [
             0.0,
             0.0,
@@ -23,6 +16,7 @@
             1.0,
             1.0,
             1.0
-        ]
+        ],
+        "TreeDepth": 0
     }
 }

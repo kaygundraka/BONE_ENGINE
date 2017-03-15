@@ -27,7 +27,8 @@ namespace BONE_GRAPHICS
 
         D3DXCOLOR color;
 
-        GUI_Scene* guiScene;        
+        GUI_Scene* guiScene;  
+        GUI_Scene* loadGuiScene;
 
 	public:
 		void InitializeMembers();
@@ -43,7 +44,8 @@ namespace BONE_GRAPHICS
 		void AddScene(string name, Scene* scene);
 
 		bool StartScene(string name);
-		void SetLoadingScene(string name);
+		void SetLoadScene(string name);
+        void SetLoadGUIScene(GUI_Scene* scene);
 		Scene* GetLoadScene();
 		void EndScene(string name);
         

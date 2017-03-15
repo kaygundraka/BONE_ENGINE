@@ -138,6 +138,7 @@
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imgui_impl_dx9.h" />
     <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="EditorLoadScene.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="PhongShader.h" />
     <ClInclude Include="PhyscisManager.h" />
@@ -289,6 +290,7 @@
     <ClCompile Include="Interface.cpp" />
     <ClCompile Include="FireworkParticle.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="EditorLoadScene.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="PhongShader.cpp" />

@@ -413,4 +413,11 @@ namespace BONE_GRAPHICS
 
         return useImGUI;
     }
+
+    void RenderManager::UseImGUI(bool use)
+    {
+        ThreadSync sync;
+
+        useImGUI = use;
+    }
 }

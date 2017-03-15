@@ -21,11 +21,11 @@ namespace BONE_GRAPHICS
 
     class BoneEditor : public GUI_Scene {
     private:
-        bool open;
         bool showObjectInfo;
         bool showAddComponent;
         bool showPrefabHierarchical;
         bool showLogWindow;
+        bool showMainEditor;
 
         std::string currentShowInfoObject;
 
@@ -37,9 +37,13 @@ namespace BONE_GRAPHICS
         std::string rootObjectName;
 
         std::list<std::string> scriptList;
+        std::string playScene;
+        bool isTestPlay;
 
     public:
         BoneEditor();
+
+        void SaveScene();
 
         void ShowFileMenu();
         void ShowEditorMenu();

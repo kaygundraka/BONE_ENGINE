@@ -1,8 +1,11 @@
 {
     "IsActive": true,
     "IsStatic": false,
-    "Priority": 100,
-    "Tag": "PointLight",
+    "Priority": 1,
+    "StaticMesh": {
+        "FileName": "Corner.X"
+    },
+    "Tag": "",
     "Transform3D": {
         "ForwardVector": [
             0.0,
@@ -11,7 +14,7 @@
         ],
         "Position": [
             0.0,
-            200.0,
+            0.0,
             0.0
         ],
         "Rotation": [

@@ -40,6 +40,10 @@ void EditorCamera::Init()
     cameraMove = false;
 }
 
+void EditorCamera::Reference()
+{
+}
+
 void EditorCamera::Update()
 {
     if (InputMgr->GetMouseRBButtonStatus() == MOUSE_STATUS::MOUSE_RBDOWN)

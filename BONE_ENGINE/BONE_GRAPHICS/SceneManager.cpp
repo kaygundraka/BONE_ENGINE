@@ -46,12 +46,19 @@ namespace BONE_GRAPHICS
 		return sceneList[loadScene];
 	}
 
-	void SceneManager::SetLoadingScene(std::string name)
+	void SceneManager::SetLoadScene(std::string name)
 	{
 		ThreadSync sync;
 
 		loadScene = name;
 	}
+
+    void SceneManager::SetLoadGUIScene(GUI_Scene* scene)
+    {
+        ThreadSync sync;
+
+        this->loadGuiScene = scene;
+    }
 
 	int SceneManager::GetFrame()
 	{
@@ -92,6 +99,13 @@ namespace BONE_GRAPHICS
 				RenderMgr->GetDevice()->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, backColor, 1.0f, 0);
 				RenderMgr->GetDevice()->BeginScene();
 
+                if (RenderMgr->UseImGUI())
+                {
+                    ImGui_ImplDX9_NewFrame();
+
+                    loadGuiScene->UpdateFrame();
+                }
+
 				if (sceneList[loadScene]->GetSceneFlag())
 				{
 					sceneList[loadScene]->Update();
@@ -99,6 +113,24 @@ namespace BONE_GRAPHICS
 					sceneList[loadScene]->Render();
 					sceneList[loadScene]->LateRender();
 				}
+
+                if (RenderMgr->UseImGUI())
+                {
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_FOGENABLE, FALSE);
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_ZENABLE, false);
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_SCISSORTESTENABLE, false);
+                    DWORD temp;
+                    RenderMgr->GetDevice()->GetRenderState(D3DRS_FILLMODE, &temp);
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+
+                    ImGui::Render();
+
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, temp);
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_ZENABLE, true);
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_SCISSORTESTENABLE, true);
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_FOGENABLE, sceneList[name]->OnFog());
+                }
 
 				RenderMgr->GetDevice()->EndScene();
 				RenderMgr->GetDevice()->Present(0, 0, 0, 0);
@@ -108,7 +140,6 @@ namespace BONE_GRAPHICS
 				lastTime = currTime;
 
 			} while (!sceneList[name]->EndLoading() || sceneList[loadScene]->GetSceneFlag());
-
 		}
 
 		LoadingThread.join();

@@ -55,5 +55,6 @@ namespace BONE_GRAPHICS
         bool DrawMeshBox(LPD3DXMESH mesh, D3DXVECTOR3 pos, D3DXCOLOR color);
 
         bool UseImGUI();
+        void UseImGUI(bool use);
     };
 }

@@ -15,6 +15,7 @@
 #include "Collision.h"
 #include "SceneInfo.h"
 #include "EditorCameraScript.h"
+#include "EditorLoadScene.h"
 
 #pragma warning (disable:4996)
 
@@ -75,7 +76,7 @@ void LogDialog::Render(const char* title, bool* p_open)
 }
 
 BoneEditor::BoneEditor() {
-    open = true;
+    showMainEditor = true;
     currentShowInfoObject = "";
     currentObjectName = "";
     showAddComponent = false;
@@ -83,6 +84,8 @@ BoneEditor::BoneEditor() {
     childSize = 0;
     showPrefabHierarchical = false;
     showLogWindow = false;
+    isTestPlay = false;
+    playScene = "";
 }
 
 void BoneEditor::Run()
@@ -97,6 +100,28 @@ void BoneEditor::Run()
 
     do
     {
+        if (isTestPlay)
+        {
+            auto_ptr<Scene> LoadScene(new Scene);
+            SceneMgr->AddScene("EditorLoadScene", LoadScene.get());
+            SceneMgr->SetLoadScene("EditorLoadScene");
+
+            auto_ptr<EditorLoadScene> EditorLoadGUI(new EditorLoadScene);
+            SceneMgr->SetLoadGUIScene(EditorLoadGUI.get());
+
+            auto_ptr<Scene> TestScene(new Scene);
+            RenderMgr->UseImGUI(false);
+
+            TestScene->SetName(playScene);
+
+            SceneMgr->AddScene(playScene, TestScene.get());
+            TestScene->OnLoadSceneData();
+
+            flag = SceneMgr->StartScene(playScene);
+            RenderMgr->UseImGUI(true);
+            isTestPlay = false;
+        }
+        else
         {
             auto_ptr<SceneInfoUI> EditorTtitleUI(new SceneInfoUI);
             SceneMgr->SetGUIScene(EditorTtitleUI.get());
@@ -112,11 +137,16 @@ void BoneEditor::Run()
 
         if (flag)
         {
-            SceneMgr->SetGUIScene(this);
-
-            this->SetScriptProc(this);
-
+            auto_ptr<Scene> LoadScene(new Scene);
+            SceneMgr->AddScene("EditorLoadScene", LoadScene.get());
+            SceneMgr->SetLoadScene("EditorLoadScene");
+            
+            auto_ptr<EditorLoadScene> EditorLoadGUI(new EditorLoadScene);
+            SceneMgr->SetLoadGUIScene(EditorLoadGUI.get());
+            
             auto_ptr<Scene> ViewScene(new Scene);
+            SceneMgr->SetGUIScene(this);
+            this->SetScriptProc(this);
 
             auto_ptr<GameObject> MainCamera(new GameObject);
             EditorCamera* EditorCameraScript = new EditorCamera(MainCamera.get(), "EditorCameraScript");
@@ -131,6 +161,7 @@ void BoneEditor::Run()
             if (!IsNewScene)
                 ViewScene->OnLoadSceneData();
 
+            playScene = OpenSceneName;
             flag = SceneMgr->StartScene(OpenSceneName);
         }
     } while (flag);
@@ -146,34 +177,37 @@ std::list<std::string> BoneEditor::GetScriptList()
     return scriptList;
 }
 
-void BoneEditor::ShowFileMenu()
+void BoneEditor::SaveScene()
 {
-    if (ImGui::MenuItem("Save", "Ctrl+S"))
+    SceneMgr->CurrentScene()->ClearSceneData();
+
+    auto DyamicObjectList = SceneMgr->CurrentScene()->GetObjectList();
+    auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
+
+    for each(auto var in DyamicObjectList)
     {
-        SceneMgr->CurrentScene()->ClearSceneData();
-
-        auto DyamicObjectList = SceneMgr->CurrentScene()->GetObjectList();
-        auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
-
-        for each(auto var in DyamicObjectList)
+        if (var->GetName() != "EditorCamera")
         {
-            if (var->GetName() != "EditorCamera")
-            {
-                var->SavePrefab();
-                var->SaveInMaps();
-            }
-        }
-
-        for each(auto var in StaticObjectList)
-        {
-            if (var->GetName() != "EditorCamera")
-            {
-                var->SavePrefab();
-                var->SaveInMaps();
-            }
+            var->SavePrefab();
+            var->SaveInMaps();
         }
     }
 
+    for each(auto var in StaticObjectList)
+    {
+        if (var->GetName() != "EditorCamera")
+        {
+            var->SavePrefab();
+            var->SaveInMaps();
+        }
+    }
+}
+
+void BoneEditor::ShowFileMenu()
+{
+    if (ImGui::MenuItem("Save", "Ctrl+S"))
+        SaveScene();
+    
     if (ImGui::MenuItem("Quit", "Alt+F4"))
     {
         SceneMgr->CurrentScene()->SetSceneFlag(true);
@@ -192,6 +226,14 @@ void BoneEditor::ShowEditorMenu()
             RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
         ImGui::EndMenu();
+    }
+
+    if (ImGui::MenuItem("Show Main Editor"))
+    {
+        if (showMainEditor)
+            showMainEditor = false;
+        else
+            showMainEditor = true;
     }
 
     if (ImGui::MenuItem("Show Collision"))
@@ -229,8 +271,14 @@ void BoneEditor::ShowEditorMenu()
             showLogWindow = true;
     }
 
-    if (ImGui::MenuItem("Play"))
+    if (ImGui::MenuItem("Game Play"))
     {
+        SaveScene();
+
+        isTestPlay = true;
+
+        SceneMgr->CurrentScene()->SetSceneFlag(true);
+        SceneMgr->EndScene(SceneMgr->CurrentScene()->GetName());
     }
 }
 
@@ -455,16 +503,36 @@ void BoneEditor::UpdateFrame()
 {
     bool isFocusedWindow = false;
 
+    if (ImGui::BeginMainMenuBar())
     {
-        if (!ImGui::Begin("Editor", &open, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_AlwaysAutoResize))
+        if (ImGui::BeginMenu("File"))
+        {
+            ShowFileMenu();
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Editor"))
+        {
+            ShowEditorMenu();
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Help"))
+        {
+            ShowHelpMenu();
+            ImGui::EndMenu();
+        }
+
+        ImGui::EndMainMenuBar();
+    }
+
+    if (showMainEditor)
+    {
+        if (!ImGui::Begin("Editor", &showMainEditor, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_AlwaysAutoResize))
         {
             ImGui::End();
             return;
         }
-
-        ImVec2 Position(0, 0);
-
-        ImGui::SetWindowPos(Position);
 
         if (ImGui::IsRootWindowOrAnyChildFocused())
             isFocusedWindow = true;
@@ -824,29 +892,6 @@ void BoneEditor::UpdateFrame()
             {
                 ImGui::TreePop();
             }
-        }
-
-        if (ImGui::BeginMenuBar())
-        {
-            if (ImGui::BeginMenu("File"))
-            {
-                ShowFileMenu();
-                ImGui::EndMenu();
-            }
-
-            if (ImGui::BeginMenu("Editor"))
-            {
-                ShowEditorMenu();
-                ImGui::EndMenu();
-            }
-
-            if (ImGui::BeginMenu("Help"))
-            {
-                ShowHelpMenu();
-                ImGui::EndMenu();
-            }
-
-            ImGui::EndMenuBar();
         }
 
         ImGui::End();

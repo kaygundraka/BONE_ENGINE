@@ -66,13 +66,27 @@ namespace BONE_GRAPHICS
 
     bool Scene::LoadContents()
     {
+        float Max = objectList.size();
+        float Cur = 0;
+        loadPerTime = 0;
+        
         for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
+        {
+            Cur++;
             (*Iter)->LoadContents();
+
+            loadPerTime = Cur / Max;
+        }
 
         IsFrameworkFlag = true;
         CompleateLoading = true;
 
         return IsFrameworkFlag;
+    }
+
+    float Scene::GetLoadPerTime()
+    {
+        return loadPerTime * 100;
     }
 
     void Scene::Render()
