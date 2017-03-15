@@ -1,24 +1,80 @@
-#include "EditorUI.h"
-#include <Common.h>
-#include <SceneManager.h>
-#include <Transform3D.h>
-#include <Camera.h>
-#include <Material.h>
-#include <TrailRenderer.h>
-#include <BillBoard.h>
-#include <SpriteBillBoard.h>
-#include <StaticMesh.h>
-#include <SkinnedMesh.h>
-#include <Collision.h>
-#include <GameObject.h>
-#include <InputManager.h>
-#include <Collision.h>
+#include "Common.h"
+#include "BoneEditor.h"
+#include "SceneManager.h"
+#include "Transform3D.h"
+#include "Camera.h"
+#include "Material.h"
+#include "TrailRenderer.h"
+#include "BillBoard.h"
+#include "SpriteBillBoard.h"
+#include "StaticMesh.h"
+#include "SkinnedMesh.h"
+#include "Collision.h"
+#include "GameObject.h"
+#include "InputManager.h"
+#include "Collision.h"
+#include "SceneInfo.h"
+#include "EditorCameraScript.h"
+
+#pragma warning (disable:4996)
 
 using namespace BONE_GRAPHICS;
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
-EditorUI::EditorUI() {
+void LogDialog::Clear() { Buf.clear(); LineOffsets.clear(); }
+
+void LogDialog::AddLog(const char* fmt, ...) IM_PRINTFARGS(2)
+{
+    int old_size = Buf.size();
+    va_list args;
+    va_start(args, fmt);
+    Buf.appendv(fmt, args);
+    va_end(args);
+    for (int new_size = Buf.size(); old_size < new_size; old_size++)
+        if (Buf[old_size] == '\n')
+            LineOffsets.push_back(old_size);
+    ScrollToBottom = true;
+}
+
+void LogDialog::Render(const char* title, bool* p_open)
+{
+    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiSetCond_FirstUseEver);
+    ImGui::Begin(title, p_open);
+    if (ImGui::Button("Clear")) Clear();
+    ImGui::SameLine();
+    bool copy = ImGui::Button("Copy");
+    ImGui::SameLine();
+    Filter.Draw("Filter", -100.0f);
+    ImGui::Separator();
+    ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+    if (copy) ImGui::LogToClipboard();
+
+    if (Filter.IsActive())
+    {
+        const char* buf_begin = Buf.begin();
+        const char* line = buf_begin;
+        for (int line_no = 0; line != NULL; line_no++)
+        {
+            const char* line_end = (line_no < LineOffsets.Size) ? buf_begin + LineOffsets[line_no] : NULL;
+            if (Filter.PassFilter(line, line_end))
+                ImGui::TextUnformatted(line, line_end);
+            line = line_end && line_end[1] ? line_end + 1 : NULL;
+        }
+    }
+    else
+    {
+        ImGui::TextUnformatted(Buf.begin());
+    }
+
+    if (ScrollToBottom)
+        ImGui::SetScrollHere(1.0f);
+    ScrollToBottom = false;
+    ImGui::EndChild();
+    ImGui::End();
+}
+
+BoneEditor::BoneEditor() {
     open = true;
     currentShowInfoObject = "";
     currentObjectName = "";
@@ -26,25 +82,79 @@ EditorUI::EditorUI() {
     showObjectInfo = false;
     childSize = 0;
     showPrefabHierarchical = false;
+    showLogWindow = false;
 }
 
-void EditorUI::ShowFileMenu()
+void BoneEditor::Run()
 {
-    if (ImGui::MenuItem("New")) 
+    bool flag = false;
+
+    RenderMgr->GetDevice()->SetRenderState(D3DRS_LIGHTING, FALSE);
+    InputMgr->SetFocusWindow(true);
+
+    std::string OpenSceneName = "";
+    bool IsNewScene = false;
+
+    do
     {
-    }
-    
-    if (ImGui::MenuItem("Open", "Ctrl+O")) 
-    {
-    }
-    
-    if (ImGui::MenuItem("Save", "Ctrl+S")) 
+        {
+            auto_ptr<SceneInfoUI> EditorTtitleUI(new SceneInfoUI);
+            SceneMgr->SetGUIScene(EditorTtitleUI.get());
+
+            auto_ptr<Scene> SceneInfo(new Scene);
+
+            SceneMgr->AddScene("InfoScene", SceneInfo.get());
+            flag = SceneMgr->StartScene("InfoScene");
+
+            OpenSceneName = EditorTtitleUI->GetSceneName();
+            IsNewScene = EditorTtitleUI->IsNewScene();
+        }
+
+        if (flag)
+        {
+            SceneMgr->SetGUIScene(this);
+
+            this->SetScriptProc(this);
+
+            auto_ptr<Scene> ViewScene(new Scene);
+
+            auto_ptr<GameObject> MainCamera(new GameObject);
+            EditorCamera* EditorCameraScript = new EditorCamera(MainCamera.get(), "EditorCameraScript");
+            MainCamera->AddComponent(EditorCameraScript);
+            ViewScene->AddObject(MainCamera.get(), "EditorCamera");
+
+            ViewScene->SetAmbientColor(1.0f, 1.0f, 1.0f, 1.0f);
+            ViewScene->SetName(OpenSceneName);
+
+            SceneMgr->AddScene(OpenSceneName, ViewScene.get());
+
+            if (!IsNewScene)
+                ViewScene->OnLoadSceneData();
+
+            flag = SceneMgr->StartScene(OpenSceneName);
+        }
+    } while (flag);
+}
+
+void BoneEditor::AddScriptList(std::string scriptName)
+{
+    scriptList.push_back(scriptName);
+}
+
+std::list<std::string> BoneEditor::GetScriptList()
+{
+    return scriptList;
+}
+
+void BoneEditor::ShowFileMenu()
+{
+    if (ImGui::MenuItem("Save", "Ctrl+S"))
     {
         SceneMgr->CurrentScene()->ClearSceneData();
 
         auto DyamicObjectList = SceneMgr->CurrentScene()->GetObjectList();
         auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
-        
+
         for each(auto var in DyamicObjectList)
         {
             if (var->GetName() != "EditorCamera")
@@ -63,32 +173,28 @@ void EditorUI::ShowFileMenu()
             }
         }
     }
-    
-    if (ImGui::MenuItem("Save As..")) 
-    {
-    }
-    
-    if (ImGui::MenuItem("Quit", "Alt+F4")) 
+
+    if (ImGui::MenuItem("Quit", "Alt+F4"))
     {
         SceneMgr->CurrentScene()->SetSceneFlag(true);
         SceneMgr->EndScene(SceneMgr->CurrentScene()->GetName());
     }
 }
 
-void EditorUI::ShowOpitionMenu()
+void BoneEditor::ShowEditorMenu()
 {
-    if (ImGui::BeginMenu("RenderMode"))
+    if (ImGui::BeginMenu("FillMode"))
     {
-        if (ImGui::MenuItem("POLYGON")) 
+        if (ImGui::MenuItem("POLYGON"))
             RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-        
-        if (ImGui::MenuItem("WIRE_FRAME")) 
+
+        if (ImGui::MenuItem("WIRE_FRAME"))
             RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
         ImGui::EndMenu();
     }
 
-    if (ImGui::MenuItem("Show/Hide Collision"))
+    if (ImGui::MenuItem("Show Collision"))
     {
         auto DyamicObjectList = SceneMgr->CurrentScene()->GetObjectList();
         auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
@@ -114,22 +220,27 @@ void EditorUI::ShowOpitionMenu()
                 sm->ShowMeshBox(EnableMeshBox);
         }
     }
-}
 
-void EditorUI::ShowHelpMenu()
-{
-    if (ImGui::BeginMenu("RenderMode"))
+    if (ImGui::MenuItem("Show Log"))
     {
-        if (ImGui::MenuItem("POLYGON")) {}
-        if (ImGui::MenuItem("WIRE_FRAME")) {}
-
-        ImGui::EndMenu();
+        if (showLogWindow)
+            showLogWindow = false;
+        else
+            showLogWindow = true;
     }
 
-    if (ImGui::MenuItem("Show Collision")) {}
+    if (ImGui::MenuItem("Play"))
+    {
+    }
 }
 
-void EditorUI::ShowObjectInfo(std::string name)
+void BoneEditor::ShowHelpMenu()
+{
+    if (ImGui::MenuItem("Info")) {}
+    ImGui::Text("Version 1.0");
+}
+
+void BoneEditor::ShowObjectInfo(std::string name)
 {
     if (ImGui::CollapsingHeader("[GameObject Info]", ImGuiTreeNodeFlags_DefaultOpen))
     {
@@ -256,12 +367,12 @@ void EditorUI::ShowObjectInfo(std::string name)
     }
 }
 
-void EditorUI::ShowGameObjectTree(std::string treeName)
+void BoneEditor::ShowGameObjectTree(std::string treeName)
 {
     if (ImGui::TreeNode(treeName.c_str()))
     {
         auto parent = SceneMgr->CurrentScene()->FindObjectByName(treeName);
-        
+
         if (ImGui::TreeNode("Show Infos"))
         {
             ShowObjectInfo(treeName);
@@ -296,7 +407,7 @@ void EditorUI::ShowGameObjectTree(std::string treeName)
                     char temp[10] = "";
                     itoa(childSize, temp, 10);
                     ChildName += temp;
-                
+
                     Child->SetPrfabName(ChildName);
                     Child->SetName(ChildName);
                     Child->SetPriority(1);
@@ -326,7 +437,7 @@ void EditorUI::ShowGameObjectTree(std::string treeName)
     }
 }
 
-void EditorUI::AllChildCheck(GameObject* parent)
+void BoneEditor::AllChildCheck(GameObject* parent)
 {
     auto childs = parent->GetChileds();
 
@@ -340,7 +451,7 @@ void EditorUI::AllChildCheck(GameObject* parent)
     }
 }
 
-void EditorUI::UpdateFrame()
+void BoneEditor::UpdateFrame()
 {
     bool isFocusedWindow = false;
 
@@ -351,8 +462,7 @@ void EditorUI::UpdateFrame()
             return;
         }
 
-        ImVec2 Position(-ImGui::GetWindowSize().x, 0);
-        Position.x += RenderMgr->GetWidth();
+        ImVec2 Position(0, 0);
 
         ImGui::SetWindowPos(Position);
 
@@ -369,7 +479,7 @@ void EditorUI::UpdateFrame()
         {
             static bool FindOption;
             ImGui::Checkbox("Enable Find Option", &FindOption);
-            
+
             std::list<std::string> FindObjectName;
 
             if (FindOption)
@@ -448,7 +558,7 @@ void EditorUI::UpdateFrame()
                     if (ImGui::TreeNode("Prefab"))
                     {
                         auto Prefabs = ResourceMgr->ExistFiles(".\\Engine\\Prefabs\\*");
-                        
+
                         const int Size = Prefabs.size();
                         char** ComboBoxItems = new char*[Size];
 
@@ -530,7 +640,7 @@ void EditorUI::UpdateFrame()
                     if (ImGui::SmallButton("Focus On"))
                     {
                         auto FocusObject = SceneMgr->CurrentScene()->FindObjectByName((*iter)->GetName().c_str());
-                        
+
                         if (FocusObject != nullptr)
                         {
                             auto Position = ((Transform3D*)FocusObject->transform3D)->GetPosition();
@@ -565,7 +675,7 @@ void EditorUI::UpdateFrame()
                 static bool NewPrefabs = false;
                 if (NewPrefabs)
                     ImGui::InputText("Name", PrefabName, 64);
-                
+
                 ImGui::Checkbox("New Prefab", &NewPrefabs);
                 ImGui::SameLine();
 
@@ -619,7 +729,7 @@ void EditorUI::UpdateFrame()
                 ImGui::TreePop();
             }
         }
-        
+
         if (ImGui::CollapsingHeader("[Environment Setting]", ImGuiTreeNodeFlags_DefaultOpen))
         {
             if (ImGui::TreeNode("SkyBox"))
@@ -641,7 +751,7 @@ void EditorUI::UpdateFrame()
                 auto OriAmbient = SceneMgr->CurrentScene()->GetAmbientColor();
 
                 static float Ambient[4] = { OriAmbient.r, OriAmbient.g, OriAmbient.b, OriAmbient.a };
-                
+
                 ImGui::InputFloat3("Ambient", Ambient);
 
                 SceneMgr->CurrentScene()->SetAmbientColor(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
@@ -664,6 +774,52 @@ void EditorUI::UpdateFrame()
                 ImGui::TreePop();
             }
 
+            if (ImGui::TreeNode("Fog"))
+            {
+                auto CurScene = SceneMgr->CurrentScene();
+                bool EnableFog = CurScene->OnFog();
+                ImGui::Checkbox("On Fog", &EnableFog);
+
+                static ImVec4 FogColor(
+                    CurScene->GetFogColor().r * 255.0f,
+                    CurScene->GetFogColor().g * 255.0f,
+                    CurScene->GetFogColor().b * 255.0f,
+                    1
+                );
+
+                D3DXCOLOR color;
+                color.r = FogColor.x;
+                color.g = FogColor.y;
+                color.b = FogColor.z;
+                color.a = 1.0f;
+
+                float Start = CurScene->GetFogStart();
+                float End = CurScene->GetFogEnd();
+                float Density = CurScene->GetFogDensity();
+
+                char* ComboBoxItems[] = {
+                    "D3DFOG_NONE",
+                    "D3DFOG_EXP",
+                    "D3DFOG_EXP2",
+                    "D3DFOG_LINEAR"
+                };
+
+                static int CurItem = CurScene->GetFogMode();
+
+                if (EnableFog)
+                {
+                    ImGui::ColorEdit3("Color", (float*)&FogColor);
+                    ImGui::DragFloat("Start", &Start, 0.2f, 0.0f, 1000.0f);
+                    ImGui::DragFloat("End", &End, 0.2f, Start, 1000.0f);
+                    ImGui::DragFloat("Density", &Density, 0.2f, 0.0f, 1000.0f);
+                    ImGui::Combo("Prefabs", &CurItem, ComboBoxItems, 4);
+                }
+
+                CurScene->SetFogStatus(EnableFog, color, Start, End, Density, CurItem);
+
+                ImGui::TreePop();
+            }
+
             if (ImGui::TreeNode("Terrain"))
             {
                 ImGui::TreePop();
@@ -678,13 +834,17 @@ void EditorUI::UpdateFrame()
                 ImGui::EndMenu();
             }
 
-            if (ImGui::BeginMenu("Option"))
+            if (ImGui::BeginMenu("Editor"))
             {
-                ShowOpitionMenu();
+                ShowEditorMenu();
                 ImGui::EndMenu();
             }
 
-            if (ImGui::MenuItem("Help")) {}
+            if (ImGui::BeginMenu("Help"))
+            {
+                ShowHelpMenu();
+                ImGui::EndMenu();
+            }
 
             ImGui::EndMenuBar();
         }
@@ -705,7 +865,7 @@ void EditorUI::UpdateFrame()
 
         ImGui::End();
     }
-    
+
     if (showAddComponent)
     {
         std::string WindowName = "Add Component : " + currentShowInfoObject;
@@ -714,7 +874,7 @@ void EditorUI::UpdateFrame()
         if (ImGui::IsRootWindowOrAnyChildFocused())
             isFocusedWindow = true;
 
-        const char* listbox_items[] = { "StaticMesh", "Collision", "SkinnedMesh", "Camera", "Material", "TrailRenderer", "BillBoard", "SpriteBillBoard" };
+        const char* listbox_items[] = { "StaticMesh", "Collision", "Script", "SkinnedMesh", "Camera", "Material", "TrailRenderer", "BillBoard", "SpriteBillBoard" };
         static int listbox_item_current = 0;
         ImGui::ListBox("Component\nTypes\n", &listbox_item_current, listbox_items, IM_ARRAYSIZE(listbox_items), 4);
 
@@ -730,13 +890,13 @@ void EditorUI::UpdateFrame()
             for each(auto item in Meshes)
             {
                 ComboBoxItems[i] = new char[64];
-                strcpy(ComboBoxItems[i], Meshes[i].c_str());
+                strcpy(ComboBoxItems[i], item.c_str());
                 i++;
             }
 
             static int CurItem = 0;
             ImGui::Combo("Meshes", &CurItem, ComboBoxItems, Size);
-            
+
             if (ImGui::Button("Add Component"))
             {
                 std::string fullpath = "";
@@ -757,21 +917,49 @@ void EditorUI::UpdateFrame()
         case 1:
         {
             char* ComboBoxItems[] = { "AABB", "SPHERE", "OBB" };
-            
+
             static int CurItem = 0;
             ImGui::Combo("Meshes", &CurItem, ComboBoxItems, 3);
 
             if (ImGui::Button("Add Component"))
             {
                 auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
-                
+
                 Collision* Coll = new Collision(Object);
                 Coll->ComputeBoundingBox(ResourceMgr->LoadMesh(((StaticMesh*)Object->GetComponent("StaticMesh"))->GetFileAddress())->mesh);
                 Coll->LoadContent();
-                
+
                 Object->AddComponent(Coll);
 
                 showAddComponent = false;
+            }
+        }
+        break;
+
+        case 2:
+        {
+            const int Size = scriptList.size();
+            char** ComboBoxItems = new char*[Size];
+
+            int i = 0;
+            for each(auto item in scriptList)
+            {
+                ComboBoxItems[i] = new char[64];
+                strcpy(ComboBoxItems[i], item.c_str());
+                i++;
+            }
+
+            static int CurItem = 0;
+            ImGui::Combo("Scripts", &CurItem, ComboBoxItems, Size);
+
+            if (ImGui::Button("Add Component"))
+            {
+                auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+
+                if (AddScript(Object, ComboBoxItems[CurItem]))
+                    showAddComponent = false;
+                else
+                    showAddComponent = true;
             }
         }
         break;
@@ -780,6 +968,9 @@ void EditorUI::UpdateFrame()
         ImGui::End();
     }
 
+    if (showLogWindow)
+        logDialog.Render("Log", &showLogWindow);
+    
     if (isFocusedWindow)
         InputMgr->SetFocusWindow(false);
     else

@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{5FE577E8-16BA-4C37-9E74-DC19A30BC289}</ProjectGuid>
+    <ProjectGuid>{62F4B169-623B-4F83-9174-88C8B76EEB09}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Prefab_Editor</RootNamespace>
+    <RootNamespace>BONE_GAME</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -150,15 +150,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CameraObject.cpp" />
-    <ClCompile Include="EditorUI.cpp" />
-    <ClCompile Include="SceneInfoUI.cpp" />
     <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="CameraObject.h" />
-    <ClInclude Include="EditorUI.h" />
-    <ClInclude Include="SceneInfoUI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

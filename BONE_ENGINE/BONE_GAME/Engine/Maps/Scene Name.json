@@ -1,0 +1,42 @@
+{
+    "PointLight": {
+        "IsChild": false,
+        "Position": [
+            0.0,
+            200.0,
+            0.0
+        ],
+        "PrefabName": "PointLight",
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "TreeDepth": 0
+    },
+    "TestPrefab": {
+        "IsChild": false,
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "PrefabName": "TestPrefab",
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "TreeDepth": 0
+    }
+}

@@ -25,7 +25,15 @@ namespace BONE_GRAPHICS
         
         RGBA globalAmbient;
         std::string name;
-         
+
+        bool enableFog;
+        float fogStart;
+        float fogEnd;
+        float fogDensity;
+        int fogMode;
+
+        D3DXCOLOR fogColor;
+ 
 	public:
 		bool InitializeMembers();
 		void Reference();
@@ -79,9 +87,17 @@ namespace BONE_GRAPHICS
 
         void AddPointLight(PointLight* object);
         void RemovePointLight(PointLight* object);
-        std::list<PointLight*>  GetPointLights();
+        std::list<PointLight*> GetPointLights();
 
         std::list<GameObject*> GetObjectList();
         std::list<GameObject*> GetStaticObjectList();
+
+        void SetFogStatus(bool on, D3DXCOLOR fogColor, float fogStart, float fogEnd, float fogDensity, int mode);
+        bool OnFog();
+        float GetFogStart();
+        float GetFogEnd();
+        float GetFogDensity();
+        int GetFogMode();
+        D3DXCOLOR GetFogColor();
 	};
 }

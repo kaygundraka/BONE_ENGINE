@@ -49,7 +49,7 @@ namespace BONE_GRAPHICS
         bool CheckRayInMesh(RAY* ray, const D3DXMATRIX& matWorld, LPD3DXMESH mesh, float* dist = nullptr);
         bool CheckRayInTriangle(RAY* ray, const D3DXMATRIX& matWorld, D3DXVECTOR3 p0, D3DXVECTOR3 p1, D3DXVECTOR3 p2, float* u, float* v, float* dist = nullptr);
 
-        void SetupPixelFog(int color, int mode);
+        void SetupPixelFog(bool on, D3DXCOLOR color, float start = 0.5f, float end = 0.8f, float density = 0.66f, int mode = D3DFOG_LINEAR);
 
         void DrawLine(D3DXVECTOR3 start, D3DXVECTOR3 end, D3DXCOLOR color);
         bool DrawMeshBox(LPD3DXMESH mesh, D3DXVECTOR3 pos, D3DXCOLOR color);

@@ -130,8 +130,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BillBoard.h" />
+    <ClInclude Include="BoneEditor.h" />
     <ClInclude Include="BoneHierarchyLoader.h" />
     <ClInclude Include="ConfigManager.h" />
+    <ClInclude Include="EditorCameraScript.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imgui_impl_dx9.h" />
@@ -141,6 +143,7 @@
     <ClInclude Include="PhyscisManager.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="RenderManager.h" />
+    <ClInclude Include="SceneInfo.h" />
     <ClInclude Include="ScreenButton.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
@@ -202,6 +205,7 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Script.h" />
     <ClInclude Include="SkinnedMesh.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="ScreenSprite.h" />
@@ -226,11 +230,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BillBoard.cpp" />
+    <ClCompile Include="BoneEditor.cpp" />
     <ClCompile Include="BoneHierarchyLoader.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ConfigManager.cpp" />
+    <ClCompile Include="EditorCameraScript.cpp" />
     <ClCompile Include="etuButton.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -289,6 +295,7 @@
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="RenderManager.cpp" />
+    <ClCompile Include="SceneInfo.cpp" />
     <ClCompile Include="ScreenButton.cpp" />
     <ClCompile Include="ScreenImage.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -298,6 +305,7 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Script.cpp" />
     <ClCompile Include="SkinnedMesh.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="ScreenSprite.cpp" />

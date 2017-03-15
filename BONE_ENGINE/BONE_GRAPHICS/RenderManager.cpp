@@ -350,27 +350,23 @@ namespace BONE_GRAPHICS
         }
     }
 
-    void RenderManager::SetupPixelFog(int color, int mode)
+    void RenderManager::SetupPixelFog(bool on, D3DXCOLOR color, float start, float end, float density, int mode)
     {
         ThreadSync sync;
 
-        float Start = 0.5f;
-        float End = 0.8f;
-        float Density = 0.66f;
-
-        D3D_DEVICE->SetRenderState(D3DRS_FOGENABLE, TRUE);
+        D3D_DEVICE->SetRenderState(D3DRS_FOGENABLE, on);
         D3D_DEVICE->SetRenderState(D3DRS_FOGCOLOR, color);
 
         if (mode == D3DFOG_LINEAR)
         {
             D3D_DEVICE->SetRenderState(D3DRS_FOGTABLEMODE, mode);
-            D3D_DEVICE->SetRenderState(D3DRS_FOGSTART, *(int *)(&Start));
-            D3D_DEVICE->SetRenderState(D3DRS_FOGEND, *(int *)(&End));
+            D3D_DEVICE->SetRenderState(D3DRS_FOGSTART, *(int *)(&start));
+            D3D_DEVICE->SetRenderState(D3DRS_FOGEND, *(int *)(&end));
         }
         else
         {
             D3D_DEVICE->SetRenderState(D3DRS_FOGTABLEMODE, mode);
-            D3D_DEVICE->SetRenderState(D3DRS_FOGDENSITY, *(int *)(&Density));
+            D3D_DEVICE->SetRenderState(D3DRS_FOGDENSITY, *(int *)(&density));
         }
     }
 

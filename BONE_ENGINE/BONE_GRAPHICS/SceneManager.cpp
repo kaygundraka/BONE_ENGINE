@@ -161,6 +161,7 @@ namespace BONE_GRAPHICS
 
                     if (RenderMgr->UseImGUI())
                     {
+                        RenderMgr->GetDevice()->SetRenderState(D3DRS_FOGENABLE, FALSE);
                         RenderMgr->GetDevice()->SetRenderState(D3DRS_ZENABLE, false);
                         RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
                         RenderMgr->GetDevice()->SetRenderState(D3DRS_SCISSORTESTENABLE, false);
@@ -173,6 +174,7 @@ namespace BONE_GRAPHICS
                         RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, temp);
                         RenderMgr->GetDevice()->SetRenderState(D3DRS_ZENABLE, true);
                         RenderMgr->GetDevice()->SetRenderState(D3DRS_SCISSORTESTENABLE, true);
+                        RenderMgr->GetDevice()->SetRenderState(D3DRS_FOGENABLE, sceneList[name]->OnFog());
                     }
 
 					RenderMgr->GetDevice()->EndScene();

@@ -3,6 +3,11 @@
 
 namespace BONE_GRAPHICS
 {
+    Component::Component()
+    {
+        isScript = false;
+    }
+
 	void Component::SetTypeName(std::string typeName)
 	{
 		this->typeName = typeName;
@@ -17,4 +22,9 @@ namespace BONE_GRAPHICS
 	{
 
 	}
+
+    bool Component::IsScript()
+    {
+        return isScript;
+    }
 }

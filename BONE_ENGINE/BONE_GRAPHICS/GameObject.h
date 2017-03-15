@@ -9,7 +9,10 @@ namespace BONE_GRAPHICS
 		std::string tag;
         std::string name;
         std::string prefab;
+
 		std::vector<Component*> components;
+
+        std::list<Component*> scripts;
 
 		GameObject* parent;
 
@@ -60,23 +63,23 @@ namespace BONE_GRAPHICS
         void SaveInMaps();
         void LoadPrefab();
         void SavePrefab();
-
+        
 		Component* GetComponent(std::string typeName);
         std::vector<Component*> GetComponents();
 		bool AddComponent(Component* component);
 
 		void LoadContents();
 
-		virtual void Awake();
-		virtual void Init();
-		virtual void Reference();
-		virtual void Update();
-		virtual void LateUpdate();
-		virtual void LateRender();
+		void Awake();
+		void Init();
+		void Reference();
+		void Update();
+		void LateUpdate();
+		void LateRender();
         
-        virtual void OnCollisionEnter(GameObject* otherObject);
-        virtual void OnCollisionStay(GameObject* otherObject);
-        virtual void OnCollisionLeave(GameObject* otherObject);
+        void OnCollisionEnter(GameObject* otherObject);
+        void OnCollisionStay(GameObject* otherObject);
+        void OnCollisionLeave(GameObject* otherObject);
 
 		void Render();
 	};

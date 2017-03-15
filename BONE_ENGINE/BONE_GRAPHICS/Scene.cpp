@@ -11,186 +11,194 @@
 
 namespace BONE_GRAPHICS
 {
-	Scene::Scene()
-	{
-		IsFrameworkFlag = false;
-		cameraIndex = 0;
-		CompleateLoading = false;
+    Scene::Scene()
+    {
+        IsFrameworkFlag = false;
+        cameraIndex = 0;
+        CompleateLoading = false;
         onLoadScene = false;
 
         globalAmbient.r = 1.0f;
         globalAmbient.g = 1.0f;
         globalAmbient.b = 1.0f;
         globalAmbient.a = 1.0f;
-	}
 
-	Scene::~Scene()
-	{
-		for (auto Iter = objectList.begin(); Iter != objectList.end();)
-		{
-			GameObject* Temp = *Iter;
+        enableFog = false;
+        fogStart = 50.0f;
+        fogEnd = 100.0f;
+        fogDensity = 1.0f;
+        fogMode = D3DFOG_LINEAR;
 
-			if (Temp == NULL)
-			{
-				Iter = objectList.erase(Iter);
-				delete Temp;
-			}
-			else
-				Iter++;
-		}
-	}
-
-	bool Scene::SetLoading(std::string imageAddress, int width, int height)
-	{
-		RECT rect = { 0, 0, width, height };
-		return image_LoadingBackground.SetInformaition("image_LoadingBackground", imageAddress, D3DXVECTOR3(0, 0, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), &rect, NULL);
-	}
-
-	bool Scene::InitializeMembers()
-	{
-		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-			(*Iter)->Init();
-
-		IsFrameworkFlag = true;
-
-		return IsFrameworkFlag;
-	}
-
-	bool Scene::LoadContents()
-	{
-		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-			(*Iter)->LoadContents();
-		
-		IsFrameworkFlag = true;
-		CompleateLoading = true;
-
-		return IsFrameworkFlag;
-	}
-
-	void Scene::Render()
-	{
-		for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
-			if ((*Iter)->GetActive())
-				(*Iter)->Render();
-
-		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-			if ((*Iter)->GetActive())
-				(*Iter)->Render();
-	}
-
-	void Scene::LateRender()
-	{
-		for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
-			if ((*Iter)->GetActive())
-				(*Iter)->LateRender();
-
-		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-			if ((*Iter)->GetActive())
-				(*Iter)->LateRender();
-	}
-
-	void Scene::SetSkybox(std::string dirName, std::string fileType)
-	{
-		char Path[MAX_PATH];
-		strcpy_s(Path, dirName.c_str());
-		skybox.SetSkybox(Path, fileType);
-	}
-
-	GameObject* Scene::GetCurrentCamera()
-	{
-		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-			if (((Camera*)(*Iter)->GetComponent("Camera")) != NULL)
-				if (((Camera*)(*Iter)->GetComponent("Camera"))->GetID() == SceneMgr->CurrentScene()->GetCameraIndex())
-					return (*Iter);
+        fogColor = COLOR::YELLOW;
     }
 
-	void Scene::Reference()
-	{
-		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-			(*Iter)->Reference();
-	}
-	
-	void Scene::Update()
-	{
-		skybox.Render(GetCurrentCamera());
+    Scene::~Scene()
+    {
+        for (auto Iter = objectList.begin(); Iter != objectList.end();)
+        {
+            GameObject* Temp = *Iter;
 
-		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-			if ((*Iter)->GetActive())
-				(*Iter)->Update();
-	}
+            if (Temp == NULL)
+            {
+                Iter = objectList.erase(Iter);
+                delete Temp;
+            }
+            else
+                Iter++;
+        }
+    }
 
-	void Scene::LateUpdate()
-	{
-		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-		    if ((*Iter)->GetActive())
-				(*Iter)->LateUpdate();
-	}
+    bool Scene::SetLoading(std::string imageAddress, int width, int height)
+    {
+        RECT rect = { 0, 0, width, height };
+        return image_LoadingBackground.SetInformaition("image_LoadingBackground", imageAddress, D3DXVECTOR3(0, 0, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), &rect, NULL);
+    }
 
-	void Scene::AddObject(GameObject* object, std::string name)
-	{
+    bool Scene::InitializeMembers()
+    {
+        for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
+            (*Iter)->Init();
+
+        IsFrameworkFlag = true;
+
+        return IsFrameworkFlag;
+    }
+
+    bool Scene::LoadContents()
+    {
+        for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
+            (*Iter)->LoadContents();
+
+        IsFrameworkFlag = true;
+        CompleateLoading = true;
+
+        return IsFrameworkFlag;
+    }
+
+    void Scene::Render()
+    {
+        for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
+            if ((*Iter)->GetActive())
+                (*Iter)->Render();
+
+        for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
+            if ((*Iter)->GetActive())
+                (*Iter)->Render();
+    }
+
+    void Scene::LateRender()
+    {
+        for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
+            if ((*Iter)->GetActive())
+                (*Iter)->LateRender();
+
+        for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
+            if ((*Iter)->GetActive())
+                (*Iter)->LateRender();
+    }
+
+    void Scene::SetSkybox(std::string dirName, std::string fileType)
+    {
+        char Path[MAX_PATH];
+        strcpy_s(Path, dirName.c_str());
+        skybox.SetSkybox(Path, fileType);
+    }
+
+    GameObject* Scene::GetCurrentCamera()
+    {
+        for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
+            if (((Camera*)(*Iter)->GetComponent("Camera")) != NULL)
+                if (((Camera*)(*Iter)->GetComponent("Camera"))->GetID() == SceneMgr->CurrentScene()->GetCameraIndex())
+                    return (*Iter);
+    }
+
+    void Scene::Reference()
+    {
+        for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
+            (*Iter)->Reference();
+    }
+
+    void Scene::Update()
+    {
+        skybox.Render(GetCurrentCamera());
+
+        for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
+            if ((*Iter)->GetActive())
+                (*Iter)->Update();
+    }
+
+    void Scene::LateUpdate()
+    {
+        for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
+            if ((*Iter)->GetActive())
+                (*Iter)->LateUpdate();
+    }
+
+    void Scene::AddObject(GameObject* object, std::string name)
+    {
         object->SetName(name);
 
-		if (object->GetStatic())
-			staticObjectList.push_back(object);
-		else
-			objectList.push_back(object);
+        if (object->GetStatic())
+            staticObjectList.push_back(object);
+        else
+            objectList.push_back(object);
 
-		if (CompleateLoading)
-		{
-			object->Init();
-			object->Reference();
-			object->LoadContents();
-		}
-	}
+        if (CompleateLoading)
+        {
+            object->Init();
+            object->Reference();
+            object->LoadContents();
+        }
+    }
 
-	class ObjSortClass {
-	public :
-		bool operator() (GameObject* left, GameObject* right) const {
-			return left->GetPriority() < right->GetPriority();
-		}
-	};
+    class ObjSortClass {
+    public:
+        bool operator() (GameObject* left, GameObject* right) const {
+            return left->GetPriority() < right->GetPriority();
+        }
+    };
 
-	void Scene::SortPriorityObject()
-	{
-		objectList.sort(ObjSortClass());
-		staticObjectList.sort(ObjSortClass());
-	}
+    void Scene::SortPriorityObject()
+    {
+        objectList.sort(ObjSortClass());
+        staticObjectList.sort(ObjSortClass());
+    }
 
-	void Scene::AddObjects(GameObject** objects, int size)
-	{
-		for (int i = 0; i < size; i++)
-		{
-			if (objects[i]->GetStatic())
-				staticObjectList.push_back(objects[i]);
-			else
-				objectList.push_back(objects[i]);
+    void Scene::AddObjects(GameObject** objects, int size)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            if (objects[i]->GetStatic())
+                staticObjectList.push_back(objects[i]);
+            else
+                objectList.push_back(objects[i]);
 
-			if (CompleateLoading)
-			{
-				objects[i]->Init();
-				objects[i]->Reference();
-				objects[i]->LoadContents();
-			}
-		}
-	}
+            if (CompleateLoading)
+            {
+                objects[i]->Init();
+                objects[i]->Reference();
+                objects[i]->LoadContents();
+            }
+        }
+    }
 
-	bool Scene::EndLoading()
-	{
-		return CompleateLoading;
-	}
+    bool Scene::EndLoading()
+    {
+        return CompleateLoading;
+    }
 
-	GameObject* Scene::FindObjectByTag(std::string tag)
-	{
-		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-			if (tag == (*Iter)->Tag())
-				return (*Iter);
+    GameObject* Scene::FindObjectByTag(std::string tag)
+    {
+        for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
+            if (tag == (*Iter)->Tag())
+                return (*Iter);
 
-		for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
-			if (tag == (*Iter)->Tag())
-				return (*Iter);
+        for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
+            if (tag == (*Iter)->Tag())
+                return (*Iter);
 
         return nullptr;
-	}
+    }
 
     GameObject* Scene::FindObjectByName(std::string name)
     {
@@ -205,82 +213,82 @@ namespace BONE_GRAPHICS
         return nullptr;
     }
 
-	std::tuple<GameObject**, int> Scene::FindObjectsByTag(std::string tag)
-	{
-		std::tuple<GameObject**, int> Result;
-		
-		GameObject** ObjArray = new GameObject*[objectList.size() + staticObjectList.size()];
-		int Size = 0;
+    std::tuple<GameObject**, int> Scene::FindObjectsByTag(std::string tag)
+    {
+        std::tuple<GameObject**, int> Result;
 
-		for (int i = 0; i < objectList.size() + staticObjectList.size(); i++)
-			ObjArray[i] = NULL;
+        GameObject** ObjArray = new GameObject*[objectList.size() + staticObjectList.size()];
+        int Size = 0;
 
-		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-			if (tag == (*Iter)->Tag())
-				ObjArray[Size++] = (*Iter);
-		
-		for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
-			if (tag == (*Iter)->Tag())
-			    ObjArray[Size++] = (*Iter);
-	
-		std::get<0>(Result) = ObjArray;
-		std::get<1>(Result) = Size;
+        for (int i = 0; i < objectList.size() + staticObjectList.size(); i++)
+            ObjArray[i] = NULL;
 
-		return Result;
-	}
+        for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
+            if (tag == (*Iter)->Tag())
+                ObjArray[Size++] = (*Iter);
 
-	bool Scene::GetSceneFlag()
-	{
-		return IsFrameworkFlag;
-	}
+        for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
+            if (tag == (*Iter)->Tag())
+                ObjArray[Size++] = (*Iter);
 
-	void Scene::Destroy(GameObject* gameObject)
-	{
-		for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-		{
-			if (gameObject == (*Iter))
-			{
-				objectList.remove(gameObject);
-				break;
-			}
-		}
+        std::get<0>(Result) = ObjArray;
+        std::get<1>(Result) = Size;
 
-		for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
-		{
-			if (gameObject == (*Iter))
-			{
-				objectList.remove(gameObject);
-				break;
-			}
-		}
+        return Result;
+    }
 
-		delete gameObject;
-	}
+    bool Scene::GetSceneFlag()
+    {
+        return IsFrameworkFlag;
+    }
 
-	void Scene::SetCamera(int ID)
-	{
-	}
-	
-	void Scene::SetSceneFlag(bool _flag)
-	{
-		IsFrameworkFlag = _flag;
-	}
+    void Scene::Destroy(GameObject* gameObject)
+    {
+        for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
+        {
+            if (gameObject == (*Iter))
+            {
+                objectList.remove(gameObject);
+                break;
+            }
+        }
 
-	void Scene::SetCameraIndex(int _index)
-	{
-		cameraIndex = _index;
-	}
-	
-	int Scene::GetCameraIndex()
-	{
-		return cameraIndex;
-	}
+        for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
+        {
+            if (gameObject == (*Iter))
+            {
+                objectList.remove(gameObject);
+                break;
+            }
+        }
+
+        delete gameObject;
+    }
+
+    void Scene::SetCamera(int ID)
+    {
+    }
+
+    void Scene::SetSceneFlag(bool _flag)
+    {
+        IsFrameworkFlag = _flag;
+    }
+
+    void Scene::SetCameraIndex(int _index)
+    {
+        cameraIndex = _index;
+    }
+
+    int Scene::GetCameraIndex()
+    {
+        return cameraIndex;
+    }
 
     void Scene::SetName(std::string name)
     {
         this->name = name;
     }
-    
+
     std::string Scene::GetName()
     {
         return name;
@@ -322,7 +330,7 @@ namespace BONE_GRAPHICS
                 if (it.key() == "PointLight")
                 {
                     PointLight* Object = new PointLight();
-                    
+
                     Object->SetRadius(200);
 
                     Object->SetName(it.key());
@@ -361,7 +369,7 @@ namespace BONE_GRAPHICS
 
                     Object->SetPrfabName(it->find("PrefabName").value().get<std::string>());
                     Object->LoadPrefab();
-                    
+
                     this->AddObject(Object, it.key());
 
                     auto Position = it->find("Position").value().get<std::vector<float>>();
@@ -378,7 +386,7 @@ namespace BONE_GRAPHICS
             {
                 Object->SetPrfabName(it->find("PrefabName").value().get<std::string>());
                 Object->LoadPrefab();
-            
+
                 auto Position = it->find("Position").value().get<std::vector<float>>();
                 ((Transform3D*)Object->GetComponent("Transform3D"))->SetPosition(Position[0], Position[1], Position[2]);
 
@@ -400,12 +408,12 @@ namespace BONE_GRAPHICS
         globalAmbient.b = b;
         globalAmbient.a = a;
     }
-    
+
     void Scene::SetAmbientColor(RGBA color)
     {
         globalAmbient = color;
     }
-    
+
     RGBA Scene::GetAmbientColor()
     {
         return globalAmbient;
@@ -442,9 +450,51 @@ namespace BONE_GRAPHICS
     {
         return objectList;
     }
-    
+
     std::list<GameObject*> Scene::GetStaticObjectList()
     {
         return staticObjectList;
+    }
+
+    void Scene::SetFogStatus(bool on, D3DXCOLOR color, float fogStart, float fogEnd, float fogDensity, int mode)
+    {
+        this->enableFog = on;
+        this->fogStart = fogStart;
+        this->fogEnd = fogEnd;
+        this->fogMode = mode;
+        this->fogDensity = fogDensity;
+        this->fogColor = color;
+
+        RenderMgr->SetupPixelFog(on, color, fogStart, fogEnd, fogDensity, mode);
+    }
+    
+    bool Scene::OnFog()
+    {
+        return enableFog;
+    }
+
+    float Scene::GetFogDensity()
+    {
+        return fogDensity;
+    }
+    
+    float Scene::GetFogStart()
+    {
+        return fogStart;
+    }
+
+    float Scene::GetFogEnd()
+    {
+        return fogEnd;
+    }
+    
+    int Scene::GetFogMode()
+    {
+        return fogMode;
+    }
+
+    D3DXCOLOR Scene::GetFogColor()
+    {
+        return fogColor;
     }
 }

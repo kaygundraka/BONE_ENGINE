@@ -2,6 +2,7 @@
 #include "ISingleton.h"
 #include "Common.h"
 #include "Scene.h"
+#include "SceneManager.h"
 
 namespace BONE_GRAPHICS 
 {
@@ -26,7 +27,7 @@ namespace BONE_GRAPHICS
 
         D3DXCOLOR color;
 
-        GUI_Scene* guiScene;
+        GUI_Scene* guiScene;        
 
 	public:
 		void InitializeMembers();

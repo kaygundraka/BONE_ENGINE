@@ -16,6 +16,7 @@
 #include "Material.h"
 #include "PointLight.h"
 #include "Collision.h"
+#include "Script.h"
 
 namespace BONE_GRAPHICS
 {
@@ -42,6 +43,7 @@ namespace BONE_GRAPHICS
         {
             Component* Temp = (*Iter);
             Iter = components.erase(Iter);
+
             delete Temp;
         }
     }
@@ -54,11 +56,6 @@ namespace BONE_GRAPHICS
 	bool GameObject::GetStatic()
 	{
 		return isStatic;
-	}
-
-	void GameObject::Awake()
-	{
-
 	}
 
 	void GameObject::SetActive(bool isActive)
@@ -80,10 +77,6 @@ namespace BONE_GRAPHICS
 	bool GameObject::GetActive()
 	{
 		return isActive;
-	}
-
-	void GameObject::Init()
-	{
 	}
 
 	void GameObject::SetPriority(int index)
@@ -141,6 +134,9 @@ namespace BONE_GRAPHICS
             transform3D = (Transform3D*)component;
         else if (component->GetTypeName() == "Transform2D")
             transform2D = (Transform2D*)component;
+
+        if (component->IsScript())
+            scripts.push_back(component);
 
 		components.push_back(component);
 
@@ -648,38 +644,57 @@ namespace BONE_GRAPHICS
         return prefab;
     }
 
+    void GameObject::Init()
+    {
+        for each(auto var in scripts)
+            ((Script*)var)->Init();
+    }
+
+    void GameObject::Awake()
+    {
+        for each(auto var in scripts)
+            ((Script*)var)->Awake();
+    }
+
 	void GameObject::Reference()
 	{
-		// 비어있음
+        for each(auto var in scripts)
+            ((Script*)var)->Reference();
 	}
 	
 	void GameObject::Update()
 	{
-		// 비어있음
+        for each(auto var in scripts)
+            ((Script*)var)->Update();
 	}
 	
 	void GameObject::LateUpdate()
 	{
-		// 비어있음
-	}
+        for each(auto var in scripts)
+            ((Script*)var)->LateUpdate();
+    }
 
 	void GameObject::LateRender()
 	{
-		// 비어있음
-	}
+        for each(auto var in scripts)
+            ((Script*)var)->LateRender();
+    }
 
     void GameObject::OnCollisionEnter(GameObject* otherObject)
     {
-
+        for each(auto var in scripts)
+            ((Script*)var)->OnCollisionEnter(otherObject);
     }
 
     void GameObject::OnCollisionStay(GameObject* otherObject)
     {
-
+        for each(auto var in scripts)
+            ((Script*)var)->OnCollisionStay(otherObject);
     }
     
     void GameObject::OnCollisionLeave(GameObject* otherObject)
     {
-
+        for each(auto var in scripts)
+            ((Script*)var)->OnCollisionLeave(otherObject);
     }
 }

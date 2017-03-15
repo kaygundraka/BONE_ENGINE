@@ -9,91 +9,106 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="소스 파일\Management">
+    <Filter Include="소스 파일\Editor">
+      <UniqueIdentifier>{13a8527a-a54a-42f2-a802-39fbc4941e53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\Script">
+      <UniqueIdentifier>{50e66d12-5796-4938-bd69-a573893c7ff2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core">
+      <UniqueIdentifier>{1c178fde-a387-4d85-a5d7-8d76aa336177}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\Management">
       <UniqueIdentifier>{cbc9803e-2339-4641-8744-2e4a4c9600f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\GameObject">
-      <UniqueIdentifier>{34124952-3ed1-40dc-a74d-fc5b9edfba21}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GameObject\Components">
-      <UniqueIdentifier>{8d2f80d3-c094-4c96-b910-6f37acd1de88}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GameObject\GUI">
-      <UniqueIdentifier>{22fb4805-e033-4430-be9b-084d31cde582}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GameObject\Components\Camera">
-      <UniqueIdentifier>{4b456b58-9d02-4836-ac14-763d91bca387}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GameObject\Components\Effect">
-      <UniqueIdentifier>{5d0a0808-1470-4c2d-9a85-2519b3fea3e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GameObject\Components\Environment">
-      <UniqueIdentifier>{3e2be8a6-bc92-43b3-817a-587ad65c469f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GameObject\Components\Mesh">
-      <UniqueIdentifier>{76d3d0c1-2855-4661-b42e-cfa855aeed8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GameObject\Components\Transform">
-      <UniqueIdentifier>{75d7c8e2-b278-488c-b8ff-4054f6e3a576}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GameObject\Components\Environment\Terrain">
-      <UniqueIdentifier>{994b56ad-4ee0-485a-b780-c5f00a2d681d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GameObject\Components\Mesh\SkinnedMesh">
-      <UniqueIdentifier>{13d409d3-5230-4f28-878c-6134f380114e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GameObject\GUI\Child">
-      <UniqueIdentifier>{62667ba5-0dd6-45a8-9a0a-d8ee1fbb7a26}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Management\Input">
+    <Filter Include="소스 파일\Core\Management\Input">
       <UniqueIdentifier>{bdd9131e-bf32-4353-af86-12c738b5a53a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Management\Interface">
+    <Filter Include="소스 파일\Core\Management\Interface">
       <UniqueIdentifier>{591af071-b9d1-4494-ba46-690fbece5745}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Management\Log">
+    <Filter Include="소스 파일\Core\Management\Log">
       <UniqueIdentifier>{41162b24-2d9f-4068-873e-cd4dd6284712}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Management\Render">
+    <Filter Include="소스 파일\Core\Management\Render">
       <UniqueIdentifier>{273739f9-9b8a-4b1f-b8e8-dce7f749602f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Management\Resource">
+    <Filter Include="소스 파일\Core\Management\Resource">
       <UniqueIdentifier>{8a035f18-cfe9-4a70-b559-5095577873c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Management\Scene">
+    <Filter Include="소스 파일\Core\Management\Scene">
       <UniqueIdentifier>{7005c771-d18f-4f23-bbe1-1a9687f299e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\GameObject\Components\Image">
-      <UniqueIdentifier>{0365dbb4-17a5-403c-b2a8-c78de75eceb0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GameObject\Components\Particle">
-      <UniqueIdentifier>{8c5d7fcb-2702-425c-8adf-a708cb04011d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GameObject\Components\GUI">
-      <UniqueIdentifier>{bdb47526-6471-4ca3-ad09-57d765083ed6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Management\Configuration">
+    <Filter Include="소스 파일\Core\Management\Configuration">
       <UniqueIdentifier>{9c0d54b8-2d1b-4ade-ac20-2e352dd37980}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\GameObject\Components\Effect\Basic">
-      <UniqueIdentifier>{0c4d47e8-e2a4-473c-b8e2-5ec69485518e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GameObject\Components\Effect\Extension">
-      <UniqueIdentifier>{8dc67a41-b40a-4c6e-8dbc-930eb223d273}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GameObject\BasicGameObject">
-      <UniqueIdentifier>{6dc5c54d-b409-4b9d-87ca-efe90fc2e876}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GameObject\Components\Physics">
-      <UniqueIdentifier>{8bab1f0a-af5d-4822-91e7-910a26c67daf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Management\PhysicsManager">
+    <Filter Include="소스 파일\Core\Management\PhysicsManager">
       <UniqueIdentifier>{da535f07-15b5-4757-b49d-98f9753e42bd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\GUI_LIBRARY">
+    <Filter Include="소스 파일\Core\GameObject">
+      <UniqueIdentifier>{34124952-3ed1-40dc-a74d-fc5b9edfba21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components">
+      <UniqueIdentifier>{8d2f80d3-c094-4c96-b910-6f37acd1de88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\Camera">
+      <UniqueIdentifier>{4b456b58-9d02-4836-ac14-763d91bca387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\Effect">
+      <UniqueIdentifier>{5d0a0808-1470-4c2d-9a85-2519b3fea3e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\Effect\Basic">
+      <UniqueIdentifier>{0c4d47e8-e2a4-473c-b8e2-5ec69485518e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\Effect\Extension">
+      <UniqueIdentifier>{8dc67a41-b40a-4c6e-8dbc-930eb223d273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\Environment">
+      <UniqueIdentifier>{3e2be8a6-bc92-43b3-817a-587ad65c469f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\Environment\Terrain">
+      <UniqueIdentifier>{994b56ad-4ee0-485a-b780-c5f00a2d681d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\Mesh">
+      <UniqueIdentifier>{76d3d0c1-2855-4661-b42e-cfa855aeed8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh">
+      <UniqueIdentifier>{13d409d3-5230-4f28-878c-6134f380114e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\Transform">
+      <UniqueIdentifier>{75d7c8e2-b278-488c-b8ff-4054f6e3a576}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\Image">
+      <UniqueIdentifier>{0365dbb4-17a5-403c-b2a8-c78de75eceb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\Particle">
+      <UniqueIdentifier>{8c5d7fcb-2702-425c-8adf-a708cb04011d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\GUI">
+      <UniqueIdentifier>{bdb47526-6471-4ca3-ad09-57d765083ed6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\Physics">
+      <UniqueIdentifier>{8bab1f0a-af5d-4822-91e7-910a26c67daf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\Script">
+      <UniqueIdentifier>{c743ad63-e0a8-41d1-adaf-957154c8a7b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\GUI">
+      <UniqueIdentifier>{22fb4805-e033-4430-be9b-084d31cde582}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\GUI\Child">
+      <UniqueIdentifier>{62667ba5-0dd6-45a8-9a0a-d8ee1fbb7a26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\GameObject\BasicGameObject">
+      <UniqueIdentifier>{6dc5c54d-b409-4b9d-87ca-efe90fc2e876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Library">
       <UniqueIdentifier>{d069bd3a-4b9a-46e7-afc6-ff25a5ee4bdf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\GUI_LIBRARY\DX9">
+    <Filter Include="소스 파일\Library\ImGUI">
+      <UniqueIdentifier>{bd0adc82-bee6-4d07-988e-be592b1d9c1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Library\ImGUI\DX9">
       <UniqueIdentifier>{099956fd-4d86-4a02-80b3-ce475c0d5cf2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -102,324 +117,348 @@
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>소스 파일\GameObject</Filter>
+      <Filter>소스 파일\Core\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Vertex.h">
-      <Filter>소스 파일\GameObject</Filter>
+      <Filter>소스 파일\Core\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>소스 파일\GameObject\Components\Camera</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Camera</Filter>
     </ClInclude>
     <ClInclude Include="IShader.h">
-      <Filter>소스 파일\GameObject\Components\Effect</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Effect</Filter>
     </ClInclude>
     <ClInclude Include="Skybox.h">
-      <Filter>소스 파일\GameObject\Components\Environment</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Environment</Filter>
     </ClInclude>
     <ClInclude Include="etuTerrain.h">
-      <Filter>소스 파일\GameObject\Components\Environment\Terrain</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Environment\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="ZFrustum.h">
-      <Filter>소스 파일\GameObject\Components\Environment\Terrain</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Environment\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="ZQuadTree.h">
-      <Filter>소스 파일\GameObject\Components\Environment\Terrain</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Environment\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="StaticMesh.h">
-      <Filter>소스 파일\GameObject\Components\Mesh</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="SkinnedMesh.h">
-      <Filter>소스 파일\GameObject\Components\Mesh\SkinnedMesh</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
     </ClInclude>
     <ClInclude Include="BoneHierarchyLoader.h">
-      <Filter>소스 파일\GameObject\Components\Mesh\SkinnedMesh</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
     </ClInclude>
     <ClInclude Include="Transform3D.h">
-      <Filter>소스 파일\GameObject\Components\Transform</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Transform</Filter>
     </ClInclude>
     <ClInclude Include="Transform2D.h">
-      <Filter>소스 파일\GameObject\Components\Transform</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Transform</Filter>
     </ClInclude>
     <ClInclude Include="etuForm.h">
-      <Filter>소스 파일\GameObject\GUI</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI</Filter>
     </ClInclude>
     <ClInclude Include="etuMessageHandler.h">
-      <Filter>소스 파일\GameObject\GUI</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI</Filter>
     </ClInclude>
     <ClInclude Include="etuTextBox.h">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClInclude>
     <ClInclude Include="etuStaticText.h">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClInclude>
     <ClInclude Include="etuInputText.h">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClInclude>
     <ClInclude Include="etuImage.h">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClInclude>
     <ClInclude Include="etuDialog.h">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClInclude>
     <ClInclude Include="etuComboBox.h">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClInclude>
     <ClInclude Include="etuCheckBox.h">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClInclude>
     <ClInclude Include="etuButton.h">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
-      <Filter>소스 파일\Management\Input</Filter>
+      <Filter>소스 파일\Core\Management\Input</Filter>
     </ClInclude>
     <ClInclude Include="ISingleton.h">
-      <Filter>소스 파일\Management\Interface</Filter>
+      <Filter>소스 파일\Core\Management\Interface</Filter>
     </ClInclude>
     <ClInclude Include="LogManager.h">
-      <Filter>소스 파일\Management\Log</Filter>
+      <Filter>소스 파일\Core\Management\Log</Filter>
     </ClInclude>
     <ClInclude Include="Collision.h">
-      <Filter>소스 파일\GameObject\Components\Physics</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
-      <Filter>소스 파일\GameObject\Components</Filter>
+      <Filter>소스 파일\Core\GameObject\Components</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
-      <Filter>소스 파일\Management\Resource</Filter>
+      <Filter>소스 파일\Core\Management\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>소스 파일\Management\Scene</Filter>
+      <Filter>소스 파일\Core\Management\Scene</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager.h">
-      <Filter>소스 파일\Management\Scene</Filter>
+      <Filter>소스 파일\Core\Management\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Common.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="ScreenSprite.h">
-      <Filter>소스 파일\GameObject\Components\Image</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Image</Filter>
     </ClInclude>
     <ClInclude Include="ScreenImage.h">
-      <Filter>소스 파일\GameObject\Components\Image</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Image</Filter>
     </ClInclude>
     <ClInclude Include="SpriteBillBoard.h">
-      <Filter>소스 파일\GameObject\Components\Image</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Image</Filter>
     </ClInclude>
     <ClInclude Include="BillBoard.h">
-      <Filter>소스 파일\GameObject\Components\Image</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Image</Filter>
     </ClInclude>
     <ClInclude Include="ParticleSystem.h">
-      <Filter>소스 파일\GameObject\Components\Particle</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Particle</Filter>
     </ClInclude>
     <ClInclude Include="Interface.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="InputTextBox.h">
-      <Filter>소스 파일\GameObject\Components\GUI</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\GUI</Filter>
     </ClInclude>
     <ClInclude Include="ScreenButton.h">
-      <Filter>소스 파일\GameObject\Components\GUI</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\GUI</Filter>
     </ClInclude>
     <ClInclude Include="ConfigManager.h">
-      <Filter>소스 파일\Management\Configuration</Filter>
+      <Filter>소스 파일\Core\Management\Configuration</Filter>
     </ClInclude>
     <ClInclude Include="RenderManager.h">
-      <Filter>소스 파일\Management\Render</Filter>
+      <Filter>소스 파일\Core\Management\Render</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>소스 파일\GameObject\Components\Effect\Basic</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Effect\Basic</Filter>
     </ClInclude>
     <ClInclude Include="PhongShader.h">
-      <Filter>소스 파일\GameObject\Components\Effect\Basic</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Effect\Basic</Filter>
     </ClInclude>
     <ClInclude Include="TrailRenderer.h">
-      <Filter>소스 파일\GameObject\Components\Effect\Extension</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Effect\Extension</Filter>
     </ClInclude>
     <ClInclude Include="PointLight.h">
-      <Filter>소스 파일\GameObject\BasicGameObject</Filter>
+      <Filter>소스 파일\Core\GameObject\BasicGameObject</Filter>
     </ClInclude>
     <ClInclude Include="PhyscisManager.h">
-      <Filter>소스 파일\Management\PhysicsManager</Filter>
-    </ClInclude>
-    <ClInclude Include="stb_truetype.h">
-      <Filter>소스 파일\GUI_LIBRARY</Filter>
-    </ClInclude>
-    <ClInclude Include="imconfig.h">
-      <Filter>소스 파일\GUI_LIBRARY</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui.h">
-      <Filter>소스 파일\GUI_LIBRARY</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_internal.h">
-      <Filter>소스 파일\GUI_LIBRARY</Filter>
-    </ClInclude>
-    <ClInclude Include="stb_rect_pack.h">
-      <Filter>소스 파일\GUI_LIBRARY</Filter>
-    </ClInclude>
-    <ClInclude Include="stb_textedit.h">
-      <Filter>소스 파일\GUI_LIBRARY</Filter>
+      <Filter>소스 파일\Core\Management\PhysicsManager</Filter>
     </ClInclude>
     <ClInclude Include="imgui_impl_dx9.h">
-      <Filter>소스 파일\GUI_LIBRARY\DX9</Filter>
+      <Filter>소스 파일\Library\ImGUI\DX9</Filter>
+    </ClInclude>
+    <ClInclude Include="Script.h">
+      <Filter>소스 파일\Core\GameObject\Components\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="BoneEditor.h">
+      <Filter>소스 파일\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneInfo.h">
+      <Filter>소스 파일\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>소스 파일\Library\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>소스 파일\Library\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>소스 파일\Library\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_rect_pack.h">
+      <Filter>소스 파일\Library\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_textedit.h">
+      <Filter>소스 파일\Library\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_truetype.h">
+      <Filter>소스 파일\Library\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorCameraScript.h">
+      <Filter>소스 파일\Editor\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
-      <Filter>소스 파일\GameObject</Filter>
+      <Filter>소스 파일\Core\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Vertex.cpp">
-      <Filter>소스 파일\GameObject</Filter>
+      <Filter>소스 파일\Core\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>소스 파일\GameObject\Components\Camera</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Camera</Filter>
     </ClCompile>
     <ClCompile Include="IShader.cpp">
-      <Filter>소스 파일\GameObject\Components\Effect</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Effect</Filter>
     </ClCompile>
     <ClCompile Include="Skybox.cpp">
-      <Filter>소스 파일\GameObject\Components\Environment</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Environment</Filter>
     </ClCompile>
     <ClCompile Include="etuTerrain.cpp">
-      <Filter>소스 파일\GameObject\Components\Environment\Terrain</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Environment\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="ZFrustum.cpp">
-      <Filter>소스 파일\GameObject\Components\Environment\Terrain</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Environment\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="ZQuadTree.cpp">
-      <Filter>소스 파일\GameObject\Components\Environment\Terrain</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Environment\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="StaticMesh.cpp">
-      <Filter>소스 파일\GameObject\Components\Mesh</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="SkinnedMesh.cpp">
-      <Filter>소스 파일\GameObject\Components\Mesh\SkinnedMesh</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
     </ClCompile>
     <ClCompile Include="BoneHierarchyLoader.cpp">
-      <Filter>소스 파일\GameObject\Components\Mesh\SkinnedMesh</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
     </ClCompile>
     <ClCompile Include="Transform2D.cpp">
-      <Filter>소스 파일\GameObject\Components\Transform</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Transform</Filter>
     </ClCompile>
     <ClCompile Include="Transform3D.cpp">
-      <Filter>소스 파일\GameObject\Components\Transform</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Transform</Filter>
     </ClCompile>
     <ClCompile Include="etuForm.cpp">
-      <Filter>소스 파일\GameObject\GUI</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI</Filter>
     </ClCompile>
     <ClCompile Include="etuMessageHandler.cpp">
-      <Filter>소스 파일\GameObject\GUI</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI</Filter>
     </ClCompile>
     <ClCompile Include="etuStaticText.cpp">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClCompile>
     <ClCompile Include="etuTextBox.cpp">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClCompile>
     <ClCompile Include="etuInputText.cpp">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClCompile>
     <ClCompile Include="etuImage.cpp">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClCompile>
     <ClCompile Include="etuDialog.cpp">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClCompile>
     <ClCompile Include="etuComboBox.cpp">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClCompile>
     <ClCompile Include="etuCheckBox.cpp">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClCompile>
     <ClCompile Include="etuButton.cpp">
-      <Filter>소스 파일\GameObject\GUI\Child</Filter>
+      <Filter>소스 파일\Core\GameObject\GUI\Child</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
-      <Filter>소스 파일\Management\Input</Filter>
+      <Filter>소스 파일\Core\Management\Input</Filter>
     </ClCompile>
     <ClCompile Include="LogManager.cpp">
-      <Filter>소스 파일\Management\Log</Filter>
+      <Filter>소스 파일\Core\Management\Log</Filter>
     </ClCompile>
     <ClCompile Include="Collision.cpp">
-      <Filter>소스 파일\GameObject\Components\Physics</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Physics</Filter>
     </ClCompile>
     <ClCompile Include="Component.cpp">
-      <Filter>소스 파일\GameObject\Components</Filter>
+      <Filter>소스 파일\Core\GameObject\Components</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
-      <Filter>소스 파일\Management\Resource</Filter>
+      <Filter>소스 파일\Core\Management\Resource</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
-      <Filter>소스 파일\Management\Scene</Filter>
+      <Filter>소스 파일\Core\Management\Scene</Filter>
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
-      <Filter>소스 파일\Management\Scene</Filter>
+      <Filter>소스 파일\Core\Management\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Common.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ScreenSprite.cpp">
-      <Filter>소스 파일\GameObject\Components\Image</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Image</Filter>
     </ClCompile>
     <ClCompile Include="ScreenImage.cpp">
-      <Filter>소스 파일\GameObject\Components\Image</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Image</Filter>
     </ClCompile>
     <ClCompile Include="BillBoard.cpp">
-      <Filter>소스 파일\GameObject\Components\Image</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Image</Filter>
     </ClCompile>
     <ClCompile Include="SpriteBillBoard.cpp">
-      <Filter>소스 파일\GameObject\Components\Image</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Image</Filter>
     </ClCompile>
     <ClCompile Include="SnowParticle.cpp">
-      <Filter>소스 파일\GameObject\Components\Particle</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Particle</Filter>
     </ClCompile>
     <ClCompile Include="FireworkParticle.cpp">
-      <Filter>소스 파일\GameObject\Components\Particle</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Particle</Filter>
     </ClCompile>
     <ClCompile Include="ParticleSystem.cpp">
-      <Filter>소스 파일\GameObject\Components\Particle</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Particle</Filter>
     </ClCompile>
     <ClCompile Include="Interface.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="InputTextBox.cpp">
-      <Filter>소스 파일\GameObject\Components\GUI</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\GUI</Filter>
     </ClCompile>
     <ClCompile Include="ScreenButton.cpp">
-      <Filter>소스 파일\GameObject\Components\GUI</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\GUI</Filter>
     </ClCompile>
     <ClCompile Include="ConfigManager.cpp">
-      <Filter>소스 파일\Management\Configuration</Filter>
+      <Filter>소스 파일\Core\Management\Configuration</Filter>
     </ClCompile>
     <ClCompile Include="RenderManager.cpp">
-      <Filter>소스 파일\Management\Render</Filter>
+      <Filter>소스 파일\Core\Management\Render</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
-      <Filter>소스 파일\GameObject\Components\Effect\Basic</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Effect\Basic</Filter>
     </ClCompile>
     <ClCompile Include="PhongShader.cpp">
-      <Filter>소스 파일\GameObject\Components\Effect\Basic</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Effect\Basic</Filter>
     </ClCompile>
     <ClCompile Include="TrailRenderer.cpp">
-      <Filter>소스 파일\GameObject\Components\Effect\Extension</Filter>
+      <Filter>소스 파일\Core\GameObject\Components\Effect\Extension</Filter>
     </ClCompile>
     <ClCompile Include="PointLight.cpp">
-      <Filter>소스 파일\GameObject\BasicGameObject</Filter>
+      <Filter>소스 파일\Core\GameObject\BasicGameObject</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsManager.cpp">
-      <Filter>소스 파일\Management\PhysicsManager</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui.cpp">
-      <Filter>소스 파일\GUI_LIBRARY</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_demo.cpp">
-      <Filter>소스 파일\GUI_LIBRARY</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_draw.cpp">
-      <Filter>소스 파일\GUI_LIBRARY</Filter>
+      <Filter>소스 파일\Core\Management\PhysicsManager</Filter>
     </ClCompile>
     <ClCompile Include="imgui_impl_dx9.cpp">
-      <Filter>소스 파일\GUI_LIBRARY\DX9</Filter>
+      <Filter>소스 파일\Library\ImGUI\DX9</Filter>
+    </ClCompile>
+    <ClCompile Include="Script.cpp">
+      <Filter>소스 파일\Core\GameObject\Components\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="BoneEditor.cpp">
+      <Filter>소스 파일\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneInfo.cpp">
+      <Filter>소스 파일\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>소스 파일\Library\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>소스 파일\Library\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>소스 파일\Library\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorCameraScript.cpp">
+      <Filter>소스 파일\Editor\Script</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
