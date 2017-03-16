@@ -13,6 +13,7 @@ namespace BONE_GRAPHICS
 
 		renderMode = RENDER_DEFAULT;
         showBox = false;
+        show = true;
 
         color = COLOR::WHITE;
 	}
@@ -84,9 +85,7 @@ namespace BONE_GRAPHICS
 
 	bool StaticMesh::CheckMouseRayInMesh(Transform3D* tr, float* dist)
 	{
-		RAY ray = RenderMgr->GetPickingRayToView(false);
-
-		bool Result = RenderMgr->CheckRayInMesh(&ray, tr->GetTransform(), ResourceMgr->FindMesh(address)->mesh, dist);
+ 		bool Result = RenderMgr->CheckRayInMesh(tr->GetTransform(), ResourceMgr->FindMesh(address)->mesh, dist);
 
 		return Result;
 	}
@@ -123,7 +122,7 @@ namespace BONE_GRAPHICS
 
 	void StaticMesh::Render(IShader* shaderOpt, GameObject* object)
 	{
-		if (IsInit)
+		if (IsInit && show)
 		{
 			Matrix Transform = ((Transform3D*)object->GetComponent("Transform3D"))->GetTransform();
 			RenderMgr->GetDevice()->SetTransform(D3DTS_WORLD, &Transform);
@@ -181,4 +180,19 @@ namespace BONE_GRAPHICS
 	{
 		return address;
 	}
+
+    void StaticMesh::Hide()
+    {
+        show = false;
+    }
+
+    void StaticMesh::Show()
+    {
+        show = true;
+    }
+    
+    bool StaticMesh::IsShow()
+    {
+        return show;
+    }
 }

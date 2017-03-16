@@ -86,7 +86,7 @@ namespace BONE_GRAPHICS
 				{
 					Matrix matIden;
 					D3DXMatrixIdentity(&matIden);
-					if (RenderMgr->CheckRayInMesh(ray, matIden, boneMesh->MeshData.pMesh, &Temp))
+					if (RenderMgr->CheckRayInMesh(matIden, boneMesh->MeshData.pMesh, &Temp))
 						if (Temp <= curDist)
 							curDist = Temp;
 				}

@@ -46,7 +46,7 @@ namespace BONE_GRAPHICS
         RAY	GetPickingRay(bool isMouseCenter);
         RAY	TransRayToView(RAY ray);
 
-        bool CheckRayInMesh(RAY* ray, const D3DXMATRIX& matWorld, LPD3DXMESH mesh, float* dist = nullptr);
+        bool CheckRayInMesh(const D3DXMATRIX& matWorld, LPD3DXMESH mesh, float* dist = nullptr);
         bool CheckRayInTriangle(RAY* ray, const D3DXMATRIX& matWorld, D3DXVECTOR3 p0, D3DXVECTOR3 p1, D3DXVECTOR3 p2, float* u, float* v, float* dist = nullptr);
 
         void SetupPixelFog(bool on, D3DXCOLOR color, float start = 0.5f, float end = 0.8f, float density = 0.66f, int mode = D3DFOG_LINEAR);

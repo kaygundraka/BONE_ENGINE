@@ -296,6 +296,9 @@
     <ClInclude Include="EditorLoadScene.h">
       <Filter>소스 파일\Editor\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="PosPivot.h">
+      <Filter>소스 파일\Editor\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -468,6 +471,9 @@
     </ClCompile>
     <ClCompile Include="EditorLoadScene.cpp">
       <Filter>소스 파일\Editor\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="PosPivot.cpp">
+      <Filter>소스 파일\Editor\Script</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

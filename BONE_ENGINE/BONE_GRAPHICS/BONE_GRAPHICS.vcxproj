@@ -143,6 +143,7 @@
     <ClInclude Include="PhongShader.h" />
     <ClInclude Include="PhyscisManager.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="PosPivot.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="SceneInfo.h" />
     <ClInclude Include="ScreenButton.h" />
@@ -296,6 +297,7 @@
     <ClCompile Include="PhongShader.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="PosPivot.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="SceneInfo.cpp" />
     <ClCompile Include="ScreenButton.cpp" />

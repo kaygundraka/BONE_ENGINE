@@ -8,7 +8,7 @@ namespace BONE_GRAPHICS
 {
     class GUI_Scene {
     public:
-        virtual void UpdateFrame() = 0;
+        virtual void UpdateFrame() {};
     };
 
 	class SceneManager : public ISingleton <SceneManager>, public BONE_SYSTEM::MultiThreadSync<SceneManager>

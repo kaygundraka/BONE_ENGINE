@@ -99,11 +99,100 @@ namespace BONE_GRAPHICS
         this->font->DrawText(nullptr, text.c_str(), -1, &TextRect, opt, color);
     }
 
+    bool RenderManager::CheckRayInMesh(const D3DXMATRIX& matWorld, LPD3DXMESH mesh, float* dist)
+    {
+        ThreadSync sync;
+
+        POINT ptCursor;
+        GetCursorPos(&ptCursor);
+        ScreenToClient(hWnd, &ptCursor);
+
+        D3DVIEWPORT9 view;
+        D3D_DEVICE->GetViewport(&view);
+
+        D3DXMATRIX projMat;
+        D3D_DEVICE->GetTransform(D3DTS_PROJECTION, &projMat);
+
+        float vx = (+2.0f*ptCursor.x / view.Width - 1.0f) / projMat._11;
+        float vy = (-2.0f*ptCursor.y / view.Height + 1.0f) / projMat._22;
+
+        D3DXVECTOR3 Origin(0.0f, 0.0f, 0.0f);
+        D3DXVECTOR3 Direction(vx, vy, 1.0f);
+
+        D3DXMATRIX viewMat;
+        D3D_DEVICE->GetTransform(D3DTS_VIEW, &viewMat);
+
+        D3DXMATRIX iviewMat;
+        D3DXMatrixInverse(&iviewMat, 0, &viewMat);
+        D3DXVec3TransformCoord(&Origin, &Origin, &iviewMat);
+        D3DXVec3TransformNormal(&Direction, &Direction, &iviewMat);
+
+        D3DXVECTOR3 vOrg;
+        D3DXVECTOR3 vDir;
+        D3DXMATRIX Inversemat;
+
+        D3DXMatrixInverse(&Inversemat, nullptr, &matWorld);
+        D3DXVec3TransformCoord(&vOrg, &Origin, &Inversemat);
+        D3DXVec3TransformNormal(&vDir, &Direction, &Inversemat);
+
+        BOOL bHit = FALSE;
+        
+        D3DXIntersect(mesh, &vOrg, &vDir, &bHit, nullptr, nullptr, nullptr, dist, nullptr, nullptr);
+
+        return bHit;
+    }
+
     RAY	RenderManager::GetPickingRayToView(bool isMouseCenter)
     {
         ThreadSync sync;
 
-        return TransRayToView(GetPickingRay(isMouseCenter));
+        POINT ptCursor;
+        GetCursorPos(&ptCursor);
+        ScreenToClient(hWnd, &ptCursor);
+
+        D3DVIEWPORT9 view;
+        D3D_DEVICE->GetViewport(&view);
+
+        D3DXMATRIX projMat;
+        D3D_DEVICE->GetTransform(D3DTS_PROJECTION, &projMat);
+
+        float vx = (+2.0f*ptCursor.x / view.Width - 1.0f) / projMat._11;
+        float vy = (-2.0f*ptCursor.y / view.Height + 1.0f) / projMat._22;
+
+        D3DXVECTOR3 Origin(0.0f, 0.0f, 0.0f);
+        D3DXVECTOR3 Direction(vx, vy, 1.0f);
+
+        D3DXMATRIX viewMat;
+        D3D_DEVICE->GetTransform(D3DTS_VIEW, &viewMat);
+
+        D3DXMATRIX iviewMat;
+        D3DXMatrixInverse(&iviewMat, 0, &viewMat);
+        D3DXVec3TransformCoord(&Origin, &Origin, &iviewMat);
+        D3DXVec3TransformNormal(&Direction, &Direction, &iviewMat);
+        
+        RAY ray;
+        ray.origin = Origin;
+        ray.direction = Direction;
+
+        return ray;
+        ///return TransRayToView(GetPickingRay(isMouseCenter));
+    }
+
+    RAY	RenderManager::TransRayToView(RAY ray)
+    {
+        ThreadSync sync;
+
+        D3DXMATRIX view;
+        D3DXMATRIX viewInverse;
+
+        D3D_DEVICE->GetTransform(D3DTS_VIEW, &view);
+
+        D3DXMatrixInverse(&viewInverse, nullptr, &view);
+        D3DXVec3TransformCoord(&ray.origin, &ray.origin, &viewInverse);
+        D3DXVec3TransformNormal(&ray.direction, &ray.direction, &viewInverse);
+        D3DXVec3Normalize(&ray.direction, &ray.direction);
+
+        return ray;
     }
 
     RAY	RenderManager::GetPickingRay(bool _isMouseCenter)
@@ -171,42 +260,6 @@ namespace BONE_GRAPHICS
         return Result;
     }
 
-    RAY	RenderManager::TransRayToView(RAY ray)
-    {
-        ThreadSync sync;
-
-        D3DXMATRIX view;		//뷰행렬 받아올 변수
-
-        D3D_DEVICE->GetTransform(D3DTS_VIEW, &view);		//뷰행렬 가져오기
-
-        D3DXMATRIX viewInverse;	//뷰역행렬 변수
-
-        D3DXMatrixInverse(&viewInverse, nullptr, &view);
-        D3DXVec3TransformCoord(&ray.origin, &ray.origin, &viewInverse);
-        D3DXVec3TransformNormal(&ray.direction, &ray.direction, &viewInverse);
-        D3DXVec3Normalize(&ray.direction, &ray.direction);
-
-        return ray;
-    }
-
-    bool RenderManager::CheckRayInMesh(RAY* ray, const D3DXMATRIX& matWorld, LPD3DXMESH mesh, float* dist)
-    {
-        ThreadSync sync;
-
-        D3DXVECTOR3 vOrg;
-        D3DXVECTOR3 vDir;
-        D3DXMATRIX Inversemat;
-
-        D3DXMatrixInverse(&Inversemat, nullptr, &matWorld);
-        D3DXVec3TransformCoord(&vOrg, &ray->origin, &Inversemat);
-        D3DXVec3TransformNormal(&vDir, &ray->direction, &Inversemat);
-
-        BOOL bHit = FALSE;
-        D3DXIntersect(mesh, &vOrg, &vDir, &bHit, nullptr, nullptr, nullptr, dist, nullptr, nullptr);
-
-        return bHit;
-    }
-
     struct line_vertex
     {
         float x, y, z;
@@ -234,6 +287,9 @@ namespace BONE_GRAPHICS
         line_vertices[1].color = color;
 
         D3D_DEVICE->SetFVF(line_fvf);
+
+        D3D_DEVICE->SetTexture(0, NULL);
+        
         D3D_DEVICE->DrawPrimitiveUP(D3DPT_LINELIST, 1, line_vertices, sizeof(line_vertex));
     }
 
@@ -308,6 +364,9 @@ namespace BONE_GRAPHICS
 
         this->DrawLine(Vertex[5], Vertex[1], color);
         this->DrawLine(Vertex[5], Vertex[3], color);
+
+        this->DrawLine(Vertex[1], Vertex[4], color);
+        this->DrawLine(Vertex[3], Vertex[6], color);
 
         return true;
     }

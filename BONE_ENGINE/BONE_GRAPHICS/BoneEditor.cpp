@@ -16,6 +16,7 @@
 #include "SceneInfo.h"
 #include "EditorCameraScript.h"
 #include "EditorLoadScene.h"
+#include "PosPivot.h"
 
 #pragma warning (disable:4996)
 
@@ -110,7 +111,8 @@ void BoneEditor::Run()
             SceneMgr->SetLoadGUIScene(EditorLoadGUI.get());
 
             auto_ptr<Scene> TestScene(new Scene);
-            RenderMgr->UseImGUI(false);
+            auto_ptr<GUI_Scene> EmptyGUI(new GUI_Scene);
+            SceneMgr->SetGUIScene(EmptyGUI.get());
 
             TestScene->SetName(playScene);
 
@@ -118,7 +120,6 @@ void BoneEditor::Run()
             TestScene->OnLoadSceneData();
 
             flag = SceneMgr->StartScene(playScene);
-            RenderMgr->UseImGUI(true);
             isTestPlay = false;
         }
         else
@@ -153,6 +154,11 @@ void BoneEditor::Run()
             MainCamera->AddComponent(EditorCameraScript);
             ViewScene->AddObject(MainCamera.get(), "EditorCamera");
 
+            auto_ptr<GameObject> Pivot(new GameObject);
+            PosPivot* PosPivotScript = new PosPivot(Pivot.get(), "PosPivotScript");
+            Pivot->AddComponent(PosPivotScript);
+            ViewScene->AddObject(Pivot.get(), "PosPivot");
+
             ViewScene->SetAmbientColor(1.0f, 1.0f, 1.0f, 1.0f);
             ViewScene->SetName(OpenSceneName);
 
@@ -186,7 +192,7 @@ void BoneEditor::SaveScene()
 
     for each(auto var in DyamicObjectList)
     {
-        if (var->GetName() != "EditorCamera")
+        if (var->Tag() != "EditorObject")
         {
             var->SavePrefab();
             var->SaveInMaps();
@@ -195,7 +201,7 @@ void BoneEditor::SaveScene()
 
     for each(auto var in StaticObjectList)
     {
-        if (var->GetName() != "EditorCamera")
+        if (var->Tag() != "EditorObject")
         {
             var->SavePrefab();
             var->SaveInMaps();
@@ -572,7 +578,7 @@ void BoneEditor::UpdateFrame()
 
             for (auto iter = ObjectList.begin(); iter != ObjectList.end(); iter++)
             {
-                if ((*iter)->GetParent() != nullptr || (*iter)->GetName() == "EditorCamera")
+                if ((*iter)->GetParent() != nullptr || (*iter)->Tag() == "EditorObject")
                     continue;
 
                 if (FindOption)

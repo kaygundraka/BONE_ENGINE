@@ -18,7 +18,7 @@ EditorCamera::~EditorCamera()
 void EditorCamera::Init()
 {
     gameObject->SetPriority(1);
-    gameObject->SetTag("CameraObject");
+    gameObject->SetTag("EditorObject");
 
     Transform3D* tr = new Transform3D();
     tr->SetPosition(Vector3(0, 100, 100));
@@ -38,6 +38,8 @@ void EditorCamera::Init()
     selectObject = "";
 
     cameraMove = false;
+
+    gameObject->SetTag("EditorObject");
 }
 
 void EditorCamera::Reference()
@@ -47,109 +49,10 @@ void EditorCamera::Reference()
 void EditorCamera::Update()
 {
     if (InputMgr->GetMouseRBButtonStatus() == MOUSE_STATUS::MOUSE_RBDOWN)
-    {
-        ShowCursor(false);
         cameraMove = true;
-    }
     else if (InputMgr->GetMouseRBButtonStatus() == MOUSE_STATUS::MOUSE_RBUP)
-    {
-        ShowCursor(true);
         cameraMove = false;
-    }
-
-    if (InputMgr->GetMouseLBButtonStatus() == MOUSE_STATUS::MOUSE_LBDOWN)
-    {
-        auto ObjectList = SceneMgr->CurrentScene()->GetObjectList();
-        auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
-
-        float MinDist = -1;
-        bool NoSelect = true;
-
-        for each(auto item in ObjectList)
-        {
-            StaticMesh* mesh = (StaticMesh*)(item->GetComponent("StaticMesh"));
-
-            if (mesh != nullptr)
-            {
-                float Dist = 0;
-
-                if (mesh->CheckMouseRayInMesh((Transform3D*)item->transform3D, &Dist))
-                {
-                    if (MinDist == -1)
-                    {
-                        selectObject = item->GetName();
-                        MinDist = Dist;
-                    }
-                    else if (MinDist >= Dist)
-                    {
-                        MinDist = Dist;
-                        selectObject = item->GetName();
-                    }
-
-                    NoSelect = false;
-                }
-            }
-        }
-
-        for each(auto item in StaticObjectList)
-        {
-            StaticMesh* mesh = (StaticMesh*)(item->GetComponent("StaticMesh"));
-
-            if (mesh != nullptr)
-            {
-                float Dist = 0;
-
-                if (mesh->CheckMouseRayInMesh((Transform3D*)item->transform3D, &Dist))
-                {
-                    if (MinDist == -1)
-                    {
-                        selectObject = item->GetName();
-                        MinDist = Dist;
-                    }
-                    else if (MinDist >= Dist)
-                    {
-                        MinDist = Dist;
-                        selectObject = item->GetName();
-                    }
-                }
-
-                NoSelect = false;
-            }
-        }
-
-        auto Object = SceneMgr->CurrentScene()->FindObjectByName(selectObject);
-
-        if (Object != nullptr)
-        {
-            auto sm = ((StaticMesh*)Object->GetComponent("StaticMesh"));
-
-            if (NoSelect)
-            {
-                sm->ShowMeshBox(true);
-                sm->SetMeshBoxColor(COLOR::GREEN);
-            }
-            else
-            {
-                sm->ShowMeshBox(false);
-                sm->SetMeshBoxColor(COLOR::WHITE);
-            }
-        }
-    }
-
-    if (InputMgr->KeyDown('F', true))
-    {
-        auto Object = SceneMgr->CurrentScene()->FindObjectByName(selectObject);
-
-        if (Object != nullptr)
-        {
-            auto Position = ((Transform3D*)Object->transform3D)->GetPosition();
-            mainCamera->SetTargetPosition(Position);
-            ((Transform3D*)gameObject->transform3D)->SetPosition(
-                ((Transform3D*)gameObject->transform3D)->GetPosition() + Position
-            );
-        }
-    }
-
+    
     if (cameraMove)
     {
         POINT pt;

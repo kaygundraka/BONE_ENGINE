@@ -21,6 +21,7 @@ namespace BONE_GRAPHICS
 		int renderMode;
 		bool IsInit;
         bool showBox;
+        bool show;
 
         D3DXCOLOR color;
 
@@ -43,6 +44,10 @@ namespace BONE_GRAPHICS
         void SetFileAddress(std::string address);
 
         bool CheckMouseRayInMesh(Transform3D* tr, float *dist);
+
+        void Hide();
+        void Show();
+        bool IsShow();
 		
 		std::string* GetTexturesAddress();
 		std::string GetFileAddress();
