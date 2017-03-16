@@ -145,10 +145,14 @@
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="PosPivot.h" />
     <ClInclude Include="RenderManager.h" />
+    <ClInclude Include="Rp3dCollision.h" />
+    <ClInclude Include="Rp3dRigidBody.h" />
     <ClInclude Include="SceneInfo.h" />
     <ClInclude Include="ScreenButton.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Collision.h" />
+    <ClInclude Include="Collision.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Component.h" />
     <ClInclude Include="etuButton.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -235,7 +239,9 @@
     <ClCompile Include="BoneEditor.cpp" />
     <ClCompile Include="BoneHierarchyLoader.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Collision.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="EditorCameraScript.cpp" />
@@ -299,6 +305,8 @@
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PosPivot.cpp" />
     <ClCompile Include="RenderManager.cpp" />
+    <ClCompile Include="Rp3dCollision.cpp" />
+    <ClCompile Include="Rp3dRigidBody.cpp" />
     <ClCompile Include="SceneInfo.cpp" />
     <ClCompile Include="ScreenButton.cpp" />
     <ClCompile Include="ScreenImage.cpp" />
@@ -316,6 +324,7 @@
     <ClCompile Include="SnowParticle.cpp" />
     <ClCompile Include="SpriteBillBoard.cpp" />
     <ClCompile Include="StaticMesh.cpp" />
+    <ClCompile Include="test.cpp" />
     <ClCompile Include="TrailRenderer.cpp" />
     <ClCompile Include="Transform2D.cpp" />
     <ClCompile Include="Transform3D.cpp" />

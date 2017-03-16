@@ -299,6 +299,12 @@
     <ClInclude Include="PosPivot.h">
       <Filter>소스 파일\Editor\Script</Filter>
     </ClInclude>
+    <ClInclude Include="Rp3dCollision.h">
+      <Filter>소스 파일\Core\GameObject\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Rp3dRigidBody.h">
+      <Filter>소스 파일\Core\GameObject\Components\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -474,6 +480,15 @@
     </ClCompile>
     <ClCompile Include="PosPivot.cpp">
       <Filter>소스 파일\Editor\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="test.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Rp3dCollision.cpp">
+      <Filter>소스 파일\Core\GameObject\Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Rp3dRigidBody.cpp">
+      <Filter>소스 파일\Core\GameObject\Components\Physics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
