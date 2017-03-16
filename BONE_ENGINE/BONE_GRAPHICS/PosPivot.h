@@ -1,6 +1,7 @@
 #pragma once
 #include "StaticMesh.h"
 #include "Script.h"
+#include "BoneEditor.h"
 
 namespace BONE_GRAPHICS
 {
@@ -15,9 +16,11 @@ namespace BONE_GRAPHICS
         bool moveY;
         bool moveZ;
         float moveValue;
+
+        BoneEditor* ui;
         
     public:
-        PosPivot(GameObject* gameObject, std::string name);
+        PosPivot(BoneEditor* ui, GameObject* gameObject, std::string name);
         virtual ~PosPivot();
 
         virtual void Init();

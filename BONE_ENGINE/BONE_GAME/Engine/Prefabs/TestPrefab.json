@@ -1,0 +1,28 @@
+{
+    "IsActive": true,
+    "IsStatic": false,
+    "Priority": 1,
+    "Tag": "",
+    "Transform3D": {
+        "ForwardVector": [
+            0.0,
+            0.0,
+            -0.999999940395355
+        ],
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    }
+}

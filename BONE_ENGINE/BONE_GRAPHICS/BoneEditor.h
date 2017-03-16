@@ -23,7 +23,8 @@ namespace BONE_GRAPHICS
     private:
         bool showObjectInfo;
         bool showAddComponent;
-        bool showPrefabHierarchical;
+        bool showEnvironmentSetting;
+        bool showPrefabInspector;
         bool showLogWindow;
         bool showMainEditor;
 
@@ -48,6 +49,8 @@ namespace BONE_GRAPHICS
         void ShowFileMenu();
         void ShowEditorMenu();
         void ShowHelpMenu();
+
+        void SelectObject(std::string name);
 
         void ShowObjectInfo(std::string name);
         void ShowGameObjectTree(std::string treeName);

@@ -41,8 +41,8 @@ void LogDialog::AddLog(const char* fmt, ...) IM_PRINTFARGS(2)
 
 void LogDialog::Render(const char* title, bool* p_open)
 {
-    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiSetCond_FirstUseEver);
-    ImGui::Begin(title, p_open);
+    ImGui::SetNextWindowPos(ImVec2(0, RenderMgr->GetHeight() - 200));
+    ImGui::Begin(title, p_open, ImVec2(RenderMgr->GetWidth() - 300, 200), -1.0f, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
     if (ImGui::Button("Clear")) Clear();
     ImGui::SameLine();
     bool copy = ImGui::Button("Copy");
@@ -78,15 +78,18 @@ void LogDialog::Render(const char* title, bool* p_open)
 
 BoneEditor::BoneEditor() {
     showMainEditor = true;
-    currentShowInfoObject = "";
-    currentObjectName = "";
     showAddComponent = false;
     showObjectInfo = false;
-    childSize = 0;
-    showPrefabHierarchical = false;
-    showLogWindow = false;
+    showPrefabInspector = false;
+    showLogWindow = true;
+    showEnvironmentSetting = false;
     isTestPlay = false;
+ 
     playScene = "";
+
+    currentShowInfoObject = "";
+    currentObjectName = "";
+    childSize = 0;
 }
 
 void BoneEditor::Run()
@@ -155,7 +158,7 @@ void BoneEditor::Run()
             ViewScene->AddObject(MainCamera.get(), "EditorCamera");
 
             auto_ptr<GameObject> Pivot(new GameObject);
-            PosPivot* PosPivotScript = new PosPivot(Pivot.get(), "PosPivotScript");
+            PosPivot* PosPivotScript = new PosPivot(this, Pivot.get(), "PosPivotScript");
             Pivot->AddComponent(PosPivotScript);
             ViewScene->AddObject(Pivot.get(), "PosPivot");
 
@@ -234,6 +237,14 @@ void BoneEditor::ShowEditorMenu()
         ImGui::EndMenu();
     }
 
+    if (ImGui::MenuItem("Show Environment"))
+    {
+        if (showEnvironmentSetting)
+            showEnvironmentSetting = false;
+        else
+            showEnvironmentSetting = true;
+    }
+
     if (ImGui::MenuItem("Show Main Editor"))
     {
         if (showMainEditor)
@@ -299,9 +310,10 @@ void BoneEditor::ShowObjectInfo(std::string name)
     if (ImGui::CollapsingHeader("[GameObject Info]", ImGuiTreeNodeFlags_DefaultOpen))
     {
         static char buf[64] = "";
+        
+        ImGui::SetNextWindowContentSize(ImVec2(100, 30));
         ImGui::InputText("Name", buf, 64);
-        ImGui::SameLine();
-
+ 
         if (ImGui::Button("Change"))
         {
             auto object = SceneMgr->CurrentScene()->FindObjectByName(name);
@@ -534,7 +546,7 @@ void BoneEditor::UpdateFrame()
 
     if (showMainEditor)
     {
-        if (!ImGui::Begin("Editor", &showMainEditor, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_AlwaysAutoResize))
+        if (!ImGui::Begin(" Scene GameObject List", &showMainEditor, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
         {
             ImGui::End();
             return;
@@ -542,6 +554,17 @@ void BoneEditor::UpdateFrame()
 
         if (ImGui::IsRootWindowOrAnyChildFocused())
             isFocusedWindow = true;
+
+        static int WindowHeight;
+        
+        if (showPrefabInspector)
+            WindowHeight = RenderMgr->GetHeight() / 2 - 17;
+        else
+            WindowHeight = RenderMgr->GetHeight() - 18;
+
+        ImGui::SetWindowSize(ImVec2(300, WindowHeight));
+        ImVec2 Size = ImGui::GetWindowSize();
+        ImGui::SetWindowPos(ImVec2(RenderMgr->GetWidth() - Size.x, 19));
 
         std::list<GameObject*> ObjectList = SceneMgr->CurrentScene()->GetObjectList();
         auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
@@ -701,7 +724,7 @@ void BoneEditor::UpdateFrame()
 
                     if (ImGui::SmallButton("Edit Object"))
                     {
-                        showPrefabHierarchical = true;
+                        showPrefabInspector = true;
 
                         currentObjectName = (*iter)->GetName();
                     }
@@ -803,19 +826,47 @@ void BoneEditor::UpdateFrame()
                 ImGui::TreePop();
             }
         }
+        
+        ImGui::End();
+    }
 
-        if (ImGui::CollapsingHeader("[Environment Setting]", ImGuiTreeNodeFlags_DefaultOpen))
+    if (showEnvironmentSetting)
+    {
+        std::string WindowName = "Environment" + currentShowInfoObject;
+        ImGui::Begin(WindowName.c_str(), &showEnvironmentSetting, ImGuiWindowFlags_AlwaysAutoResize);
+
+        if (ImGui::IsRootWindowOrAnyChildFocused())
+            isFocusedWindow = true;
+
+        if (ImGui::CollapsingHeader("[Settings]", ImGuiTreeNodeFlags_DefaultOpen))
         {
             if (ImGui::TreeNode("SkyBox"))
             {
-                static char SkyBoxFolder[64] = "miramar";
-                ImGui::InputText("Folder Name", SkyBoxFolder, 64);
+                auto SkyBoxs = ResourceMgr->ExistFiles(".\\Resource\\Skybox\\*");
+
+                const int Size = SkyBoxs.size();
+                char** ListBoxItems = new char*[Size];
+
+                int i = 0;
+                for each(auto item in SkyBoxs)
+                {
+                    ListBoxItems[i] = new char[64];
+                    strcpy(ListBoxItems[i], SkyBoxs[i].c_str());
+                    i++;
+                }
+
+                static int CurItem = 0;
+                ImGui::ListBox("Folder List", &CurItem, ListBoxItems, Size, 4);
 
                 static char TypeName[64] = "tga";
                 ImGui::InputText("ImageType", TypeName, 64);
 
                 if (ImGui::Button("Chanage SkyBox"))
-                    SceneMgr->CurrentScene()->SetSkybox(SkyBoxFolder, TypeName);
+                    SceneMgr->CurrentScene()->SetSkybox(ListBoxItems[CurItem], TypeName);
+
+                for (int i = 0; i<Size; i++)
+                    delete[] ListBoxItems[i];
+                delete[] ListBoxItems;
 
                 ImGui::TreePop();
             }
@@ -903,15 +954,20 @@ void BoneEditor::UpdateFrame()
         ImGui::End();
     }
 
-    if (showPrefabHierarchical)
+    if (showPrefabInspector)
     {
-        std::string WindowName = "Prefab Inspector : " + currentObjectName;
+        std::string WindowName = " Prefab Inspector : " + currentObjectName;
 
-        ImGui::Begin(WindowName.c_str(), &showPrefabHierarchical, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::Begin(WindowName.c_str(), &showPrefabInspector,
+            ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoResize);  //ImGuiWindowFlags_AlwaysAutoResize
 
         if (ImGui::IsRootWindowOrAnyChildFocused())
             isFocusedWindow = true;
 
+        ImGui::SetWindowSize(ImVec2(300, RenderMgr->GetHeight() / 2));
+        ImVec2 Size = ImGui::GetWindowSize();
+        ImGui::SetWindowPos(ImVec2(RenderMgr->GetWidth() - Size.x, RenderMgr->GetHeight() / 2));
+        
         ShowGameObjectTree(currentObjectName);
 
         ImGui::End();
@@ -919,17 +975,22 @@ void BoneEditor::UpdateFrame()
 
     if (showAddComponent)
     {
-        std::string WindowName = "Add Component : " + currentShowInfoObject;
-        ImGui::Begin(WindowName.c_str(), &showAddComponent, ImGuiWindowFlags_AlwaysAutoResize);
+        static ImVec2 Size(250, 180);
+        ImGui::SetNextWindowSize(Size);
+
+        std::string WindowName = " Add Component : " + currentShowInfoObject;
+        ImGui::Begin(WindowName.c_str(), &showAddComponent, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoResize);
 
         if (ImGui::IsRootWindowOrAnyChildFocused())
             isFocusedWindow = true;
 
-        const char* listbox_items[] = { "StaticMesh", "Collision", "Script", "SkinnedMesh", "Camera", "Material", "TrailRenderer", "BillBoard", "SpriteBillBoard" };
+        const char* listbox_items[] = { "StaticMesh", "Collision", "Script", "SkinnedMesh", "Sound", "Material", "Camera", "TrailRenderer", "BillBoard", "SpriteBillBoard" };
         static int listbox_item_current = 0;
         ImGui::ListBox("Component\nTypes\n", &listbox_item_current, listbox_items, IM_ARRAYSIZE(listbox_items), 4);
 
         switch (listbox_item_current) {
+        
+        // StaticMesh
         case 0:
         {
             auto Meshes = ResourceMgr->ExistFiles(".\\Resource\\Mesh\\*");
@@ -965,6 +1026,7 @@ void BoneEditor::UpdateFrame()
         }
         break;
 
+        // Collision
         case 1:
         {
             char* ComboBoxItems[] = { "AABB", "SPHERE", "OBB" };
@@ -977,7 +1039,14 @@ void BoneEditor::UpdateFrame()
                 auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
 
                 Collision* Coll = new Collision(Object);
-                Coll->ComputeBoundingBox(ResourceMgr->LoadMesh(((StaticMesh*)Object->GetComponent("StaticMesh"))->GetFileAddress())->mesh);
+
+                if (CurItem == 0)
+                    Coll->ComputeBoundingBox(ResourceMgr->LoadMesh(((StaticMesh*)Object->GetComponent("StaticMesh"))->GetFileAddress())->mesh);
+                else if (CurItem == 1)
+                    Coll->ComputeBoundingSphere(ResourceMgr->LoadMesh(((StaticMesh*)Object->GetComponent("StaticMesh"))->GetFileAddress())->mesh);
+                //else
+                //    Coll->CreateOBB()
+
                 Coll->LoadContent();
 
                 Object->AddComponent(Coll);
@@ -987,6 +1056,7 @@ void BoneEditor::UpdateFrame()
         }
         break;
 
+        // Script
         case 2:
         {
             const int Size = scriptList.size();
@@ -1014,16 +1084,99 @@ void BoneEditor::UpdateFrame()
             }
         }
         break;
+
+        // SkinnedMesh
+        case 3:
+        {
+        }
+        break;
+
+        // Sound
+        case 4:
+        {
+        }
+        break;
+
+        // Material
+        case 5:
+        {
+            static float Ambient[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+            static float Diffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+            static float Emissive[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+            static float Specular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+            static float Shininess = 1.0f;
+
+            ImGui::InputFloat3("Ambient", Ambient);
+            ImGui::InputFloat3("Diffuse", Diffuse);
+            ImGui::InputFloat3("Emissive", Emissive);
+            ImGui::InputFloat3("Specular", Specular);
+            ImGui::InputFloat("Shininess", &Shininess);
+
+            if (ImGui::Button("Add Component"))
+            {
+                Material* Mat = new Material();
+
+                Mat->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
+                Mat->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
+                Mat->SetEmissive(Emissive[0], Emissive[1], Emissive[2], Emissive[3]);
+                Mat->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
+                Mat->SetShininess(Shininess);
+
+                Mat->LoadContent();
+                
+                auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+                Object->AddComponent(Mat);
+
+                showAddComponent = false;
+            }
+        }
+        break;
+
+        // Camera
+        case 6:
+        {
+
+        }
+        break;
+
+        // TrailRenderer
+        case 7:
+        {
+
+        }
+        break;
+
+        // BillBoard
+        case 8:
+        {
+
+        }
+        break;
+
+        // SpriteBillBoard
+        case 9:
+        {
+
+        }
+        break;
+
         }
 
         ImGui::End();
     }
 
     if (showLogWindow)
-        logDialog.Render("Log", &showLogWindow);
+        logDialog.Render(" Log Dialog", &showLogWindow);
     
     if (isFocusedWindow)
         InputMgr->SetFocusWindow(false);
     else
         InputMgr->SetFocusWindow(true);
+}
+
+void BoneEditor::SelectObject(std::string name)
+{
+    showPrefabInspector = true;
+
+    currentObjectName = name;
 }

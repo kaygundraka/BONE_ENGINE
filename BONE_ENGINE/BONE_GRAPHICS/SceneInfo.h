@@ -7,6 +7,7 @@ namespace BONE_GRAPHICS
     class SceneInfoUI : public GUI_Scene {
     private:
         bool open;
+        bool openPopup;
         bool endScene;
 
         bool isNewScene;

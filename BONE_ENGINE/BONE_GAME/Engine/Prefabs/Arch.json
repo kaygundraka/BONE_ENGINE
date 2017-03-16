@@ -1,0 +1,31 @@
+{
+    "IsActive": true,
+    "IsStatic": false,
+    "Priority": 1,
+    "StaticMesh": {
+        "FileName": "Arch_A.X"
+    },
+    "Tag": "",
+    "Transform3D": {
+        "ForwardVector": [
+            0.0,
+            0.0,
+            -0.999999940395355
+        ],
+        "Position": [
+            -5.84202575683594,
+            35.7400512695313,
+            21.2156372070313
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    }
+}

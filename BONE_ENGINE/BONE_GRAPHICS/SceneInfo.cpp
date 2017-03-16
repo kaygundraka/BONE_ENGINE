@@ -9,6 +9,8 @@ namespace BONE_GRAPHICS
     SceneInfoUI::SceneInfoUI()
     {
         endScene = false;
+
+        openPopup = false;
     }
 
     void SceneInfoUI::UpdateFrame()
@@ -25,50 +27,72 @@ namespace BONE_GRAPHICS
 
         ImGui::SetWindowPos(Position);
 
-        static char FileName[64] = "Scene Name";
-        ImGui::InputText("New File Name", FileName, 64);
+        static char FileName[64] = "Scene";
+        ImGui::InputText("File Name", FileName, 64);
 
         if (ImGui::Button("New Scene"))
         {
-            endScene = true;
-            isNewScene = true;
-            openSceneName = FileName;
+            std::string Path;
+            std::string Name = FileName;
+            Name += ".json";
+
+            if (!ResourceMgr->ExistFile(Name, &Path))
+            {
+                endScene = true;
+                isNewScene = true;
+                openSceneName = FileName;
+            }
+            else
+                ImGui::OpenPopup("Error?");
+        }
+
+        if (ImGui::BeginPopupModal("Error?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text("A file with duplicate names exists.\nThis operation cannot be undone!\n\n");
+            ImGui::Separator();
+
+            if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+            ImGui::EndPopup();
         }
 
         auto Scenes = ResourceMgr->ExistFiles(".\\Engine\\Maps\\*");
 
         const int Size = Scenes.size();
-        char** ComboBoxItems = new char*[Size];
+        char** ListBoxItems = new char*[Size];
 
         int i = 0;
         for each(auto item in Scenes)
         {
-            ComboBoxItems[i] = new char[64];
-            strcpy(ComboBoxItems[i], Scenes[i].c_str());
+            ListBoxItems[i] = new char[64];
+            strcpy(ListBoxItems[i], Scenes[i].c_str());
             i++;
         }
 
         static int CurItem = 0;
-        ImGui::Combo("Scene List", &CurItem, ComboBoxItems, Size);
+        ImGui::ListBox("Scene List", &CurItem, ListBoxItems, Size, 4);
 
         if (ImGui::Button("Open Scene"))
         {
             isNewScene = false;
             endScene = true;
 
-            for (int i = strlen(ComboBoxItems[CurItem]) - 1; i >= 0; i--)
+            for (int i = strlen(ListBoxItems[CurItem]) - 1; i >= 0; i--)
             {
-                if (ComboBoxItems[CurItem][i] != '.')
-                    ComboBoxItems[CurItem][i] = '\0';
+                if (ListBoxItems[CurItem][i] != '.')
+                    ListBoxItems[CurItem][i] = '\0';
                 else
                 {
-                    ComboBoxItems[CurItem][i] = '\0';
+                    ListBoxItems[CurItem][i] = '\0';
                     break;
                 }
             }
 
-            openSceneName = ComboBoxItems[CurItem];
+            openSceneName = ListBoxItems[CurItem];
         }
+
+        for (int i =0; i<Size; i++)
+            delete[] ListBoxItems[i];
+        delete[] ListBoxItems;
 
         ImGui::End();
 

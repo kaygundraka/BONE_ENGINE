@@ -6,8 +6,9 @@
 
 namespace BONE_GRAPHICS
 {
-    PosPivot::PosPivot(GameObject* gameObject, std::string name) : Script(gameObject, name)
+    PosPivot::PosPivot(BoneEditor* ui, GameObject* gameObject, std::string name) : Script(gameObject, name)
     {
+        this->ui = ui;
         gameObject->SetTag("EditorObject");
     }    
     
@@ -194,6 +195,8 @@ namespace BONE_GRAPHICS
             }
             else
             {
+                ui->SelectObject(selectObject);
+
                 if (Object != nullptr)
                 {
                     sm->ShowMeshBox(true);

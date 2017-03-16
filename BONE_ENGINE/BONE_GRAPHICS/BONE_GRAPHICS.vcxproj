@@ -69,13 +69,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(DXSDK_DIR)\Include\;..\BONE_SYSTEM\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)\Lib\x64;..\x64\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\Library\Include;$(DXSDK_DIR)\Include\;..\BONE_SYSTEM\;$(IncludePath)</IncludePath>
+    <LibraryPath>..\Library\Lib;$(DXSDK_DIR)\Lib\x64;..\x64\Debug;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(DXSDK_DIR)\Utilities\bin\x64;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(DXSDK_DIR)\Include\;..\BONE_SYSTEM\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)\Lib\x64;..\x64\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\Library\Include;$(DXSDK_DIR)\Include\;..\BONE_SYSTEM\;$(IncludePath)</IncludePath>
+    <LibraryPath>..\Library\Lib;$(DXSDK_DIR)\Lib\x64;..\x64\Release;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(DXSDK_DIR)\Utilities\bin\x64;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -94,7 +94,7 @@
       <PrecompiledHeaderFile>Common.h</PrecompiledHeaderFile>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>BONE_SYSTEM.lib;d3d9.lib;d3dx10d.lib;d3dx9.lib;winmm.lib;d3dxof.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BONE_SYSTEM.lib;d3d9.lib;d3dx10d.lib;d3dx9.lib;winmm.lib;d3dxof.lib;reactphysics3d_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -125,7 +125,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>BONE_SYSTEM.lib;d3d9.lib;d3dx10d.lib;d3dx9.lib;winmm.lib;d3dxof.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BONE_SYSTEM.lib;d3d9.lib;d3dx10d.lib;d3dx9.lib;winmm.lib;d3dxof.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
