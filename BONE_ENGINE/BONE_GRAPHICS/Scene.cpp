@@ -77,10 +77,10 @@ namespace BONE_GRAPHICS
 
             loadPerTime = Cur / Max;
         }
-
+        
         if (Max == 0)
             loadPerTime = 1;
-
+        
         IsFrameworkFlag = true;
         CompleateLoading = true;
 

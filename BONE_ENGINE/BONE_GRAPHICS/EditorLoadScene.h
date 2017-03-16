@@ -8,6 +8,7 @@ namespace BONE_GRAPHICS
     private:
         bool open;
         float progress;
+        float temp;
 
     public:
         EditorLoadScene();

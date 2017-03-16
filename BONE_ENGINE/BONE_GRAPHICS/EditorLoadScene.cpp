@@ -8,6 +8,7 @@ namespace BONE_GRAPHICS
     {
         open = true;
         progress = 0;
+        temp = 0;
     }
 
     void EditorLoadScene::UpdateFrame()
@@ -24,9 +25,15 @@ namespace BONE_GRAPHICS
         ImGui::Text("Load Scene...");
         ImGui::ProgressBar(progress, ImVec2(0.0f, 0.0f));
 
-        progress += SceneMgr->GetTimeDelta() / 2;
+        progress = SceneMgr->CurrentScene()->GetLoadPerTime() / 200 + temp;
 
-        if (progress >= 1 && SceneMgr->CurrentScene()->GetLoadPerTime() / 100 >= 1)
+        for (int i = 0; i < 100; i++)
+        {
+            temp += 0.01f;
+            Sleep(1);
+        }
+
+        if (progress >= 1)
             SceneMgr->GetLoadScene()->SetSceneFlag(false);
 
         ImGui::End();

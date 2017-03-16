@@ -100,6 +100,7 @@ namespace BONE_GRAPHICS
 		if (staticMeshList.find(name) == staticMeshList.end())
 		{
 			MESH_INFO Temp;
+
 			
             std::string full_path = "";
             if (!ExistFile(name, &full_path))
