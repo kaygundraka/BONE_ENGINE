@@ -114,6 +114,9 @@
     <Filter Include="소스 파일\Editor\Scene">
       <UniqueIdentifier>{ad79331f-ac67-4f15-a087-dd17736a07f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Core\Management\RuntimeCompiler">
+      <UniqueIdentifier>{31631ac4-7f9a-443b-97c3-1d989f0ea174}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -305,6 +308,9 @@
     <ClInclude Include="Rp3dRigidBody.h">
       <Filter>소스 파일\Core\GameObject\Components\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="RuntimeCompiler.h">
+      <Filter>소스 파일\Core\Management\RuntimeCompiler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -489,6 +495,9 @@
     </ClCompile>
     <ClCompile Include="Rp3dRigidBody.cpp">
       <Filter>소스 파일\Core\GameObject\Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="RuntimeCompiler.cpp">
+      <Filter>소스 파일\Core\Management\RuntimeCompiler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -94,7 +94,7 @@
       <PrecompiledHeaderFile>Common.h</PrecompiledHeaderFile>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>BONE_SYSTEM.lib;d3d9.lib;d3dx10d.lib;d3dx9.lib;winmm.lib;d3dxof.lib;reactphysics3d_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BONE_SYSTEM.lib;d3d9.lib;d3dx10d.lib;d3dx9.lib;winmm.lib;d3dxof.lib;RuntimeCompiler_Debug.lib;reactphysics3d_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -125,7 +125,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>BONE_SYSTEM.lib;d3d9.lib;d3dx10d.lib;d3dx9.lib;winmm.lib;d3dxof.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BONE_SYSTEM.lib;d3d9.lib;d3dx10d.lib;d3dx9.lib;winmm.lib;d3dxof.lib;RuntimeCompiler.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -147,6 +147,7 @@
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Rp3dCollision.h" />
     <ClInclude Include="Rp3dRigidBody.h" />
+    <ClInclude Include="RuntimeCompiler.h" />
     <ClInclude Include="SceneInfo.h" />
     <ClInclude Include="ScreenButton.h" />
     <ClInclude Include="Camera.h" />
@@ -307,6 +308,7 @@
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="Rp3dCollision.cpp" />
     <ClCompile Include="Rp3dRigidBody.cpp" />
+    <ClCompile Include="RuntimeCompiler.cpp" />
     <ClCompile Include="SceneInfo.cpp" />
     <ClCompile Include="ScreenButton.cpp" />
     <ClCompile Include="ScreenImage.cpp" />
