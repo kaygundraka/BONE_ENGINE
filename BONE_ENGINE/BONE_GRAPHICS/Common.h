@@ -14,6 +14,8 @@
 #include <string>
 #include <dsound.h>
 #include <mmsystem.h>
+#include <stdarg.h>
+#include <assert.h>
 #include <vector>
 #include <CommCtrl.h>
 #include <tchar.h>
@@ -30,6 +32,16 @@
 #include <MultiThreadSync.h>
 #include <json.hpp>
 
+// RuntimeCompiled C++
+#include <ICompilerLogger.h>
+#include <IObject.h>
+#include <IObjectFactorySystem.h>
+#include <AUArray.h>
+#include <BuildTool.h>
+#include <FileChangeNotifier.h>
+#include <RuntimeObjectSystem.h>
+
+// ImGUIs
 #include "imgui.h"
 #include "imgui_impl_dx9.h"
 

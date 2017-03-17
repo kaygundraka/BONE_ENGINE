@@ -14,7 +14,7 @@ namespace BONE_GRAPHICS
         preMessage = new char[100];
         SaveLog(outputLog);
 
-        ShowMessage(LOG_MESSAGE, "LogManager is initialized");
+        ShowMessage(LOG_INFO, "LogManager is initialized");
     }
 
 	std::string GetTime()
@@ -50,12 +50,11 @@ namespace BONE_GRAPHICS
 		TiXmlDocument doc;
 		doc.LoadFile(logFileName.c_str());
 
-		// 루트 노드 접근
 		TiXmlElement* pRoot = doc.FirstChildElement("BONE_LOG_SYSTEM");
 
-		TiXmlElement* pElem = pRoot->FirstChildElement("LOG_SET");
+		TiXmlElement* pElem = pRoot->FirstChildElement("LOG_INFO");
 
-		if (_type == LOG_SET)
+		if (_type == LOG_INFO)
 		{
 			TiXmlElement* pLog = new TiXmlElement("Log");
 			_log = "TIME[" + GetTime() + "] : " + _log;
@@ -71,17 +70,7 @@ namespace BONE_GRAPHICS
 			pLog->LinkEndChild(new TiXmlText(_log.c_str()));
 			pElem->LinkEndChild(pLog);
 		}
-		else if (_type == LOG_VALUE)
-		{
-			pElem = pElem->NextSiblingElement();
-			pElem = pElem->NextSiblingElement();
-
-			TiXmlElement* pLog = new TiXmlElement("Log");
-			_log = "TIME[" + GetTime() + "] : " + _log;
-			pLog->LinkEndChild(new TiXmlText(_log.c_str()));
-			pElem->LinkEndChild(pLog);
-		}
-		else if (_type == LOG_MESSAGE)
+		else if (_type == LOG_WARNING)
 		{
 			pElem = pElem->NextSiblingElement();
 			pElem = pElem->NextSiblingElement();
@@ -96,124 +85,51 @@ namespace BONE_GRAPHICS
 		doc.SaveFile(logFileName.c_str());
 	}
 
-	void LogManager::ShowMessage(int _type, char* _log)
+    void LogManager::Error(const char * format, ...)
+    {
+        va_list args;
+        va_start(args, format);
+
+        ShowMessage(LOG_ERROR, args);
+    }
+
+    void LogManager::Warning(const char * format, ...)
+    {
+        va_list args;
+        va_start(args, format);
+        ShowMessage(LOG_WARNING, args);
+    }
+
+    void LogManager::Info(const char * format, ...)
+    {
+        va_list args;
+        va_start(args, format);
+        ShowMessage(LOG_INFO, args)
+    }
+
+	void LogManager::ShowMessage(int _type, const char* _log, va_list args)
 	{
 		ThreadSync sync;
 
-		if (strlen(_log) < MAX_PATH)
-		{
-			freopen("CONOUT$", "wt", stdout);
-			//CONOUT$ - console 창
-			//wt - 텍스트 쓰기 모드
-			//stdout - 출력될 파일 포인터(모니터로 지정)
+        int result = vsnprintf(buff, LOGSYSTEM_MAX_BUFFER - 1, _log, args);
 
-			sprintf(logMessage, "%d : ", index++);
+        buff[LOGSYSTEM_MAX_BUFFER - 1] = '\0';
 
-			char* TempStr;
-			TempStr = new char[100 - strlen(logMessage)];
+        freopen("CONOUT$", "wt", stdout);
 
-			strcpy(TempStr, _log);
+        if (_type == LOG_INFO)
+            std::cout << "Info : " << buff << std::endl;
+        else if (_type == LOG_WARNING)
+            std::cout << "Warning : " << buff << std::endl;
+        else
+            std::cout << "Error : " << buff << std::endl;
 
-			strcat(logMessage, TempStr);
+        if (IsSave)
+            AddLogToFile(_type, logMessage);
 
-			if (strcmp(logMessage, preMessage))
-			{
-				sprintf(preMessage, "%d : ", index);
-				strcat(preMessage, TempStr);
-
-				std::cout << logMessage << std::endl;
-			}
-			else
-				index--;
-
-			if (IsSave)
-			{
-				AddLogToFile(_type, logMessage);
-			}
-
-			delete[] TempStr;
-		}
-		else
-			std::cout << "Message Size - OVERFLOW" << std::endl;
-	}
-
-	void LogManager::ShowMessage(int _type, char* _log, float _value)
-	{
-		ThreadSync sync;
-
-		if (strlen(_log) < MAX_PATH)
-		{
-			freopen("CONOUT$", "wt", stdout);
-			//CONOUT$ - console 창
-			//wt - 텍스트 쓰기 모드
-			//stdout - 출력될 파일 포인터(모니터로 지정)
-
-			sprintf(logMessage, "%d : ", index++);
-
-			char* TempStr = new char[100 - strlen(logMessage)];
-
-			sprintf(TempStr, _log, _value);
-
-			strcat(logMessage, TempStr);
-
-			if (strcmp(logMessage, preMessage))
-			{
-				sprintf(preMessage, "%d : ", index);
-				strcat(preMessage, TempStr);
-
-				std::cout << logMessage << std::endl;
-			}
-			else
-				index--;
-
-			if (IsSave)
-			{
-				AddLogToFile(_type, logMessage);
-			}
-
-			delete[] TempStr;
-		}
-		else
-			std::cout << "Message Size - OVERFLOW" << std::endl;
-	}
-
-	void LogManager::ShowMessage(int _type, char* _log, char* _value)
-	{
-		ThreadSync sync;
-
-		if (strlen(_log) < MAX_PATH)
-		{
-			freopen("CONOUT$", "wt", stdout);
-			//CONOUT$ - console 창
-			//wt - 텍스트 쓰기 모드
-			//stdout - 출력될 파일 포인터(모니터로 지정)
-
-			sprintf(logMessage, "%d : ", index++);
-
-			char* TempStr = new char[100 - strlen(logMessage)];
-
-			sprintf(TempStr, _log, _value);
-			strcat(logMessage, TempStr);
-
-			if (strcmp(logMessage, preMessage))
-			{
-				sprintf(preMessage, "%d : ", index);
-				strcat(preMessage, TempStr);
-
-				std::cout << logMessage << std::endl;
-			}
-			else
-				index--;
-
-			if (IsSave)
-			{
-				AddLogToFile(_type, logMessage);
-			}
-
-			delete[] TempStr;
-		}
-		else
-			std::cout << "Message Size - OVERFLOW" << std::endl;
+#ifdef _WIN32
+        OutputDebugStringA(buff);
+#endif
 	}
 
 	void LogManager::SaveLog(bool _bFlag)
@@ -242,22 +158,15 @@ namespace BONE_GRAPHICS
 			pRoot->LinkEndChild(pComment);
 
 			// Static Mesh Information
-			TiXmlElement* pElem = new TiXmlElement("LOG_SET");
+			TiXmlElement* pElem = new TiXmlElement("LOG_INFO");
 			pRoot->LinkEndChild(pElem);
-			//delete pElem;
-
+			
+			pElem = new TiXmlElement("LOG_WARNING");
+			pRoot->LinkEndChild(pElem);
+			
 			pElem = new TiXmlElement("LOG_ERROR");
 			pRoot->LinkEndChild(pElem);
-			//delete pElem;
 
-			pElem = new TiXmlElement("LOG_VALUE");
-			pRoot->LinkEndChild(pElem);
-			//delete pElem;
-
-			pElem = new TiXmlElement("LOG_MESSAGE");
-			pRoot->LinkEndChild(pElem);
-
-			// XML 파일 형태로 저장.
 			doc.SaveFile(logFileName.c_str());
 		}
 	}

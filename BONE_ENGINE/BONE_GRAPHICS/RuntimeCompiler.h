@@ -11,6 +11,10 @@ namespace BONE_GRAPHICS
         RuntimeCompiler();
         virtual ~RuntimeCompiler();
 
+        void AddSource();
+
+        bool Compile();
+
         void InitializeMembers();
         virtual void ReleaseMembers();
     };

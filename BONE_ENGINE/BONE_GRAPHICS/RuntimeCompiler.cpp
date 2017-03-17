@@ -22,4 +22,14 @@ namespace BONE_GRAPHICS
     {
 
     }
+
+    void RuntimeCompiler::AddSource()
+    {
+
+    }
+
+    bool RuntimeCompiler::Compile()
+    {
+
+    }
 }

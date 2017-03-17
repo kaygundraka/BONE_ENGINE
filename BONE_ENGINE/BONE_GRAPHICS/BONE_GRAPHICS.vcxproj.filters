@@ -311,6 +311,9 @@
     <ClInclude Include="RuntimeCompiler.h">
       <Filter>소스 파일\Core\Management\RuntimeCompiler</Filter>
     </ClInclude>
+    <ClInclude Include="RuntimeCompilerLogger.h">
+      <Filter>소스 파일\Core\Management\Log</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -498,6 +501,9 @@
     </ClCompile>
     <ClCompile Include="RuntimeCompiler.cpp">
       <Filter>소스 파일\Core\Management\RuntimeCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="RuntimeCompilerLogger.cpp">
+      <Filter>소스 파일\Core\Management\Log</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
