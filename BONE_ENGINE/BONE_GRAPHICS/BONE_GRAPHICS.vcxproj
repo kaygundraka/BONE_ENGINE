@@ -69,12 +69,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\Library\Include;$(DXSDK_DIR)\Include\;..\BONE_SYSTEM\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Library\reactphysics3d\;..\Library\RuntimeCompiledC++\;$(DXSDK_DIR)\Include\;..\BONE_SYSTEM\;$(IncludePath)</IncludePath>
     <LibraryPath>..\Library\Lib;$(DXSDK_DIR)\Lib\x64;..\x64\Debug;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(DXSDK_DIR)\Utilities\bin\x64;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\Library\Include;$(DXSDK_DIR)\Include\;..\BONE_SYSTEM\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Library\reactphysics3d\;..\Library\RuntimeCompiledC++\;$(DXSDK_DIR)\Include\;..\BONE_SYSTEM\;$(IncludePath)</IncludePath>
     <LibraryPath>..\Library\Lib;$(DXSDK_DIR)\Lib\x64;..\x64\Release;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(DXSDK_DIR)\Utilities\bin\x64;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
@@ -324,7 +324,10 @@
     <ClCompile Include="SnowParticle.cpp" />
     <ClCompile Include="SpriteBillBoard.cpp" />
     <ClCompile Include="StaticMesh.cpp" />
-    <ClCompile Include="test.cpp" />
+    <ClCompile Include="test.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="TrailRenderer.cpp" />
     <ClCompile Include="Transform2D.cpp" />
     <ClCompile Include="Transform3D.cpp" />
