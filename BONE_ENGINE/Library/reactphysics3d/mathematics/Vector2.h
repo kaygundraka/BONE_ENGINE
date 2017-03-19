@@ -26,6 +26,12 @@
 #ifndef REACTPHYSICS3D_VECTOR2_H
 #define REACTPHYSICS3D_VECTOR2_H
 
+#ifdef max
+
+#undef max
+#undef min
+#endif // max
+
 // Libraries
 #include <cmath>
 #include <cassert>

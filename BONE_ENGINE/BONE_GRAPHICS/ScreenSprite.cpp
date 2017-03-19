@@ -82,7 +82,7 @@ namespace BONE_GRAPHICS
 	void ScreenSprite::Render(GameObject* owner)
 	{
 		Matrix matrix = ((Transform2D*)owner->GetComponent("Transform2D"))->GetTransform();
-		Vector3 position = ((Transform2D*)owner->GetComponent("Transform2D"))->GetPosition();
+		Vec3 position = ((Transform2D*)owner->GetComponent("Transform2D"))->GetPosition();
 
 		LPDIRECT3DTEXTURE9 texture = ResourceMgr->LoadTexture(address);
 
@@ -90,7 +90,7 @@ namespace BONE_GRAPHICS
 
 		sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
 
-		sprite->Draw(texture, &curRect, nullptr, &Vector3(0, 0, 0), 0xffffffff);
+		sprite->Draw(texture, &curRect, nullptr, &Vec3(0, 0, 0), 0xffffffff);
 
 		sprite->End();
 	}

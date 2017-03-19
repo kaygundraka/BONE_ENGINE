@@ -35,7 +35,7 @@ namespace BONE_GRAPHICS
 		if (tr == nullptr)
 			return false;
 
-		Vector2 position(
+		Vec2 position(
 			tr->GetPosition().x,
 			tr->GetPosition().y
 		);

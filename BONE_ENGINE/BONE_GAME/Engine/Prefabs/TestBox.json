@@ -1,0 +1,47 @@
+{
+    "Collision": {
+        "HalfExtens": [
+            4.62671422958374,
+            7.62237024307251,
+            7.69959354400635
+        ],
+        "Type": 0
+    },
+    "IsActive": true,
+    "IsStatic": false,
+    "Priority": 1,
+    "RigidBody": {
+        "Bounciness": 0.400000005960464,
+        "EnableGravity": true,
+        "FricitionCoefficient": 0.200000002980232,
+        "IsAllowedToSleep": false,
+        "Mass": 5.0,
+        "Type": 2
+    },
+    "StaticMesh": {
+        "FileName": "Wall3.X"
+    },
+    "Tag": "",
+    "Transform3D": {
+        "ForwardVector": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Position": [
+            0.0,
+            44.2805328369141,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Scale": [
+            1.0,
+            0.200000002980232,
+            0.200000002980232
+        ]
+    }
+}

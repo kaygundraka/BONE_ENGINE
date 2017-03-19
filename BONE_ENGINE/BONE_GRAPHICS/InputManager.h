@@ -1,5 +1,6 @@
 #pragma once
 #include "ISingleton.h"
+#include "InterfaceIds.h"
 #include "Common.h"
 
 namespace BONE_GRAPHICS
@@ -35,7 +36,7 @@ namespace BONE_GRAPHICS
 		bool KeyDown(char _key, bool _onlyOne);
 		void KeyUp(char _key);
 		POINT GetMousePosition();
-		Vector2 GetMousePositionToVector2();
+		Vec2 GetMousePositionToVector2();
 		MOUSE_STATUS GetMouseLBButtonStatus();
 		MOUSE_STATUS GetMouseRBButtonStatus();
 		bool GetCheckBoxStatus(int _checkBoxName);

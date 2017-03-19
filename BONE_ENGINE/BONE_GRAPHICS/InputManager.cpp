@@ -2,229 +2,228 @@
 #include "InputManager.h"
 #include "LogManager.h"
 
-namespace BONE_GRAPHICS
+using namespace BONE_GRAPHICS;
+
+void InputManager::InitializeMembers()
 {
-	void InputManager::InitializeMembers()
-	{
-		ThreadSync sync;
+    ThreadSync sync;
 
-		mousePosition.x = 400;
-		mousePosition.y = 300;
-		IsLBClick = MOUSE_NONE;
-		IsRBClick = MOUSE_NONE;
-		focusedInputText = 0;
-		IsSelectObject = false;
-		currentCharNumber = 0;
-		focusedWindow = true;
+    mousePosition.x = 400;
+    mousePosition.y = 300;
+    IsLBClick = MOUSE_NONE;
+    IsRBClick = MOUSE_NONE;
+    focusedInputText = 0;
+    IsSelectObject = false;
+    currentCharNumber = 0;
+    focusedWindow = true;
 
-		for (int i = 0; i < 127; i++)
-			keyStatus[(char)i] = true;
+    for (int i = 0; i < 127; i++)
+        keyStatus[(char)i] = true;
 
-		LogMgr->ShowMessage(LOG_MESSAGE, "InputManager is initialized");
-	}
-    
-	void InputManager::SelectObject(std::string name)
-	{
-		ThreadSync sync;
+    LogMgr->Info("InputManager is initialized");
+}
 
-		IsSelectObject = true;
-		selectObjectName = name;
-	}
+void InputManager::SelectObject(std::string name)
+{
+    ThreadSync sync;
 
-	void InputManager::SelectNature(std::string name)
-	{
-		ThreadSync sync;
+    IsSelectObject = true;
+    selectObjectName = name;
+}
 
-		selectNatureName = name;
-	}
+void InputManager::SelectNature(std::string name)
+{
+    ThreadSync sync;
 
-	std::string InputManager::GetSelectedObjectName()
-	{
-		ThreadSync sync;
+    selectNatureName = name;
+}
 
-		return selectObjectName;
-	}
+std::string InputManager::GetSelectedObjectName()
+{
+    ThreadSync sync;
 
-	void InputManager::SetSelectObjectValue(bool isExist)
-	{
-		ThreadSync sync;
+    return selectObjectName;
+}
 
-		IsSelectObject = isExist;
-	}
+void InputManager::SetSelectObjectValue(bool isExist)
+{
+    ThreadSync sync;
 
-	bool InputManager::ExistSelectObejct()
-	{
-		ThreadSync sync;
-	
-		return IsSelectObject;
-	}
+    IsSelectObject = isExist;
+}
 
-	char InputManager::GetCurrentChar()
-	{
-		ThreadSync sync;
+bool InputManager::ExistSelectObejct()
+{
+    ThreadSync sync;
 
-		if (currentCharNumber >= 1)
-			currentCharNumber--;
-		else
-			return 0;
+    return IsSelectObject;
+}
 
-		return currentInputChar;
-	}
+char InputManager::GetCurrentChar()
+{
+    ThreadSync sync;
 
-	bool InputManager::IsFocusedWindow()
-	{
-		ThreadSync sync;
+    if (currentCharNumber >= 1)
+        currentCharNumber--;
+    else
+        return 0;
 
-		return focusedWindow;
-	}
+    return currentInputChar;
+}
 
-	void InputManager::SetFocusWindow(bool isFocused)
-	{
-		ThreadSync sync;
+bool InputManager::IsFocusedWindow()
+{
+    ThreadSync sync;
 
-		focusedWindow = isFocused;
-	}
+    return focusedWindow;
+}
 
-	void InputManager::SetCurrentChar(char _char)
-	{
-		ThreadSync sync;
+void InputManager::SetFocusWindow(bool isFocused)
+{
+    ThreadSync sync;
 
-		if (focusedInputText >= 1)
-		{
-			currentInputChar = _char;
-			currentCharNumber++;
-		}
-	}
+    focusedWindow = isFocused;
+}
 
-	void InputManager::SetFocusTextInput(int addNumber)
-	{
-		ThreadSync sync;
+void InputManager::SetCurrentChar(char _char)
+{
+    ThreadSync sync;
 
-		focusedInputText += addNumber;
-	}
+    if (focusedInputText >= 1)
+    {
+        currentInputChar = _char;
+        currentCharNumber++;
+    }
+}
 
-	void InputManager::NotFocusTextInput()
-	{
-		ThreadSync sync;
+void InputManager::SetFocusTextInput(int addNumber)
+{
+    ThreadSync sync;
 
-		focusedInputText = 0;
-	}
+    focusedInputText += addNumber;
+}
 
-	bool InputManager::KeyDown(char key, bool onlyOne)
-	{
-		ThreadSync sync;
+void InputManager::NotFocusTextInput()
+{
+    ThreadSync sync;
 
-		if (!focusedInputText && focusedWindow)
-		{
-			if (onlyOne)
-			{
-				if ((GetAsyncKeyState(key) & 0x8000) && keyStatus[key] == true)
-				{
-					keyStatus[key] = false;
-					return true;
-				}
-			}
-			else if ((GetAsyncKeyState(key) & 0x8000))
-				return true;
-		}
-		return false;
-	}
+    focusedInputText = 0;
+}
 
-	std::string InputManager::GetSelectedNatureName()
-	{
-		return selectNatureName;
-	}
+bool InputManager::KeyDown(char key, bool onlyOne)
+{
+    ThreadSync sync;
 
-	MOUSE_WHEEL_STATUS InputManager::GetMouseWheelStatus()
-	{
-		return mouseStatus;
-	}
+    if (!focusedInputText && focusedWindow)
+    {
+        if (onlyOne)
+        {
+            if ((GetAsyncKeyState(key) & 0x8000) && keyStatus[key] == true)
+            {
+                keyStatus[key] = false;
+                return true;
+            }
+        }
+        else if ((GetAsyncKeyState(key) & 0x8000))
+            return true;
+    }
+    return false;
+}
 
-	void InputManager::SetMouseWheelStatus(MOUSE_WHEEL_STATUS mouseWheelStatus)
-	{
-		ThreadSync sync;
+std::string InputManager::GetSelectedNatureName()
+{
+    return selectNatureName;
+}
 
-		mouseStatus = mouseWheelStatus;
-	}
+MOUSE_WHEEL_STATUS InputManager::GetMouseWheelStatus()
+{
+    return mouseStatus;
+}
 
-	bool InputManager::GetCheckBoxStatus(int checkBoxName)
-	{
-		return checkBoxStatus[checkBoxName];
-	}
+void InputManager::SetMouseWheelStatus(MOUSE_WHEEL_STATUS mouseWheelStatus)
+{
+    ThreadSync sync;
 
-	void InputManager::SetCheckBoxStatus(int checkBoxName, bool isChecked)
-	{
-		ThreadSync sync;
+    mouseStatus = mouseWheelStatus;
+}
 
-		checkBoxStatus[checkBoxName] = isChecked;
-	}
+bool InputManager::GetCheckBoxStatus(int checkBoxName)
+{
+    return checkBoxStatus[checkBoxName];
+}
 
-	void InputManager::KeyUp(char key)
-	{
-		ThreadSync sync;
+void InputManager::SetCheckBoxStatus(int checkBoxName, bool isChecked)
+{
+    ThreadSync sync;
 
-		keyStatus[key] = true;
-	}
+    checkBoxStatus[checkBoxName] = isChecked;
+}
 
-	POINT InputManager::GetMousePosition()
-	{
-		return mousePosition;
-	}
+void InputManager::KeyUp(char key)
+{
+    ThreadSync sync;
 
-	Vector2 InputManager::GetMousePositionToVector2()
-	{
-		return Vector2(mousePosition.x, mousePosition.y);
-	}
+    keyStatus[key] = true;
+}
 
-	MOUSE_STATUS InputManager::GetMouseLBButtonStatus()
-	{
-		return IsLBClick;
-	}
+POINT InputManager::GetMousePosition()
+{
+    return mousePosition;
+}
 
-	int InputManager::GetCreatorMode()
-	{
-		return creatorMode;
-	}
+Vec2 InputManager::GetMousePositionToVector2()
+{
+    return Vec2(mousePosition.x, mousePosition.y);
+}
 
-	void InputManager::SetCreatorMode(int index)
-	{
-		ThreadSync sync;
+MOUSE_STATUS InputManager::GetMouseLBButtonStatus()
+{
+    return IsLBClick;
+}
 
-		creatorMode = index;
-	}
+int InputManager::GetCreatorMode()
+{
+    return creatorMode;
+}
 
-	void InputManager::SetMouseLBButtonStatus(MOUSE_STATUS isClicked)
-	{
-		ThreadSync sync;
+void InputManager::SetCreatorMode(int index)
+{
+    ThreadSync sync;
 
-		IsLBClick = isClicked;
-	}
+    creatorMode = index;
+}
 
-	MOUSE_STATUS InputManager::GetMouseRBButtonStatus()
-	{
-		ThreadSync sync;
+void InputManager::SetMouseLBButtonStatus(MOUSE_STATUS isClicked)
+{
+    ThreadSync sync;
 
-		return IsRBClick;
-	}
+    IsLBClick = isClicked;
+}
 
-	void InputManager::SetMouseRBButtonStatus(MOUSE_STATUS isClicked)
-	{
-		ThreadSync sync;
+MOUSE_STATUS InputManager::GetMouseRBButtonStatus()
+{
+    ThreadSync sync;
 
-		IsRBClick = isClicked;
-	}
+    return IsRBClick;
+}
 
-	void InputManager::SetMousePosition(POINT mousePosition)
-	{
-		ThreadSync sync;
+void InputManager::SetMouseRBButtonStatus(MOUSE_STATUS isClicked)
+{
+    ThreadSync sync;
 
-		mousePosition = mousePosition;
-	}
+    IsRBClick = isClicked;
+}
 
-	void InputManager::ReleaseMembers()
-	{
-		ThreadSync sync;
+void InputManager::SetMousePosition(POINT mousePosition)
+{
+    ThreadSync sync;
 
-		LogMgr->ShowMessage(LOG_MESSAGE, "inputManager is clear.");
-	}
+    mousePosition = mousePosition;
+}
+
+void InputManager::ReleaseMembers()
+{
+    ThreadSync sync;
+
+    LogMgr->Info("inputManager is clear.");
 }

@@ -29,7 +29,7 @@ namespace BONE_GRAPHICS
 		originRect = rect;
 	}
 
-	void ScreenImage::SetOriginRect(Vector2 leftUp, Vector2 rightBottom)
+	void ScreenImage::SetOriginRect(Vec2 leftUp, Vec2 rightBottom)
 	{
 		originRect.LeftTop = leftUp;
 		originRect.RightBottom = rightBottom;
@@ -53,7 +53,7 @@ namespace BONE_GRAPHICS
 	void ScreenImage::Render(GameObject* owner)
 	{
 		Matrix matrix = ((Transform2D*)owner->GetComponent("Transform2D"))->GetTransform();
-		Vector3 position = ((Transform2D*)owner->GetComponent("Transform2D"))->GetPosition();
+		Vec3 position = ((Transform2D*)owner->GetComponent("Transform2D"))->GetPosition();
 
 		RECT rect;
 		rect.left = originRect.LeftTop.x;
@@ -76,7 +76,7 @@ namespace BONE_GRAPHICS
 		sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
 
 		D3DCOLOR RGB = D3DCOLOR_ARGB((int)alpha, 255, 255, 255);
-		sprite->Draw(texture, &rect, nullptr, &Vector3(0, 0, 0), RGB);
+		sprite->Draw(texture, &rect, nullptr, &Vec3(0, 0, 0), RGB);
 		sprite->End();
 
 		RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);

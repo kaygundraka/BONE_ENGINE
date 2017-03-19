@@ -21,7 +21,7 @@ namespace BONE_GRAPHICS
 		void LoadContent();
 
 		void SetOriginRect(Rect rect);
-		void SetOriginRect(Vector2 leftTop, Vector2 rightBottom);
+		void SetOriginRect(Vec2 leftTop, Vec2 rightBottom);
 		Rect GetOriginRect();
 
 		void SetImageFile(std::string address);

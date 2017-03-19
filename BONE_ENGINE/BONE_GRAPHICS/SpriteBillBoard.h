@@ -50,7 +50,7 @@ namespace BONE_GRAPHICS
 		void SelectAnimation(int sceneIndex);
 		
 		void SetRectSize(float width, float height);
-		Vector2 GetRectSize();
+		Vec2 GetRectSize();
 
 		SpriteBillBoard();
 		virtual ~SpriteBillBoard();

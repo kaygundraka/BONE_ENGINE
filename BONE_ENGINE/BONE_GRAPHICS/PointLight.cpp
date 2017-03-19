@@ -100,7 +100,7 @@ namespace BONE_GRAPHICS
         specular = color;
     }
 
-    void PointLight::SetPosition(Vector3 pos)
+    void PointLight::SetPosition(Vec3 pos)
     {
         this->pos = pos;
     }
@@ -120,7 +120,7 @@ namespace BONE_GRAPHICS
         return specular;
     }
 
-    Vector3 PointLight::GetPosition()
+    Vec3 PointLight::GetPosition()
     {
         return tr->GetPosition();
     }

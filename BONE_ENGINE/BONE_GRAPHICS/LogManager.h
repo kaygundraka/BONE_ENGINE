@@ -1,6 +1,7 @@
 #pragma once
 #include "ISingleton.h"
 #include "Common.h"
+#include "BoneEditor.h"
 
 const size_t LOGSYSTEM_MAX_BUFFER = 4096;
 
@@ -19,6 +20,8 @@ namespace BONE_GRAPHICS
 		std::string logFileName;
 		bool IsSave;
 
+        LogDialog* logDialog;
+
         char buff[LOGSYSTEM_MAX_BUFFER];
 
         void ShowMessage(int _type, const char* _log, va_list args);
@@ -32,6 +35,12 @@ namespace BONE_GRAPHICS
         void Error(const char * format, ...);
         void Warning(const char * format, ...);
         void Info(const char * format, ...);
+
+        void Error(const char * format, va_list arg);
+        void Warning(const char * format, va_list arg);
+        void Info(const char * format, va_list arg);
+
+        void AddLogGui(LogDialog* logDialog);
 
 		void AddLogToFile(int _type, std::string _log);
 

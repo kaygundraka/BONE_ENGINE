@@ -17,7 +17,7 @@ namespace BONE_GRAPHICS
 		max.z = -FLT_MAX;
 	}
 
-	bool BoundingBox::isPointInside(Vector3& p)
+	bool BoundingBox::isPointInside(Vec3& p)
 	{
 		if (p.x >= min.x && p.y >= min.y && p.z >= min.z &&
 			p.x <= max.x && p.y <= max.y && p.z <= max.z)

@@ -12,8 +12,8 @@ void TheCollisionWorld()
     rp3d::CollisionWorld world;
 
     // Initial position and orientation of the collision body 
-    rp3d::Vector3 initPosition(0.0, 3.0, 0.0);
-    rp3d::Quaternion initOrientation = rp3d::Quaternion::identity();
+    rp3d::Vec3 initPosition(0.0, 3.0, 0.0);
+    rp3d::Quater initOrientation = rp3d::Quater::identity();
     rp3d::Transform transform(initPosition, initOrientation);
 
     // Create a collision body in the world 
@@ -21,8 +21,8 @@ void TheCollisionWorld()
     body = world.createCollisionBody(transform);
 
     // New position and orientation of the collision body 
-    rp3d::Vector3 position(10.0, 3.0, 0.0);
-    rp3d::Quaternion orientation = rp3d::Quaternion::identity();
+    rp3d::Vec3 position(10.0, 3.0, 0.0);
+    rp3d::Quater orientation = rp3d::Quater::identity();
     rp3d::Transform newTransform(position, orientation);
 
     // Move the collision body 
@@ -38,11 +38,11 @@ void TheCollisionWorld()
 void CollisionType()
 {
     // Half extents of the box in the x, y and z directions 
-    const rp3d::Vector3 halfExtents(2.0, 3.0, 5.0);
+    const rp3d::Vec3 halfExtents(2.0, 3.0, 5.0);
 
     // Create the box shape 
     const rp3d::BoxShape boxShape(halfExtents);
-
+    
     // Create the box shape with a custom collision margin 
     const rp3d::BoxShape boxShape(halfExtents, 0.01);
 
@@ -68,7 +68,7 @@ void CollisionType()
 void TheDynamicWorld()
 {
     // Gravity vector 
-    rp3d::Vector3 gravity(0.0, -9.81, 0.0);
+    rp3d::Vec3 gravity(0.0, -9.81, 0.0);
 
     // Create the dynamics world 
     rp3d::DynamicsWorld world(gravity);
@@ -101,8 +101,8 @@ void UpdateDynamicWorld(rp3d::DynamicsWorld* world)
 void CreatingRigidBody(rp3d::DynamicsWorld* world)
 {
     // Initial position and orientation of the rigid body 
-    rp3d::Vector3 initPosition(0.0, 3.0, 0.0);
-    rp3d::Quaternion initOrientation = rp3d::Quaternion::identity();
+    rp3d::Vec3 initPosition(0.0, 3.0, 0.0);
+    rp3d::Quater initOrientation = rp3d::Quater::identity();
     rp3d::Transform transform(initPosition, initOrientation);
 
     // Create a rigid body in the world 
@@ -128,22 +128,22 @@ void CreatingRigidBody(rp3d::DynamicsWorld* world)
     rigidBody->setIsAllowedToSleep(false);
 
     // Force vector (in Newton) 
-    rp3d::Vector3 force(2.0, 0.0, 0.0);
+    rp3d::Vec3 force(2.0, 0.0, 0.0);
 
     // Apply a force to the center of the body 
     rigidBody->applyForceToCenterOfMass(force);
 
     // Force vector (in Newton) 
-    rp3d::Vector3 force(2.0, 0.0, 0.0);
+    rp3d::Vec3 force(2.0, 0.0, 0.0);
 
     // Point where the force is applied 
-    rp3d::Vector3 point(4.0, 5.0, 6.0);
+    rp3d::Vec3 point(4.0, 5.0, 6.0);
 
     // Apply a force to the body 
     rigidBody->applyForce(force, point);
 
     // Torque vector 
-    rp3d::Vector3 torque(0.0, 3.0, 0.0);
+    rp3d::Vec3 torque(0.0, 3.0, 0.0);
 
     // Apply a torque to the body 
     rigidBody->applyTorque(torque);

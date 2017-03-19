@@ -9,7 +9,7 @@ namespace BONE_GRAPHICS
     {
     private:
         Transform3D* tr;
-        Vector3 pos;
+        Vec3 pos;
 
         RGBA ambient;
         RGBA diffuse;
@@ -33,12 +33,12 @@ namespace BONE_GRAPHICS
         void SetAmbient(RGBA color);
         void SetDiffuse(RGBA color);
         void SetSpecular(RGBA color);
-        void SetPosition(Vector3 pos);
+        void SetPosition(Vec3 pos);
 
         RGBA GetAmbient();
         RGBA GetDiffuse();
         RGBA GetSpecular();
-        Vector3 GetPosition();
+        Vec3 GetPosition();
         float GetRadius();
 
         virtual void Init();

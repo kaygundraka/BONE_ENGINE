@@ -1,0 +1,53 @@
+{
+    "GameObject": {
+        "Floor": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "PrefabName": "Floor",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "TestBox": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                44.2805328369141,
+                0.0
+            ],
+            "PrefabName": "TestBox",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                0.200000002980232,
+                0.200000002980232
+            ],
+            "TreeDepth": 0
+        }
+    },
+    "Scene": {
+        "EnableFog": false,
+        "GlobalAmbient": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ]
+    }
+}

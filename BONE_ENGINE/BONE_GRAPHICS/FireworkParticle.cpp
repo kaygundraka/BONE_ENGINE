@@ -23,10 +23,10 @@ namespace BONE_GRAPHICS
 	void FireworkParticle::ResetParticle(Attribute* _attribute)
 	{
 		_attribute->isAlive = true;
-		_attribute->position = Vector3(0, 0, 0);
+		_attribute->position = Vec3(0, 0, 0);
 
-		Vector3 min = Vector3(-1.0f, -1.0f, -1.0f);
-		Vector3 max = Vector3(1.0f, 1.0f, 1.0f);
+		Vec3 min = Vec3(-1.0f, -1.0f, -1.0f);
+		Vec3 max = Vec3(1.0f, 1.0f, 1.0f);
 
 
 		GetRandomVector(&_attribute->velocity, &min, &max);

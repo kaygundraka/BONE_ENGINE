@@ -99,7 +99,7 @@ namespace BONE_GRAPHICS
 		
 		if (!pRoot)
 		{
-			LogMgr->ShowMessage(LOG_ERROR, "Failed Loading - Settings.xml");
+			LogMgr->Error("Failed Loading - Settings.xml");
 			return;
 		}
 
@@ -108,7 +108,7 @@ namespace BONE_GRAPHICS
 
 		if (!pElem)
 		{
-			LogMgr->ShowMessage(LOG_ERROR, "Failed File - Settings.xml");
+			LogMgr->Error("Failed File - Settings.xml");
 			return;
 		}
 
@@ -118,7 +118,7 @@ namespace BONE_GRAPHICS
 		
 		if (!pTerrainInfoElem)
 		{
-			LogMgr->ShowMessage(LOG_ERROR, "Failed File - Settings.xml");
+			LogMgr->Error("Failed File - Settings.xml");
 			return;
 		}
 
@@ -138,7 +138,7 @@ namespace BONE_GRAPHICS
 
 			if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), Address.c_str(), &Terrain_Info.AlphaMap[i])))
 			{
-				LogMgr->ShowMessage(LOG_ERROR, "Terrain %d-AlphaMap is not load.", i);
+				LogMgr->Error("Terrain %d-AlphaMap is not load.", i);
 				return;
 			}
 		}
@@ -266,7 +266,7 @@ namespace BONE_GRAPHICS
 	{
 		if (FAILED(D3DXCreateTextureFromFile(RenderMgr->GetDevice(), _String, &Terrain_Info.LayerMapFile[p_iIndex])))
 		{
-			LogMgr->ShowMessage(LOG_ERROR, "Trrain %f-Texture is not load.", _Index);
+			LogMgr->Error("Trrain %f-Texture is not load.", _Index);
 		}
 	}
 

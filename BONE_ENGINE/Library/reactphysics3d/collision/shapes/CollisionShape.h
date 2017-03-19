@@ -84,6 +84,7 @@ class CollisionShape {
 
     public :
 
+        std::string name;
         // -------------------- Methods -------------------- //
 
         /// Constructor

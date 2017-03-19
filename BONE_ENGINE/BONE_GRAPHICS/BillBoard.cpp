@@ -181,9 +181,9 @@ namespace BONE_GRAPHICS
 			LoadContent();
 	}
 
-	Vector2 BillBoard::GetRectSize()
+	Vec2 BillBoard::GetRectSize()
 	{
-		return Vector2(rectWidth, rectHeight);
+		return Vec2(rectWidth, rectHeight);
 	}
 
 	void BillBoard::SetOriginRect(Rect rect)
@@ -194,7 +194,7 @@ namespace BONE_GRAPHICS
 			LoadContent();
 	}
 
-	void BillBoard::SetOriginRect(Vector2 leftUp, Vector2 rightBottom)
+	void BillBoard::SetOriginRect(Vec2 leftUp, Vec2 rightBottom)
 	{
 		originRect.LeftTop = leftUp;
 		originRect.RightBottom = rightBottom;
@@ -214,7 +214,7 @@ namespace BONE_GRAPHICS
 		{
 			if (target != nullptr)
 			{
-				Vector3 Dir = ((Camera*)target->GetComponent("Camera"))->GetTargetPosition() - ((Transform3D*)target->GetComponent("Transform3D"))->GetPosition();
+				Vec3 Dir = ((Camera*)target->GetComponent("Camera"))->GetTargetPosition() - ((Transform3D*)target->GetComponent("Transform3D"))->GetPosition();
 				D3DXVec3Normalize(&Dir, &Dir);
 
 				float x = Dir.x;

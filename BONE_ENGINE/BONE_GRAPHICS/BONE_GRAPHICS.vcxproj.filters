@@ -12,9 +12,6 @@
     <Filter Include="소스 파일\Editor">
       <UniqueIdentifier>{13a8527a-a54a-42f2-a802-39fbc4941e53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Editor\Script">
-      <UniqueIdentifier>{50e66d12-5796-4938-bd69-a573893c7ff2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Core">
       <UniqueIdentifier>{1c178fde-a387-4d85-a5d7-8d76aa336177}</UniqueIdentifier>
     </Filter>
@@ -117,6 +114,9 @@
     <Filter Include="소스 파일\Core\Management\RuntimeCompiler">
       <UniqueIdentifier>{31631ac4-7f9a-443b-97c3-1d989f0ea174}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Editor\Script">
+      <UniqueIdentifier>{50e66d12-5796-4938-bd69-a573893c7ff2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -200,9 +200,6 @@
     <ClInclude Include="LogManager.h">
       <Filter>소스 파일\Core\Management\Log</Filter>
     </ClInclude>
-    <ClInclude Include="Collision.h">
-      <Filter>소스 파일\Core\GameObject\Components\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>소스 파일\Core\GameObject\Components</Filter>
     </ClInclude>
@@ -260,9 +257,6 @@
     <ClInclude Include="PointLight.h">
       <Filter>소스 파일\Core\GameObject\BasicGameObject</Filter>
     </ClInclude>
-    <ClInclude Include="PhyscisManager.h">
-      <Filter>소스 파일\Core\Management\PhysicsManager</Filter>
-    </ClInclude>
     <ClInclude Include="imgui_impl_dx9.h">
       <Filter>소스 파일\Library\ImGUI\DX9</Filter>
     </ClInclude>
@@ -313,6 +307,12 @@
     </ClInclude>
     <ClInclude Include="RuntimeCompilerLogger.h">
       <Filter>소스 파일\Core\Management\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceIds.h">
+      <Filter>소스 파일\Core\Management\RuntimeCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsListener.h">
+      <Filter>소스 파일\Core\Management\PhysicsManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -391,9 +391,6 @@
     <ClCompile Include="LogManager.cpp">
       <Filter>소스 파일\Core\Management\Log</Filter>
     </ClCompile>
-    <ClCompile Include="Collision.cpp">
-      <Filter>소스 파일\Core\GameObject\Components\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>소스 파일\Core\GameObject\Components</Filter>
     </ClCompile>
@@ -457,9 +454,6 @@
     <ClCompile Include="PointLight.cpp">
       <Filter>소스 파일\Core\GameObject\BasicGameObject</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsManager.cpp">
-      <Filter>소스 파일\Core\Management\PhysicsManager</Filter>
-    </ClCompile>
     <ClCompile Include="imgui_impl_dx9.cpp">
       <Filter>소스 파일\Library\ImGUI\DX9</Filter>
     </ClCompile>
@@ -504,6 +498,9 @@
     </ClCompile>
     <ClCompile Include="RuntimeCompilerLogger.cpp">
       <Filter>소스 파일\Core\Management\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsListener.cpp">
+      <Filter>소스 파일\Core\Management\PhysicsManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

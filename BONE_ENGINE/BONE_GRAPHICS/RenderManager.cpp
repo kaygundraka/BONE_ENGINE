@@ -59,13 +59,13 @@ namespace BONE_GRAPHICS
 
         if (vp != D3D_OK)
         {
-            LogMgr->ShowMessage(LOG_ERROR, "CreateDevice() - FAILED");
+            LogMgr->Error("CreateDevice() - FAILED");
             Is_init = false;
             return 0;
         }
 
         Is_init = true;
-        LogMgr->ShowMessage(LOG_MESSAGE, "RenderManager is initialized");
+        LogMgr->Info("RenderManager is initialized");
 
         this->useImGUI = useImgui;
 
@@ -266,6 +266,31 @@ namespace BONE_GRAPHICS
         DWORD color;
     };
 
+    void RenderManager::DrawLine(D3DXMATRIX matrix, D3DXVECTOR3 start, D3DXVECTOR3 end, D3DXCOLOR color)
+    {
+        D3D_DEVICE->SetTransform(D3DTS_WORLD, &matrix);
+
+        line_vertex line_vertices[2];
+
+        const DWORD line_fvf = D3DFVF_XYZ | D3DFVF_DIFFUSE;
+
+        line_vertices[0].x = start.x;
+        line_vertices[0].y = start.y;
+        line_vertices[0].z = start.z;
+        line_vertices[0].color = color;
+
+        line_vertices[1].x = end.x;
+        line_vertices[1].y = end.y;
+        line_vertices[1].z = end.z;
+        line_vertices[1].color = color;
+
+        D3D_DEVICE->SetFVF(line_fvf);
+
+        D3D_DEVICE->SetTexture(0, NULL);
+
+        D3D_DEVICE->DrawPrimitiveUP(D3DPT_LINELIST, 1, line_vertices, sizeof(line_vertex));
+    }
+
     void RenderManager::DrawLine(D3DXVECTOR3 start, D3DXVECTOR3 end, D3DXCOLOR color)
     {
         Matrix Transform;
@@ -293,7 +318,7 @@ namespace BONE_GRAPHICS
         D3D_DEVICE->DrawPrimitiveUP(D3DPT_LINELIST, 1, line_vertices, sizeof(line_vertex));
     }
 
-    bool RenderManager::DrawMeshBox(LPD3DXMESH mesh, D3DXVECTOR3 pos, D3DXCOLOR color)
+    bool RenderManager::DrawMeshBox(D3DXMATRIX matrix, LPD3DXMESH mesh, D3DXVECTOR3 pos, D3DXCOLOR color)
     {
         D3DXVECTOR3 LeftBottom;
         D3DXVECTOR3 RightTop;
@@ -301,12 +326,12 @@ namespace BONE_GRAPHICS
         LPVOID pVertices(nullptr);
         mesh->LockVertexBuffer(D3DLOCK_NOSYSLOCK, &pVertices);
 
-        if (FAILED(D3DXComputeBoundingBox((Vector3*)pVertices,
+        if (FAILED(D3DXComputeBoundingBox((Vec3*)pVertices,
             mesh->GetNumVertices(),
             D3DXGetFVFVertexSize(mesh->GetFVF()),
             &LeftBottom, &RightTop)))
         {
-            LogMgr->ShowMessage(LOG_ERROR, "Compute BoundingBox Failed..");
+            LogMgr->Error("Compute BoundingBox Failed..");
             mesh->UnlockVertexBuffer();
 
             return false;
@@ -347,26 +372,23 @@ namespace BONE_GRAPHICS
         Vertex[7].x = RightTop.x;
         Vertex[7].y = RightTop.y;
         Vertex[7].z = RightTop.z;
+                
+        this->DrawLine(matrix, Vertex[0], Vertex[1], color);
+        this->DrawLine(matrix, Vertex[0], Vertex[2], color);
+        this->DrawLine(matrix, Vertex[0], Vertex[3], color);
 
-        for (int i = 0; i < 8; i++)
-            Vertex[i] += pos;
+        this->DrawLine(matrix, Vertex[7], Vertex[4], color);
+        this->DrawLine(matrix, Vertex[7], Vertex[5], color);
+        this->DrawLine(matrix, Vertex[7], Vertex[6], color);
 
-        this->DrawLine(Vertex[0], Vertex[1], color);
-        this->DrawLine(Vertex[0], Vertex[2], color);
-        this->DrawLine(Vertex[0], Vertex[3], color);
+        this->DrawLine(matrix, Vertex[2], Vertex[4], color);
+        this->DrawLine(matrix, Vertex[2], Vertex[6], color);
 
-        this->DrawLine(Vertex[7], Vertex[4], color);
-        this->DrawLine(Vertex[7], Vertex[5], color);
-        this->DrawLine(Vertex[7], Vertex[6], color);
+        this->DrawLine(matrix, Vertex[5], Vertex[1], color);
+        this->DrawLine(matrix, Vertex[5], Vertex[3], color);
 
-        this->DrawLine(Vertex[2], Vertex[4], color);
-        this->DrawLine(Vertex[2], Vertex[6], color);
-
-        this->DrawLine(Vertex[5], Vertex[1], color);
-        this->DrawLine(Vertex[5], Vertex[3], color);
-
-        this->DrawLine(Vertex[1], Vertex[4], color);
-        this->DrawLine(Vertex[3], Vertex[6], color);
+        this->DrawLine(matrix, Vertex[1], Vertex[4], color);
+        this->DrawLine(matrix, Vertex[3], Vertex[6], color);
 
         return true;
     }
@@ -404,7 +426,7 @@ namespace BONE_GRAPHICS
             return D3D_DEVICE;
         else
         {
-            LogMgr->ShowMessage(LOG_ERROR, "Not Exist Device - FAILED");
+            LogMgr->Error("Not Exist Device - FAILED");
             return nullptr;
         }
     }
@@ -463,7 +485,7 @@ namespace BONE_GRAPHICS
 
         if (d3d9) d3d9->Release();
 
-        LogMgr->ShowMessage(LOG_MESSAGE, "Render Manager is Clear.");
+        LogMgr->Info("Render Manager is Clear.");
     }
 
     bool RenderManager::UseImGUI()

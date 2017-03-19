@@ -5,9 +5,9 @@
 #include "StaticMesh.h"
 using namespace BONE_GRAPHICS;
 
-EditorCamera::EditorCamera(GameObject* gameObject, std::string name) : Script(gameObject, name)
+EditorCamera::EditorCamera(GameObject* gameObject, std::string name)
 {
-
+    SetInfo(gameObject, name);
 }
 
 EditorCamera::~EditorCamera()
@@ -21,13 +21,13 @@ void EditorCamera::Init()
     gameObject->SetTag("EditorObject");
 
     Transform3D* tr = new Transform3D();
-    tr->SetPosition(Vector3(0, 100, 100));
+    tr->SetPosition(Vec3(0, 100, 100));
     gameObject->AddComponent(tr);
 
     Camera *camera = new Camera(0, PROJECTION_TYPE::PRJOJECTION_PERSPACTIVE,
-        Vector3(0, 1, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), 1000, 0.1f, D3DX_PI * 0.3f);
+        Vec3(0, 1, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), 1000, 0.1f, D3DX_PI * 0.3f);
 
-    camera->SetTargetPosition(Vector3(0, 0, 0));
+    camera->SetTargetPosition(Vec3(0, 0, 0));
     gameObject->AddComponent(camera);
 
     mainCamera = ((Camera*)gameObject->GetComponent("Camera"));
@@ -38,8 +38,6 @@ void EditorCamera::Init()
     selectObject = "";
 
     cameraMove = false;
-
-    gameObject->SetTag("EditorObject");
 }
 
 void EditorCamera::Reference()
@@ -141,7 +139,7 @@ void EditorCamera::Update()
 
 void EditorCamera::LateRender()
 {
-    Vector3 Pos[2];
+    Vec3 Pos[2];
 
     Pos[0].y = 0;
     Pos[1].y = 0;

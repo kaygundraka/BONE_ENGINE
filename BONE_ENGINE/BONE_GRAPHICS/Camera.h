@@ -14,10 +14,10 @@ namespace BONE_GRAPHICS
 	private:
 		int ID;
 
-		Vector3 targetPosition;
-		Vector3 cameraUp;
-        Vector3 viewVector;
-        Vector3 crossVector;
+		Vec3 targetPosition;
+		Vec3 cameraUp;
+        Vec3 viewVector;
+        Vec3 crossVector;
 		Matrix viewMatrix;
 		Matrix projectionMatrix;
 
@@ -33,12 +33,12 @@ namespace BONE_GRAPHICS
 		int height;
 
 	public:
-		Camera(int ID, PROJECTION_TYPE type, Vector3 cameraUp, int width, int height, float farDist, float nearDist, float fov);
+		Camera(int ID, PROJECTION_TYPE type, Vec3 cameraUp, int width, int height, float farDist, float nearDist, float fov);
         
         void SetFov(float fov);
 		void SetNearDistance(float nearDist);
 		void SetFarDistance(float farDist);
-		void SetTargetPosition(Vector3 targetPosition);
+		void SetTargetPosition(Vec3 targetPosition);
 		void SetTargetPosition(float x, float y, float z);
 
         int GetID();
@@ -48,16 +48,16 @@ namespace BONE_GRAPHICS
         float GetFov();
         float GetNearDistance();
         float GetFarDistance();
-        Vector3 GetCameraUp();
-        Vector3 GetTargetPosition();
+        Vec3 GetCameraUp();
+        Vec3 GetTargetPosition();
 		Matrix GetViewMatrix(GameObject* owner);
 		Matrix GetProjectionMatrix();
 
         void RotateLocalX(float angle);
         void RotateLocalY(float angle);
 
-        Vector3 GetViewVector();
-        Vector3 GetCrossVector();
+        Vec3 GetViewVector();
+        Vec3 GetCrossVector();
 
 		virtual void FixedUpdate(GameObject* owner);
 	};

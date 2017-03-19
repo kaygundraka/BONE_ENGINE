@@ -156,9 +156,9 @@ namespace BONE_GRAPHICS
 		rectHeight = height;
 	}
 
-	Vector2 SpriteBillBoard::GetRectSize()
+	Vec2 SpriteBillBoard::GetRectSize()
 	{
-		return Vector2(rectWidth, rectHeight);
+		return Vec2(rectWidth, rectHeight);
 	}
 
 	void SpriteBillBoard::SetAnimation(int width, int height, int animationCut, int animationScene, float alpha)
@@ -298,7 +298,7 @@ namespace BONE_GRAPHICS
 		{
 			if (target != nullptr)
 			{
-				Vector3 Dir = ((Camera*)target->GetComponent("Camera"))->GetTargetPosition() - ((Transform3D*)target->GetComponent("Transform3D"))->GetPosition();
+				Vec3 Dir = ((Camera*)target->GetComponent("Camera"))->GetTargetPosition() - ((Transform3D*)target->GetComponent("Transform3D"))->GetPosition();
 				D3DXVec3Normalize(&Dir, &Dir);
 
 				float x = Dir.x;

@@ -12,7 +12,7 @@ namespace BONE_GRAPHICS
 
 		std::vector<Component*> components;
 
-        std::list<Component*> scripts;
+        std::list<std::string> scripts;
 
 		GameObject* parent;
 
@@ -42,6 +42,9 @@ namespace BONE_GRAPHICS
 		void AttachParent(GameObject* parent);
 		void DetachParent();
 		GameObject* GetParent();
+
+        void AddScript(std::string name);
+        std::list<std::string> GetScript();
 		
 		void AttachChild(GameObject* child);
 		void DetachChild(GameObject* child);
@@ -70,17 +73,24 @@ namespace BONE_GRAPHICS
 
 		void LoadContents();
 
-		void Awake();
-		void Init();
-		void Reference();
-		void Update();
-		void LateUpdate();
-		void LateRender();
-        
-        void OnCollisionEnter(GameObject* otherObject);
-        void OnCollisionStay(GameObject* otherObject);
-        void OnCollisionLeave(GameObject* otherObject);
+        void Init();
+        void Awake();
+        void Reference();
+        void Update();
+        void LateUpdate();
+        void LateRender();
 
+        void CollisionEvent(GameObject* otherObject);
+
+        void (*InitFunc)(GameObject* owner);
+        void (*AwakeFunc)(GameObject* owner);
+        void (*ReferenceFunc)(GameObject* owner);
+        void (*UpdateFunc)(GameObject* owner);
+        void (*LateUpdateFunc)(GameObject* owner);
+        void (*LateRenderFunc)(GameObject* owner);
+        
+        void (*CollisionEventFunc)(GameObject* owner, GameObject* otherObject);
+        
 		void Render();
 	};
 }

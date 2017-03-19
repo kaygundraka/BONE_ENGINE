@@ -37,7 +37,7 @@ namespace BONE_GRAPHICS
 
             if (meshInfo == nullptr)
             {
-                LogMgr->ShowMessage(LOG_ERROR, "%s : Could Not Find Xfile.", Address);
+                LogMgr->Error("%s : Could Not Find Xfile.", Address);
                 throw;
             }
 
@@ -66,7 +66,7 @@ namespace BONE_GRAPHICS
                     // 텍스쳐 생성
                     if (ResourceMgr->LoadTexture(filename) == nullptr)
                     {
-                        LogMgr->ShowMessage(LOG_ERROR, "%s : Could Not Find TextureFile.", filename);
+                        LogMgr->Error("%s : Could Not Find TextureFile.", filename);
                         throw;
                     }
                 }
@@ -167,7 +167,7 @@ namespace BONE_GRAPHICS
 				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, false);
 		
             if (showBox)
-                RenderMgr->DrawMeshBox(ResourceMgr->FindMesh(address)->mesh, ((Transform3D*)object->GetComponent("Transform3D"))->GetPosition(), color);
+                RenderMgr->DrawMeshBox(Transform, ResourceMgr->FindMesh(address)->mesh, ((Transform3D*)object->GetComponent("Transform3D"))->GetPosition(), color);
         }
 	}
 

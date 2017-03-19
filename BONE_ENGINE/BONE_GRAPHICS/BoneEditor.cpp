@@ -9,20 +9,24 @@
 #include "SpriteBillBoard.h"
 #include "StaticMesh.h"
 #include "SkinnedMesh.h"
-#include "Collision.h"
 #include "GameObject.h"
 #include "InputManager.h"
-#include "Collision.h"
+#include "Rp3dCollision.h"
+#include "Rp3dRigidBody.h"
 #include "SceneInfo.h"
 #include "EditorCameraScript.h"
 #include "EditorLoadScene.h"
 #include "PosPivot.h"
+#include "RuntimeCompiler.h"
+#include "LogManager.h"
 
 #pragma warning (disable:4996)
 
 using namespace BONE_GRAPHICS;
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
+
+#pragma region !!---------------- LOG DIALOG ----------------!!
 
 void LogDialog::Clear() { Buf.clear(); LineOffsets.clear(); }
 
@@ -76,6 +80,8 @@ void LogDialog::Render(const char* title, bool* p_open)
     ImGui::End();
 }
 
+#pragma endregion
+
 BoneEditor::BoneEditor() {
     showMainEditor = true;
     showAddComponent = false;
@@ -84,12 +90,15 @@ BoneEditor::BoneEditor() {
     showLogWindow = true;
     showEnvironmentSetting = false;
     isTestPlay = false;
+    isFocused = false;
  
     playScene = "";
 
     currentShowInfoObject = "";
     currentObjectName = "";
     childSize = 0;
+
+    LogMgr->AddLogGui(&logDialog);
 }
 
 void BoneEditor::Run()
@@ -188,7 +197,12 @@ std::list<std::string> BoneEditor::GetScriptList()
 
 void BoneEditor::SaveScene()
 {
+    LogMgr->Info("Clean Old Scene Data");
     SceneMgr->CurrentScene()->ClearSceneData();
+
+    LogMgr->Info("%s - Save Scene...", SceneMgr->CurrentScene()->GetName().c_str());
+
+    SceneMgr->CurrentScene()->SaveSceneData();
 
     auto DyamicObjectList = SceneMgr->CurrentScene()->GetObjectList();
     auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
@@ -197,6 +211,7 @@ void BoneEditor::SaveScene()
     {
         if (var->Tag() != "EditorObject")
         {
+            LogMgr->Info("%s - Save Object", var->GetName().c_str());
             var->SavePrefab();
             var->SaveInMaps();
         }
@@ -206,10 +221,13 @@ void BoneEditor::SaveScene()
     {
         if (var->Tag() != "EditorObject")
         {
+            LogMgr->Info("%s - Save Object", var->GetName().c_str());
             var->SavePrefab();
             var->SaveInMaps();
         }
     }
+
+    LogMgr->Info("%s - Save...", SceneMgr->CurrentScene()->GetName().c_str());
 }
 
 void BoneEditor::ShowFileMenu()
@@ -224,7 +242,7 @@ void BoneEditor::ShowFileMenu()
     }
 }
 
-void BoneEditor::ShowEditorMenu()
+void BoneEditor::ShowViewMenu()
 {
     if (ImGui::BeginMenu("FillMode"))
     {
@@ -287,6 +305,26 @@ void BoneEditor::ShowEditorMenu()
         else
             showLogWindow = true;
     }
+}
+
+void BoneEditor::ShowEditorMenu()
+{
+    if (ImGui::MenuItem("Compile Script"))
+    {
+        RuntimeMgr->Compile();
+    }
+
+    if (ImGui::MenuItem("Enable Physics"))
+    {
+        auto Enable = SceneMgr->CurrentScene()->IsEnablePhysics();
+
+        if (Enable)
+            Enable = false;
+        else
+            Enable = true;
+            
+        SceneMgr->CurrentScene()->EnablePhysics(Enable);
+    }
 
     if (ImGui::MenuItem("Game Play"))
     {
@@ -311,7 +349,6 @@ void BoneEditor::ShowObjectInfo(std::string name)
     {
         static char buf[64] = "";
         
-        ImGui::SetNextWindowContentSize(ImVec2(100, 30));
         ImGui::InputText("Name", buf, 64);
  
         if (ImGui::Button("Change"))
@@ -334,10 +371,10 @@ void BoneEditor::ShowObjectInfo(std::string name)
             {
                 if ((*iter)->GetTypeName() == "Transform3D")
                 {
-                    Vector3 oriPos = ((Transform3D*)object->transform3D)->GetPosition();
-                    Vector3 oriRot = ((Transform3D*)object->transform3D)->GetRotateAngle();
-                    Vector3 oriScale = ((Transform3D*)object->transform3D)->GetScale();
-                    Vector3 oriForward = ((Transform3D*)object->transform3D)->GetForward();
+                    Vec3 oriPos = ((Transform3D*)object->transform3D)->GetPosition();
+                    Vec3 oriRot = ((Transform3D*)object->transform3D)->GetRotateAngle();
+                    Vec3 oriScale = ((Transform3D*)object->transform3D)->GetScale();
+                    Vec3 oriForward = ((Transform3D*)object->transform3D)->GetForward();
 
                     float pos[3] = { oriPos.x, oriPos.y, oriPos.z };
                     float rot[3] = { oriRot.x, oriRot.y, oriRot.z };
@@ -519,6 +556,8 @@ void BoneEditor::AllChildCheck(GameObject* parent)
 
 void BoneEditor::UpdateFrame()
 {
+    RuntimeMgr->Compile();
+
     bool isFocusedWindow = false;
 
     if (ImGui::BeginMainMenuBar())
@@ -526,6 +565,12 @@ void BoneEditor::UpdateFrame()
         if (ImGui::BeginMenu("File"))
         {
             ShowFileMenu();
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("View"))
+        {
+            ShowViewMenu();
             ImGui::EndMenu();
         }
 
@@ -742,7 +787,7 @@ void BoneEditor::UpdateFrame()
                         {
                             auto Position = ((Transform3D*)FocusObject->transform3D)->GetPosition();
                             ((Camera*)(SceneMgr->CurrentScene()->GetCurrentCamera()->GetComponent("Camera")))->SetTargetPosition(Position);
-                            ((Transform3D*)SceneMgr->CurrentScene()->GetCurrentCamera()->transform3D)->Translate(Position + Vector3(100, 100, 100));
+                            ((Transform3D*)SceneMgr->CurrentScene()->GetCurrentCamera()->transform3D)->Translate(Position + Vec3(100, 100, 100));
                         }
                     }
 
@@ -975,193 +1020,290 @@ void BoneEditor::UpdateFrame()
 
     if (showAddComponent)
     {
-        static ImVec2 Size(250, 180);
-        ImGui::SetNextWindowSize(Size);
-
         std::string WindowName = " Add Component : " + currentShowInfoObject;
-        ImGui::Begin(WindowName.c_str(), &showAddComponent, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoResize);
+        ImGui::Begin(WindowName.c_str(), &showAddComponent, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_AlwaysAutoResize);
 
         if (ImGui::IsRootWindowOrAnyChildFocused())
             isFocusedWindow = true;
 
-        const char* listbox_items[] = { "StaticMesh", "Collision", "Script", "SkinnedMesh", "Sound", "Material", "Camera", "TrailRenderer", "BillBoard", "SpriteBillBoard" };
+        const char* listbox_items[] = { "StaticMesh", "Collision", "RigidBody", "SkinnedMesh", "Sound", "Material", "Script", "Camera", "TrailRenderer", "BillBoard", "SpriteBillBoard" };
         static int listbox_item_current = 0;
-        ImGui::ListBox("Component\nTypes\n", &listbox_item_current, listbox_items, IM_ARRAYSIZE(listbox_items), 4);
 
-        switch (listbox_item_current) {
-        
-        // StaticMesh
-        case 0:
+        if (ImGui::CollapsingHeader("[Select Component]"), ImGuiTreeNodeFlags_DefaultOpen)
         {
-            auto Meshes = ResourceMgr->ExistFiles(".\\Resource\\Mesh\\*");
-
-            const int Size = Meshes.size();
-            char** ComboBoxItems = new char*[Size];
-
-            int i = 0;
-            for each(auto item in Meshes)
-            {
-                ComboBoxItems[i] = new char[64];
-                strcpy(ComboBoxItems[i], item.c_str());
-                i++;
-            }
-
-            static int CurItem = 0;
-            ImGui::Combo("Meshes", &CurItem, ComboBoxItems, Size);
-
-            if (ImGui::Button("Add Component"))
-            {
-                std::string fullpath = "";
-                if (!ResourceMgr->ExistFile(ComboBoxItems[CurItem], &fullpath))
-                    break;
-
-                StaticMesh* Mesh = new StaticMesh();
-                Mesh->SetFileAddress(ComboBoxItems[CurItem]);
-                Mesh->LoadContent();
-                auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
-                Object->AddComponent(Mesh);
-
-                showAddComponent = false;
-            }
+            ImGui::ListBox("Component\nTypes\n", &listbox_item_current, listbox_items, IM_ARRAYSIZE(listbox_items), 4);
         }
-        break;
 
-        // Collision
-        case 1:
+        if (ImGui::CollapsingHeader("[Detail]"), ImGuiTreeNodeFlags_DefaultOpen)
         {
-            char* ComboBoxItems[] = { "AABB", "SPHERE", "OBB" };
+            switch (listbox_item_current) {
 
-            static int CurItem = 0;
-            ImGui::Combo("Meshes", &CurItem, ComboBoxItems, 3);
-
-            if (ImGui::Button("Add Component"))
+                // StaticMesh
+            case 0:
             {
-                auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+                auto Meshes = ResourceMgr->ExistFiles(".\\Resource\\Mesh\\*");
 
-                Collision* Coll = new Collision(Object);
+                const int Size = Meshes.size();
+                char** ComboBoxItems = new char*[Size];
+
+                int i = 0;
+                for each(auto item in Meshes)
+                {
+                    ComboBoxItems[i] = new char[64];
+                    strcpy(ComboBoxItems[i], item.c_str());
+                    i++;
+                }
+
+                static int CurItem = 0;
+                ImGui::Combo("Meshes", &CurItem, ComboBoxItems, Size);
+
+                if (ImGui::Button("Add Component"))
+                {
+                    std::string fullpath = "";
+                    if (!ResourceMgr->ExistFile(ComboBoxItems[CurItem], &fullpath))
+                        break;
+
+                    StaticMesh* Mesh = new StaticMesh();
+                    Mesh->SetFileAddress(ComboBoxItems[CurItem]);
+                    Mesh->LoadContent();
+                    auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+                    Object->AddComponent(Mesh);
+
+                    showAddComponent = false;
+                }
+            }
+            break;
+
+            // Collision
+            case 1:
+            {
+                char* ComboBoxItems[] = { "Box", "Sphere", "Cone", "Cylinder", "Capsule" };
+
+                static int CurItem = 0;
+                ImGui::Combo("Collisions", &CurItem, ComboBoxItems, 3);
+
+                static bool AutoCompute = true;
+                static float Radius = 1.0f;
+                static float Height = 1.0f;
+                static float BoxVector[] = { 1.0f, 1.0f, 1.0f };
+
+                if (CurItem == 0 || CurItem == 1)
+                    ImGui::Checkbox("Auto Compute", &AutoCompute);
 
                 if (CurItem == 0)
-                    Coll->ComputeBoundingBox(ResourceMgr->LoadMesh(((StaticMesh*)Object->GetComponent("StaticMesh"))->GetFileAddress())->mesh);
-                else if (CurItem == 1)
-                    Coll->ComputeBoundingSphere(ResourceMgr->LoadMesh(((StaticMesh*)Object->GetComponent("StaticMesh"))->GetFileAddress())->mesh);
-                //else
-                //    Coll->CreateOBB()
+                    ImGui::DragFloat3("BoxVector", BoxVector, 1.0f, 0.0f);
 
-                Coll->LoadContent();
+                if (CurItem != 0)
+                    ImGui::DragFloat("Radius", &Radius, 1.0f, 0.1f);
 
-                Object->AddComponent(Coll);
+                if (CurItem == 2 || CurItem == 3 || CurItem == 4)
+                    ImGui::DragFloat("Height", &Height, 1.0f, 0.1f);
 
-                showAddComponent = false;
+                if (ImGui::Button("Add Component"))
+                {
+                    auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+
+                    Collision* Coll = new Collision(Object);
+
+                    bool Init = true;
+
+                    if (CurItem == 0)
+                    {
+                        if (AutoCompute)
+                        {
+                            auto Mesh = (StaticMesh*)Object->GetComponent("StaticMesh");
+
+                            if (Mesh != nullptr)
+                                Coll->ComputeBoundingBox(ResourceMgr->LoadMesh((Mesh)->GetFileAddress())->mesh);
+                            else
+                                Init = false;
+                        }
+                        else
+                            Coll->CreateBox(reactphysics3d::Vector3(BoxVector[0], BoxVector[1], BoxVector[2]));
+                    }
+                    else if (CurItem == 1)
+                    {
+                        if (AutoCompute)
+                        {
+                            auto Mesh = (StaticMesh*)Object->GetComponent("StaticMesh");
+
+                            if (Mesh != nullptr)
+                                Coll->ComputeBoundingSphere(ResourceMgr->LoadMesh((Mesh)->GetFileAddress())->mesh);
+                            else
+                                Init = false;
+                        }
+                        else
+                            Coll->CreateSphere(Radius);
+                    }
+                    else if (CurItem == 2)
+                        Coll->CreateCone(Radius, Height);
+                    else if (CurItem == 3)
+                        Coll->CreateCone(Radius, Height);
+                    else if (CurItem == 4)
+                        Coll->CreateCylinder(Radius, Height);
+                    else if (CurItem == 5)
+                        Coll->CreateCapsule(Radius, Height);
+
+                    if (Init)
+                    {
+                        Object->AddComponent(Coll);
+
+                        showAddComponent = false;
+                    }
+                }
             }
-        }
-        break;
+            break;
 
-        // Script
-        case 2:
-        {
-            const int Size = scriptList.size();
-            char** ComboBoxItems = new char*[Size];
-
-            int i = 0;
-            for each(auto item in scriptList)
+            // RigidBody
+            case 2:
             {
-                ComboBoxItems[i] = new char[64];
-                strcpy(ComboBoxItems[i], item.c_str());
-                i++;
+                char* ComboBoxItems[] = { "Static", "Kemetic",  "Dynamic" };
+
+                static int CurItem = 0;
+                ImGui::Combo("Types", &CurItem, ComboBoxItems, 3);
+
+                static bool EnableGravity = false;
+                static bool IsAllowedToSleep = false;
+                static float Bounciness = 0.4f;
+                static float FrictionCoefficient = 0.2f;
+                static float Mass = 1.0f;
+
+                ImGui::Checkbox("Enable Gravity", &EnableGravity);
+                ImGui::Checkbox("Allow To Sleep", &IsAllowedToSleep);
+                ImGui::DragFloat("Bounciness", &Bounciness, 1.0f, 0.1f);
+                ImGui::DragFloat("FrictionCoefficient", &FrictionCoefficient, 1.0f, 0.1f);
+                ImGui::DragFloat("Mass", &Mass, 1.0f, 0.1f);
+
+                if (ImGui::Button("Add Component"))
+                {
+                    auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+
+                    RigidBody* rigidBody = new RigidBody();
+
+                    if (rigidBody->SetInfo(Object, Mass))
+                    {
+                        rigidBody->EnableGravity(EnableGravity);
+                        rigidBody->SetBounciness(Bounciness);
+                        rigidBody->SetFrictionCoefficient(FrictionCoefficient);
+                        rigidBody->SetIsAllowedToSleep(IsAllowedToSleep);
+                        rigidBody->SetType(reactphysics3d::BodyType(CurItem));
+
+                        Object->AddComponent(rigidBody);
+
+                        showAddComponent = false;
+                    }
+                    else
+                        delete rigidBody;
+                }
             }
+            break;
 
-            static int CurItem = 0;
-            ImGui::Combo("Scripts", &CurItem, ComboBoxItems, Size);
-
-            if (ImGui::Button("Add Component"))
+            // SkinnedMesh
+            case 3:
             {
-                auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+            }
+            break;
 
-                if (AddScript(Object, ComboBoxItems[CurItem]))
+            // Sound
+            case 4:
+            {
+            }
+            break;
+
+            // Material
+            case 5:
+            {
+                static float Ambient[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+                static float Diffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+                static float Emissive[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+                static float Specular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+                static float Shininess = 1.0f;
+
+                ImGui::InputFloat3("Ambient", Ambient);
+                ImGui::InputFloat3("Diffuse", Diffuse);
+                ImGui::InputFloat3("Emissive", Emissive);
+                ImGui::InputFloat3("Specular", Specular);
+                ImGui::InputFloat("Shininess", &Shininess);
+
+                if (ImGui::Button("Add Component"))
+                {
+                    Material* Mat = new Material();
+
+                    Mat->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
+                    Mat->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
+                    Mat->SetEmissive(Emissive[0], Emissive[1], Emissive[2], Emissive[3]);
+                    Mat->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
+                    Mat->SetShininess(Shininess);
+
+                    Mat->LoadContent();
+
+                    auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+                    Object->AddComponent(Mat);
+
                     showAddComponent = false;
-                else
-                    showAddComponent = true;
+                }
             }
-        }
-        break;
+            break;
 
-        // SkinnedMesh
-        case 3:
-        {
-        }
-        break;
-
-        // Sound
-        case 4:
-        {
-        }
-        break;
-
-        // Material
-        case 5:
-        {
-            static float Ambient[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-            static float Diffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-            static float Emissive[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-            static float Specular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-            static float Shininess = 1.0f;
-
-            ImGui::InputFloat3("Ambient", Ambient);
-            ImGui::InputFloat3("Diffuse", Diffuse);
-            ImGui::InputFloat3("Emissive", Emissive);
-            ImGui::InputFloat3("Specular", Specular);
-            ImGui::InputFloat("Shininess", &Shininess);
-
-            if (ImGui::Button("Add Component"))
+            // Script
+            case 6:
             {
-                Material* Mat = new Material();
+                const int Size = scriptList.size();
+                char** ComboBoxItems = new char*[Size];
 
-                Mat->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
-                Mat->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
-                Mat->SetEmissive(Emissive[0], Emissive[1], Emissive[2], Emissive[3]);
-                Mat->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
-                Mat->SetShininess(Shininess);
+                int i = 0;
+                for each(auto item in scriptList)
+                {
+                    ComboBoxItems[i] = new char[64];
+                    strcpy(ComboBoxItems[i], item.c_str());
+                    i++;
+                }
 
-                Mat->LoadContent();
-                
-                auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
-                Object->AddComponent(Mat);
+                static int CurItem = 0;
+                ImGui::Combo("Scripts", &CurItem, ComboBoxItems, Size);
 
-                showAddComponent = false;
+                if (ImGui::Button("Add Component"))
+                {
+                    auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+
+                    if (AddScript(Object, ComboBoxItems[CurItem]))
+                        showAddComponent = false;
+                    else
+                        showAddComponent = true;
+                }
+            }
+            break;
+
+            // Camera
+            case 7:
+            {
+
+            }
+            break;
+
+            // TrailRenderer
+            case 8:
+            {
+
+            }
+            break;
+
+            // BillBoard
+            case 9:
+            {
+
+            }
+            break;
+
+            // SpriteBillBoard
+            case 10:
+            {
+
+            }
+            break;
+
             }
         }
-        break;
-
-        // Camera
-        case 6:
-        {
-
-        }
-        break;
-
-        // TrailRenderer
-        case 7:
-        {
-
-        }
-        break;
-
-        // BillBoard
-        case 8:
-        {
-
-        }
-        break;
-
-        // SpriteBillBoard
-        case 9:
-        {
-
-        }
-        break;
-
-        }
-
         ImGui::End();
     }
 

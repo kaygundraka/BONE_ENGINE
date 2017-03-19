@@ -3,9 +3,9 @@
 
 struct VERTEX
 {
-	Vector3 p;
-	Vector3 n;
-	Vector2 uv;
+	Vec3 p;
+	Vec3 n;
+	Vec2 uv;
 	static const int FVF;
 
 	VERTEX() {}
@@ -44,6 +44,6 @@ struct VERTEX
 struct VERTEX_INDEX {
 	WORD _0, _1, _2;
 };
-void SetVtx3DTexture(VERTEX &ct, Vector3 p, Vector3 n, float tu, float tv);
+void SetVtx3DTexture(VERTEX &ct, Vec3 p, Vec3 n, float tu, float tv);
 void SetIdx(VERTEX_INDEX &ci, WORD _0, WORD _1, WORD _2);
-float CalculateDistance(Vector3 a, Vector3 b);
+float CalculateDistance(Vec3 a, Vec3 b);

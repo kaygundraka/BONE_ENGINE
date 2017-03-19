@@ -7,6 +7,7 @@
 #include "LogManager.h"
 #include "ResourceManager.h"
 #include "Transform3D.h"
+#include "PhysicsListener.h"
 #include "etuImage.h"
 
 namespace BONE_GRAPHICS
@@ -30,6 +31,20 @@ namespace BONE_GRAPHICS
         fogMode = D3DFOG_LINEAR;
 
         fogColor = COLOR::YELLOW;
+
+        collisionWorld = new rp3d::CollisionWorld();
+
+        rp3d::Vector3 gravity(0.0, -9.81, 0.0);
+        rp3d::DynamicsWorld test(gravity);
+        physicsWorld = new rp3d::DynamicsWorld(gravity);
+
+        enablePhysics = false;
+
+        physicsWorld->setNbIterationsVelocitySolver(15);
+        physicsWorld->setNbIterationsPositionSolver(8);
+        physicsWorld->enableSleeping(false);
+
+        physicsWorld->setEventListener(&physicsEventListner);
     }
 
     Scene::~Scene()
@@ -46,6 +61,23 @@ namespace BONE_GRAPHICS
             else
                 Iter++;
         }
+
+        delete physicsWorld;
+    }
+
+    void Scene::EnablePhysics(bool enable)
+    {
+        enablePhysics = enable;
+    }
+
+    bool Scene::IsEnablePhysics()
+    {
+        return enablePhysics;
+    }
+
+    rp3d::DynamicsWorld* Scene::GetPhysicsWorld()
+    {
+        return physicsWorld;
     }
 
     bool Scene::SetLoading(std::string imageAddress, int width, int height)
@@ -142,6 +174,9 @@ namespace BONE_GRAPHICS
         for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
             if ((*Iter)->GetActive())
                 (*Iter)->Update();
+
+        if (enablePhysics)
+            physicsWorld->update(SceneMgr->GetTimeDelta());
     }
 
     void Scene::LateUpdate()
@@ -153,6 +188,8 @@ namespace BONE_GRAPHICS
 
     void Scene::AddObject(GameObject* object, std::string name)
     {
+        SceneMgr->SetGameObject(object);
+
         object->SetName(name);
 
         if (object->GetStatic())
@@ -313,6 +350,38 @@ namespace BONE_GRAPHICS
 
     void Scene::SaveSceneData()
     {
+        bool isNewMap = false;
+        std::string FullPath;
+                
+        json j;
+
+        j["Scene"]["GlobalAmbient"] = {
+            globalAmbient.r,
+            globalAmbient.g,
+            globalAmbient.b,
+            globalAmbient.a
+        };
+
+        j["Scene"]["EnableFog"] = enableFog;
+
+        if (enableFog)
+        {
+            j["Scene"]["FogStart"] = fogStart;
+            j["Scene"]["FogEnd"] = fogEnd;
+            j["Scene"]["FogDensity"] = fogDensity;
+            j["Scene"]["FogMode"] = fogMode;
+            j["Scene"]["FogColor"] = {
+                fogColor.r,
+                fogColor.g,
+                fogColor.b,
+                fogColor.a
+            };
+        }
+                
+        std::string fullPath = ".\\Engine\\Maps\\" + SceneMgr->CurrentScene()->GetName() + ".json";
+        std::ofstream o(fullPath);
+        o << std::setw(4) << j << std::endl;
+        o.close();
     }
 
     void Scene::ClearSceneData()
@@ -339,7 +408,32 @@ namespace BONE_GRAPHICS
         json j;
         file >> j;
 
-        for (json::iterator it = j.begin(); it != j.end(); ++it) {
+        auto GlobalAmbient = j["Scene"]["GlobalAmbient"].get<std::vector<double>>();
+        
+        globalAmbient.r = GlobalAmbient[0];
+        globalAmbient.g = GlobalAmbient[1];
+        globalAmbient.b = GlobalAmbient[2];
+        globalAmbient.a = GlobalAmbient[3];
+        
+        auto EnableFog = j["Scene"]["EnableFog"].get<bool>();
+        enableFog = EnableFog;
+
+        if (enableFog)
+        {
+            fogStart = j["Scene"]["FogStart"].get<double>();
+            fogEnd = j["Scene"]["FogEnd"].get<double>();
+            fogDensity = j["Scene"]["FogDensity"].get<double>();
+            fogMode = j["Scene"]["FogMode"].get<double>();
+            
+            auto FogColor = j["Scene"]["FogColor"].get<std::vector<double>>();
+
+            fogColor.r = FogColor[0];
+            fogColor.r = FogColor[1];
+            fogColor.r = FogColor[2];
+            fogColor.r = FogColor[3];
+        }
+
+        for (json::iterator it = j["GameObject"].begin(); it != j["GameObject"].end(); ++it) {
             auto Object = this->FindObjectByName(it.key());
 
             if (Object == nullptr)

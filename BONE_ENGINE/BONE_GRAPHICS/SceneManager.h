@@ -41,6 +41,8 @@ namespace BONE_GRAPHICS
 	public:
 		void LoadingRender();
 
+        void (*SetGameObject)(GameObject* obj);
+
 		void AddScene(string name, Scene* scene);
 
 		bool StartScene(string name);

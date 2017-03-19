@@ -48,10 +48,10 @@ namespace BONE_GRAPHICS
 		void SetTarget(GameObject* targetCamera);
 
 		void SetRectSize(float width, float height);
-		Vector2 GetRectSize();
+		Vec2 GetRectSize();
 
 		void SetOriginRect(Rect rect);
-		void SetOriginRect(Vector2 leftTop, Vector2 rightBottom);
+		void SetOriginRect(Vec2 leftTop, Vec2 rightBottom);
 		Rect GetOriginRect();
 
 		void SetRenderMode(RENDER_MODE mode);

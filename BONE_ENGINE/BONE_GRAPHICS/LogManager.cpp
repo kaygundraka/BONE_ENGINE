@@ -14,7 +14,9 @@ namespace BONE_GRAPHICS
         preMessage = new char[100];
         SaveLog(outputLog);
 
-        ShowMessage(LOG_INFO, "LogManager is initialized");
+        logDialog = nullptr;
+
+        Info("LogManager is initialized");
     }
 
 	std::string GetTime()
@@ -42,6 +44,13 @@ namespace BONE_GRAPHICS
 
 		return Time;
 	}
+
+    void LogManager::AddLogGui(LogDialog* logDialog)
+    {
+        ThreadSync sync;
+
+        this->logDialog = logDialog;
+    }
 
 	void LogManager::AddLogToFile(int _type, std::string _log)
 	{
@@ -87,24 +96,51 @@ namespace BONE_GRAPHICS
 
     void LogManager::Error(const char * format, ...)
     {
+        ThreadSync sync;
+
         va_list args;
         va_start(args, format);
 
-        ShowMessage(LOG_ERROR, args);
+        ShowMessage(LOG_ERROR, format, args);
     }
 
     void LogManager::Warning(const char * format, ...)
     {
+        ThreadSync sync;
+
         va_list args;
         va_start(args, format);
-        ShowMessage(LOG_WARNING, args);
+        ShowMessage(LOG_WARNING, format, args);
     }
 
     void LogManager::Info(const char * format, ...)
     {
+        ThreadSync sync;
+
         va_list args;
         va_start(args, format);
-        ShowMessage(LOG_INFO, args)
+        ShowMessage(LOG_INFO, format, args);
+    }
+
+    void LogManager::Error(const char * format, va_list args)
+    {
+        ThreadSync sync;
+
+        ShowMessage(LOG_ERROR, format, args);
+    }
+
+    void LogManager::Warning(const char * format, va_list args)
+    {
+        ThreadSync sync;
+
+        ShowMessage(LOG_WARNING, format, args);
+    }
+
+    void LogManager::Info(const char * format, va_list args)
+    {
+        ThreadSync sync;
+
+        ShowMessage(LOG_INFO, format, args);
     }
 
 	void LogManager::ShowMessage(int _type, const char* _log, va_list args)
@@ -124,12 +160,15 @@ namespace BONE_GRAPHICS
         else
             std::cout << "Error : " << buff << std::endl;
 
+        if (logDialog != nullptr)
+        {
+            std::string log = buff;
+            log += '\n';
+            logDialog->AddLog(log.c_str());
+        }
+
         if (IsSave)
             AddLogToFile(_type, logMessage);
-
-#ifdef _WIN32
-        OutputDebugStringA(buff);
-#endif
 	}
 
 	void LogManager::SaveLog(bool _bFlag)

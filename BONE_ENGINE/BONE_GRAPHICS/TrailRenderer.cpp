@@ -20,8 +20,8 @@ namespace BONE_GRAPHICS
         createCycle = 2;
         curCreateTime = 0;
 
-        pivot = Vector3(0, 0, 0);
-        upDir = Vector3(0, 1, 0);
+        pivot = Vec3(0, 0, 0);
+        upDir = Vec3(0, 1, 0);
 
         startSize = 1;
         endSize = 1;
@@ -46,7 +46,7 @@ namespace BONE_GRAPHICS
         IsInit = true;
     }
 
-    void TrailRenderer::SetTargetObject(GameObject* targetObject, Vector3 pivot)
+    void TrailRenderer::SetTargetObject(GameObject* targetObject, Vec3 pivot)
     {
         target = targetObject;
         this->pivot = pivot;
@@ -94,11 +94,11 @@ namespace BONE_GRAPHICS
                 temp.curLiveTime = 0;
                 temp.curSize = startSize;
 
-                Vector3 Posit = pivot;
+                Vec3 Posit = pivot;
                 D3DXVec3TransformCoord(&Posit, &Posit, &((Transform3D*)target->GetComponent("Transform3D"))->GetTransform());
                 temp.pivot = Posit;
 
-                Vector3 UpDir = upDir;
+                Vec3 UpDir = upDir;
                 D3DXVec3TransformNormal(&UpDir, &UpDir, &((Transform3D*)target->GetComponent("Transform3D"))->GetTransform());
                 D3DXVec3Normalize(&UpDir, &UpDir);
                 temp.upDir = UpDir;
@@ -203,7 +203,7 @@ namespace BONE_GRAPHICS
         indexBuffer->Unlock();
     }
 
-    void TrailRenderer::SetUpVector(Vector3 upDir)
+    void TrailRenderer::SetUpVector(Vec3 upDir)
     {
         this->upDir = upDir;
         D3DXVec3Normalize(&this->upDir, &this->upDir);
@@ -266,7 +266,7 @@ namespace BONE_GRAPHICS
         return textureAddress;
     }
 
-    Vector3 TrailRenderer::GetPivot()
+    Vec3 TrailRenderer::GetPivot()
     {
         return pivot;
     }
@@ -291,7 +291,7 @@ namespace BONE_GRAPHICS
         return createCycle;
     }
     
-    Vector3 TrailRenderer::GetUpVector()
+    Vec3 TrailRenderer::GetUpVector()
     {
         return upDir;
     }

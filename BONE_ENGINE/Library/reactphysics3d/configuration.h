@@ -26,6 +26,12 @@
 #ifndef REACTPHYSICS3D_CONFIGURATION_H
 #define	REACTPHYSICS3D_CONFIGURATION_H
 
+#ifdef max
+
+#undef max
+#undef min
+#endif // max
+
 // Libraries
 #include <limits>
 #include <cfloat>

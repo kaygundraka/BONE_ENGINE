@@ -33,7 +33,7 @@ namespace BONE_GRAPHICS
 		if (tr == nullptr)
 			return BUTTON_STATUS::NORMAL;
 
-		Vector2 position(
+		Vec2 position(
 			tr->GetPosition().x,
 			tr->GetPosition().y
 		);
@@ -67,7 +67,7 @@ namespace BONE_GRAPHICS
 		originRect = rect;
 	}
 	
-	void ScreenButton::SetOriginRect(Vector2 leftTop, Vector2 rightBottom)
+	void ScreenButton::SetOriginRect(Vec2 leftTop, Vec2 rightBottom)
 	{
 		originRect.LeftTop = leftTop;
 		originRect.RightBottom = rightBottom;
@@ -91,7 +91,7 @@ namespace BONE_GRAPHICS
 	void ScreenButton::Render(GameObject* owner)
 	{
 		Matrix matrix = ((Transform2D*)owner->GetComponent("Transform2D"))->GetTransform();
-		Vector3 position = ((Transform2D*)owner->GetComponent("Transform2D"))->GetPosition();
+		Vec3 position = ((Transform2D*)owner->GetComponent("Transform2D"))->GetPosition();
 
 		RECT rect;
 		rect.left = originRect.LeftTop.x;
@@ -122,7 +122,7 @@ namespace BONE_GRAPHICS
 
 		sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
 
-		sprite->Draw(texture, &rect, nullptr, &Vector3(0, 0, 0), 0xffffffff);
+		sprite->Draw(texture, &rect, nullptr, &Vec3(0, 0, 0), 0xffffffff);
 
 		sprite->End();
 	}

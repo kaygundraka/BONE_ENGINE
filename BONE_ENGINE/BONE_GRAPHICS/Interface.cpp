@@ -6,7 +6,7 @@
 #include "ResourceManager.h"
 #include "InputManager.h"
 #include "ConfigManager.h"
-#include "PhyscisManager.h"
+#include "RuntimeCompiler.h"
 
 extern LRESULT ImGui_ImplDX9_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -170,7 +170,7 @@ namespace BONE_GRAPHICS
 		InputMgr->InitializeMembers();
 		SceneMgr->InitializeMembers();
 		ResourceMgr->InitializeMembers();
-        PhysicsMgr->InitializeMembers();
+        RuntimeMgr->InitializeMembers();
 
         if (useImGUI)
             ImGui_ImplDX9_Init(hWnd, RenderMgr->GetDevice());
@@ -186,7 +186,7 @@ namespace BONE_GRAPHICS
 
         Matrix matrix;
         D3DXMatrixIdentity(&matrix);
-        D3DXMatrixTransformation2D(&matrix, 0, 0, &Vector2(WidthScale, HeightScale), 0, 0, 0);
+        D3DXMatrixTransformation2D(&matrix, 0, 0, &Vec2(WidthScale, HeightScale), 0, 0, 0);
         sprite->SetTransform(&matrix);
 
 		int Alpha = 0;
@@ -208,7 +208,7 @@ namespace BONE_GRAPHICS
             sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
 
             D3DCOLOR RGB = D3DCOLOR_ARGB((int)Alpha, 255, 255, 255);
-            sprite->Draw(texture, &rect, nullptr, &Vector3(0, 0, 0), RGB);
+            sprite->Draw(texture, &rect, nullptr, &Vec3(0, 0, 0), RGB);
 
             sprite->End();
 			Alpha += 1;
@@ -243,7 +243,7 @@ namespace BONE_GRAPHICS
             sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
 
             D3DCOLOR RGB = D3DCOLOR_ARGB((int)Alpha, 255, 255, 255);
-            sprite->Draw(texture, &rect, nullptr, &Vector3(0, 0, 0), RGB);
+            sprite->Draw(texture, &rect, nullptr, &Vec3(0, 0, 0), RGB);
 
             sprite->End();
             Alpha -= 1;
@@ -264,7 +264,7 @@ namespace BONE_GRAPHICS
         if (RenderMgr->UseImGUI())
             ImGui_ImplDX9_Shutdown();
 
-        PhysicsMgr->ReleaseMembers();
+        RuntimeMgr->ReleaseMembers();
 		SceneMgr->ReleaseMembers();
 		InputMgr->ReleaseMembers();
 		RenderMgr->ReleaseMembers();

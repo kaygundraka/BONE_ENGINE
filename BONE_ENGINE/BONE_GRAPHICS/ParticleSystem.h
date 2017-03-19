@@ -10,24 +10,24 @@ namespace BONE_GRAPHICS
 	{
 		BoundingBox();
 
-		bool isPointInside(Vector3& p);
+		bool isPointInside(Vec3& p);
 
-		Vector3 min;
-		Vector3 max;
+		Vec3 min;
+		Vec3 max;
 	};
 
 	struct BoundingSphere
 	{
 		BoundingSphere();
 
-		Vector3 center;
+		Vec3 center;
 		float   radius;
 	};
 
 	////파티클의 위치와 컬러를 표현하는 데의 구조체 포맷.
 	struct Particle
 	{
-		Vector3 position;
+		Vec3 position;
 		D3DCOLOR    color;
 		static const int FVF;
 	};
@@ -45,14 +45,14 @@ namespace BONE_GRAPHICS
 		// 파티클을 렌더링하는데 필요한 데이터와 파티클 속성을 별도의 구조체 내에 보관하게 되는데,
 		// 파티클을 만들고 파괴하고 갱신할 때는 바로 이러한 속성을 이용해 작업하는 것이며,
 		// 이를 렌더링할 준비가 완료되면 Particle 구조체로 위치와 속성을 복사해 이용.
-		Vector3 position;     // 월드 스페이스 내의 파티클 위치.
-		Vector3 velocity;     // 파티클의 속도, 보통은 초당 이동 단위로 기록.
-		Vector3 acceleration; // 파티클의 가속. 보통은 초당 이동 단위로 기록.
+		Vec3 position;     // 월드 스페이스 내의 파티클 위치.
+		Vec3 velocity;     // 파티클의 속도, 보통은 초당 이동 단위로 기록.
+		Vec3 acceleration; // 파티클의 가속. 보통은 초당 이동 단위로 기록.
 		float       lifeTime;     // 파티클이 소멸할 때까지 유지되는 시간.
 								   // 예, 레이저 빔 파티클은 특정한 시간동안만 유지.
 		float       age;          // 파티클의 현재 나이
 		D3DXCOLOR   color;        // 파티클의 컬러
-		Vector3   colorFade;    // 파티클의 컬러가 시간의 흐름에 따라 퇴색하는 방법
+		Vec3   colorFade;    // 파티클의 컬러가 시간의 흐름에 따라 퇴색하는 방법
 		bool        isAlive;    // 파티클이 생존한 경우 true, 소멸한 경우 false
 	};
 

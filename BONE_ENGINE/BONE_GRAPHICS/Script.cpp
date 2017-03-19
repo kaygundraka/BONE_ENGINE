@@ -3,17 +3,21 @@
 
 namespace BONE_GRAPHICS {
 
-    Script::Script(GameObject* gameObject, std::string name)
+    Script::Script()
     {
-        this->gameObject = gameObject;
-        this->SetTypeName(name);
-
-        isScript = true;
     }
 
     Script::~Script()
     {
 
+    }
+
+    void Script::SetInfo(GameObject* gameObject, std::string name)
+    {
+        this->gameObject = gameObject;
+        this->SetTypeName(name);
+
+        isScript = true;
     }
 
     void Script::Awake()
@@ -46,17 +50,7 @@ namespace BONE_GRAPHICS {
 
     }
 
-    void Script::OnCollisionEnter(GameObject* otherObject)
-    {
-
-    }
-
-    void Script::OnCollisionStay(GameObject* otherObject)
-    {
-
-    }
-
-    void Script::OnCollisionLeave(GameObject* otherObject)
+    void Script::CollisionEvent(GameObject* otherObject)
     {
 
     }

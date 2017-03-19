@@ -51,8 +51,9 @@ namespace BONE_GRAPHICS
 
         void SetupPixelFog(bool on, D3DXCOLOR color, float start = 0.5f, float end = 0.8f, float density = 0.66f, int mode = D3DFOG_LINEAR);
 
+        void DrawLine(D3DXMATRIX matrix, D3DXVECTOR3 start, D3DXVECTOR3 end, D3DXCOLOR color);
         void DrawLine(D3DXVECTOR3 start, D3DXVECTOR3 end, D3DXCOLOR color);
-        bool DrawMeshBox(LPD3DXMESH mesh, D3DXVECTOR3 pos, D3DXCOLOR color);
+        bool DrawMeshBox(D3DXMATRIX matrix, LPD3DXMESH mesh, D3DXVECTOR3 pos, D3DXCOLOR color);
 
         bool UseImGUI();
         void UseImGUI(bool use);

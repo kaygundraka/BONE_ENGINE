@@ -31,7 +31,7 @@ namespace BONE_GRAPHICS
 		BUTTON_STATUS Update(GameObject* owner);
 
 		void SetOriginRect(Rect rect);
-		void SetOriginRect(Vector2 leftTop, Vector2 rightBottom);
+		void SetOriginRect(Vec2 leftTop, Vec2 rightBottom);
 		Rect GetOriginRect();
 
 		void SetImageFile(std::string address);

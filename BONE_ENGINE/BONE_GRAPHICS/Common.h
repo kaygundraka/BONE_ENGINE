@@ -1,6 +1,6 @@
 #pragma once
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
-
+#include <reactphysics3d.h>
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <dxfile.h>
@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
-#include <math.h>
 #include <map>
 #include <list>
 #include <string>
@@ -25,12 +24,12 @@
 #include <tuple>
 #include <shlwapi.h>
 
+
 #include "Strsafe.h"
 #include "Interface.h"
 #include <tinystr.h>
 #include <tinyxml.h>
 #include <MultiThreadSync.h>
-#include <json.hpp>
 
 // RuntimeCompiled C++
 #include <ICompilerLogger.h>
@@ -40,10 +39,15 @@
 #include <BuildTool.h>
 #include <FileChangeNotifier.h>
 #include <RuntimeObjectSystem.h>
+#include <ObjectInterfacePerModule.h>
 
 // ImGUIs
 #include "imgui.h"
 #include "imgui_impl_dx9.h"
+
+
+#include <json.hpp>
+using json = nlohmann::json;
 
 #pragma comment(lib, "shlwapi")
 #pragma comment(lib, "comctl32.lib")
@@ -52,19 +56,18 @@
 #pragma warning (disable:4251)
 
 using namespace std;
-using json = nlohmann::json;
 
-#define Vector3 D3DXVECTOR3
-#define Vector2 D3DXVECTOR2
+#define Vec3 D3DXVECTOR3
+#define Vec2 D3DXVECTOR2
 #define Matrix D3DXMATRIX
-#define Quaternion D3DXQUATERNION
+#define Quater D3DXQUATERNION
 #define Color D3DCOLOR
 #define Mesh LPD3DXMESH
 
 class Rect {
 public:
-	Vector2 LeftTop;
-	Vector2 RightBottom;
+	Vec2 LeftTop;
+	Vec2 RightBottom;
 };
 
 namespace COLOR {
@@ -87,14 +90,18 @@ typedef struct _RGBA {
     _RGBA() : r(1), g(1), b(1), a(1) {}
 } RGBA;
 
+#define RuntimeMgr RuntimeCompiler::GetInstance()
 #define SceneMgr SceneManager::GetInstance()
 #define RenderMgr RenderManager::GetInstance()
 #define InputMgr InputManager::GetInstance()
 #define ResourceMgr ResourceManager::GetInstance()
 #define ConfigMgr ConfigManager::GetInstance()
 #define PhysicsMgr PhysicsManager::GetInstance()
+#define LogMgr LogManager::GetInstance()
+
+using namespace reactphysics3d;
+
 //#define EMManager EnvironmentManager::GetInstance()
 //#define SDManager SoundManager::GetInstance()
 //#define PSManager PhysicsManager::GetInstance()
 //#define R2DManager UIManager::GetInstance()
-#define LogMgr LogManager::GetInstance()

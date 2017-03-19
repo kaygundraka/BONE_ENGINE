@@ -6,10 +6,10 @@
 
 namespace BONE_GRAPHICS
 {
-    PosPivot::PosPivot(BoneEditor* ui, GameObject* gameObject, std::string name) : Script(gameObject, name)
+    PosPivot::PosPivot(BoneEditor* ui, GameObject* gameObject, std::string name)
     {
+        SetInfo(gameObject, name);
         this->ui = ui;
-        gameObject->SetTag("EditorObject");
     }    
     
     PosPivot::~PosPivot()
@@ -19,6 +19,9 @@ namespace BONE_GRAPHICS
 
     void PosPivot::Init()
     {
+        gameObject->SetPriority(1);
+        gameObject->SetTag("EditorObject");
+
         Transform3D* Transform = new Transform3D();
         gameObject->AddComponent(Transform);
 
@@ -80,6 +83,9 @@ namespace BONE_GRAPHICS
 
     void PosPivot::Update()
     {
+        if (!InputMgr->IsFocusedWindow())
+            return;
+
         if (InputMgr->GetMouseLBButtonStatus() == MOUSE_STATUS::MOUSE_LBUP)
         {
             moveX = false;
@@ -212,9 +218,9 @@ namespace BONE_GRAPHICS
             while (Object->GetParent() != nullptr)
                 Object = Object->GetParent();
             
-            Vector3 ObjectPos = ((Transform3D*)Object->transform3D)->GetPosition();
-            Vector3 CameraPos = ((Transform3D*)mainCamera->transform3D)->GetPosition();
-            Vector3 Vector = ObjectPos - CameraPos;
+            Vec3 ObjectPos = ((Transform3D*)Object->transform3D)->GetPosition();
+            Vec3 CameraPos = ((Transform3D*)mainCamera->transform3D)->GetPosition();
+            Vec3 Vector = ObjectPos - CameraPos;
 
             float Length = D3DXVec3Length(&Vector);
 
@@ -277,9 +283,9 @@ namespace BONE_GRAPHICS
                 Object = Object->GetParent();
 
             RAY PickingRay = RenderMgr->GetPickingRayToView(false);
-            Vector3 PickingPos = PickingRay.origin + PickingRay.direction * moveValue * 2;
+            Vec3 PickingPos = PickingRay.origin + PickingRay.direction * moveValue * 2;
 
-            Vector3 MovePos = ((Transform3D*)Object->transform3D)->GetPosition();
+            Vec3 MovePos = ((Transform3D*)Object->transform3D)->GetPosition();
 
             if (moveValue != 0)
             {

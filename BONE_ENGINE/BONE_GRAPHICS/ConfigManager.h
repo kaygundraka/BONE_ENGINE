@@ -2,6 +2,7 @@
 #include "ISingleton.h"
 #include "Common.h"
 
+
 namespace BONE_GRAPHICS
 {
     class ConfigManager : public ISingleton <ConfigManager>, public BONE_SYSTEM::MultiThreadSync <ConfigManager>

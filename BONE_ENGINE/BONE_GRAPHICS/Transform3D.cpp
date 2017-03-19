@@ -5,11 +5,11 @@ namespace BONE_GRAPHICS
 {
 	Transform3D::Transform3D()
 	{
-		position = Vector3(0, 0, 0);
-		rotAngle = Quaternion(0, 0, 0, 1);
-		scale = Vector3(1, 1, 1);
-		forward = Vector3(0, 0, -1);
-		up = Vector3(0, 1, 0);
+		position = Vec3(0, 0, 0);
+		rotAngle = Quater(0, 0, 0, 1);
+		scale = Vec3(1, 1, 1);
+		forward = Vec3(0, 0, -1);
+		up = Vec3(0, 1, 0);
 		
 		D3DXMatrixIdentity(&transform);
 		D3DXMatrixIdentity(&rotateTransform);
@@ -25,7 +25,7 @@ namespace BONE_GRAPHICS
 	{
 	}
 
-	void Transform3D::SetForward(Vector3 forward)
+	void Transform3D::SetForward(Vec3 forward)
 	{
 		this->forward = forward;
 		D3DXVec3Normalize(&this->forward, &this->forward);
@@ -40,9 +40,9 @@ namespace BONE_GRAPHICS
 		D3DXVec3Normalize(&forward, &forward);
 	}
 
-	Vector3 Transform3D::GetForward()
+	Vec3 Transform3D::GetForward()
 	{
-		Vector3 Forward = forward;
+		Vec3 Forward = forward;
 
 		D3DXVec3TransformNormal(&Forward, &Forward, &transform);
 		D3DXVec3Normalize(&Forward, &Forward);
@@ -50,11 +50,11 @@ namespace BONE_GRAPHICS
 		return Forward;
 	}
 
-	Vector3 Transform3D::GetLeft()
+	Vec3 Transform3D::GetLeft()
 	{
-		Vector3 Left;
-		Vector3 Forward = forward;
-		Vector3 Up = up;
+		Vec3 Left;
+		Vec3 Forward = forward;
+		Vec3 Up = up;
 
 		D3DXVec3TransformNormal(&Up, &Up, &transform);
 		D3DXVec3Normalize(&Up, &Up);
@@ -68,7 +68,7 @@ namespace BONE_GRAPHICS
 		return Left;
 	}
 
-	void Transform3D::SetPosition(Vector3 pos)
+	void Transform3D::SetPosition(Vec3 pos)
 	{
 		this->position = pos;
 	}
@@ -80,7 +80,7 @@ namespace BONE_GRAPHICS
 		position.z = z;
 	}
 
-	void Transform3D::Translate(Vector3 pos)
+	void Transform3D::Translate(Vec3 pos)
 	{
 		position += pos;
 	}
@@ -92,16 +92,16 @@ namespace BONE_GRAPHICS
 		position.z += z;
 	}
 
-	Vector3 Transform3D::GetPosition()
+	Vec3 Transform3D::GetPosition()
 	{
 		return position;
 	}
 
-	Vector3 Transform3D::GetWorldPositon()
+	Vec3 Transform3D::GetWorldPositon()
 	{
 		GameObject* parentPtr = parent;
 
-		Vector3 Posit = position;
+		Vec3 Posit = position;
 
 		while (parentPtr != nullptr)
 		{
@@ -115,7 +115,7 @@ namespace BONE_GRAPHICS
 		return Posit;
 	}
 
-	void Transform3D::Scale(Vector3 scale)
+	void Transform3D::Scale(Vec3 scale)
 	{
 		this->scale.x += scale.x;
         this->scale.y += scale.y;
@@ -129,7 +129,7 @@ namespace BONE_GRAPHICS
 		scale.z += z;
 	}
 
-	void Transform3D::SetScale(Vector3 scale)
+	void Transform3D::SetScale(Vec3 scale)
 	{
         this->scale = scale;
 	}
@@ -141,16 +141,16 @@ namespace BONE_GRAPHICS
 		scale.z = z;
 	}
 
-	Vector3 Transform3D::GetScale()
+	Vec3 Transform3D::GetScale()
 	{
 		return scale;
 	}
 
-	Vector3 Transform3D::GetWolrdScale()
+	Vec3 Transform3D::GetWolrdScale()
 	{
 		GameObject* parentPtr = parent;
 
-		Vector3 Scale = scale;
+		Vec3 Scale = scale;
 
 		while (parentPtr != nullptr)
 		{
@@ -166,42 +166,42 @@ namespace BONE_GRAPHICS
 		return Scale;
 	}
 
-	void Transform3D::Rotate(Quaternion rotAngle)
+	void Transform3D::Rotate(Quater rotAngle)
 	{
 		D3DXQuaternionMultiply(&this->rotAngle, &this->rotAngle, &rotAngle);
 	}
 
 	void Transform3D::Rotate(float x, float y, float z)
 	{
-		Quaternion Quater;
+		Quater Quater;
 		D3DXQuaternionRotationYawPitchRoll(&Quater, y, x, z);
 		
 		D3DXQuaternionMultiply(&rotAngle, &rotAngle, &Quater);
 	}
 
-	void Transform3D::SetRotate(Quaternion rotAngle)
+	void Transform3D::SetRotate(Quater rotAngle)
 	{
 		this->rotAngle = rotAngle;
 	}
 
 	void Transform3D::SetRotate(float x, float y, float z)
 	{
-		Quaternion Quater;
+		Quater Quater;
 		D3DXQuaternionRotationYawPitchRoll(&Quater, y, x, z);
 
 		rotAngle = Quater;
 	}
 
-	Quaternion Transform3D::GetRotateAngle()
+	Quater Transform3D::GetRotateAngle()
 	{
 		return rotAngle;
 	}
 
-	Quaternion Transform3D::GetWorldRotateAngle()
+	Quater Transform3D::GetWorldRotateAngle()
 	{
 		GameObject* parentPtr = parent;
 
-		Quaternion result = rotAngle;
+		Quater result = rotAngle;
 
 		while (parentPtr != nullptr)
 		{
@@ -224,9 +224,9 @@ namespace BONE_GRAPHICS
 	{
 		GameObject* parentPtr = parent;
 
-		Vector3 Scale = scale;
-		Vector3 Posit = position;
-		Quaternion RotAngle = rotAngle;
+		Vec3 Scale = scale;
+		Vec3 Posit = position;
+		Quater RotAngle = rotAngle;
 
 		while (parentPtr != nullptr)
 		{
@@ -241,7 +241,7 @@ namespace BONE_GRAPHICS
 			parentPtr = parentPtr->GetParent();
 		}
 
-		Quaternion RotQuaternion;
+		Quater RotQuaternion;
 	
 		D3DXMatrixRotationQuaternion(&rotateTransform, &RotAngle);
 		D3DXMatrixTranslation(&translateTransform, Posit.x, Posit.y, Posit.z);

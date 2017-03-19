@@ -5,10 +5,10 @@ namespace BONE_GRAPHICS
 {
 	Transform2D::Transform2D()
 	{
-		position = Vector3(RenderMgr->GetWidth() / 2, RenderMgr->GetHeight() / 2, 0);
-		pivotCenter = Vector2(0.5f, 0.5f);
+		position = Vec3(RenderMgr->GetWidth() / 2, RenderMgr->GetHeight() / 2, 0);
+		pivotCenter = Vec2(0.5f, 0.5f);
 		rotAngle = 0;
-		scale = Vector2(1, 1);
+		scale = Vec2(1, 1);
 
 		D3DXMatrixIdentity(&transform);
 
@@ -27,12 +27,12 @@ namespace BONE_GRAPHICS
 		size.y = height;
 	}
 	
-	Vector2 Transform2D::GetSize()
+	Vec2 Transform2D::GetSize()
 	{
 		return size;
 	}
 
-	void Transform2D::SetPosition(Vector3 pos)
+	void Transform2D::SetPosition(Vec3 pos)
 	{
 		position = pos;
 	}
@@ -44,7 +44,7 @@ namespace BONE_GRAPHICS
 		position.z = _z;
 	}
 
-	void Transform2D::Translate(Vector3 _position)
+	void Transform2D::Translate(Vec3 _position)
 	{
 		position += _position;
 	}
@@ -56,12 +56,12 @@ namespace BONE_GRAPHICS
 		position.z += _z;
 	}
 
-	Vector3 Transform2D::GetPosition()
+	Vec3 Transform2D::GetPosition()
 	{
 		return position;
 	}
 
-	void Transform2D::Scale(Vector2 _scale)
+	void Transform2D::Scale(Vec2 _scale)
 	{
 		scale += _scale;
 	}
@@ -72,7 +72,7 @@ namespace BONE_GRAPHICS
 		scale.y += _y;
 	}
 	
-	void Transform2D::SetScale(Vector2 _scale)
+	void Transform2D::SetScale(Vec2 _scale)
 	{
 		scale = _scale;
 	}
@@ -83,7 +83,7 @@ namespace BONE_GRAPHICS
 		scale.y = _y;
 	}
 
-	Vector2 Transform2D::GetScale()
+	Vec2 Transform2D::GetScale()
 	{
 		return scale;
 	}
@@ -103,7 +103,7 @@ namespace BONE_GRAPHICS
 		return rotAngle;
 	}
 
-	void Transform2D::SetPivotCenter(Vector2 _pivotCenter)
+	void Transform2D::SetPivotCenter(Vec2 _pivotCenter)
 	{
 		pivotCenter = _pivotCenter;
 	}
@@ -114,7 +114,7 @@ namespace BONE_GRAPHICS
 		pivotCenter.y = _y;
 	}
 
-	Vector2 Transform2D::GetPivotCenter()
+	Vec2 Transform2D::GetPivotCenter()
 	{
 		return pivotCenter;
 	}
@@ -122,7 +122,7 @@ namespace BONE_GRAPHICS
 	Matrix Transform2D::GetTransform()
 	{
 		D3DXMatrixIdentity(&transform);
-		D3DXMatrixTransformation2D(&transform, &pivotCenter, 0, &scale, &pivotCenter, rotAngle, &Vector2(position.x, position.y));
+		D3DXMatrixTransformation2D(&transform, &pivotCenter, 0, &scale, &pivotCenter, rotAngle, &Vec2(position.x, position.y));
 
 		return transform;
 	}

@@ -30,6 +30,8 @@ namespace BONE_GRAPHICS
 
         std::string currentShowInfoObject;
 
+        bool isFocused;
+
         int childSize;
 
         LogDialog logDialog;
@@ -48,6 +50,7 @@ namespace BONE_GRAPHICS
 
         void ShowFileMenu();
         void ShowEditorMenu();
+        void ShowViewMenu();
         void ShowHelpMenu();
 
         void SelectObject(std::string name);

@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "Skybox.h"
 #include "PointLight.h"
+#include "PhysicsListener.h"
 
 namespace BONE_GRAPHICS
 {
@@ -35,8 +36,14 @@ namespace BONE_GRAPHICS
         float loadPerTime;
 
         D3DXCOLOR fogColor;
- 
-	public:
+
+        bool enablePhysics;
+
+        rp3d::CollisionWorld* collisionWorld;
+        rp3d::DynamicsWorld* physicsWorld;
+        PhysicsEventListener physicsEventListner;
+        
+ 	public:
 		bool InitializeMembers();
 		void Reference();
 		bool LoadContents();
@@ -48,7 +55,7 @@ namespace BONE_GRAPHICS
 	public:
 		Scene();
 		~Scene();
-		
+
 		void AddObject(GameObject* object, std::string name);
 		void AddObjects(GameObject** objects, int size);
 
@@ -60,6 +67,8 @@ namespace BONE_GRAPHICS
 
 		void Destroy(GameObject* gameObject);
 
+        rp3d::DynamicsWorld* GetPhysicsWorld();
+
 		GameObject* GetCurrentCamera();
 
 		void SetCamera(int ID);
@@ -70,6 +79,9 @@ namespace BONE_GRAPHICS
 		bool GetSceneFlag();
 		void SetSceneFlag(bool flag);
 		bool EndLoading();
+
+        void EnablePhysics(bool enable);
+        bool IsEnablePhysics();
 
         void SaveSceneData();
         void LoadSceneData();
@@ -91,11 +103,11 @@ namespace BONE_GRAPHICS
 
         void AddPointLight(PointLight* object);
         void RemovePointLight(PointLight* object);
+        
         std::list<PointLight*> GetPointLights();
-
         std::list<GameObject*> GetObjectList();
         std::list<GameObject*> GetStaticObjectList();
-
+                
         void SetFogStatus(bool on, D3DXCOLOR fogColor, float fogStart, float fogEnd, float fogDensity, int mode);
         bool OnFog();
         float GetFogStart();

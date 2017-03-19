@@ -10,8 +10,8 @@ using namespace BONE_SYSTEM;
 namespace BONE_GRAPHICS
 {
 	typedef struct _TRAIL_MESH{
-		Vector3 pivot;
-		Vector3 upDir;
+		Vec3 pivot;
+		Vec3 upDir;
 
         float curSize;
 		float curLiveTime;
@@ -30,8 +30,8 @@ namespace BONE_GRAPHICS
 		float createCycle;
 		float curCreateTime;
 
-		Vector3 pivot;
-		Vector3 upDir;
+		Vec3 pivot;
+		Vec3 upDir;
 		
 		float startSize;
 		float endSize;
@@ -55,16 +55,16 @@ namespace BONE_GRAPHICS
 
 		void LoadContent();
 			
-		void SetTargetObject(GameObject* targetObject, Vector3 pivot);
+		void SetTargetObject(GameObject* targetObject, Vec3 pivot);
         void SetSize(float start, float end);
 		void SetCycle(float liveCycle, float createCycle);
-		void SetUpVector(Vector3 upDir);
+		void SetUpVector(Vec3 upDir);
         void SetActive(bool active);
 		void SetRenderMode(int mode);
         void SetTexturesAddress(std::string address);
         
-        Vector3 GetPivot();
-        Vector3 GetUpVector();
+        Vec3 GetPivot();
+        Vec3 GetUpVector();
         float GetStartSize();
         float GetEndSize();
         float GetLiveCycle();

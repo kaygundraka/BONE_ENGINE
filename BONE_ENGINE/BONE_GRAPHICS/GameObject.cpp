@@ -15,8 +15,10 @@
 #include "PhongShader.h"
 #include "Material.h"
 #include "PointLight.h"
-#include "Collision.h"
 #include "Script.h"
+#include "RuntimeCompiler.h"
+#include "Rp3dCollision.h"
+#include "Rp3dRigidBody.h"
 
 namespace BONE_GRAPHICS
 {
@@ -135,10 +137,7 @@ namespace BONE_GRAPHICS
         else if (component->GetTypeName() == "Transform2D")
             transform2D = (Transform2D*)component;
 
-        if (component->IsScript())
-            scripts.push_back(component);
-
-		components.push_back(component);
+        components.push_back(component);
 
 		return true;
 	}
@@ -183,8 +182,8 @@ namespace BONE_GRAPHICS
             Shader->GetShader()->EndPass();
         }
 
-        if (GetComponent("Collision") != nullptr)
-            ((Collision*)GetComponent("Collision"))->Render(this);
+        //if (GetComponent("Collision") != nullptr)
+        //    ((Collision*)GetComponent("Collision"))->Render(this);
 
         if (GetComponent("ScreenSprite") != nullptr)
 			((ScreenSprite*)GetComponent("ScreenSprite"))->Render(this);
@@ -326,26 +325,26 @@ namespace BONE_GRAPHICS
             file >> j;
 
             if (parent == nullptr)
-                j[name]["IsChild"] = false;
+                j["GameObject"][name]["IsChild"] = false;
             else
-                j[name]["IsChild"] = true;
+                j["GameObject"][name]["IsChild"] = true;
 
-            j[name]["PrefabName"] = prefab;
-            j[name]["TreeDepth"] = TreeDepth;
+            j["GameObject"][name]["PrefabName"] = prefab;
+            j["GameObject"][name]["TreeDepth"] = TreeDepth;
 
-            j[name]["Position"] = {
+            j["GameObject"][name]["Position"] = {
                 ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().x,
                 ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().y,
                 ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().z
             };
 
-            j[name]["Rotation"] = {
+            j["GameObject"][name]["Rotation"] = {
                 ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().x,
                 ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().y,
                 ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().z
             };
 
-            j[name]["Scale"] = {
+            j["GameObject"][name]["Scale"] = {
                 ((Transform3D*)(GetComponent("Transform3D")))->GetScale().x,
                 ((Transform3D*)(GetComponent("Transform3D")))->GetScale().y,
                 ((Transform3D*)(GetComponent("Transform3D")))->GetScale().z
@@ -356,26 +355,26 @@ namespace BONE_GRAPHICS
         else
         {
             if (parent == nullptr)
-                j[name]["IsChild"] = false;
+                j["GameObject"][name]["IsChild"] = false;
             else
-                j[name]["IsChild"] = true;
+                j["GameObject"][name]["IsChild"] = true;
 
-            j[name]["PrefabName"] = prefab;
-            j[name]["TreeDepth"] = TreeDepth;
+            j["GameObject"][name]["PrefabName"] = prefab;
+            j["GameObject"][name]["TreeDepth"] = TreeDepth;
 
-            j[name]["Position"] = {
+            j["GameObject"][name]["Position"] = {
                 ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().x,
                 ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().y,
                 ((Transform3D*)(GetComponent("Transform3D")))->GetPosition().z
             };
 
-            j[name]["Rotation"] = {
+            j["GameObject"][name]["Rotation"] = {
                 ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().x,
                 ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().y,
                 ((Transform3D*)(GetComponent("Transform3D")))->GetRotateAngle().z
             };
 
-            j[name]["Scale"] = {
+            j["GameObject"][name]["Scale"] = {
                 ((Transform3D*)(GetComponent("Transform3D")))->GetScale().x,
                 ((Transform3D*)(GetComponent("Transform3D")))->GetScale().y,
                 ((Transform3D*)(GetComponent("Transform3D")))->GetScale().z
@@ -445,6 +444,36 @@ namespace BONE_GRAPHICS
                 j["Material"]["Specular"] = { Specular.r, Specular.g, Specular.b, Specular.a };
                 j["Material"]["Shininess"] = Shininess;
             }
+            else if (TypeName == "Collision")
+            {
+                auto Type = ((Collision*)(components[i]))->GetCollisionType();
+                j["Collision"]["Type"] = (int)Type;
+
+                if (Type == Collision::COLL_BOX)
+                {
+                    j["Collision"]["HalfExtens"] = {
+                        ((Collision*)(components[i]))->GetHalfExtens().x,
+                        ((Collision*)(components[i]))->GetHalfExtens().y,
+                        ((Collision*)(components[i]))->GetHalfExtens().z
+                    };
+                }
+                else if (Type == Collision::COLL_SPHERE)
+                    j["Collision"]["Radius"] = ((Collision*)(components[i]))->GetRadius();
+                else
+                {
+                    j["Collision"]["Radius"] = ((Collision*)(components[i]))->GetRadius();
+                    j["Collision"]["Height"] = ((Collision*)(components[i]))->GetHeight();
+                }
+            }
+            else if (TypeName == "RigidBody")
+            {
+                j["RigidBody"]["Type"] = (int)(((RigidBody*)(components[i]))->GetType());
+                j["RigidBody"]["Mass"] = ((RigidBody*)(components[i]))->GetMass();
+                j["RigidBody"]["EnableGravity"] = ((RigidBody*)(components[i]))->IsEnableGravity();
+                j["RigidBody"]["Bounciness"] = ((RigidBody*)(components[i]))->GetBounciness();
+                j["RigidBody"]["FricitionCoefficient"] = ((RigidBody*)(components[i]))->GetFrictionCoefficient();
+                j["RigidBody"]["IsAllowedToSleep"] = ((RigidBody*)(components[i]))->GetIsAllowedToSleep();
+            }
             else if (TypeName == "StaticMesh")
             {
                 j["StaticMesh"]["FileName"] = ((StaticMesh*)(components[i]))->GetFileAddress();
@@ -472,6 +501,8 @@ namespace BONE_GRAPHICS
     void GameObject::LoadPrefab()
     {
         std::string FullPath;
+
+        SceneMgr->SetGameObject(this);
 
         if (!ResourceMgr->ExistFile(prefab + ".json", &FullPath))
             return;
@@ -551,7 +582,7 @@ namespace BONE_GRAPHICS
                     camera = new Camera(
                         j["Camera"]["ID"],
                         j["Camera"]["Type"],
-                        Vector3(UpVector[0], UpVector[1], UpVector[2]),
+                        Vec3(UpVector[0], UpVector[1], UpVector[2]),
                         j["Camera"]["Width"],
                         j["Camera"]["Height"],
                         j["Camera"]["farDist"],
@@ -560,6 +591,80 @@ namespace BONE_GRAPHICS
                     );
 
                     AddComponent(camera);
+                }
+            }
+            else if (TypeName == "Collision")
+            {
+                Collision* collision = (Collision*)GetComponent("Collision");
+
+                if (collision == nullptr)
+                {
+                    collision = new Collision(this);
+
+                    Collision::COLLISION_TYPE Type = (Collision::COLLISION_TYPE)j["Collision"]["Type"].get<int>();
+
+                    if (Type == Collision::COLL_BOX)
+                    {
+                        auto HalfExtens = j["Collision"]["HalfExtens"].get<std::vector<double>>();
+
+                        collision->CreateBox(Vector3((float)HalfExtens[0], (float)HalfExtens[1], (float)HalfExtens[2]));
+                    }
+                    else if (Type == Collision::COLL_CAPSULE)
+                    {
+                        auto Radius = j["Collision"]["Radius"].get<double>();
+                        auto Height = j["Collision"]["Height"].get<double>();
+
+                        collision->CreateCapsule(Radius, Height);
+                    }
+                    else if (Type == Collision::COLL_CONE)
+                    {
+                        auto Radius = j["Collision"]["Radius"].get<double>();
+                        auto Height = j["Collision"]["Height"].get<double>();
+
+                        collision->CreateCone(Radius, Height);
+                    }
+                    else if (Type == Collision::COLL_CYLINDER)
+                    {
+                        auto Radius = j["Collision"]["Radius"].get<double>();
+                        auto Height = j["Collision"]["Height"].get<double>();
+
+                        collision->CreateCylinder(Radius, Height);
+                    }
+                    else if (Type == Collision::COLL_SPHERE)
+                    {
+                        auto Radius = j["Collision"]["Radius"].get<double>();
+                        
+                        collision->CreateSphere(Radius);
+                    }
+
+                    AddComponent(collision);
+                }
+            }
+            else if (TypeName == "RigidBody")
+            {
+                RigidBody* rigidBody = (RigidBody*)GetComponent("RigidBody");
+
+                if (rigidBody == nullptr)
+                {
+                    rigidBody = new RigidBody();
+
+                    reactphysics3d::BodyType Type = (reactphysics3d::BodyType)j["RigidBody"]["Type"].get<int>();
+                    auto Mass = j["RigidBody"]["Mass"].get<double>();
+                    auto EnableGravity = j["RigidBody"]["EnableGravity"].get<bool>();
+                    auto Bounciness = j["RigidBody"]["Bounciness"].get<double>();
+                    auto FricitionCoefficient = j["RigidBody"]["FricitionCoefficient"].get<double>();
+                    auto IsAllowedToSleep = j["RigidBody"]["IsAllowedToSleep"].get<bool>();
+
+                    if (rigidBody->SetInfo(this, Mass))
+                    {
+                        rigidBody->EnableGravity(EnableGravity);
+                        rigidBody->SetBounciness(Bounciness);
+                        rigidBody->SetFrictionCoefficient(FricitionCoefficient);
+                        rigidBody->SetIsAllowedToSleep(IsAllowedToSleep);
+                        rigidBody->SetType(Type);
+
+                        AddComponent(rigidBody);
+                    }
                 }
             }
             else if (TypeName == "Material")
@@ -634,6 +739,16 @@ namespace BONE_GRAPHICS
         file.close();
     }
 
+    void GameObject::AddScript(std::string name)
+    {
+        scripts.push_back(name);
+    }
+
+    std::list<std::string> GameObject::GetScript()
+    {
+        return scripts;
+    }
+
     void GameObject::SetPrfabName(std::string prefabName)
     {
         this->prefab = prefabName;
@@ -646,55 +761,68 @@ namespace BONE_GRAPHICS
 
     void GameObject::Init()
     {
-        for each(auto var in scripts)
-            ((Script*)var)->Init();
+        for (int i = 0; i < components.size(); i++)
+            if ((components[i])->IsScript())
+                ((Script*)(components[i]))->Init();
+        
+        InitFunc(this);
     }
 
     void GameObject::Awake()
     {
-        for each(auto var in scripts)
-            ((Script*)var)->Awake();
+        for (auto var = components.begin(); var != components.end(); var++)
+            if ((*var)->IsScript())
+                ((Script*)*var)->Awake();
+    
+        AwakeFunc(this);
     }
 
 	void GameObject::Reference()
 	{
-        for each(auto var in scripts)
-            ((Script*)var)->Reference();
-	}
+        for (auto var = components.begin(); var != components.end(); var++)
+            if ((*var)->IsScript())
+                ((Script*)*var)->Reference();
+    
+        ReferenceFunc(this);
+    }
 	
 	void GameObject::Update()
 	{
-        for each(auto var in scripts)
-            ((Script*)var)->Update();
-	}
+        for (auto var = components.begin(); var != components.end(); var++)
+        {
+            if ((*var)->IsScript())
+                ((Script*)*var)->Update();
+            else if ((*var)->GetTypeName() == "RigidBody")
+                ((RigidBody*)(*var))->UpdateTransform();
+        }
+
+        UpdateFunc(this);
+    }
 	
 	void GameObject::LateUpdate()
 	{
-        for each(auto var in scripts)
-            ((Script*)var)->LateUpdate();
+        for (auto var = components.begin(); var != components.end(); var++)
+            if ((*var)->IsScript())
+                ((Script*)*var)->LateUpdate();
+    
+        LateUpdateFunc(this);
     }
 
 	void GameObject::LateRender()
 	{
-        for each(auto var in scripts)
-            ((Script*)var)->LateRender();
-    }
-
-    void GameObject::OnCollisionEnter(GameObject* otherObject)
-    {
-        for each(auto var in scripts)
-            ((Script*)var)->OnCollisionEnter(otherObject);
-    }
-
-    void GameObject::OnCollisionStay(GameObject* otherObject)
-    {
-        for each(auto var in scripts)
-            ((Script*)var)->OnCollisionStay(otherObject);
-    }
+        for (auto var = components.begin(); var != components.end(); var++)
+            if ((*var)->IsScript())
+                ((Script*)*var)->LateRender();
     
-    void GameObject::OnCollisionLeave(GameObject* otherObject)
+        LateRenderFunc(this);
+    }
+
+    void GameObject::CollisionEvent(GameObject* otherObject)
     {
-        for each(auto var in scripts)
-            ((Script*)var)->OnCollisionLeave(otherObject);
+        for (auto var = components.begin(); var != components.end(); var++)
+            if ((*var)->IsScript())
+                ((Script*)*var)->CollisionEvent(otherObject);
+    
+        CollisionEventFunc(this, otherObject);
     }
 }

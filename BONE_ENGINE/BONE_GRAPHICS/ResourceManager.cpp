@@ -8,7 +8,7 @@ namespace BONE_GRAPHICS
 {
 	void ResourceManager::InitializeMembers()
 	{
-		LogMgr->ShowMessage(LOG_MESSAGE, "ResourceManager is initialized");
+		LogMgr->Info("ResourceManager is initialized");
 	}
 
 	void ResourceManager::ReleaseMembers()
@@ -28,7 +28,7 @@ namespace BONE_GRAPHICS
 			Iter = textureList.erase(Iter);
 		}
 
-		LogMgr->ShowMessage(LOG_MESSAGE, "ResourceManager Manager is Clear.");
+		LogMgr->Info("ResourceManager Manager is Clear.");
 	}
 
     bool ResourceManager::ExistFile(std::string name, std::string* full_path)
@@ -114,7 +114,7 @@ namespace BONE_GRAPHICS
 			char log[MAX_PATH] = "";
 			strcpy_s(log, name.c_str());
 			strcat_s(log, "- is loaded.");
-			LogMgr->ShowMessage(LOG_MESSAGE, log);
+			LogMgr->Info(log);
 
 			return &(staticMeshList.find(name)->second);
 		}
@@ -157,7 +157,7 @@ namespace BONE_GRAPHICS
 			char log[MAX_PATH] = "";
 			strcpy_s(log, name.c_str());
 			strcat_s(log, "- is loaded.");
-			LogMgr->ShowMessage(LOG_MESSAGE, log);
+			LogMgr->Info(log);
 
 			return textureList.find(name)->second;
 		}
