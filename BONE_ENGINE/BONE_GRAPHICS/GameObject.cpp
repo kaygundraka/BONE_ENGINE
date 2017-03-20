@@ -684,7 +684,7 @@ namespace BONE_GRAPHICS
                     material->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
                     material->SetEmissive(Emissive[0], Emissive[1], Emissive[2], Emissive[3]);
                     material->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
-                    material->SetShininess(j["4.Material"]["Shininess"]);
+                    material->SetShininess(j["5.Material"]["Shininess"]);
                     
                     AddComponent(material);
                 }

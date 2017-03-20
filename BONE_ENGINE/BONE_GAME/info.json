@@ -1,6 +1,6 @@
 {
     "WindowsName":"BONE_ENGINE - Bone Editor",
-    "WindowsWidth":1024,
+    "WindowsWidth":1280,
     "WindowsHeight":768,
     "ShowLogCmd":true,
     "EnableLog":false,
@@ -8,6 +8,7 @@
     "ResourcePaths":[
         ".\\*",
         ".\\Engine\\*",
+        ".\\Engine\\Editor\\*",
         ".\\Engine\\Shader\\*",
         ".\\Engine\\Maps\\*",
         ".\\Engine\\Prefabs\\*",

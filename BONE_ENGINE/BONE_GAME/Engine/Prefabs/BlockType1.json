@@ -7,8 +7,8 @@
         ],
         "Position": [
             0.0,
-            0.0,
-            0.0
+            10.0,
+            -20.0
         ],
         "Rotation": [
             0.0,
@@ -36,6 +36,33 @@
         "IsAllowedToSleep": false,
         "Mass": 1.0,
         "Type": 0
+    },
+    "5.Material": {
+        "Ambient": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Diffuse": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Emissive": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Shininess": 1.0,
+        "Specular": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ]
     },
     "6.StaticMesh": {
         "FileName": "Floor.X"

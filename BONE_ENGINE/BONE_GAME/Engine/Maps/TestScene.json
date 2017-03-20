@@ -4,10 +4,90 @@
             "IsChild": false,
             "Position": [
                 0.0,
+                10.0,
+                -96.9853057861328
+            ],
+            "PrefabName": "BlockType1",
+            "Rotation": [
+                0.0,
                 0.0,
                 0.0
             ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "Block2": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                10.0,
+                56.6535797119141
+            ],
             "PrefabName": "BlockType1",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "Block3": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                10.0,
+                -20.0
+            ],
+            "PrefabName": "BlockType1",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "PhysicsBox": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                100.0,
+                0.0
+            ],
+            "PrefabName": "PhysicsBox",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.100000001490116,
+                1.0,
+                0.100000001490116
+            ],
+            "TreeDepth": 0
+        },
+        "PointLight": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                200.0,
+                0.0
+            ],
+            "PrefabName": "PointLight",
             "Rotation": [
                 0.0,
                 0.0,
@@ -64,9 +144,9 @@
     "Scene": {
         "EnableFog": false,
         "GlobalAmbient": [
-            1.0,
-            1.0,
-            1.0,
+            0.0,
+            0.0,
+            0.0,
             1.0
         ]
     }
