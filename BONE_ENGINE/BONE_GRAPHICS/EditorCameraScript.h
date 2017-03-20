@@ -8,6 +8,7 @@ private:
     Camera* mainCamera;
     int mouseX;
     int mouseY;
+    float cameraMoveSpeed;
 
     std::string selectObject;
 

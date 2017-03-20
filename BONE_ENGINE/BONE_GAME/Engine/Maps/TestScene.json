@@ -1,13 +1,13 @@
 {
     "GameObject": {
-        "Block": {
+        "BlcokType3-1": {
             "IsChild": false,
             "Position": [
-                0.0,
+                76.5168151855469,
                 10.0,
-                -96.9853057861328
+                -20.0
             ],
-            "PrefabName": "BlockType1",
+            "PrefabName": "BlockType3",
             "Rotation": [
                 0.0,
                 0.0,
@@ -20,7 +20,7 @@
             ],
             "TreeDepth": 0
         },
-        "Block2": {
+        "BlockType1-1": {
             "IsChild": false,
             "Position": [
                 0.0,
@@ -40,12 +40,12 @@
             ],
             "TreeDepth": 0
         },
-        "Block3": {
+        "BlockType1-2": {
             "IsChild": false,
             "Position": [
                 0.0,
                 10.0,
-                -20.0
+                -97.1387481689453
             ],
             "PrefabName": "BlockType1",
             "Rotation": [
@@ -60,34 +60,14 @@
             ],
             "TreeDepth": 0
         },
-        "PhysicsBox": {
+        "BlockType2-1": {
             "IsChild": false,
             "Position": [
-                0.0,
-                100.0,
-                0.0
+                0.259869813919067,
+                9.60932540893555,
+                -20.0
             ],
-            "PrefabName": "PhysicsBox",
-            "Rotation": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "Scale": [
-                0.100000001490116,
-                1.0,
-                0.100000001490116
-            ],
-            "TreeDepth": 0
-        },
-        "PointLight": {
-            "IsChild": false,
-            "Position": [
-                0.0,
-                200.0,
-                0.0
-            ],
-            "PrefabName": "PointLight",
+            "PrefabName": "BlockType2",
             "Rotation": [
                 0.0,
                 0.0,
@@ -99,6 +79,206 @@
                 1.0
             ],
             "TreeDepth": 0
+        },
+        "BlockType2-DoorWay": {
+            "IsChild": true,
+            "Position": [
+                34.0,
+                0.0,
+                0.0
+            ],
+            "PrefabName": "BlockType2-DoorWay",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "BlockType2-DoorWay2": {
+            "IsChild": true,
+            "Position": [
+                -34.0,
+                0.0,
+                0.0
+            ],
+            "PrefabName": "BlockType2-DoorWay2",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "BlockType2-Top": {
+            "IsChild": true,
+            "Position": [
+                0.0,
+                76.0,
+                0.0
+            ],
+            "PrefabName": "BlockType2-Top",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "BlockType3-2": {
+            "IsChild": false,
+            "Position": [
+                -76.5168151855469,
+                10.0,
+                -20.0
+            ],
+            "PrefabName": "BlockType3",
+            "Rotation": [
+                0.0,
+                3.14000010490417,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "BlockType3-MetalDoor": {
+            "IsChild": true,
+            "Position": [
+                -40.0,
+                0.0,
+                -15.0
+            ],
+            "PrefabName": "BlockType3-MetalDoor",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "BlockType3-Top": {
+            "IsChild": true,
+            "Position": [
+                0.0,
+                76.0,
+                0.0
+            ],
+            "PrefabName": "BlockType3-Top",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "BlockType3-Wall": {
+            "IsChild": true,
+            "Position": [
+                0.0,
+                0.0,
+                -34.0
+            ],
+            "PrefabName": "BlockType3-Wall",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "BlockType3-Wall2": {
+            "IsChild": true,
+            "Position": [
+                0.0,
+                0.0,
+                34.0
+            ],
+            "PrefabName": "BlockType3-Wall2",
+            "Rotation": [
+                0.0,
+                1.56999957561493,
+                -1.47191272503733e-07
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "BlockType3-Wall3": {
+            "IsChild": true,
+            "Position": [
+                34.0,
+                0.0,
+                0.0
+            ],
+            "PrefabName": "BlockType3-Wall3",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "Top": {
+            "IsChild": true,
+            "Position": [
+                0.0,
+                76.0,
+                0.0
+            ],
+            "PrefabName": "Top",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
         },
         "Wall1": {
             "IsChild": true,
@@ -141,12 +321,72 @@
             "TreeDepth": 1
         }
     },
+    "Light": {
+        "PointLight_0": {
+            "Ambient": [
+                1.0,
+                0.200000002980232,
+                0.300000011920929,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                50.0,
+                -10.0
+            ],
+            "Radius": 55.0000038146973,
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ]
+        },
+        "PointLight_1": {
+            "Ambient": [
+                1.0,
+                0.100000001490116,
+                0.100000001490116,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                45.0,
+                60.0
+            ],
+            "Radius": 50.0000038146973,
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ]
+        }
+    },
     "Scene": {
+        "BackGroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
         "EnableFog": false,
         "GlobalAmbient": [
-            0.0,
-            0.0,
-            0.0,
+            0.0299999993294477,
+            0.0299999993294477,
+            0.0299999993294477,
             1.0
         ]
     }

@@ -484,9 +484,6 @@
     <ClCompile Include="PosPivot.cpp">
       <Filter>소스 파일\Editor\Script</Filter>
     </ClCompile>
-    <ClCompile Include="test.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Rp3dCollision.cpp">
       <Filter>소스 파일\Core\GameObject\Components\Physics</Filter>
     </ClCompile>

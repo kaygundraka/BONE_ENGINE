@@ -69,9 +69,6 @@ namespace BONE_GRAPHICS
         
         Matrix MatWorld = ((Transform3D*)parent->transform3D)->GetTransform();
 
-        //Matrix MatWorld;
-        //D3DXMatrixIdentity(&MatWorld);
-
         auto Mesh = (StaticMesh*)parent->GetComponent("StaticMesh");
 
         if (Mesh != nullptr)
@@ -109,7 +106,7 @@ namespace BONE_GRAPHICS
             PhongEffect->SetValue("globalAmbient", &GlobalAmbient, sizeof(GlobalAmbient));
             PhongEffect->SetValue("numLights", &LightNumber, sizeof(LightNumber));
 
-            PhongEffect->SetTexture("colorMapTexture", ResourceMgr->LoadTexture(Mesh->GetTexturesAddress()[0]));
+            PhongEffect->SetTexture("colorMapTexture", ResourceMgr->LoadTexture(Mesh->GetTextures()[0]));
                         
             D3DXHANDLE HandleLight;
             D3DXHANDLE HandleLightPos;

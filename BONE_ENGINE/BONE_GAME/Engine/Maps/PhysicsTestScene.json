@@ -1,0 +1,147 @@
+{
+    "GameObject": {
+        "Floor": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                7.82800674438477,
+                0.0
+            ],
+            "PrefabName": "Floor",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                2.0,
+                1.0,
+                2.0
+            ],
+            "TreeDepth": 0
+        },
+        "PhysicsBox": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                100.0,
+                0.0
+            ],
+            "PrefabName": "PhysicsBox",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "PhysicsBox2": {
+            "IsChild": false,
+            "Position": [
+                -6.8321099281311,
+                110.0,
+                -4.02890586853027
+            ],
+            "PrefabName": "PhysicsBox",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "PhysicsBox3": {
+            "IsChild": false,
+            "Position": [
+                -5.0,
+                90.0,
+                5.0
+            ],
+            "PrefabName": "PhysicsBox",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "PhysicsBox4": {
+            "IsChild": false,
+            "Position": [
+                -4.37529373168945,
+                120.0,
+                0.0
+            ],
+            "PrefabName": "PhysicsBox",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        }
+    },
+    "Light": {
+        "PointLight_0": {
+            "Ambient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                150.0,
+                0.0
+            ],
+            "Radius": 163.000015258789,
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ]
+        }
+    },
+    "Scene": {
+        "BackGroundColor": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "EnableFog": false,
+        "GlobalAmbient": [
+            0.300000011920929,
+            0.300000011920929,
+            0.300000011920929,
+            1.0
+        ]
+    }
+}

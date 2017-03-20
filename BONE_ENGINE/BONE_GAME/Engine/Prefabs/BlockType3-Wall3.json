@@ -16,22 +16,6 @@
             1.0
         ]
     },
-    "3.Collision": {
-        "HalfExtens": [
-            3.89025211334229,
-            38.1062202453613,
-            38.4791488647461
-        ],
-        "Type": 0
-    },
-    "4.RigidBody": {
-        "Bounciness": 0.400000005960464,
-        "EnableGravity": false,
-        "FricitionCoefficient": 0.200000002980232,
-        "IsAllowedToSleep": false,
-        "Mass": 1.0,
-        "Type": 0
-    },
     "5.Material": {
         "Ambient": [
             1.0,

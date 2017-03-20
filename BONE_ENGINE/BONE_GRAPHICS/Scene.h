@@ -39,7 +39,6 @@ namespace BONE_GRAPHICS
 
         bool enablePhysics;
 
-        rp3d::CollisionWorld* collisionWorld;
         rp3d::DynamicsWorld* physicsWorld;
         PhysicsEventListener physicsEventListner;
         

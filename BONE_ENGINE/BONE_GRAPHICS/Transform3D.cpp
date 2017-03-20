@@ -173,10 +173,10 @@ namespace BONE_GRAPHICS
 
 	void Transform3D::Rotate(float x, float y, float z)
 	{
-		Quater Quater;
-		D3DXQuaternionRotationYawPitchRoll(&Quater, y, x, z);
+		Quater quater;
+		D3DXQuaternionRotationYawPitchRoll(&quater, y, x, z);
 		
-		D3DXQuaternionMultiply(&rotAngle, &rotAngle, &Quater);
+		D3DXQuaternionMultiply(&rotAngle, &rotAngle, &quater);
 	}
 
 	void Transform3D::SetRotate(Quater rotAngle)
@@ -186,16 +186,30 @@ namespace BONE_GRAPHICS
 
 	void Transform3D::SetRotate(float x, float y, float z)
 	{
-		Quater Quater;
-		D3DXQuaternionRotationYawPitchRoll(&Quater, y, x, z);
+		Quater quater;
+		D3DXQuaternionRotationYawPitchRoll(&quater, y, x, z);
 
-		rotAngle = Quater;
+		rotAngle = quater;
 	}
 
-	Quater Transform3D::GetRotateAngle()
+	Vec3 Transform3D::GetRotateAngle()
 	{
-		return rotAngle;
+        float sqw = rotAngle.w * rotAngle.w;
+        float sqx = rotAngle.x * rotAngle.x;
+        float sqy = rotAngle.y * rotAngle.y;
+        float sqz = rotAngle.z * rotAngle.z;
+
+        float pitch = asinf(2.0f * (rotAngle.w * rotAngle.x - rotAngle.y * rotAngle.z));
+        float yaw = atan2f(2.0f * (rotAngle.x * rotAngle.z + rotAngle.w * rotAngle.y), (-sqx - sqy + sqz + sqw));
+        float roll = atan2f(2.0f * (rotAngle.x * rotAngle.y + rotAngle.w * rotAngle.z), (-sqx + sqy - sqz + sqw));
+
+		return Vec3(pitch, yaw, roll);
 	}
+
+    Quater Transform3D::GetRotateQuater()
+    {
+        return rotAngle;
+    }
 
 	Quater Transform3D::GetWorldRotateAngle()
 	{
@@ -205,7 +219,7 @@ namespace BONE_GRAPHICS
 
 		while (parentPtr != nullptr)
 		{
-			result *= ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetRotateAngle();
+			result *= ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetRotateQuater();
 
 			parentPtr = parentPtr->GetParent();
 		}
@@ -228,26 +242,26 @@ namespace BONE_GRAPHICS
 		Vec3 Posit = position;
 		Quater RotAngle = rotAngle;
 
+        D3DXMatrixRotationQuaternion(&rotateTransform, &RotAngle);
+        D3DXMatrixTranslation(&translateTransform, Posit.x, Posit.y, Posit.z);
+        D3DXMatrixScaling(&scaleTransform, Scale.x, Scale.y, Scale.z);
+
+        transform = scaleTransform * rotateTransform * translateTransform;
+
 		while (parentPtr != nullptr)
 		{
-			Scale.x *= ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetScale().x;
+			/*Scale.x *= ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetScale().x;
 			Scale.y *= ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetScale().y;
 			Scale.z *= ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetScale().z;
 
-			Posit += ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetPosition();
+			Posit += ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetPosition();*/
 
-			RotAngle *= ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetRotateAngle();
+			//RotAngle *= ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetRotateQuater();
 
-			parentPtr = parentPtr->GetParent();
+            transform *= ((Transform3D*)parentPtr->transform3D)->GetTransform();
+
+            parentPtr = parentPtr->GetParent();
 		}
-
-		Quater RotQuaternion;
-	
-		D3DXMatrixRotationQuaternion(&rotateTransform, &RotAngle);
-		D3DXMatrixTranslation(&translateTransform, Posit.x, Posit.y, Posit.z);
-		D3DXMatrixScaling(&scaleTransform, Scale.x, Scale.y, Scale.z);
-		
-		transform = scaleTransform * rotateTransform * translateTransform;
 
 		return transform;
 	}

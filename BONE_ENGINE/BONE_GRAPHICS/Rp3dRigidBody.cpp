@@ -12,8 +12,6 @@ namespace BONE_GRAPHICS
 
     RigidBody::~RigidBody()
     {
-        if (rigidBody != nullptr)
-            SceneMgr->CurrentScene()->GetPhysicsWorld()->destroyRigidBody(rigidBody);
     }
 
     bool RigidBody::SetInfo(GameObject* onwer, float mass)

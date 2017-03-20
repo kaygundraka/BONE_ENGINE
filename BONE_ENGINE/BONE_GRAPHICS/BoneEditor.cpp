@@ -105,7 +105,7 @@ void BoneEditor::Run()
 {
     bool flag = false;
 
-    //RenderMgr->GetDevice()->SetRenderState(D3DRS_LIGHTING, FALSE);
+    RenderMgr->GetDevice()->SetRenderState(D3DRS_LIGHTING, FALSE);
     InputMgr->SetFocusWindow(true);
 
     std::string OpenSceneName = "";
@@ -161,28 +161,27 @@ void BoneEditor::Run()
             SceneMgr->SetGUIScene(this);
             this->SetScriptProc(this);
 
-            auto_ptr<GameObject> MainCamera(new GameObject);
-            EditorCamera* EditorCameraScript = new EditorCamera(MainCamera.get(), "EditorCameraScript");
+            GameObject* MainCamera = new GameObject();
+            EditorCamera* EditorCameraScript = new EditorCamera(MainCamera, "EditorCameraScript");
             MainCamera->AddComponent(EditorCameraScript);
-            ViewScene->AddObject(MainCamera.get(), "EditorCamera");
+            ViewScene->AddObject(MainCamera, "EditorCamera");
 
-            auto_ptr<GameObject> Pivot(new GameObject);
-            PosPivot* PosPivotScript = new PosPivot(this, Pivot.get(), "PosPivotScript");
+            GameObject* Pivot = new GameObject();
+            PosPivot* PosPivotScript = new PosPivot(this, Pivot, "PosPivotScript");
             Pivot->AddComponent(PosPivotScript);
-            ViewScene->AddObject(Pivot.get(), "PosPivot");
+            ViewScene->AddObject(Pivot, "PosPivot");
 
-            auto_ptr<PointLight> Light(new PointLight);
+            /*auto_ptr<PointLight> Light(new PointLight);
 
             Light->SetAmbient(1.0f, 1.0f, 1.0f, 1.0f);
             Light->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
             Light->SetSpecular(0.5f, 0.5f, 0.5f, 0.5f);
             Light->SetRadius(200);
             Light->SetLight(true);
-            Light->SetPrfabName("PointLight");
             Light->SetPosition(Vec3(0, 200, 0));
             Light->SetTag("EditorObject");
             ViewScene->AddObject(Light.get(), "PointLight");
-            ViewScene->AddPointLight(Light.get());
+            ViewScene->AddPointLight(Light.get());*/
 
             ViewScene->SetAmbientColor(1.0f, 1.0f, 1.0f, 1.0f);
             ViewScene->SetName(OpenSceneName);
@@ -225,7 +224,9 @@ void BoneEditor::SaveScene()
         if (var->Tag() != "EditorObject")
         {
             LogMgr->Info("%s - Save Object", var->GetName().c_str());
-            var->SavePrefab();
+ 
+            if (var->Tag() != "PointLight")   
+                var->SavePrefab();
             var->SaveInMaps();
         }
     }
@@ -235,7 +236,10 @@ void BoneEditor::SaveScene()
         if (var->Tag() != "EditorObject")
         {
             LogMgr->Info("%s - Save Object", var->GetName().c_str());
-            var->SavePrefab();
+
+            if (var->Tag() != "PointLight")
+                var->SavePrefab();
+            
             var->SaveInMaps();
         }
     }
@@ -360,125 +364,134 @@ void BoneEditor::ShowObjectInfo(std::string name)
 {
     if (ImGui::CollapsingHeader("[GameObject Info]", ImGuiTreeNodeFlags_DefaultOpen))
     {
+        auto object = SceneMgr->CurrentScene()->FindObjectByName(name);
+
+        if (object == nullptr)
+            return;
+
         static char buf[64] = "";
         
         ImGui::InputText("Name", buf, 64);
  
         if (ImGui::Button("Change"))
         {
-            auto object = SceneMgr->CurrentScene()->FindObjectByName(name);
             name = buf;
 
             object->SetName(name);
         }
+
+        bool IsLocked = object->IsLockedEditor();
+        ImGui::Checkbox("IsLocked", &IsLocked);
+
+        object->LockEditor(IsLocked);
     }
 
     if (ImGui::CollapsingHeader("[Components]"), ImGuiTreeNodeFlags_DefaultOpen)
     {
         GameObject* object = SceneMgr->CurrentScene()->FindObjectByName(name);
-        std::vector<Component*> components = object->GetComponents();
 
-        for (auto iter = components.begin(); iter != components.end(); iter++)
+        if (object != nullptr)
         {
-            if (ImGui::TreeNode((*iter)->GetTypeName().c_str()))
+            std::vector<Component*> components = object->GetComponents();
+
+            for (auto iter = components.begin(); iter != components.end(); iter++)
             {
-                if ((*iter)->GetTypeName() == "Transform3D")
+                if (ImGui::TreeNode((*iter)->GetTypeName().c_str()))
                 {
-                    Vec3 oriPos = ((Transform3D*)object->transform3D)->GetPosition();
-                    Vec3 oriRot = ((Transform3D*)object->transform3D)->GetRotateAngle();
-                    Vec3 oriScale = ((Transform3D*)object->transform3D)->GetScale();
-                    Vec3 oriForward = ((Transform3D*)object->transform3D)->GetForward();
-
-                    float pos[3] = { oriPos.x, oriPos.y, oriPos.z };
-                    float rot[3] = { oriRot.x, oriRot.y, oriRot.z };
-                    float scale[3] = { oriScale.x, oriScale.y, oriScale.z };
-                    float forward[3] = { oriForward.x, oriForward.y, oriForward.z };
-
-                    ImGui::InputFloat3("Position", pos);
-                    ImGui::InputFloat3("Rotation", rot);
-                    ImGui::InputFloat3("Scale", scale);
-                    ImGui::InputFloat3("Forward", forward);
-
-                    ((Transform3D*)object->transform3D)->SetPosition(pos[0], pos[1], pos[2]);
-                    ((Transform3D*)object->transform3D)->SetRotate(rot[0], rot[1], rot[2]);
-                    ((Transform3D*)object->transform3D)->SetScale(scale[0], scale[1], scale[2]);
-                    ((Transform3D*)object->transform3D)->SetForward(forward[0], forward[1], forward[2]);
-                }
-                else if ((*iter)->GetTypeName() == "StaticMesh")
-                {
-                    auto MeshName = ((StaticMesh*)(*iter))->GetFileAddress();
-                    auto Meshes = ResourceMgr->ExistFiles(".\\Resource\\Mesh\\*");
-
-                    const int Size = Meshes.size();
-                    char** ComboBoxItems = new char*[Size];
-
-                    int CurItem = 0;
-
-                    int i = 0;
-                    for each(auto item in Meshes)
+                    if ((*iter)->GetTypeName() == "Transform3D")
                     {
-                        ComboBoxItems[i] = new char[64];
-                        strcpy(ComboBoxItems[i], Meshes[i].c_str());
+                        Vec3 oriPos = ((Transform3D*)object->transform3D)->GetPosition();
+                        Vec3 oriRot = ((Transform3D*)object->transform3D)->GetRotateAngle();
+                        Vec3 oriScale = ((Transform3D*)object->transform3D)->GetScale();
+                        
+                        float pos[3] = { oriPos.x, oriPos.y, oriPos.z };
+                        float rot[3] = { oriRot.x, oriRot.y, oriRot.z };
+                        float scale[3] = { oriScale.x, oriScale.y, oriScale.z };
+                        
+                        ImGui::InputFloat3("Position", pos);
+                        ImGui::InputFloat3("Rotation", rot);
+                        ImGui::InputFloat3("Scale", scale);
+                        
+                        ((Transform3D*)object->transform3D)->SetPosition(pos[0], pos[1], pos[2]);
+                        ((Transform3D*)object->transform3D)->SetRotate(rot[0], rot[1], rot[2]);
+                        ((Transform3D*)object->transform3D)->SetScale(scale[0], scale[1], scale[2]);
+                    }
+                    else if ((*iter)->GetTypeName() == "StaticMesh")
+                    {
+                        auto MeshName = ((StaticMesh*)(*iter))->GetFile();
+                        auto Meshes = ResourceMgr->ExistFiles(".\\Resource\\Mesh\\*");
 
-                        if (MeshName == ComboBoxItems[i])
-                            CurItem = i;
+                        const int Size = Meshes.size();
+                        char** ComboBoxItems = new char*[Size];
 
-                        i++;
+                        int CurItem = 0;
+
+                        int i = 0;
+                        for each(auto item in Meshes)
+                        {
+                            ComboBoxItems[i] = new char[64];
+                            strcpy(ComboBoxItems[i], Meshes[i].c_str());
+
+                            if (MeshName == ComboBoxItems[i])
+                                CurItem = i;
+
+                            i++;
+                        }
+
+                        ImGui::Combo("Meshes", &CurItem, ComboBoxItems, Size);
+
+                        if (ImGui::Button("Chanage"))
+                        {
+
+                        }
+
+                        ImGui::SameLine();
+
+                        if (ImGui::Button("Remove"))
+                        {
+
+                        }
+
+                        for (int i = 0; i < Size; i++)
+                            delete ComboBoxItems[i];
+                        delete[] ComboBoxItems;
+                    }
+                    else if ((*iter)->GetTypeName() == "Material")
+                    {
+                        RGBA OriAmbient = ((Material*)(*iter))->GetAmbient();
+                        RGBA OriDiffuse = ((Material*)(*iter))->GetDiffuse();
+                        RGBA OriEmissive = ((Material*)(*iter))->GetEmissive();
+                        RGBA OriSpecular = ((Material*)(*iter))->GetSpecular();
+                        float OriShininess = ((Material*)(*iter))->GetShininess();
+
+                        float Ambient[4] = { OriAmbient.r, OriAmbient.g, OriAmbient.b, OriAmbient.a };
+                        float Diffuse[4] = { OriDiffuse.r, OriDiffuse.g, OriDiffuse.b, OriDiffuse.a };
+                        float Emissive[4] = { OriEmissive.r, OriEmissive.g, OriEmissive.b, OriEmissive.a };
+                        float Specular[4] = { OriSpecular.r, OriSpecular.g, OriSpecular.b, OriSpecular.a };
+                        float Shininess = OriShininess;
+
+                        ImGui::InputFloat3("Ambient", Ambient);
+                        ImGui::InputFloat3("Diffuse", Diffuse);
+                        ImGui::InputFloat3("Emissive", Emissive);
+                        ImGui::InputFloat3("Specular", Specular);
+                        ImGui::InputFloat("Shininess", &Shininess);
+
+                        ((Material*)(*iter))->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
+                        ((Material*)(*iter))->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
+                        ((Material*)(*iter))->SetEmissive(Emissive[0], Emissive[1], Emissive[2], Emissive[3]);
+                        ((Material*)(*iter))->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
+                        ((Material*)(*iter))->SetShininess(Shininess);
                     }
 
-                    ImGui::Combo("Meshes", &CurItem, ComboBoxItems, Size);
-
-                    if (ImGui::Button("Chanage"))
-                    {
-
-                    }
-
-                    ImGui::SameLine();
-
-                    if (ImGui::Button("Remove"))
-                    {
-
-                    }
-
-                    for (int i = 0; i < Size; i++)
-                        delete ComboBoxItems[i];
-                    delete[] ComboBoxItems;
+                    ImGui::TreePop();
                 }
-                else if ((*iter)->GetTypeName() == "Material")
-                {
-                    RGBA OriAmbient = ((Material*)(*iter))->GetAmbient();
-                    RGBA OriDiffuse = ((Material*)(*iter))->GetDiffuse();
-                    RGBA OriEmissive = ((Material*)(*iter))->GetEmissive();
-                    RGBA OriSpecular = ((Material*)(*iter))->GetSpecular();
-                    float OriShininess = ((Material*)(*iter))->GetShininess();
-
-                    float Ambient[4] = { OriAmbient.r, OriAmbient.g, OriAmbient.b, OriAmbient.a };
-                    float Diffuse[4] = { OriDiffuse.r, OriDiffuse.g, OriDiffuse.b, OriDiffuse.a };
-                    float Emissive[4] = { OriEmissive.r, OriEmissive.g, OriEmissive.b, OriEmissive.a };
-                    float Specular[4] = { OriSpecular.r, OriSpecular.g, OriSpecular.b, OriSpecular.a };
-                    float Shininess = OriShininess;
-
-                    ImGui::InputFloat3("Ambient", Ambient);
-                    ImGui::InputFloat3("Diffuse", Diffuse);
-                    ImGui::InputFloat3("Emissive", Emissive);
-                    ImGui::InputFloat3("Specular", Specular);
-                    ImGui::InputFloat("Shininess", &Shininess);
-
-                    ((Material*)(*iter))->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
-                    ((Material*)(*iter))->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
-                    ((Material*)(*iter))->SetEmissive(Emissive[0], Emissive[1], Emissive[2], Emissive[3]);
-                    ((Material*)(*iter))->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
-                    ((Material*)(*iter))->SetShininess(Shininess);
-                }
-
-                ImGui::TreePop();
             }
-        }
 
-        if (ImGui::SmallButton("Add Component"))
-        {
-            currentShowInfoObject = name;
-            showAddComponent = true;
+            if (ImGui::SmallButton("Add Component"))
+            {
+                currentShowInfoObject = name;
+                showAddComponent = true;
+            }
         }
     }
 }
@@ -676,115 +689,159 @@ void BoneEditor::UpdateFrame()
 
                 if (ImGui::TreeNode((*iter)->GetName().c_str()))
                 {
-                    if (ImGui::TreeNode("Information"))
+                    if ((*iter)->Tag() == "PointLight")
                     {
-                        auto IsActive = (*iter)->GetActive();
-                        ImGui::Checkbox("IsActvie", &IsActive);
-                        ImGui::SameLine();
-
-                        auto IsStatic = (*iter)->GetStatic();
-                        ImGui::Checkbox("IsStatic", &IsStatic);
-
-                        auto Priority = (*iter)->GetPriority();
-                        ImGui::InputInt("Priority", &Priority);
-
-                        (*iter)->SetActive(IsActive);
-                        (*iter)->SetStatic(IsStatic);
-                        (*iter)->SetPriority(Priority);
-
-                        auto Tag = (*iter)->Tag();
-                        char TagStr[64] = "";
-                        strcpy(TagStr, Tag.c_str());
-                        ImGui::InputText("Tag", TagStr, 64);
-                        if (ImGui::Button("Change Tag"))
-                            (*iter)->SetTag(Tag);
-
-                        static char buf[64] = "";
-                        ImGui::InputText("Name", buf, 64);
-                        if (ImGui::Button("Change Name"))
+                        if (ImGui::TreeNode("Transform3D"))
                         {
-                            auto object = SceneMgr->CurrentScene()->FindObjectByName((*iter)->GetName().c_str());
-                            object->SetName(buf);
+                            Vec3 oriPos = ((Transform3D*)(*iter)->transform3D)->GetPosition();
+
+                            float pos[3] = { oriPos.x, oriPos.y, oriPos.z };
+
+                            ImGui::InputFloat3("Position", pos);
+
+                            ((Transform3D*)(*iter)->transform3D)->SetPosition(pos[0], pos[1], pos[2]);
+
+                            ImGui::TreePop();
                         }
-
-                        ImGui::TreePop();
-                    }
-
-                    if (ImGui::TreeNode("Prefab"))
-                    {
-                        auto Prefabs = ResourceMgr->ExistFiles(".\\Engine\\Prefabs\\*");
-
-                        const int Size = Prefabs.size();
-                        char** ComboBoxItems = new char*[Size];
-
-                        int i = 0;
-                        for each(auto item in Prefabs)
+                        if (ImGui::TreeNode("Color"))
                         {
-                            ComboBoxItems[i] = new char[64];
-                            strcpy(ComboBoxItems[i], Prefabs[i].c_str());
-                            i++;
-                        }
+                            bool oriActive = ((PointLight*)(*iter))->GetActive();
+                            RGBA oriAmbient = ((PointLight*)(*iter))->GetAmbient();
+                            RGBA oriDiffuse = ((PointLight*)(*iter))->GetDiffuse();
+                            RGBA oriSpecular = ((PointLight*)(*iter))->GetSpecular();
+                            float oriRadius = ((PointLight*)(*iter))->GetRadius();
 
-                        static int CurItem = 0;
+                            float Ambient[4] = { oriAmbient.r, oriAmbient.g, oriAmbient.b, oriAmbient.a };
+                            float Diffuse[4] = { oriDiffuse.r, oriDiffuse.g, oriDiffuse.b, oriDiffuse.a };
+                            float Specular[4] = { oriSpecular.r, oriSpecular.g, oriSpecular.b, oriSpecular.a };
 
-                        for (int i = 0; i < Size; i++)
-                        {
-                            if ((*iter)->GetPrfabName() + ".json" == Prefabs[i])
-                            {
-                                CurItem = i;
-                                break;
-                            }
-                        }
+                            ImGui::Checkbox("Active", &oriActive);
+                            ImGui::DragFloat("Radius", &oriRadius, 1.0f, 0.1f);
+                            ImGui::InputFloat3("Ambient", Ambient);
+                            ImGui::InputFloat3("Diffuse", Diffuse);
+                            ImGui::InputFloat3("Specular", Specular);
 
-                        ImGui::Combo("Prefabs", &CurItem, ComboBoxItems, Size);
+                            ((PointLight*)(*iter))->SetActive(oriActive);
+                            ((PointLight*)(*iter))->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
+                            ((PointLight*)(*iter))->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
+                            ((PointLight*)(*iter))->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
+                            ((PointLight*)(*iter))->SetRadius(oriRadius);
 
-                        static char PrefabName[64] = "";
-                        ImGui::InputText("Name", PrefabName, 64);
-
-                        if (ImGui::SmallButton("New File"))
-                        {
-                            (*iter)->SetPrfabName(PrefabName);
-                            (*iter)->SavePrefab();
-                        }
-
-                        ImGui::SameLine();
-
-                        if (ImGui::SmallButton("Change File"))
-                        {
-                            for (int i = Prefabs[CurItem].size(); i >= 0; i--)
-                            {
-                                if (ComboBoxItems[CurItem][i] != '.')
-                                    ComboBoxItems[CurItem][i] = '\0';
-                                else
-                                {
-                                    ComboBoxItems[CurItem][i] = '\0';
-                                    break;
-                                }
-                            }
-                            (*iter)->SetPrfabName(ComboBoxItems[CurItem]);
-                        }
-
-                        for (int i = 0; i < Size; i++)
-                            delete ComboBoxItems[i];
-                        delete[] ComboBoxItems;
-
-                        ImGui::TreePop();
-                    }
-
-                    if ((*iter)->GetChileds().size() != 0)
-                    {
-                        if (ImGui::TreeNode("Childs"))
-                        {
-                            AllChildCheck((*iter));
                             ImGui::TreePop();
                         }
                     }
-
-                    if (ImGui::SmallButton("Edit Object"))
+                    else
                     {
-                        showPrefabInspector = true;
+                        if (ImGui::TreeNode("Information"))
+                        {
+                            auto IsActive = (*iter)->GetActive();
+                            ImGui::Checkbox("IsActvie", &IsActive);
+                            ImGui::SameLine();
 
-                        currentObjectName = (*iter)->GetName();
+                            auto IsStatic = (*iter)->GetStatic();
+                            ImGui::Checkbox("IsStatic", &IsStatic);
+
+                            auto Priority = (*iter)->GetPriority();
+                            ImGui::InputInt("Priority", &Priority);
+
+                            (*iter)->SetActive(IsActive);
+                            (*iter)->SetStatic(IsStatic);
+                            (*iter)->SetPriority(Priority);
+
+                            auto Tag = (*iter)->Tag();
+                            char TagStr[64] = "";
+                            strcpy(TagStr, Tag.c_str());
+                            ImGui::InputText("Tag", TagStr, 64);
+                            if (ImGui::Button("Change Tag"))
+                                (*iter)->SetTag(Tag);
+
+                            static char buf[64] = "";
+                            ImGui::InputText("Name", buf, 64);
+                            if (ImGui::Button("Change Name"))
+                            {
+                                auto object = SceneMgr->CurrentScene()->FindObjectByName((*iter)->GetName().c_str());
+                                object->SetName(buf);
+                            }
+
+                            ImGui::TreePop();
+                        }
+
+                        if (ImGui::TreeNode("Prefab"))
+                        {
+                            auto Prefabs = ResourceMgr->ExistFiles(".\\Engine\\Prefabs\\*");
+
+                            const int Size = Prefabs.size();
+                            char** ComboBoxItems = new char*[Size];
+
+                            int i = 0;
+                            for each(auto item in Prefabs)
+                            {
+                                ComboBoxItems[i] = new char[64];
+                                strcpy(ComboBoxItems[i], Prefabs[i].c_str());
+                                i++;
+                            }
+
+                            static int CurItem = 0;
+
+                            for (int i = 0; i < Size; i++)
+                            {
+                                if ((*iter)->GetPrfabName() + ".json" == Prefabs[i])
+                                {
+                                    CurItem = i;
+                                    break;
+                                }
+                            }
+
+                            ImGui::Combo("Prefabs", &CurItem, ComboBoxItems, Size);
+
+                            static char PrefabName[64] = "";
+                            ImGui::InputText("Name", PrefabName, 64);
+
+                            if (ImGui::SmallButton("New File"))
+                            {
+                                (*iter)->SetPrfabName(PrefabName);
+                                (*iter)->SavePrefab();
+                            }
+
+                            ImGui::SameLine();
+
+                            if (ImGui::SmallButton("Change File"))
+                            {
+                                for (int i = Prefabs[CurItem].size(); i >= 0; i--)
+                                {
+                                    if (ComboBoxItems[CurItem][i] != '.')
+                                        ComboBoxItems[CurItem][i] = '\0';
+                                    else
+                                    {
+                                        ComboBoxItems[CurItem][i] = '\0';
+                                        break;
+                                    }
+                                }
+                                (*iter)->SetPrfabName(ComboBoxItems[CurItem]);
+                            }
+
+                            for (int i = 0; i < Size; i++)
+                                delete ComboBoxItems[i];
+                            delete[] ComboBoxItems;
+
+                            ImGui::TreePop();
+                        }
+
+                        if ((*iter)->GetChileds().size() != 0)
+                        {
+                            if (ImGui::TreeNode("Childs"))
+                            {
+                                AllChildCheck((*iter));
+                                ImGui::TreePop();
+                            }
+                        }
+
+                        if (ImGui::SmallButton("Edit Object"))
+                        {
+                            showPrefabInspector = true;
+
+                            currentObjectName = (*iter)->GetName();
+                        }
                     }
 
                     if (ImGui::SmallButton("Remove Object"))
@@ -794,21 +851,28 @@ void BoneEditor::UpdateFrame()
 
                     if (ImGui::SmallButton("Focus On"))
                     {
-                        auto FocusObject = SceneMgr->CurrentScene()->FindObjectByName((*iter)->GetName().c_str());
+                        auto Object = SceneMgr->CurrentScene()->FindObjectByName((*iter)->GetName().c_str());
 
-                        if (FocusObject != nullptr)
+                        if (Object != nullptr)
                         {
-                            auto Position = ((Transform3D*)FocusObject->transform3D)->GetPosition();
+                            auto Position = ((Transform3D*)Object->transform3D)->GetPosition();
+
                             ((Camera*)(SceneMgr->CurrentScene()->GetCurrentCamera()->GetComponent("Camera")))->SetTargetPosition(Position);
-                            ((Transform3D*)SceneMgr->CurrentScene()->GetCurrentCamera()->transform3D)->Translate(Position + Vec3(100, 100, 100));
+
+                            ((Transform3D*)SceneMgr->CurrentScene()->GetCurrentCamera()->transform3D)->SetPosition(
+                                Position + Vec3(100, 100, 100)
+                            );
                         }
                     }
 
                     ImGui::TreePop();
                 }
             }
+        }
 
-            if (ImGui::TreeNode("New GameObject"))
+        if (ImGui::CollapsingHeader("[New GameObject]", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            if (ImGui::TreeNode("New Prefabs"))
             {
                 auto Prefabs = ResourceMgr->ExistFiles(".\\Engine\\Prefabs\\*");
 
@@ -883,6 +947,39 @@ void BoneEditor::UpdateFrame()
 
                 ImGui::TreePop();
             }
+        
+            if (ImGui::TreeNode("New Light"))
+            {
+                char* ComboBoxItems[] = { "Point", "Direction", "Spot" };
+                
+                static int CurItem = 0;
+                ImGui::Combo("Typs", &CurItem, ComboBoxItems, 3);
+                
+                if (ImGui::Button("Create"))
+                {
+                    PointLight* Light = new PointLight;
+
+                    Light->SetAmbient(1.0f, 1.0f, 1.0f, 1.0f);
+                    Light->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+                    Light->SetSpecular(0.5f, 0.5f, 0.5f, 0.5f);
+                    Light->SetRadius(200);
+                    Light->SetLight(true);
+                    Light->SetPosition(Vec3(0, 0, 0));
+                    Light->SetTag("EditorObject");
+
+                    int num = SceneMgr->CurrentScene()->GetPointLights().size();
+                    char temp[100] = "";
+                    itoa(num, temp, 10);
+
+                    std::string name = "PointLight_";
+                    name += temp;
+
+                    SceneMgr->CurrentScene()->AddPointLight(Light);
+                    SceneMgr->CurrentScene()->AddObject(Light, name);
+                }
+
+                ImGui::TreePop();
+            }
         }
         
         ImGui::End();
@@ -944,7 +1041,8 @@ void BoneEditor::UpdateFrame()
 
             if (ImGui::TreeNode("Clear Color"))
             {
-                static ImVec4 clear_col(247.0f / 255.0f, 204.0f / 255.0f, 130.0f / 255.0f, 1);
+                auto ClearColor = SceneMgr->GetClearColor();
+                static ImVec4 clear_col(ClearColor * 255.0f, ClearColor * 255.0f, ClearColor * 255.0f, 1);
                 ImGui::ColorEdit3("clear color", (float*)&clear_col);
 
                 D3DXCOLOR color;
@@ -1050,8 +1148,7 @@ void BoneEditor::UpdateFrame()
         if (ImGui::CollapsingHeader("[Detail]"), ImGuiTreeNodeFlags_DefaultOpen)
         {
             switch (listbox_item_current) {
-
-                // StaticMesh
+            // StaticMesh
             case 0:
             {
                 auto Meshes = ResourceMgr->ExistFiles(".\\Resource\\Mesh\\*");
@@ -1077,7 +1174,7 @@ void BoneEditor::UpdateFrame()
                         break;
 
                     StaticMesh* Mesh = new StaticMesh();
-                    Mesh->SetFileAddress(ComboBoxItems[CurItem]);
+                    Mesh->SetFile(ComboBoxItems[CurItem]);
                     Mesh->LoadContent();
                     auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
                     Object->AddComponent(Mesh);
@@ -1127,7 +1224,7 @@ void BoneEditor::UpdateFrame()
                             auto Mesh = (StaticMesh*)Object->GetComponent("StaticMesh");
 
                             if (Mesh != nullptr)
-                                Coll->ComputeBoundingBox(ResourceMgr->LoadMesh((Mesh)->GetFileAddress())->mesh);
+                                Coll->ComputeBoundingBox(ResourceMgr->LoadMesh((Mesh)->GetFile())->mesh);
                             else
                                 Init = false;
                         }
@@ -1141,7 +1238,7 @@ void BoneEditor::UpdateFrame()
                             auto Mesh = (StaticMesh*)Object->GetComponent("StaticMesh");
 
                             if (Mesh != nullptr)
-                                Coll->ComputeBoundingSphere(ResourceMgr->LoadMesh((Mesh)->GetFileAddress())->mesh);
+                                Coll->ComputeBoundingSphere(ResourceMgr->LoadMesh((Mesh)->GetFile())->mesh);
                             else
                                 Init = false;
                         }

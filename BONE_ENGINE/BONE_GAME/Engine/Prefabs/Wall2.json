@@ -1,10 +1,5 @@
 {
     "1.Transform3D": {
-        "ForwardVector": [
-            0.0,
-            0.0,
-            -0.999999940395355
-        ],
         "Position": [
             -34.0,
             0.0,
@@ -68,6 +63,7 @@
         "FileName": "Wall.X"
     },
     "IsActive": true,
+    "IsEditorLock": false,
     "IsStatic": false,
     "Priority": 1,
     "Tag": ""

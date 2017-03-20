@@ -21,7 +21,7 @@ namespace BONE_GRAPHICS
 
 	void ScreenImage::LoadContent()
 	{
-		ResourceMgr->LoadTexture(address);
+		ResourceMgr->LoadTexture(fileName);
 	}
 
 	void ScreenImage::SetOriginRect(Rect rect)

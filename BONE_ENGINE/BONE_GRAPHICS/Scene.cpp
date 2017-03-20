@@ -10,6 +10,8 @@
 #include "PhysicsListener.h"
 #include "etuImage.h"
 
+#pragma warning(disable:4996)
+
 namespace BONE_GRAPHICS
 {
     Scene::Scene()
@@ -32,8 +34,6 @@ namespace BONE_GRAPHICS
 
         fogColor = COLOR::YELLOW;
 
-        collisionWorld = new rp3d::CollisionWorld();
-
         rp3d::Vector3 gravity(0.0, -9.81, 0.0);
         rp3d::DynamicsWorld test(gravity);
         physicsWorld = new rp3d::DynamicsWorld(gravity);
@@ -53,7 +53,7 @@ namespace BONE_GRAPHICS
         {
             GameObject* Temp = *Iter;
 
-            if (Temp == NULL)
+            if (Temp != nullptr)
             {
                 Iter = objectList.erase(Iter);
                 delete Temp;
@@ -63,6 +63,7 @@ namespace BONE_GRAPHICS
         }
 
         delete physicsWorld;
+        physicsWorld = nullptr;
     }
 
     void Scene::EnablePhysics(bool enable)
@@ -311,7 +312,7 @@ namespace BONE_GRAPHICS
         {
             if (gameObject == (*Iter))
             {
-                objectList.remove(gameObject);
+                staticObjectList.remove(gameObject);
                 break;
             }
         }
@@ -377,6 +378,13 @@ namespace BONE_GRAPHICS
                 fogColor.a
             };
         }
+
+        j["Scene"]["BackGroundColor"] = {
+            SceneMgr->GetClearColor().r,
+            SceneMgr->GetClearColor().g,
+            SceneMgr->GetClearColor().b,
+            SceneMgr->GetClearColor().a
+        };
                 
         std::string fullPath = ".\\Engine\\Maps\\" + SceneMgr->CurrentScene()->GetName() + ".json";
         std::ofstream o(fullPath);
@@ -433,65 +441,78 @@ namespace BONE_GRAPHICS
             fogColor.r = FogColor[3];
         }
 
+        auto BackGroundColor = j["Scene"]["BackGroundColor"].get<std::vector<double>>();
+        D3DXCOLOR color;
+        color.r = BackGroundColor[0];
+        color.g = BackGroundColor[1];
+        color.b = BackGroundColor[2];
+        color.a = BackGroundColor[3];
+        SceneMgr->SetClearColor(color);
+
+        for (json::iterator it = j["Light"].begin(); it != j["Light"].end(); ++it) {
+            auto Object = this->FindObjectByName(it.key());
+
+            if (Object == nullptr)
+            {
+                auto Position = j["Light"][it.key()]["Position"].get<std::vector<double>>();
+                auto Ambient = j["Light"][it.key()]["Ambient"].get<std::vector<double>>();
+                auto Diffuse = j["Light"][it.key()]["Diffuse"].get<std::vector<double>>();
+                auto Specular = j["Light"][it.key()]["Specular"].get<std::vector<double>>();
+                auto Radius = j["Light"][it.key()]["Radius"].get<double>();
+
+                PointLight* Light = new PointLight;
+                Transform3D* tr = new Transform3D();
+                Light->AddComponent(tr);
+                tr->SetPosition(Position[0], Position[1], Position[2]);
+                
+                Light->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
+                Light->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
+                Light->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
+                Light->SetRadius(Radius);
+                Light->SetLight(true);
+                
+                int num = SceneMgr->CurrentScene()->GetPointLights().size();
+                char temp[100] = "";
+                itoa(num, temp, 10);
+
+                std::string name = "PointLight_";
+                name += temp;
+
+                SceneMgr->CurrentScene()->AddPointLight(Light);
+                SceneMgr->CurrentScene()->AddObject(Light, name);
+            }
+        }
+
         for (json::iterator it = j["GameObject"].begin(); it != j["GameObject"].end(); ++it) {
             auto Object = this->FindObjectByName(it.key());
 
             if (Object == nullptr)
             {
-                if (it.key() == "PointLight")
-                {
-                    PointLight* Object = new PointLight();
+                if (it->find("IsChild").value().get<bool>())
+                    continue;
 
-                    Object->SetRadius(200);
+                Object = new GameObject();
+                Transform3D* tr = new Transform3D();
+                Object->AddComponent(tr);
 
-                    Object->SetName(it.key());
+                Object->SetName(it.key());
 
-                    Object->SetPriority(1);
-                    Object->SetTag("");
-                    Object->SetLight(true);
+                Object->SetPriority(1);
+                Object->SetTag("");
 
-                    Object->SetPrfabName(it->find("PrefabName").value().get<std::string>());
-                    Object->LoadPrefab();
+                Object->SetPrfabName(it->find("PrefabName").value().get<std::string>());
+                Object->LoadPrefab();
 
-                    this->AddObject(Object, it.key());
+                this->AddObject(Object, it.key());
 
-                    auto Position = it->find("Position").value().get<std::vector<float>>();
-                    ((Transform3D*)Object->GetComponent("Transform3D"))->SetPosition(Position[0], Position[1], Position[2]);
+                auto Position = it->find("Position").value().get<std::vector<float>>();
+                tr->SetPosition(Position[0], Position[1], Position[2]);
 
-                    auto Rotation = it->find("Rotation").value().get<std::vector<float>>();
-                    ((Transform3D*)Object->GetComponent("Transform3D"))->SetRotate(Rotation[0], Rotation[1], Rotation[2]);
+                auto Rotation = it->find("Rotation").value().get<std::vector<float>>();
+                tr->SetRotate(Rotation[0], Rotation[1], Rotation[2]);
 
-                    auto Scale = it->find("Scale").value().get<std::vector<float>>();
-                    ((Transform3D*)Object->GetComponent("Transform3D"))->SetScale(Scale[0], Scale[1], Scale[2]);
-                }
-                else
-                {
-                    if (it->find("IsChild").value().get<bool>())
-                        continue;
-
-                    Object = new GameObject();
-                    Transform3D* tr = new Transform3D();
-                    Object->AddComponent(tr);
-
-                    Object->SetName(it.key());
-
-                    Object->SetPriority(1);
-                    Object->SetTag("");
-
-                    Object->SetPrfabName(it->find("PrefabName").value().get<std::string>());
-                    Object->LoadPrefab();
-
-                    this->AddObject(Object, it.key());
-
-                    auto Position = it->find("Position").value().get<std::vector<float>>();
-                    ((Transform3D*)Object->GetComponent("Transform3D"))->SetPosition(Position[0], Position[1], Position[2]);
-
-                    auto Rotation = it->find("Rotation").value().get<std::vector<float>>();
-                    ((Transform3D*)Object->GetComponent("Transform3D"))->SetRotate(Rotation[0], Rotation[1], Rotation[2]);
-
-                    auto Scale = it->find("Scale").value().get<std::vector<float>>();
-                    ((Transform3D*)Object->GetComponent("Transform3D"))->SetScale(Scale[0], Scale[1], Scale[2]);
-                }
+                auto Scale = it->find("Scale").value().get<std::vector<float>>();
+                    tr->SetScale(Scale[0], Scale[1], Scale[2]);
             }
             else
             {

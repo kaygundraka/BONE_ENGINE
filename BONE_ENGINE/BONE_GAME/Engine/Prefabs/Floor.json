@@ -1,8 +1,8 @@
 {
     "1.Transform3D": {
         "Position": [
-            34.0,
             0.0,
+            7.82800674438477,
             0.0
         ],
         "Rotation": [
@@ -11,16 +11,16 @@
             0.0
         ],
         "Scale": [
+            2.0,
             1.0,
-            1.0,
-            1.0
+            2.0
         ]
     },
     "3.Collision": {
         "HalfExtens": [
-            3.89025211334229,
-            38.1062202453613,
-            38.4791488647461
+            76.1062164306641,
+            3.89025378227234,
+            76.4791412353516
         ],
         "Type": 0
     },
@@ -60,10 +60,10 @@
         ]
     },
     "6.StaticMesh": {
-        "FileName": "Wall.X"
+        "FileName": "Floor.X"
     },
     "IsActive": true,
-    "IsEditorLock": false,
+    "IsEditorLock": true,
     "IsStatic": false,
     "Priority": 1,
     "Tag": ""

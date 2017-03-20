@@ -1,13 +1,13 @@
 {
     "1.Transform3D": {
         "Position": [
-            34.0,
-            0.0,
-            0.0
+            -76.5168151855469,
+            10.0,
+            -20.0
         ],
         "Rotation": [
             0.0,
-            0.0,
+            3.14000010490417,
             0.0
         ],
         "Scale": [
@@ -15,22 +15,6 @@
             1.0,
             1.0
         ]
-    },
-    "3.Collision": {
-        "HalfExtens": [
-            3.89025211334229,
-            38.1062202453613,
-            38.4791488647461
-        ],
-        "Type": 0
-    },
-    "4.RigidBody": {
-        "Bounciness": 0.400000005960464,
-        "EnableGravity": false,
-        "FricitionCoefficient": 0.200000002980232,
-        "IsAllowedToSleep": false,
-        "Mass": 1.0,
-        "Type": 0
     },
     "5.Material": {
         "Ambient": [
@@ -60,10 +44,17 @@
         ]
     },
     "6.StaticMesh": {
-        "FileName": "Wall.X"
+        "FileName": "Floor.X"
     },
+    "ChildObjects": [
+        "BlockType3-Wall",
+        "BlockType3-Wall2",
+        "BlockType3-Wall3",
+        "BlockType3-Top",
+        "BlockType3-MetalDoor"
+    ],
     "IsActive": true,
-    "IsEditorLock": false,
+    "IsEditorLock": true,
     "IsStatic": false,
     "Priority": 1,
     "Tag": ""

@@ -35,6 +35,8 @@ namespace BONE_GRAPHICS
         void SetSpecular(RGBA color);
         void SetPosition(Vec3 pos);
 
+        virtual void SaveInMaps();
+
         RGBA GetAmbient();
         RGBA GetDiffuse();
         RGBA GetSpecular();

@@ -21,11 +21,11 @@ void EditorCamera::Init()
     gameObject->SetTag("EditorObject");
 
     Transform3D* tr = new Transform3D();
-    tr->SetPosition(Vec3(0, 100, 100));
+    tr->SetPosition(Vec3(0, 300, 300));
     gameObject->AddComponent(tr);
 
     Camera *camera = new Camera(0, PROJECTION_TYPE::PRJOJECTION_PERSPACTIVE,
-        Vec3(0, 1, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), 1000, 0.1f, D3DX_PI * 0.3f);
+        Vec3(0, 1, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), 1000, 0.1f, D3DX_PI * 0.6f);
 
     camera->SetTargetPosition(Vec3(0, 0, 0));
     gameObject->AddComponent(camera);
@@ -36,6 +36,8 @@ void EditorCamera::Init()
     mouseY = 0;
 
     selectObject = "";
+
+    cameraMoveSpeed = 100.0f;
 
     cameraMove = false;
 }
@@ -63,8 +65,6 @@ void EditorCamera::Update()
         mainCamera->RotateLocalX(dy * fDelta); // 마우스의 Y축 회전값은 3D world의  X축 회전값
         mainCamera->RotateLocalY(dx * fDelta); // 마우스의 X축 회전값은 3D world의  Y축 회전값
 
-                                               //RECT rc;
-                                               //GetClientRect(g_hwnd, &rc);
         pt.x = (RenderMgr->GetWidth()) / 2;
         pt.y = (RenderMgr->GetHeight()) / 2;//(rc.bottom - rc.top) / 2;
                                             //ClientToScreen(g_hwnd, &pt);
@@ -75,18 +75,57 @@ void EditorCamera::Update()
 
     auto transform = ((Transform3D*)gameObject->transform3D);
 
+    cameraMoveSpeed = 100.0f;
+
+    if (InputMgr->KeyDown(VK_SHIFT, false))
+        cameraMoveSpeed = 200.0f;
+    
+    if (InputMgr->GetMouseWheelStatus() == MOUSE_WHEEL_DOWN)
+    {
+        auto ray = RenderMgr->GetPickingRayToView(false);
+        
+        transform->SetPosition(
+            transform->GetPosition() -
+            ray.direction *
+            SceneMgr->GetTimeDelta() * cameraMoveSpeed
+        );
+
+        mainCamera->SetTargetPosition(
+            mainCamera->GetTargetPosition() -
+            ray.direction *
+            SceneMgr->GetTimeDelta() * cameraMoveSpeed
+        );
+    }
+
+    if (InputMgr->GetMouseWheelStatus() == MOUSE_WHEEL_UP)
+    {
+        auto ray = RenderMgr->GetPickingRayToView(false);
+
+        transform->SetPosition(
+            transform->GetPosition() +
+            ray.direction *
+            SceneMgr->GetTimeDelta() * cameraMoveSpeed
+        );
+
+        mainCamera->SetTargetPosition(
+            mainCamera->GetTargetPosition() +
+            ray.direction *
+            SceneMgr->GetTimeDelta() * cameraMoveSpeed
+        );
+    }
+
     if (InputMgr->KeyDown('W', false))
     {
         transform->SetPosition(
             transform->GetPosition() +
             mainCamera->GetViewVector() *
-            SceneMgr->GetTimeDelta() * 100
+            SceneMgr->GetTimeDelta() * cameraMoveSpeed
         );
 
         mainCamera->SetTargetPosition(
             mainCamera->GetTargetPosition() +
             mainCamera->GetViewVector() *
-            SceneMgr->GetTimeDelta() * 100
+            SceneMgr->GetTimeDelta() * cameraMoveSpeed
         );
     }
 
@@ -95,13 +134,13 @@ void EditorCamera::Update()
         transform->SetPosition(
             transform->GetPosition() +
             -mainCamera->GetViewVector() *
-            SceneMgr->GetTimeDelta() * 100
+            SceneMgr->GetTimeDelta() * cameraMoveSpeed
         );
 
         mainCamera->SetTargetPosition(
             mainCamera->GetTargetPosition() +
             mainCamera->GetViewVector() *
-            SceneMgr->GetTimeDelta() * 100
+            SceneMgr->GetTimeDelta() * cameraMoveSpeed
         );
     }
 
@@ -110,13 +149,13 @@ void EditorCamera::Update()
         transform->SetPosition(
             transform->GetPosition() +
             -mainCamera->GetCrossVector() *
-            SceneMgr->GetTimeDelta() * 100
+            SceneMgr->GetTimeDelta() * cameraMoveSpeed
         );
 
         mainCamera->SetTargetPosition(
             mainCamera->GetTargetPosition() +
             -mainCamera->GetCrossVector() *
-            SceneMgr->GetTimeDelta() * 100
+            SceneMgr->GetTimeDelta() * cameraMoveSpeed
         );
     }
 
@@ -125,13 +164,13 @@ void EditorCamera::Update()
         transform->SetPosition(
             transform->GetPosition() +
             mainCamera->GetCrossVector() *
-            SceneMgr->GetTimeDelta() * 100
+            SceneMgr->GetTimeDelta() * cameraMoveSpeed
         );
 
         mainCamera->SetTargetPosition(
             mainCamera->GetTargetPosition() +
             mainCamera->GetCrossVector() *
-            SceneMgr->GetTimeDelta() * 100
+            SceneMgr->GetTimeDelta() * cameraMoveSpeed
         );
     }
 

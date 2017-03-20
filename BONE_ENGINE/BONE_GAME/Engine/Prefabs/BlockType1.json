@@ -1,14 +1,9 @@
 {
     "1.Transform3D": {
-        "ForwardVector": [
-            0.0,
-            0.0,
-            -0.999999940395355
-        ],
         "Position": [
             0.0,
             10.0,
-            -20.0
+            -97.1387481689453
         ],
         "Rotation": [
             0.0,
@@ -69,9 +64,11 @@
     },
     "ChildObjects": [
         "Wall1",
-        "Wall2"
+        "Wall2",
+        "Top"
     ],
     "IsActive": true,
+    "IsEditorLock": true,
     "IsStatic": false,
     "Priority": 1,
     "Tag": ""

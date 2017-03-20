@@ -26,7 +26,11 @@ namespace BONE_GRAPHICS
     {
         isActive = true;
         isStatic = false;
+        isDefaultShader = true;
+        isEditorLock = false;
         name = "";
+
+        transform3D = nullptr;
 
         parent = nullptr;
         std::vector<GameObject*> Child;
@@ -36,18 +40,22 @@ namespace BONE_GRAPHICS
     {
         for (auto Iter = childs.begin(); Iter != childs.end();)
         {
-            GameObject* Temp = (*Iter);
+            //GameObject* Temp = (*Iter);
             Iter = childs.erase(Iter);
-            delete Temp;
+            //SceneMgr->CurrentScene()->Destroy(Temp);
         }
 
         for (auto Iter = components.begin(); Iter != components.end();)
         {
             Component* Temp = (*Iter);
             Iter = components.erase(Iter);
-
             delete Temp;
         }
+    }
+
+    void GameObject::SetDefaultPipeLine()
+    {
+        isDefaultShader = false;
     }
 
 	void GameObject::SetStatic(bool isStatic)
@@ -147,36 +155,56 @@ namespace BONE_GRAPHICS
 		IShader* Shader = ((IShader*)GetComponent("IShader"));
         static PhongShader phongShader;
 
-        if (Shader == nullptr)
+        if (isDefaultShader)
             Shader = &phongShader;
-        
-        UINT numPasses = 0;
 
-        Shader->GetShader()->Begin(&numPasses, 0);
+        if (Shader != nullptr)
         {
-            for (UINT i = 0; i < numPasses; i++)
+            UINT numPasses = 0;
+
+            Shader->GetShader()->Begin(&numPasses, 0);
             {
-                Shader->GetShader()->BeginPass(i);
+                for (UINT i = 0; i < numPasses; i++)
                 {
-                    if (GetComponent("StaticMesh") != nullptr)
-                        ((StaticMesh*)GetComponent("StaticMesh"))->Render(Shader, this);
+                    Shader->GetShader()->BeginPass(i);
+                    {
+                        if (GetComponent("StaticMesh") != nullptr)
+                            ((StaticMesh*)GetComponent("StaticMesh"))->Render(Shader, this);
 
-                    if (GetComponent("BillBoard") != nullptr)
-                        ((BillBoard*)GetComponent("BillBoard"))->Render(Shader, this);
+                        if (GetComponent("BillBoard") != nullptr)
+                            ((BillBoard*)GetComponent("BillBoard"))->Render(Shader, this);
 
-                    if (GetComponent("SpriteBillBoard") != nullptr)
-                        ((SpriteBillBoard*)GetComponent("SpriteBillBoard"))->Render(Shader, this);
+                        if (GetComponent("SpriteBillBoard") != nullptr)
+                            ((SpriteBillBoard*)GetComponent("SpriteBillBoard"))->Render(Shader, this);
 
-                    if (GetComponent("TrailRenderer") != nullptr)
-                        ((TrailRenderer*)GetComponent("TrailRenderer"))->Render(Shader);
+                        if (GetComponent("TrailRenderer") != nullptr)
+                            ((TrailRenderer*)GetComponent("TrailRenderer"))->Render(Shader);
 
-                    if (GetComponent("SkinnedMesh") != nullptr)
-                        ((SkinnedMesh*)GetComponent("SkinnedMesh"))->Render(Shader, this);
+                        if (GetComponent("SkinnedMesh") != nullptr)
+                            ((SkinnedMesh*)GetComponent("SkinnedMesh"))->Render(Shader, this);
+                    }
+                    Shader->GetShader()->End();
                 }
-                Shader->GetShader()->End();
-            }
 
-            Shader->GetShader()->EndPass();
+                Shader->GetShader()->EndPass();
+            }
+        }
+        else
+        {
+            if (GetComponent("StaticMesh") != nullptr)
+                ((StaticMesh*)GetComponent("StaticMesh"))->Render(nullptr, this);
+
+            if (GetComponent("BillBoard") != nullptr)
+                ((BillBoard*)GetComponent("BillBoard"))->Render(nullptr, this);
+
+            if (GetComponent("SpriteBillBoard") != nullptr)
+                ((SpriteBillBoard*)GetComponent("SpriteBillBoard"))->Render(nullptr, this);
+
+            if (GetComponent("TrailRenderer") != nullptr)
+                ((TrailRenderer*)GetComponent("TrailRenderer"))->Render(nullptr);
+
+            if (GetComponent("SkinnedMesh") != nullptr)
+                ((SkinnedMesh*)GetComponent("SkinnedMesh"))->Render(nullptr, this);
         }
 
         if (GetComponent("ScreenSprite") != nullptr)
@@ -389,6 +417,7 @@ namespace BONE_GRAPHICS
         j["Priority"] = priorty;
         j["IsActive"] = isActive;
         j["IsStatic"] = isStatic;
+        j["IsEditorLock"] = isEditorLock;
         
         for (auto iter = childs.begin(); iter != childs.end(); iter++)
             j["ChildObjects"].push_back((*iter)->GetPrfabName());
@@ -402,12 +431,10 @@ namespace BONE_GRAPHICS
                 auto Position = ((Transform3D*)(components[i]))->GetPosition();
                 auto Rotation = ((Transform3D*)(components[i]))->GetRotateAngle();
                 auto Scale = ((Transform3D*)(components[i]))->GetScale();
-                auto ForwardVector = ((Transform3D*)(components[i]))->GetForward();
 
                 j["1.Transform3D"]["Position"] = { Position.x, Position.y, Position.z };
                 j["1.Transform3D"]["Rotation"] = { Rotation.x, Rotation.y, Rotation.z };
                 j["1.Transform3D"]["Scale"] = { Scale.x, Scale.y, Scale.z };
-                j["1.Transform3D"]["ForwardVector"] = { ForwardVector.x, ForwardVector.y, ForwardVector.z };
             }
             else if (TypeName == "Camera")
             {
@@ -470,11 +497,11 @@ namespace BONE_GRAPHICS
             }
             else if (TypeName == "StaticMesh")
             {
-                j["6.StaticMesh"]["FileName"] = ((StaticMesh*)(components[i]))->GetFileAddress();
+                j["6.StaticMesh"]["FileName"] = ((StaticMesh*)(components[i]))->GetFile();
             }
             else if (TypeName == "SkinnedMesh")
             {
-                j["7.SkinnedMesh"]["FileName"] = ((SkinnedMesh*)(components[i]))->GetFileAddress();
+                j["7.SkinnedMesh"]["FileName"] = ((SkinnedMesh*)(components[i]))->GetFile();
 
                 auto animationSet = ((SkinnedMesh*)(components[i]))->GetAnmimationSet();
 
@@ -513,6 +540,10 @@ namespace BONE_GRAPHICS
             {
                 this->SetTag(j["Tag"].get<std::string>());
             }
+            else if (TypeName == "IsEditorLock")
+            {
+                this->isEditorLock = j["IsEditorLock"].get<bool>();
+            }
             else if (TypeName == "Priority")
             {
                 this->SetPriority(j["Priority"].get<int>());
@@ -550,7 +581,6 @@ namespace BONE_GRAPHICS
                 auto Position = j["1.Transform3D"]["Position"].get<std::vector<double>>();
                 auto Rotation = j["1.Transform3D"]["Rotation"].get<std::vector<double>>();
                 auto Scale = j["1.Transform3D"]["Scale"].get<std::vector<double>>();
-                auto ForwardVector = j["1.Transform3D"]["ForwardVector"].get<std::vector<double>>();
 
                 Transform3D* tr = (Transform3D*)GetComponent("Transform3D");
 
@@ -562,7 +592,6 @@ namespace BONE_GRAPHICS
                     tr->SetPosition(Position[0], Position[1], Position[2]);
                     tr->SetRotate(Rotation[0], Rotation[1], Rotation[2]);
                     tr->SetScale(Scale[0], Scale[1], Scale[2]);
-                    tr->SetForward(ForwardVector[0], ForwardVector[1], ForwardVector[2]);
                 }
             }
             else if (TypeName == "2.Camera")
@@ -691,7 +720,7 @@ namespace BONE_GRAPHICS
                 {
                     staticMesh = new StaticMesh();
 
-                    staticMesh->SetFileAddress(j["6.StaticMesh"]["FileName"]);
+                    staticMesh->SetFile(j["6.StaticMesh"]["FileName"]);
 
                     AddComponent(staticMesh);
                 }
@@ -710,7 +739,7 @@ namespace BONE_GRAPHICS
                         {
                             skinnedMesh = new SkinnedMesh();
 
-                            skinnedMesh->SetFileAddress(j["7.SkinnedMesh"]["FileName"]);
+                            skinnedMesh->SetFile(j["7.SkinnedMesh"]["FileName"]);
 
                             AddComponent(skinnedMesh);
                         }
@@ -731,6 +760,16 @@ namespace BONE_GRAPHICS
         }
 
         file.close();
+    }
+
+    void GameObject::LockEditor(bool lock)
+    {
+        isEditorLock = lock;
+    }
+    
+    bool GameObject::IsLockedEditor()
+    {
+        return isEditorLock;
     }
 
     void GameObject::AddScript(std::string name)

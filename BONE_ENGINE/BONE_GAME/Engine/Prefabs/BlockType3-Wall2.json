@@ -1,36 +1,20 @@
 {
     "1.Transform3D": {
         "Position": [
-            34.0,
             0.0,
-            0.0
+            0.0,
+            34.0
         ],
         "Rotation": [
             0.0,
-            0.0,
-            0.0
+            1.56999957561493,
+            -1.47191272503733e-07
         ],
         "Scale": [
             1.0,
             1.0,
             1.0
         ]
-    },
-    "3.Collision": {
-        "HalfExtens": [
-            3.89025211334229,
-            38.1062202453613,
-            38.4791488647461
-        ],
-        "Type": 0
-    },
-    "4.RigidBody": {
-        "Bounciness": 0.400000005960464,
-        "EnableGravity": false,
-        "FricitionCoefficient": 0.200000002980232,
-        "IsAllowedToSleep": false,
-        "Mass": 1.0,
-        "Type": 0
     },
     "5.Material": {
         "Ambient": [

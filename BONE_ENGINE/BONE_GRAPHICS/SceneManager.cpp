@@ -74,6 +74,11 @@ namespace BONE_GRAPHICS
     {
         backColor = color;
     }
+
+    D3DXCOLOR SceneManager::GetClearColor()
+    {
+        return backColor;
+    }
 	
 	bool SceneManager::StartScene(std::string name)
 	{

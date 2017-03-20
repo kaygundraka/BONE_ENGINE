@@ -52,6 +52,7 @@ namespace BONE_GRAPHICS
 		void EndScene(string name);
         
         void SetClearColor(D3DXCOLOR color);
+        D3DXCOLOR GetClearColor();
 
         void SetGUIScene(GUI_Scene* scene);
 

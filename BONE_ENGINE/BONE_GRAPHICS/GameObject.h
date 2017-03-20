@@ -5,7 +5,7 @@
 namespace BONE_GRAPHICS 
 {
 	class GameObject {
-	private:
+	protected:
 		std::string tag;
         std::string name;
         std::string prefab;
@@ -19,13 +19,18 @@ namespace BONE_GRAPHICS
 		std::vector<GameObject*> childs;
 
 		int priorty;
+
+        bool isDefaultShader;
 		
 		bool isStatic;
 		bool isActive;
+        bool isEditorLock;
 
 	public:
         Component* transform3D;
         Component* transform2D;
+
+        void SetDefaultPipeLine();
 
 		GameObject();
 		virtual ~GameObject();
@@ -63,10 +68,13 @@ namespace BONE_GRAPHICS
         void SetPrfabName(std::string prefabName);
         std::string GetPrfabName();
 
-        void SaveInMaps();
+        virtual void SaveInMaps();
         void LoadPrefab();
         void SavePrefab();
         
+        void LockEditor(bool lock);
+        bool IsLockedEditor();
+
 		Component* GetComponent(std::string typeName);
         std::vector<Component*> GetComponents();
 		bool AddComponent(Component* component);

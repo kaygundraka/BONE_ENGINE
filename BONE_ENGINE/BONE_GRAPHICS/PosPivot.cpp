@@ -40,7 +40,9 @@ namespace BONE_GRAPHICS
             StaticMesh* PivotMesh = new StaticMesh();
             Transform3D* Transform = new Transform3D();
 
-            PivotMesh->SetFileAddress("PosPivot.X");
+            Pivot->SetDefaultPipeLine();
+
+            PivotMesh->SetFile("PosPivot.X");
             PivotMesh->Hide();
             
             Pivot->AddComponent(Transform);
@@ -75,7 +77,7 @@ namespace BONE_GRAPHICS
                 *Texture = "blue.png";
 
 
-            PivotMesh->SetTexturesAddress(Texture);
+            PivotMesh->SetTextures(Texture);
         }
 
         mainCamera = SceneMgr->CurrentScene()->GetCurrentCamera();
@@ -85,6 +87,20 @@ namespace BONE_GRAPHICS
     {
         if (!InputMgr->IsFocusedWindow())
             return;
+
+        if (InputMgr->KeyDown('F', true))
+        {
+            auto Object = SceneMgr->CurrentScene()->FindObjectByName(selectObject);
+
+            if (Object != nullptr)
+            {
+                auto Position = ((Transform3D*)Object->transform3D)->GetPosition();
+                ((Camera*)mainCamera->GetComponent("Camera"))->SetTargetPosition(Position);
+                ((Transform3D*)mainCamera->transform3D)->SetPosition(
+                    Position + Vec3(100, 100, 100)
+                );
+            }
+        }
 
         if (InputMgr->GetMouseLBButtonStatus() == MOUSE_STATUS::MOUSE_LBUP)
         {
@@ -109,7 +125,7 @@ namespace BONE_GRAPHICS
                 {
                     float Dist = 0;
 
-                    if (mesh->GetFileAddress() == "PosPivot.X")
+                    if (mesh->GetFile() == "PosPivot.X")
                     {
                         if (mesh->CheckMouseRayInMesh((Transform3D*)item->transform3D, &Dist))
                         {
@@ -136,7 +152,7 @@ namespace BONE_GRAPHICS
                 {
                     float Dist = 0;
 
-                    if (mesh->GetFileAddress() == "PosPivot.X")
+                    if (mesh->GetFile() == "PosPivot.X")
                         continue;
 
                     if (mesh->CheckMouseRayInMesh((Transform3D*)item->transform3D, &Dist))
@@ -245,20 +261,6 @@ namespace BONE_GRAPHICS
                 ((StaticMesh*)var->GetComponent("StaticMesh"))->Hide();
         }
 
-        if (InputMgr->KeyDown('F', true))
-        {
-            auto Object = SceneMgr->CurrentScene()->FindObjectByName(selectObject);
-
-            if (Object != nullptr)
-            {
-                auto Position = ((Transform3D*)Object->transform3D)->GetPosition();
-                ((Camera*)mainCamera->GetComponent("Camera"))->SetTargetPosition(Position);
-                ((Transform3D*)mainCamera->transform3D)->SetPosition(
-                    ((Transform3D*)mainCamera->transform3D)->GetPosition() + Position
-                );
-            }
-        }
-
         if ((moveX || moveY || moveZ) && selectObject != "")
         {
             GameObject* pivot = nullptr;
@@ -279,9 +281,12 @@ namespace BONE_GRAPHICS
 
             auto Object = SceneMgr->CurrentScene()->FindObjectByName(selectObject);
 
+            if (Object->IsLockedEditor())
+                return;
+/*
             while (Object->GetParent() != nullptr)
                 Object = Object->GetParent();
-
+*/
             RAY PickingRay = RenderMgr->GetPickingRayToView(false);
             Vec3 PickingPos = PickingRay.origin + PickingRay.direction * moveValue * 2;
 
