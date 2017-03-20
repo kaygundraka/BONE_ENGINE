@@ -27,15 +27,15 @@ namespace BONE_GRAPHICS
 
         void SetAnimation(std::string name, int index, float animationSpeed);
 		void SetAnimation(std::string name, float animationSpeed);
-        void SetFileAddress(std::string address);
+        void SetFile(std::string fileName);
 
-        std::string GetFileAddress();
+        std::string GetFile();
         
         map<std::string, KEYFRAMERATE> GetAnmimationSet();
         
 		void CheckInRay(RAY *ray, Bone* bone, float& curDist);
 
-		std::string address;
+		std::string fileName;
 		LPD3DXMESH GetMesh();
 
 	private:
@@ -47,7 +47,6 @@ namespace BONE_GRAPHICS
 		D3DXFRAME *rootBone;
 
 		BoneHierarchyLoader boneHierarchy;
-		
         LPD3DXANIMATIONCONTROLLER animationContainer;
 		
         map<std::string, KEYFRAMERATE> animationSet;

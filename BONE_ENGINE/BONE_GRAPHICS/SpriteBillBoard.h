@@ -17,7 +17,7 @@ namespace BONE_GRAPHICS
 		};
 
 	private:
-		std::string textureAddress;
+		std::string fileName;
 		
 		int width;
 		int height;
@@ -35,7 +35,7 @@ namespace BONE_GRAPHICS
 		IDirect3DVertexBuffer9* vertexBuffer;
 		IDirect3DIndexBuffer9*	indexBuffer;
 
-		D3DMATERIAL9	meshMaterial;
+		D3DMATERIAL9 meshMaterial;
 		GameObject*	target;
 
 		RENDER_MODE renderMode;
@@ -61,9 +61,9 @@ namespace BONE_GRAPHICS
 				
 		void SetRenderMode(RENDER_MODE mode);
 
-		void SetTexturesAddress(std::string address);
+		void SetTexture(std::string fileName);
 		bool CheckMouseRayInMesh(Transform3D* tr);
 
-		std::string GetTexturesAddress();
+		std::string GetTexture();
 	};
 }

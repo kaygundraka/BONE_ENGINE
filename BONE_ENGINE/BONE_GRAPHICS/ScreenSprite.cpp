@@ -18,14 +18,14 @@ namespace BONE_GRAPHICS
 		sprite->Release();
 	}
 
-	void ScreenSprite::SetInformation(std::string address, int width, int height, int animationCut, int animationScene, float alpha)
+	void ScreenSprite::SetInformation(std::string fileName, int width, int height, int animationCut, int animationScene, float alpha)
 	{
 		this->width = width;
         this->height = height;
 		animeCut = animationCut;
 		animeScene = animationScene;
 
-        this->address = address;
+        this->fileName = fileName;
 
 		RECT rect = {
 			0, 0, width / animeCut, height / animeScene,
@@ -84,7 +84,7 @@ namespace BONE_GRAPHICS
 		Matrix matrix = ((Transform2D*)owner->GetComponent("Transform2D"))->GetTransform();
 		Vec3 position = ((Transform2D*)owner->GetComponent("Transform2D"))->GetPosition();
 
-		LPDIRECT3DTEXTURE9 texture = ResourceMgr->LoadTexture(address);
+		LPDIRECT3DTEXTURE9 texture = ResourceMgr->LoadTexture(fileName);
 
 		sprite->SetTransform(&matrix);
 
@@ -97,7 +97,7 @@ namespace BONE_GRAPHICS
 
 	void ScreenSprite::LoadContent()
 	{
-		ResourceMgr->LoadTexture(address);
+		ResourceMgr->LoadTexture(fileName);
 	}
 
 	void ScreenSprite::SelectAnimation(int sceneIndex)

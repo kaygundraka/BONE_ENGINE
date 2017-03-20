@@ -20,14 +20,14 @@ namespace BONE_GRAPHICS
 		SetTypeName("SkinnedMesh");
 	}
 
-	void SkinnedMesh::SetFileAddress(std::string address)
+	void SkinnedMesh::SetFile(std::string fileName)
 	{
-		this->address = address;
+		this->fileName = fileName;
 	}
 
 	void SkinnedMesh::LoadContent()
 	{
-		D3DXLoadMeshHierarchyFromX(address.c_str(), D3DXMESH_MANAGED, RenderMgr->GetDevice(),
+		D3DXLoadMeshHierarchyFromX(fileName.c_str(), D3DXMESH_MANAGED, RenderMgr->GetDevice(),
 			&boneHierarchy, nullptr, &rootBone, &animationContainer);
 
 		UpdateMatrices((Bone*)rootBone, nullptr);
@@ -37,9 +37,9 @@ namespace BONE_GRAPHICS
 		IsInit = true;
 	}
 
-	std::string SkinnedMesh::GetFileAddress()
+	std::string SkinnedMesh::GetFile()
 	{
-		return address;
+		return fileName;
 	}
 	
 	SkinnedMesh::~SkinnedMesh() 

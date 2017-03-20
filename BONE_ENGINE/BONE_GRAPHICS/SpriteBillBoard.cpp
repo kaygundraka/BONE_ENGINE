@@ -33,7 +33,7 @@ namespace BONE_GRAPHICS
 		if(indexBuffer == nullptr)
 			indexBuffer->Release();
 
-		ResourceMgr->ReleaseTexture(textureAddress);
+		ResourceMgr->ReleaseTexture(fileName);
 	}
 
 	void SpriteBillBoard::LoadContent()
@@ -272,14 +272,14 @@ namespace BONE_GRAPHICS
 		return true;
 	}
 
-	void SpriteBillBoard::SetTexturesAddress(std::string address)
+	void SpriteBillBoard::SetTexture(std::string fileName)
 	{
-		textureAddress = address;
+		this->fileName = fileName;
 	}
 
-	std::string	SpriteBillBoard::GetTexturesAddress()
+	std::string	SpriteBillBoard::GetTexture()
 	{
-		return textureAddress;
+		return fileName;
 	}
 
 	void SpriteBillBoard::SetTargetCamera(GameObject* target)
@@ -360,7 +360,7 @@ namespace BONE_GRAPHICS
 			RenderMgr->GetDevice()->SetIndices(indexBuffer);
 
 			if (shaderOpt == nullptr)
-			    RenderMgr->GetDevice()->SetTexture(0, ResourceMgr->LoadTexture(textureAddress));
+			    RenderMgr->GetDevice()->SetTexture(0, ResourceMgr->LoadTexture(fileName));
 			else
 				shaderOpt->Render(0, object);
 			

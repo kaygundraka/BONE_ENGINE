@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "Transform3D.h"
 #include "SceneManager.h"
+#include "BillBoard.h"
 
 namespace BONE_GRAPHICS
 {
@@ -26,8 +27,16 @@ namespace BONE_GRAPHICS
         Transform3D* tr = new Transform3D();
         tr->SetPosition(pos);
         this->AddComponent(tr);
-
         this->tr = tr;
+
+        BillBoard* billBoard = new BillBoard();
+        Rect rect;
+        rect.LeftTop = Vec2(0, 0);
+        rect.RightBottom = Vec2(512, 512);
+        billBoard->SetOriginRect(rect);
+        billBoard->SetTarget(SceneMgr->CurrentScene()->GetCurrentCamera());
+        billBoard->SetTexturesAddress("PointLight.png", 30, 30);
+        billBoard->SetRenderMode(BillBoard::RENDER_ALPHA);
 
         IsInit = true;
     }

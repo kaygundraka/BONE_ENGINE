@@ -40,9 +40,9 @@ namespace BONE_GRAPHICS
 		return originRect;
 	}
 
-	void ScreenImage::SetImageFile(std::string address)
+	void ScreenImage::SetImageFile(std::string fileName)
 	{
-		this->address = address;
+		this->fileName = fileName;
 	}
 
 	void ScreenImage::SetAlpha(float alpha)
@@ -61,7 +61,7 @@ namespace BONE_GRAPHICS
 		rect.right = originRect.RightBottom.x;
 		rect.bottom = originRect.RightBottom.y;
 
-		LPDIRECT3DTEXTURE9 texture = ResourceMgr->LoadTexture(address);
+		LPDIRECT3DTEXTURE9 texture = ResourceMgr->LoadTexture(fileName);
 
 		sprite->SetTransform(&matrix);
 

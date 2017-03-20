@@ -149,10 +149,7 @@ namespace BONE_GRAPHICS
 
         if (Shader == nullptr)
             Shader = &phongShader;
-
-        //if (GetComponent("StaticMesh") != nullptr)
-            //((StaticMesh*)GetComponent("StaticMesh"))->Render(nullptr, this);
-
+        
         UINT numPasses = 0;
 
         Shader->GetShader()->Begin(&numPasses, 0);
@@ -181,9 +178,6 @@ namespace BONE_GRAPHICS
 
             Shader->GetShader()->EndPass();
         }
-
-        //if (GetComponent("Collision") != nullptr)
-        //    ((Collision*)GetComponent("Collision"))->Render(this);
 
         if (GetComponent("ScreenSprite") != nullptr)
 			((ScreenSprite*)GetComponent("ScreenSprite"))->Render(this);

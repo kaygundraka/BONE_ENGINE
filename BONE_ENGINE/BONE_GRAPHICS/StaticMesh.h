@@ -15,8 +15,8 @@ namespace BONE_GRAPHICS
 		MESH_INFO*  meshInfo;
     	D3DMATERIAL9* meshMaterials;
 
-        std::string address;
-        std::string*  textureAddress;
+        std::string fileName;
+        std::string* textureFiles;
 
 		int renderMode;
 		bool IsInit;
@@ -40,8 +40,8 @@ namespace BONE_GRAPHICS
         void ShowMeshBox(bool show);
         bool IsShowMeshBOx();
         void SetMeshBoxColor(D3DXCOLOR color);
-        void SetTexturesAddress(std::string* address);
-        void SetFileAddress(std::string address);
+        void SetTextures(std::string* fileNames);
+        void SetFile(std::string fileName);
 
         bool CheckMouseRayInMesh(Transform3D* tr, float *dist);
 
@@ -49,7 +49,7 @@ namespace BONE_GRAPHICS
         void Show();
         bool IsShow();
 		
-		std::string* GetTexturesAddress();
-		std::string GetFileAddress();
+		std::string* GetTextures();
+		std::string GetFile();
 	};
 }

@@ -17,7 +17,7 @@ namespace BONE_GRAPHICS
 		};
 
 	private:
-		std::string textureAddress;
+		std::string fileName;
 
 		IDirect3DVertexBuffer9* vertexBuffer;
 		IDirect3DIndexBuffer9*	indexBuffer;
@@ -56,9 +56,9 @@ namespace BONE_GRAPHICS
 
 		void SetRenderMode(RENDER_MODE mode);
 
-		void SetTexturesAddress(std::string address, int width, int height);
+		void SetTexture(std::string fileName, int width, int height);
 		bool CheckMouseRayInMesh(Transform3D* tr);
 
-		std::string GetTexturesAddress();
+		std::string GetTexture();
 	};
 }

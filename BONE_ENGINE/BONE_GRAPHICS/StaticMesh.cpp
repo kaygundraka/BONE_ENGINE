@@ -20,20 +20,20 @@ namespace BONE_GRAPHICS
 
 	StaticMesh::~StaticMesh()
 	{
-		ResourceMgr->ReleaseMesh(address);
+		ResourceMgr->ReleaseMesh(fileName);
 
-        if (ResourceMgr->FindMesh(address) != nullptr)
-    		for (int i = 0; i < ResourceMgr->FindMesh(address)->numMaterials; i++)
-	    		ResourceMgr->ReleaseTexture(textureAddress[i]);
+        if (ResourceMgr->FindMesh(fileName) != nullptr)
+    		for (int i = 0; i < ResourceMgr->FindMesh(fileName)->numMaterials; i++)
+	    		ResourceMgr->ReleaseTexture(textureFiles[i]);
 	}
 
 	void StaticMesh::LoadContent()
 	{
 		char Address[MAX_PATH];
-		strcpy_s(Address, address.c_str());
+		strcpy_s(Address, fileName.c_str());
 
 		try {
-            meshInfo = ResourceMgr->LoadMesh(address);
+            meshInfo = ResourceMgr->LoadMesh(fileName);
 
             if (meshInfo == nullptr)
             {
@@ -43,7 +43,7 @@ namespace BONE_GRAPHICS
 
             int MaterialSize = meshInfo->numMaterials;
 
-            textureAddress = new string[MaterialSize];
+            textureFiles = new string[MaterialSize];
 
             D3DXMATERIAL* d3dxMaterials = (D3DXMATERIAL*)meshInfo->buffer->GetBufferPointer();
 
@@ -57,16 +57,16 @@ namespace BONE_GRAPHICS
                 // 재질용 주변광 색깔 설정(D3DX에서 직접해주지 않음)
                 meshMaterials[i].Ambient = meshMaterials[i].Diffuse;
 
-                char* filename = PathFindFileName(d3dxMaterials[i].pTextureFilename);
+                char* file = PathFindFileName(d3dxMaterials[i].pTextureFilename);
 
                 if (d3dxMaterials[i].pTextureFilename != nullptr && lstrlenA(d3dxMaterials[i].pTextureFilename) > 0)
                 {
-                    textureAddress[i] = filename;
+                    textureFiles[i] = file;
 
                     // 텍스쳐 생성
-                    if (ResourceMgr->LoadTexture(filename) == nullptr)
+                    if (ResourceMgr->LoadTexture(file) == nullptr)
                     {
-                        LogMgr->Error("%s : Could Not Find TextureFile.", filename);
+                        LogMgr->Error("%s : Could Not Find TextureFile.", file);
                         throw;
                     }
                 }
@@ -85,7 +85,7 @@ namespace BONE_GRAPHICS
 
 	bool StaticMesh::CheckMouseRayInMesh(Transform3D* tr, float* dist)
 	{
- 		bool Result = RenderMgr->CheckRayInMesh(tr->GetTransform(), ResourceMgr->FindMesh(address)->mesh, dist);
+ 		bool Result = RenderMgr->CheckRayInMesh(tr->GetTransform(), ResourceMgr->FindMesh(fileName)->mesh, dist);
 
 		return Result;
 	}
@@ -95,14 +95,14 @@ namespace BONE_GRAPHICS
 		renderMode = mode;
 	}
 
-	string* StaticMesh::GetTexturesAddress()
+	string* StaticMesh::GetTextures()
 	{
-		return textureAddress;
+		return textureFiles;
 	}
 
-	void StaticMesh::SetTexturesAddress(string* address)
+	void StaticMesh::SetTextures(string* fileNames)
 	{
-		textureAddress = address;
+		textureFiles = fileNames;
 	}
 
     void StaticMesh::ShowMeshBox(bool show)
@@ -144,20 +144,20 @@ namespace BONE_GRAPHICS
 
 			if (shaderOpt == nullptr)
 			{
-				for (int i = 0; i < ResourceMgr->FindMesh(address)->numMaterials; i++)
+				for (int i = 0; i < ResourceMgr->FindMesh(fileName)->numMaterials; i++)
 				{
 					RenderMgr->GetDevice()->SetMaterial(&meshMaterials[i]);
-					RenderMgr->GetDevice()->SetTexture(0, ResourceMgr->LoadTexture(textureAddress[i]));
-					ResourceMgr->FindMesh(address)->mesh->DrawSubset(i);
+					RenderMgr->GetDevice()->SetTexture(0, ResourceMgr->LoadTexture(textureFiles[i]));
+					ResourceMgr->FindMesh(fileName)->mesh->DrawSubset(i);
 				}
 
 			}
 			else
 			{
-				for (int i = 0; i < ResourceMgr->FindMesh(address)->numMaterials; i++)
+				for (int i = 0; i < ResourceMgr->FindMesh(fileName)->numMaterials; i++)
 				{
 					shaderOpt->Render(i, object);
-					ResourceMgr->FindMesh(address)->mesh->DrawSubset(i);
+					ResourceMgr->FindMesh(fileName)->mesh->DrawSubset(i);
 				}
 			}
 
@@ -167,18 +167,18 @@ namespace BONE_GRAPHICS
 				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, false);
 		
             if (showBox)
-                RenderMgr->DrawMeshBox(Transform, ResourceMgr->FindMesh(address)->mesh, ((Transform3D*)object->GetComponent("Transform3D"))->GetPosition(), color);
+                RenderMgr->DrawMeshBox(Transform, ResourceMgr->FindMesh(fileName)->mesh, ((Transform3D*)object->GetComponent("Transform3D"))->GetPosition(), color);
         }
 	}
 
-	void StaticMesh::SetFileAddress(string address)
+	void StaticMesh::SetFile(string fileName)
 	{
-		this->address = address;
+		this->fileName = fileName;
 	}
 
-	string StaticMesh::GetFileAddress()
+	string StaticMesh::GetFile()
 	{
-		return address;
+		return fileName;
 	}
 
     void StaticMesh::Hide()

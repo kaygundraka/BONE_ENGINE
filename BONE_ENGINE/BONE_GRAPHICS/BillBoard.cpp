@@ -31,7 +31,7 @@ namespace BONE_GRAPHICS
 		if (indexBuffer == nullptr)
 			indexBuffer->Release();
 
-		ResourceMgr->ReleaseTexture(textureAddress);
+		ResourceMgr->ReleaseTexture(fileName);
 	}
 
 	void BillBoard::LoadContent()
@@ -150,16 +150,16 @@ namespace BONE_GRAPHICS
 		return true;
 	}
 
-	void BillBoard::SetTexturesAddress(std::string address, int width, int height)
+	void BillBoard::SetTexture(std::string fileName, int width, int height)
 	{
-		textureAddress = address;
+		this->fileName = fileName;
 		this->width = width;
         this->height = height;
 	}
 
-	std::string	BillBoard::GetTexturesAddress()
+	std::string	BillBoard::GetTexture()
 	{
-		return textureAddress;
+		return fileName;
 	}
 
 	void BillBoard::SetTarget(GameObject* target)
@@ -278,7 +278,7 @@ namespace BONE_GRAPHICS
 			RenderMgr->GetDevice()->SetIndices(indexBuffer);
 
 			if (shaderOpt == nullptr)
-				RenderMgr->GetDevice()->SetTexture(0, ResourceMgr->LoadTexture(textureAddress));
+				RenderMgr->GetDevice()->SetTexture(0, ResourceMgr->LoadTexture(fileName));
 			else
 				shaderOpt->Render(0, object);
 

@@ -65,12 +65,6 @@ namespace BONE_GRAPHICS
 
         runtimeObjectSystem->GetObjectFactorySystem()->AddListener(this);
         
-        //runtimeObjectSystem->AddLibraryDir("..\\Library\\Lib", 0);
-        //runtimeObjectSystem->AddLibraryDir("..\\x64\\Debug", 0);
-
-        //runtimeObjectSystem->AddIncludeDir("..\\Library\\RuntimeObjectSystem");
-        //runtimeObjectSystem->AddIncludeDir("..\\Library\\reactphysics3d");
-        //runtimeObjectSystem->AddIncludeDir("..\\Library\\RuntimeCompiler");
         runtimeObjectSystem->AddIncludeDir("..\\BONE_SYSTEM");
         runtimeObjectSystem->AddIncludeDir("..\\BONE_GRAPHICS");
         runtimeObjectSystem->AddIncludeDir("C:\\Program Files (x86)\\Microsoft DirectX SDK (June 2010)\\Include");
