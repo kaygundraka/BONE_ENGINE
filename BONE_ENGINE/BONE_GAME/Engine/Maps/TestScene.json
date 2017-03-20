@@ -1,13 +1,13 @@
 {
     "GameObject": {
-        "Floor": {
+        "Block": {
             "IsChild": false,
             "Position": [
                 0.0,
                 0.0,
                 0.0
             ],
-            "PrefabName": "Floor",
+            "PrefabName": "BlockType1",
             "Rotation": [
                 0.0,
                 0.0,
@@ -20,14 +20,14 @@
             ],
             "TreeDepth": 0
         },
-        "TestBox": {
-            "IsChild": false,
+        "Wall1": {
+            "IsChild": true,
             "Position": [
+                34.0,
                 0.0,
-                44.2805328369141,
                 0.0
             ],
-            "PrefabName": "TestBox",
+            "PrefabName": "Wall1",
             "Rotation": [
                 0.0,
                 0.0,
@@ -35,10 +35,30 @@
             ],
             "Scale": [
                 1.0,
-                0.200000002980232,
-                0.200000002980232
+                1.0,
+                1.0
             ],
-            "TreeDepth": 0
+            "TreeDepth": 1
+        },
+        "Wall2": {
+            "IsChild": true,
+            "Position": [
+                -34.0,
+                0.0,
+                0.0
+            ],
+            "PrefabName": "Wall2",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
         }
     },
     "Scene": {

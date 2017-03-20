@@ -8,8 +8,8 @@ namespace BONE_GRAPHICS
 {
     PointLight::PointLight()
     {
-        radius = 10;
-        this->status = false;
+        radius = 100;
+        this->status = true;
         IsInit = false;
     }
 
@@ -34,10 +34,6 @@ namespace BONE_GRAPHICS
 
     void PointLight::Reference()
     {
-        if (this->status)
-            SceneMgr->CurrentScene()->AddPointLight(this);
-        else
-            SceneMgr->CurrentScene()->RemovePointLight(this);
     }
 
     void PointLight::SetLight(bool status)

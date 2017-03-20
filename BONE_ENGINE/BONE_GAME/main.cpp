@@ -153,20 +153,3 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 
     return 0;
 }
-
-
-/*if (IsNewScene)
-{
-auto_ptr<PointLight> Light(new PointLight);
-
-Light->SetAmbient(1.0f, 1.0f, 1.0f, 1.0f);
-Light->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
-Light->SetSpecular(0.5f, 0.5f, 0.5f, 0.5f);
-Light->SetRadius(200);
-Light->SetLight(true);
-Light->SetPrfabName("PointLight");
-Light->SetPosition(Vector3(0, 200, 0));
-
-ViewScene->AddObject(Light.get(), "PointLight");
-}
-*/

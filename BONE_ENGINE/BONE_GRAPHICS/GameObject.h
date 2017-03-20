@@ -73,12 +73,12 @@ namespace BONE_GRAPHICS
 
 		void LoadContents();
 
-        void Init();
-        void Awake();
-        void Reference();
-        void Update();
-        void LateUpdate();
-        void LateRender();
+        virtual void Init();
+        virtual void Awake();
+        virtual void Reference();
+        virtual void Update();
+        virtual void LateUpdate();
+        virtual void LateRender();
 
         void CollisionEvent(GameObject* otherObject);
 

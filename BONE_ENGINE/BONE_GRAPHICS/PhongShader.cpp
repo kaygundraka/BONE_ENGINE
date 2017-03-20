@@ -69,6 +69,9 @@ namespace BONE_GRAPHICS
         
         Matrix MatWorld = ((Transform3D*)parent->transform3D)->GetTransform();
 
+        //Matrix MatWorld;
+        //D3DXMatrixIdentity(&MatWorld);
+
         auto Mesh = (StaticMesh*)parent->GetComponent("StaticMesh");
 
         if (Mesh != nullptr)
@@ -160,6 +163,8 @@ namespace BONE_GRAPHICS
                 PhongEffect->SetValue(HandleLightSpecular, LightSpecular, sizeof(LightSpecular));
                 PhongEffect->SetFloat(HandleLightRadius, (*iter)->GetRadius());
             }
+
+            PhongEffect->CommitChanges();
         }
     }
 }

@@ -81,7 +81,7 @@ sampler2D colorMap = sampler_state
 
 struct VS_INPUT
 {
-	float3 position : POSITION;
+	float4 position : POSITION;
 	float2 texCoord : TEXCOORD0;
 	float3 normal : NORMAL;
 };
@@ -89,7 +89,7 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
 	float4 position : POSITION;
-	float3 worldPos : TEXCOORD0;
+	float4 worldPos : TEXCOORD0;
 	float2 texCoord : TEXCOORD1;
 	float3 viewDir : TEXCOORD2;
 	float3 normal : TEXCOORD3;
@@ -99,9 +99,12 @@ VS_OUTPUT VS_PointLighting(VS_INPUT IN)
 {
 	VS_OUTPUT OUT;
 
-	OUT.position = mul(float4(IN.position, 1.0f), worldMatrix);
+    IN.position.w = 1.0f;
+
+	OUT.position = mul(IN.position, worldMatrix);
     OUT.position = mul(OUT.position, worldViewProjectionMatrix);
-	OUT.worldPos = mul(IN.position, worldMatrix).xyz;
+
+	OUT.worldPos = mul(IN.position, worldMatrix);
 	OUT.texCoord = IN.texCoord;
 	OUT.viewDir = cameraPos - OUT.worldPos;
 	OUT.normal = mul(IN.normal, (float3x3)worldInverseTransposeMatrix);

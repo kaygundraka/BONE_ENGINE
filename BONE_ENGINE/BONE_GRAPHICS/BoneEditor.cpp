@@ -105,7 +105,7 @@ void BoneEditor::Run()
 {
     bool flag = false;
 
-    RenderMgr->GetDevice()->SetRenderState(D3DRS_LIGHTING, FALSE);
+    //RenderMgr->GetDevice()->SetRenderState(D3DRS_LIGHTING, FALSE);
     InputMgr->SetFocusWindow(true);
 
     std::string OpenSceneName = "";
@@ -170,6 +170,19 @@ void BoneEditor::Run()
             PosPivot* PosPivotScript = new PosPivot(this, Pivot.get(), "PosPivotScript");
             Pivot->AddComponent(PosPivotScript);
             ViewScene->AddObject(Pivot.get(), "PosPivot");
+
+            auto_ptr<PointLight> Light(new PointLight);
+
+            Light->SetAmbient(1.0f, 1.0f, 1.0f, 1.0f);
+            Light->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+            Light->SetSpecular(0.5f, 0.5f, 0.5f, 0.5f);
+            Light->SetRadius(200);
+            Light->SetLight(true);
+            Light->SetPrfabName("PointLight");
+            Light->SetPosition(Vec3(0, 200, 0));
+            Light->SetTag("EditorObject");
+            ViewScene->AddObject(Light.get(), "PointLight");
+            ViewScene->AddPointLight(Light.get());
 
             ViewScene->SetAmbientColor(1.0f, 1.0f, 1.0f, 1.0f);
             ViewScene->SetName(OpenSceneName);
