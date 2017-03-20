@@ -1,29 +1,10 @@
-#include "Common.h"
-#include "EditorCameraScript.h"
-#include "InputManager.h"
-#include "SceneManager.h"
-#include "StaticMesh.h"
-using namespace BONE_GRAPHICS;
+#include "PlayerCamera.h"
+#include <InputManager.h>
 
-EditorCamera::EditorCamera(GameObject* gameObject, std::string name)
-{
-    SetInfo(gameObject, name);
-}
-
-EditorCamera::~EditorCamera()
-{
-
-}
-
-void EditorCamera::Init()
+void PlayerCamera::Init()
 {
     gameObject->SetPriority(1);
-    gameObject->SetTag("EditorObject");
-
-    Transform3D* tr = new Transform3D();
-    tr->SetPosition(Vec3(200, 200, 200));
-    gameObject->AddComponent(tr);
-
+    
     Camera *camera = new Camera(0, PROJECTION_TYPE::PRJOJECTION_PERSPACTIVE,
         Vec3(0, 1, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), 1000, 0.1f, D3DX_PI * 0.6f);
 
@@ -35,39 +16,25 @@ void EditorCamera::Init()
     mouseX = 0;
     mouseY = 0;
 
-    selectObject = "";
-
     cameraMoveSpeed = 100.0f;
-
-    cameraMove = false;
 }
 
-void EditorCamera::Reference()
+void PlayerCamera::Update()
 {
-}
-
-void EditorCamera::Update()
-{
-    if (InputMgr->GetMouseRBButtonStatus() == MOUSE_STATUS::MOUSE_RBDOWN)
-        cameraMove = true;
-    else if (InputMgr->GetMouseRBButtonStatus() == MOUSE_STATUS::MOUSE_RBUP)
-        cameraMove = false;
-    
-    if (cameraMove)
     {
         POINT pt;
-        float fDelta = 0.001f; // 마우스의 민감도, 이 값이 커질수록 많이 움직인다.
+        float fDelta = 0.001f;
 
         GetCursorPos(&pt);
-        int dx = pt.x - mouseX; // 마우스의 변화값
-        int dy = pt.y - mouseY; // 마우스의 변화값
+        int dx = pt.x - mouseX;
+        int dy = pt.y - mouseY;
 
-        mainCamera->RotateLocalX(dy * fDelta); // 마우스의 Y축 회전값은 3D world의  X축 회전값
-        mainCamera->RotateLocalY(dx * fDelta); // 마우스의 X축 회전값은 3D world의  Y축 회전값
+        mainCamera->RotateLocalX(dy * fDelta);
+        mainCamera->RotateLocalY(dx * fDelta);
 
         pt.x = (RenderMgr->GetWidth()) / 2;
-        pt.y = (RenderMgr->GetHeight()) / 2;//(rc.bottom - rc.top) / 2;
-                                            //ClientToScreen(g_hwnd, &pt);
+        pt.y = (RenderMgr->GetHeight()) / 2;
+
         SetCursorPos(pt.x, pt.y);
         mouseX = pt.x;
         mouseY = pt.y;
@@ -79,11 +46,11 @@ void EditorCamera::Update()
 
     if (InputMgr->KeyDown(VK_SHIFT, false))
         cameraMoveSpeed = 200.0f;
-    
+
     if (InputMgr->GetMouseWheelStatus() == MOUSE_WHEEL_DOWN)
     {
         auto ray = RenderMgr->GetPickingRayToView(false);
-        
+
         transform->SetPosition(
             transform->GetPosition() -
             ray.direction *
@@ -173,44 +140,4 @@ void EditorCamera::Update()
             SceneMgr->GetTimeDelta() * cameraMoveSpeed
         );
     }
-
-}
-
-void EditorCamera::LateRender()
-{
-    Vec3 Pos[2];
-
-    Pos[0].y = 0;
-    Pos[1].y = 0;
-
-    for (int i = 0; i < 9; i++)
-    {
-        Pos[0].x = -40 + i * 10;
-        Pos[1].x = -40 + i * 10;
-        Pos[0].z = -40;
-        Pos[1].z = 40;
-
-        if (i == 4)
-            RenderMgr->DrawLine(Pos[0], Pos[1], COLOR::RED);
-        else
-            RenderMgr->DrawLine(Pos[0], Pos[1], COLOR::WHITE);
-    }
-
-    for (int i = 0; i < 9; i++)
-    {
-        Pos[0].z = -40 + i * 10;
-        Pos[1].z = -40 + i * 10;
-        Pos[0].x = -40;
-        Pos[1].x = 40;
-
-        if (i == 4)
-            RenderMgr->DrawLine(Pos[0], Pos[1], COLOR::BLUE);
-        else
-            RenderMgr->DrawLine(Pos[0], Pos[1], COLOR::WHITE);
-    }
-}
-
-void EditorCamera::LateUpdate()
-{
-    mainCamera->FixedUpdate(gameObject);
 }

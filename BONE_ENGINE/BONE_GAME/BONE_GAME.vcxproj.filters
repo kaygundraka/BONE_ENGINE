@@ -16,6 +16,9 @@
     <Filter Include="소스 파일\Runtime Modifiable">
       <UniqueIdentifier>{e681857c-6058-482b-ab96-bfc11a2cedad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Script">
+      <UniqueIdentifier>{954f1d98-3b96-4ba1-b3e3-7ead3cb8f776}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,10 +27,22 @@
     <ClCompile Include="TestScript2.cpp">
       <Filter>소스 파일\Runtime Modifiable</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerCamera.cpp">
+      <Filter>소스 파일\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="SetScript.cpp">
+      <Filter>소스 파일\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestScript2.h">
       <Filter>소스 파일\Runtime Modifiable</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCamera.h">
+      <Filter>소스 파일\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="SetScript.h">
+      <Filter>소스 파일\Script</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

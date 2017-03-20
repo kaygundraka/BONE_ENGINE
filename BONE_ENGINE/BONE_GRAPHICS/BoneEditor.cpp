@@ -126,6 +126,11 @@ void BoneEditor::Run()
             auto_ptr<GUI_Scene> EmptyGUI(new GUI_Scene);
             SceneMgr->SetGUIScene(EmptyGUI.get());
 
+            GameObject* MainCamera = new GameObject();
+            EditorCamera* EditorCameraScript = new EditorCamera(MainCamera, "EditorCameraScript");
+            MainCamera->AddComponent(EditorCameraScript);
+            TestScene->AddObject(MainCamera, "EditorCamera");
+
             TestScene->SetName(playScene);
 
             SceneMgr->AddScene(playScene, TestScene.get());
