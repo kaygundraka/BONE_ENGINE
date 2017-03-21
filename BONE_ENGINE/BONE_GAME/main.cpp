@@ -17,6 +17,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
         return 0;
 
     SceneMgr->SetGameObject = SetGameObject;
+    SceneMgr->AddScript = AddScriptHandler;
     RuntimeMgr->AddSource("TestScript2");
 
     BoneEditor Editor;

@@ -98,6 +98,8 @@ BoneEditor::BoneEditor() {
     currentObjectName = "";
     childSize = 0;
 
+    isEditMode = true;
+
     LogMgr->AddLogGui(&logDialog);
 }
 
@@ -125,11 +127,6 @@ void BoneEditor::Run()
             auto_ptr<Scene> TestScene(new Scene);
             auto_ptr<GUI_Scene> EmptyGUI(new GUI_Scene);
             SceneMgr->SetGUIScene(EmptyGUI.get());
-
-            GameObject* MainCamera = new GameObject();
-            EditorCamera* EditorCameraScript = new EditorCamera(MainCamera, "EditorCameraScript");
-            MainCamera->AddComponent(EditorCameraScript);
-            TestScene->AddObject(MainCamera, "EditorCamera");
 
             TestScene->SetName(playScene);
 
@@ -167,7 +164,7 @@ void BoneEditor::Run()
             this->SetScriptProc(this);
 
             GameObject* MainCamera = new GameObject();
-            EditorCamera* EditorCameraScript = new EditorCamera(MainCamera, "EditorCameraScript");
+            EditorCamera* EditorCameraScript = new EditorCamera(MainCamera, this, "EditorCameraScript");
             MainCamera->AddComponent(EditorCameraScript);
             ViewScene->AddObject(MainCamera, "EditorCamera");
 
@@ -175,19 +172,7 @@ void BoneEditor::Run()
             PosPivot* PosPivotScript = new PosPivot(this, Pivot, "PosPivotScript");
             Pivot->AddComponent(PosPivotScript);
             ViewScene->AddObject(Pivot, "PosPivot");
-
-            /*auto_ptr<PointLight> Light(new PointLight);
-
-            Light->SetAmbient(1.0f, 1.0f, 1.0f, 1.0f);
-            Light->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
-            Light->SetSpecular(0.5f, 0.5f, 0.5f, 0.5f);
-            Light->SetRadius(200);
-            Light->SetLight(true);
-            Light->SetPosition(Vec3(0, 200, 0));
-            Light->SetTag("EditorObject");
-            ViewScene->AddObject(Light.get(), "PointLight");
-            ViewScene->AddPointLight(Light.get());*/
-
+            
             ViewScene->SetAmbientColor(1.0f, 1.0f, 1.0f, 1.0f);
             ViewScene->SetName(OpenSceneName);
 
@@ -196,10 +181,17 @@ void BoneEditor::Run()
             if (!IsNewScene)
                 ViewScene->OnLoadSceneData();
 
+            ViewScene->SetEditorScene();
+
             playScene = OpenSceneName;
             flag = SceneMgr->StartScene(OpenSceneName);
         }
     } while (flag);
+}
+
+bool BoneEditor::IsEditMode()
+{
+    return isEditMode;
 }
 
 void BoneEditor::AddScriptList(std::string scriptName)
@@ -283,6 +275,23 @@ void BoneEditor::ShowViewMenu()
             showEnvironmentSetting = false;
         else
             showEnvironmentSetting = true;
+    }
+
+    if (ImGui::MenuItem("Show Light Icon"))
+    {
+        static bool show = false;
+        auto DyamicObjectList = SceneMgr->CurrentScene()->GetObjectList();
+
+        if (show)
+            show = false;
+        else
+            show = true;
+
+        for each(auto var in DyamicObjectList)
+        {
+            if (var->Tag() == "PointLight")
+                ((PointLight*)var)->SetIcon(show);
+        }
     }
 
     if (ImGui::MenuItem("Show Main Editor"))
@@ -530,6 +539,7 @@ void BoneEditor::ShowGameObjectTree(std::string treeName)
             if (ImGui::SmallButton("Create"))
             {
                 GameObject* Child = new GameObject();
+                Child->EnableScript(false);
 
                 Transform3D* tr = new Transform3D();
                 Child->AddComponent(tr);
@@ -587,6 +597,30 @@ void BoneEditor::AllChildCheck(GameObject* parent)
 
 void BoneEditor::UpdateFrame()
 {
+    if (InputMgr->KeyDown(VK_F1, true))
+        if (isEditMode)
+            isEditMode = false;
+        else
+            isEditMode = true;
+
+    if (!ImGui::Begin("Mode", nullptr, ImVec2(0, 0), 0.3f, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings))
+    {
+        ImGui::End();
+        return;
+    }
+
+    ImGui::SetWindowPos(ImVec2(10, 30));
+
+    if (isEditMode)
+        ImGui::Text("[F1 - Change View/Select Mode]");
+    else
+        ImGui::Text("[F1 - Change Editor Mode]");
+
+    ImGui::End();
+
+    if (!isEditMode)
+        return;
+
     RuntimeMgr->Compile();
 
     bool isFocusedWindow = false;
@@ -906,6 +940,7 @@ void BoneEditor::UpdateFrame()
                 if (ImGui::Button("Create"))
                 {
                     GameObject* Object = new GameObject;
+                    Object->EnableScript(false);
 
                     std::string ObjectName = "GameObject";
                     static int ObjectNum = 0;

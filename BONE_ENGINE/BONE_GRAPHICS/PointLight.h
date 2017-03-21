@@ -19,6 +19,8 @@ namespace BONE_GRAPHICS
         bool status;
 
         bool IsInit;
+
+        bool showIcon;
         
     public:
         PointLight();
@@ -34,6 +36,8 @@ namespace BONE_GRAPHICS
         void SetDiffuse(RGBA color);
         void SetSpecular(RGBA color);
         void SetPosition(Vec3 pos);
+        void SetIcon(bool show);
+        bool ShowIcon();
 
         virtual void SaveInMaps();
 

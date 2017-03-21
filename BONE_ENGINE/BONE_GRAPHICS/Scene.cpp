@@ -39,6 +39,7 @@ namespace BONE_GRAPHICS
         physicsWorld = new rp3d::DynamicsWorld(gravity);
 
         enablePhysics = false;
+        isEditorScene = false;
 
         physicsWorld->setNbIterationsVelocitySolver(15);
         physicsWorld->setNbIterationsPositionSolver(8);
@@ -64,6 +65,16 @@ namespace BONE_GRAPHICS
 
         delete physicsWorld;
         physicsWorld = nullptr;
+    }
+
+    void Scene::SetEditorScene()
+    {
+        isEditorScene = true;
+    }
+    
+    bool Scene::IsEditorScene()
+    {
+        return isEditorScene;
     }
 
     void Scene::EnablePhysics(bool enable)

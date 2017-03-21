@@ -260,6 +260,26 @@
             ],
             "TreeDepth": 1
         },
+        "Player": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                30.0,
+                0.0
+            ],
+            "PrefabName": "Player",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
         "Top": {
             "IsChild": true,
             "Position": [

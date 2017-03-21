@@ -42,6 +42,8 @@ namespace BONE_GRAPHICS
         std::list<std::string> scriptList;
         std::string playScene;
         bool isTestPlay;
+        
+        bool isEditMode;
 
     public:
         BoneEditor();
@@ -57,6 +59,8 @@ namespace BONE_GRAPHICS
 
         void ShowObjectInfo(std::string name);
         void ShowGameObjectTree(std::string treeName);
+
+        bool IsEditMode();
 
         void AllChildCheck(GameObject* parent);
 

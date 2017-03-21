@@ -8,7 +8,6 @@ void PlayerCamera::Init()
     Camera *camera = new Camera(0, PROJECTION_TYPE::PRJOJECTION_PERSPACTIVE,
         Vec3(0, 1, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), 1000, 0.1f, D3DX_PI * 0.6f);
 
-    camera->SetTargetPosition(Vec3(0, 0, 0));
     gameObject->AddComponent(camera);
 
     mainCamera = ((Camera*)gameObject->GetComponent("Camera"));
@@ -17,10 +16,28 @@ void PlayerCamera::Init()
     mouseY = 0;
 
     cameraMoveSpeed = 100.0f;
+
+    cameraMove = false;
+    OnlyOne = true;
+
+    mainCamera->FixedUpdate(gameObject);
 }
 
 void PlayerCamera::Update()
 {
+    if (OnlyOne)
+    {
+        ((Transform3D*)gameObject->GetComponent("Transform3D"))->SetPosition(Vec3(-70, 50, -20));
+        mainCamera->SetTargetPosition(Vec3(0, 50, -20));
+        OnlyOne = false;
+    }
+
+    if (InputMgr->GetMouseRBButtonStatus() == MOUSE_STATUS::MOUSE_RBDOWN)
+        cameraMove = true;
+    else if (InputMgr->GetMouseRBButtonStatus() == MOUSE_STATUS::MOUSE_RBUP)
+        cameraMove = false;
+
+    if (cameraMove)
     {
         POINT pt;
         float fDelta = 0.001f;
@@ -140,4 +157,15 @@ void PlayerCamera::Update()
             SceneMgr->GetTimeDelta() * cameraMoveSpeed
         );
     }
+
+    if (InputMgr->KeyDown(VK_ESCAPE, true))
+    {
+        SceneMgr->CurrentScene()->SetSceneFlag(true);
+        SceneMgr->EndScene(SceneMgr->CurrentScene()->GetName());
+    }
+}
+
+void PlayerCamera::LateUpdate()
+{
+    mainCamera->FixedUpdate(gameObject);
 }

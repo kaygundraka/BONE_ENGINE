@@ -13,6 +13,7 @@ namespace BONE_GRAPHICS
         this->status = true;
         IsInit = false;
         tr = nullptr;
+        showIcon = false;
     }
 
     PointLight::~PointLight()
@@ -36,6 +37,8 @@ namespace BONE_GRAPHICS
         billBoard->SetRenderMode(BillBoard::RENDER_ALPHA);
         this->AddComponent(billBoard);
 
+        ((BillBoard*)GetComponent("BillBoard"))->SetShow(false);
+
         this->SetDefaultPipeLine();
 
         IsInit = true;
@@ -52,6 +55,18 @@ namespace BONE_GRAPHICS
         }
         else
             this->tr = (Transform3D*)transform3D;
+    }
+
+    void PointLight::SetIcon(bool show)
+    {
+        showIcon = show;
+
+        ((BillBoard*)GetComponent("BillBoard"))->SetShow(show);
+    }
+    
+    bool PointLight::ShowIcon()
+    {
+        return showIcon;
     }
 
     void PointLight::SaveInMaps()

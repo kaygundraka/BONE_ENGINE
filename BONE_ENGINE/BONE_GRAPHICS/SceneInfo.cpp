@@ -11,6 +11,13 @@ namespace BONE_GRAPHICS
         endScene = false;
 
         openPopup = false;
+
+        D3DXCOLOR color;
+        color.r = 34 / 255.f;
+        color.g = 113 / 255.f;
+        color.b = 89 / 255.f;
+        color.a = 255 / 255.f;
+        SceneMgr->SetClearColor(color);
     }
 
     void SceneInfoUI::UpdateFrame()

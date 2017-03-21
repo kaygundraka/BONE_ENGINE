@@ -50,7 +50,7 @@ namespace BONE_GRAPHICS
         void SetLoadGUIScene(GUI_Scene* scene);
 		Scene* GetLoadScene();
 		void EndScene(string name);
-        
+
         void SetClearColor(D3DXCOLOR color);
         D3DXCOLOR GetClearColor();
 
@@ -58,6 +58,8 @@ namespace BONE_GRAPHICS
 
 		int GetFrame();
 		double GetTimeDelta();
+
+        bool(*AddScript)(GameObject* object, std::string scripts);
 
 		Scene* CurrentScene();
 	};

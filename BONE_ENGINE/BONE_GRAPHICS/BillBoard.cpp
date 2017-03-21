@@ -16,6 +16,7 @@ namespace BONE_GRAPHICS
 		vertexBuffer = nullptr;
 		indexBuffer = nullptr;
 		target = nullptr;
+        isShow = true;
 
 		rectWidth = 1;
 		rectHeight = 1;
@@ -208,9 +209,19 @@ namespace BONE_GRAPHICS
 		return originRect;
 	}
 
+    void BillBoard::SetShow(bool show)
+    {
+        isShow = show;
+    }
+    
+    bool BillBoard::IsShow()
+    {
+        return isShow;
+    }
+
 	void BillBoard::Render(IShader* shaderOpt, GameObject* object)
 	{
-		if (IsInit)
+		if (IsInit && isShow)
 		{
             if (target != nullptr)
             {

@@ -109,6 +109,9 @@ namespace BONE_GRAPHICS
             moveZ = false;
         }
 
+        if (ui->IsEditMode())
+            return;
+
         if (InputMgr->GetMouseLBButtonStatus() == MOUSE_STATUS::MOUSE_LBDOWN && !moveX && !moveY && !moveZ)
         {
             auto ObjectList = SceneMgr->CurrentScene()->GetObjectList();

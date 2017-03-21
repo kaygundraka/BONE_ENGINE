@@ -2,7 +2,7 @@
     "1.Transform3D": {
         "Position": [
             0.0,
-            0.0,
+            30.0,
             0.0
         ],
         "Rotation": [
@@ -16,6 +16,23 @@
             1.0
         ]
     },
+    "2.Camera": {
+        "Height": 729,
+        "ID": 0,
+        "Type": 0,
+        "UpVector": [
+            0.0,
+            1.0,
+            0.0
+        ],
+        "Width": 1008,
+        "farDist": 1000.0,
+        "fov": 1.88495576381683,
+        "nearDist": 0.100000001490116
+    },
+    "8.Script": [
+        "PlayerCamera"
+    ],
     "IsActive": true,
     "IsEditorLock": false,
     "IsStatic": false,

@@ -5,9 +5,10 @@
 #include "StaticMesh.h"
 using namespace BONE_GRAPHICS;
 
-EditorCamera::EditorCamera(GameObject* gameObject, std::string name)
+EditorCamera::EditorCamera(GameObject* gameObject, BoneEditor* ui, std::string name)
 {
     SetInfo(gameObject, name);
+    this->ui = ui;
 }
 
 EditorCamera::~EditorCamera()
@@ -48,6 +49,9 @@ void EditorCamera::Reference()
 
 void EditorCamera::Update()
 {
+    if (ui->IsEditMode())
+        return;
+
     if (InputMgr->GetMouseRBButtonStatus() == MOUSE_STATUS::MOUSE_RBDOWN)
         cameraMove = true;
     else if (InputMgr->GetMouseRBButtonStatus() == MOUSE_STATUS::MOUSE_RBUP)

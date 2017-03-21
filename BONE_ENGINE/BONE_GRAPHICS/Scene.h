@@ -33,6 +33,8 @@ namespace BONE_GRAPHICS
         float fogDensity;
         int fogMode;
 
+        bool isEditorScene;
+
         float loadPerTime;
 
         D3DXCOLOR fogColor;
@@ -59,6 +61,9 @@ namespace BONE_GRAPHICS
 		void AddObjects(GameObject** objects, int size);
 
 		void SortPriorityObject();
+
+        void SetEditorScene();
+        bool IsEditorScene();
 
 		std::tuple<GameObject**, int> FindObjectsByTag(std::string tag);
 		GameObject* FindObjectByTag(std::string tag);

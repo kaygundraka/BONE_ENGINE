@@ -26,7 +26,7 @@ namespace BONE_GRAPHICS
         ImGui::ProgressBar(progress, ImVec2(0.0f, 0.0f));
 
         progress = SceneMgr->CurrentScene()->GetLoadPerTime() / 200 + temp;
-        temp += 0.0001f;
+        temp += 0.001f;
         
         if (progress >= 1)
             SceneMgr->GetLoadScene()->SetSceneFlag(false);

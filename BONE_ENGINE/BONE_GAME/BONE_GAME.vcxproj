@@ -79,7 +79,7 @@
     <LinkIncremental>true</LinkIncremental>
     <ExecutablePath>$(DXSDK_DIR)\Utilities\bin\x64;$(ExecutablePath)</ExecutablePath>
     <IncludePath>..\BONE_GRAPHICS\;..\Library\RuntimeObjectSystem\;..\Library\reactphysics3d\;..\Library\RuntimeCompiler\;$(DXSDK_DIR)\Include\;..\BONE_SYSTEM\;$(IncludePath)</IncludePath>
-    <LibraryPath>..\Library\Lib;$(DXSDK_DIR)\Lib\x64;..\x64\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\Library\Lib\x64;$(DXSDK_DIR)\Lib\x64;..\x64\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -88,7 +88,7 @@
     <LinkIncremental>false</LinkIncremental>
     <ExecutablePath>$(DXSDK_DIR)\Utilities\bin\x64;$(ExecutablePath)</ExecutablePath>
     <IncludePath>..\BONE_GRAPHICS\;..\Library\RuntimeObjectSystem\;..\Library\reactphysics3d\;..\Library\RuntimeCompiler\;$(DXSDK_DIR)\Include\;..\BONE_SYSTEM\;$(IncludePath)</IncludePath>
-    <LibraryPath>..\Library\Lib;$(DXSDK_DIR)\Lib\x64;..\x64\Release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\Library\Lib\x64;$(DXSDK_DIR)\Lib\x64;..\x64\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

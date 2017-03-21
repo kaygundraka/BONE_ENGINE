@@ -29,6 +29,7 @@ namespace BONE_GRAPHICS
         isDefaultShader = true;
         isEditorLock = false;
         name = "";
+        enableScript = true;
 
         transform3D = nullptr;
 
@@ -421,7 +422,11 @@ namespace BONE_GRAPHICS
         
         for (auto iter = childs.begin(); iter != childs.end(); iter++)
             j["ChildObjects"].push_back((*iter)->GetPrfabName());
-        
+
+        for each(auto item in components)
+            if (item->IsScript())
+                j["8.Script"].push_back(item->GetTypeName());
+         
         for (int i = 0; i < components.size(); i++)
         {
             std::string TypeName = components[i]->GetTypeName();
@@ -539,6 +544,9 @@ namespace BONE_GRAPHICS
             if (TypeName == "Tag")
             {
                 this->SetTag(j["Tag"].get<std::string>());
+
+                if (Tag() != "EditorObject" && SceneMgr->CurrentScene()->IsEditorScene())
+                    EnableScript(false);
             }
             else if (TypeName == "IsEditorLock")
             {
@@ -563,7 +571,7 @@ namespace BONE_GRAPHICS
                 for (auto iter = Childs.begin(); iter != Childs.end(); iter++)
                 {
                     auto ChildObject = new GameObject();
-
+                    
                     ChildObject->SetPrfabName((*iter));
                     ChildObject->LoadPrefab();
                     ChildObject->AttachParent(this);
@@ -757,9 +765,26 @@ namespace BONE_GRAPHICS
                     }
                 }
             }
+            else if (TypeName == "8.Script")
+            {
+                auto Scripts = j["8.Script"].get<std::vector<std::string>>();
+
+                for each(auto item in Scripts)
+                    SceneMgr->AddScript(this, item);
+            }
         }
 
         file.close();
+    }
+
+    void GameObject::EnableScript(bool enable)
+    {
+        enableScript = enable;
+    }
+
+    bool GameObject::IsEnableScript()
+    {
+        return enableScript;
     }
 
     void GameObject::LockEditor(bool lock)
@@ -794,6 +819,9 @@ namespace BONE_GRAPHICS
 
     void GameObject::Init()
     {
+        if (!enableScript)
+            return;
+
         for (int i = 0; i < components.size(); i++)
             if ((components[i])->IsScript())
                 ((Script*)(components[i]))->Init();
@@ -803,6 +831,9 @@ namespace BONE_GRAPHICS
 
     void GameObject::Awake()
     {
+        if (!enableScript)
+            return;
+
         for (auto var = components.begin(); var != components.end(); var++)
             if ((*var)->IsScript())
                 ((Script*)*var)->Awake();
@@ -812,6 +843,9 @@ namespace BONE_GRAPHICS
 
 	void GameObject::Reference()
 	{
+        if (!enableScript)
+            return;
+
         for (auto var = components.begin(); var != components.end(); var++)
             if ((*var)->IsScript())
                 ((Script*)*var)->Reference();
@@ -821,6 +855,9 @@ namespace BONE_GRAPHICS
 	
 	void GameObject::Update()
 	{
+        if (!enableScript)
+            return;
+
         for (auto var = components.begin(); var != components.end(); var++)
         {
             if ((*var)->IsScript())
@@ -834,6 +871,9 @@ namespace BONE_GRAPHICS
 	
 	void GameObject::LateUpdate()
 	{
+        if (!enableScript)
+            return;
+
         for (auto var = components.begin(); var != components.end(); var++)
             if ((*var)->IsScript())
                 ((Script*)*var)->LateUpdate();
@@ -843,6 +883,9 @@ namespace BONE_GRAPHICS
 
 	void GameObject::LateRender()
 	{
+        if (!enableScript)
+            return;
+
         for (auto var = components.begin(); var != components.end(); var++)
             if ((*var)->IsScript())
                 ((Script*)*var)->LateRender();
@@ -852,6 +895,9 @@ namespace BONE_GRAPHICS
 
     void GameObject::CollisionEvent(GameObject* otherObject)
     {
+        if (!enableScript)
+            return;
+
         for (auto var = components.begin(); var != components.end(); var++)
             if ((*var)->IsScript())
                 ((Script*)*var)->CollisionEvent(otherObject);

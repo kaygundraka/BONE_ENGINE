@@ -11,10 +11,13 @@ class PlayerCamera : public Script {
 public:
     virtual void Init();
     virtual void Update();
+    virtual void LateUpdate();
 
 private:
     Camera* mainCamera;
+    bool OnlyOne;
     int mouseX;
     int mouseY;
     float cameraMoveSpeed;
+    bool cameraMove;
 };

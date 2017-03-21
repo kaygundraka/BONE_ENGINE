@@ -28,6 +28,7 @@ namespace BONE_GRAPHICS
 		RENDER_MODE renderMode;
 
 		bool IsInit;
+        bool isShow;
 
 		int width;
 		int height;
@@ -37,7 +38,6 @@ namespace BONE_GRAPHICS
 		Rect originRect;
 
 	public:
-		
 		BillBoard();
 
 		void LoadContent();
@@ -58,6 +58,9 @@ namespace BONE_GRAPHICS
 
 		void SetTexture(std::string fileName, int width, int height);
 		bool CheckMouseRayInMesh(Transform3D* tr);
+
+        void SetShow(bool show);
+        bool IsShow();
 
 		std::string GetTexture();
 	};

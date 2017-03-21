@@ -26,6 +26,8 @@ namespace BONE_GRAPHICS
 		bool isActive;
         bool isEditorLock;
 
+        bool enableScript;
+
 	public:
         Component* transform3D;
         Component* transform2D;
@@ -67,6 +69,9 @@ namespace BONE_GRAPHICS
 		void SetTag(std::string tag);
         void SetPrfabName(std::string prefabName);
         std::string GetPrfabName();
+
+        void EnableScript(bool enable);
+        bool IsEnableScript();
 
         virtual void SaveInMaps();
         void LoadPrefab();
