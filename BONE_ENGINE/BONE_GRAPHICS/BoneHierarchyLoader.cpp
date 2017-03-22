@@ -1,5 +1,6 @@
 #include "Common.h"
 #include "RenderManager.h"
+#include "ResourceManager.h"
 #include "BoneHierarchyLoader.h"
 #pragma warning(disable:4996)
 
@@ -81,41 +82,7 @@ namespace BONE_GRAPHICS
             IDirect3DTexture9* newTexture = NULL;
 
             if (mtrl.pTextureFilename != NULL)
-            {
-                char textureFileName[200];
-                strcpy(textureFileName, "Resource\\Meshbank\\");
-
-                char* TextureFileRealName;
-                int Vertex_Index = strlen(mtrl.pTextureFilename);
-
-                char Temp[20] = "";
-                int Index2 = 0;
-
-                while (1)
-                {
-                    if (mtrl.pTextureFilename[Vertex_Index] != '\\' && mtrl.pTextureFilename[Vertex_Index] != '/' && Vertex_Index >= 0)
-                    {
-                        Temp[Index2++] = mtrl.pTextureFilename[Vertex_Index--];
-                    }
-                    else
-                    {
-                        TextureFileRealName = new char[Index2 + 1];
-
-                        for (int i = 0; i < Index2; i++)
-                            TextureFileRealName[i] = Temp[Index2 - i - 1];
-
-                        break;
-                    }
-                }
-
-                strcat(textureFileName, TextureFileRealName);
-
-                delete[] TextureFileRealName;
-                // 텍스처 로드
-                D3DXCreateTextureFromFile(RenderMgr->GetDevice(), textureFileName, &newTexture);
-
-            }
-            boneMesh->textures.push_back(newTexture);
+                boneMesh->textures.push_back(ResourceMgr->LoadTexture(mtrl.pTextureFilename));
         }
 
         // 스킨 정보가 전달되었다면 이를 저장해야한다.
@@ -128,20 +95,19 @@ namespace BONE_GRAPHICS
             pSkinInfo->AddRef();
 
             // 메시를 인덱스 블렌디드 메시로 변환하고, 본 컴비네이션 테이블을 저장해둔다
-            /*DWORD maxVertInfluences = 0;
+            DWORD maxVertInfluences = 0;
             DWORD numBoneComboEntries = 0;
-
             pSkinInfo->ConvertToIndexedBlendedMesh(pMeshData->pMesh,
-            D3DXMESH_MANAGED | D3DXMESH_WRITEONLY,
-            30,
-            NULL,
-            NULL,
-            NULL,
-            NULL,
-            &maxVertInfluences,
-            &numBoneComboEntries,
-            &boneMesh->pBoneCombinationBuf,
-            &boneMesh->MeshData.pMesh);*/
+                D3DXMESH_MANAGED | D3DXMESH_WRITEONLY,
+                30,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                &maxVertInfluences,
+                &numBoneComboEntries,
+                &boneMesh->pBoneCombinationBuf,
+                &boneMesh->MeshData.pMesh);
 
             // 메시를 복제해 boneMesh->MeshData->pMesh에 저장한다.
             // 이 복제된 메시는 나중에 실제로 렌더링 되는 스킨드 메시가 된다.

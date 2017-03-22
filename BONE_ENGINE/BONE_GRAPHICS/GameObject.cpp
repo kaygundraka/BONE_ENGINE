@@ -180,9 +180,6 @@ namespace BONE_GRAPHICS
 
                         if (GetComponent("TrailRenderer") != nullptr)
                             ((TrailRenderer*)GetComponent("TrailRenderer"))->Render(Shader);
-
-                        if (GetComponent("SkinnedMesh") != nullptr)
-                            ((SkinnedMesh*)GetComponent("SkinnedMesh"))->Render(Shader, this);
                     }
                     Shader->GetShader()->End();
                 }
@@ -192,6 +189,9 @@ namespace BONE_GRAPHICS
         }
         else
         {
+            if (GetComponent("SkinnedMesh") != nullptr)
+                ((SkinnedMesh*)GetComponent("SkinnedMesh"))->Render(nullptr, this);
+
             if (GetComponent("StaticMesh") != nullptr)
                 ((StaticMesh*)GetComponent("StaticMesh"))->Render(nullptr, this);
 
@@ -203,9 +203,6 @@ namespace BONE_GRAPHICS
 
             if (GetComponent("TrailRenderer") != nullptr)
                 ((TrailRenderer*)GetComponent("TrailRenderer"))->Render(nullptr);
-
-            if (GetComponent("SkinnedMesh") != nullptr)
-                ((SkinnedMesh*)GetComponent("SkinnedMesh"))->Render(nullptr, this);
         }
 
         if (GetComponent("ScreenSprite") != nullptr)
@@ -506,7 +503,7 @@ namespace BONE_GRAPHICS
             }
             else if (TypeName == "SkinnedMesh")
             {
-                j["7.SkinnedMesh"]["FileName"] = ((SkinnedMesh*)(components[i]))->GetFile();
+                /*j["7.SkinnedMesh"]["FileName"] = ((SkinnedMesh*)(components[i]))->GetFile();
 
                 auto animationSet = ((SkinnedMesh*)(components[i]))->GetAnmimationSet();
 
@@ -514,7 +511,7 @@ namespace BONE_GRAPHICS
                 {
                     j["7.SkinnedMesh"]["AnimationSet"][var.first]["Speed"] = var.second.AnimationSpeed;
                     j["7.SkinnedMesh"]["AnimationSet"][var.first]["Index"] = var.second.Vertex_Index;
-                }
+                }*/
             }
         }
 
@@ -745,11 +742,11 @@ namespace BONE_GRAPHICS
 
                         if (skinnedMesh == nullptr)
                         {
-                            skinnedMesh = new SkinnedMesh();
+                            //skinnedMesh = new SkinnedMesh();
 
-                            skinnedMesh->SetFile(j["7.SkinnedMesh"]["FileName"]);
+                            //skinnedMesh->SetFileName(j["7.SkinnedMesh"]["FileName"]);
 
-                            AddComponent(skinnedMesh);
+                            //AddComponent(skinnedMesh);
                         }
                     }
                     else if (*iter == "AnimationSet")
@@ -855,6 +852,14 @@ namespace BONE_GRAPHICS
 	
 	void GameObject::Update()
 	{
+        auto rigidBody = this->GetComponent("RigidBody");
+        if (rigidBody != nullptr)
+            ((RigidBody*)rigidBody)->UpdateTransform();
+
+        auto skinnedMesh = this->GetComponent("SkinnedMesh");
+        if (skinnedMesh != nullptr)
+            ((SkinnedMesh*)skinnedMesh)->UpdateAnimation();
+
         if (!enableScript)
             return;
 

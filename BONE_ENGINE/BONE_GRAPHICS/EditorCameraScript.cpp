@@ -156,8 +156,7 @@ void EditorCamera::Update()
             SceneMgr->GetTimeDelta() * cameraMoveSpeed
         );
 
-        mainCamera->SetTargetPosition(
-            mainCamera->GetTargetPosition() +
+        mainCamera->SetTargetPosition(mainCamera->GetTargetPosition() +
             -mainCamera->GetCrossVector() *
             SceneMgr->GetTimeDelta() * cameraMoveSpeed
         );
@@ -165,14 +164,12 @@ void EditorCamera::Update()
 
     if (InputMgr->KeyDown('D', false))
     {
-        transform->SetPosition(
-            transform->GetPosition() +
+        transform->SetPosition(transform->GetPosition() +
             mainCamera->GetCrossVector() *
             SceneMgr->GetTimeDelta() * cameraMoveSpeed
         );
 
-        mainCamera->SetTargetPosition(
-            mainCamera->GetTargetPosition() +
+        mainCamera->SetTargetPosition(mainCamera->GetTargetPosition() +
             mainCamera->GetCrossVector() *
             SceneMgr->GetTimeDelta() * cameraMoveSpeed
         );

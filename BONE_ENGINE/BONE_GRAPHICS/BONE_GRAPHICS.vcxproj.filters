@@ -69,9 +69,6 @@
     <Filter Include="소스 파일\Core\GameObject\Components\Mesh">
       <UniqueIdentifier>{76d3d0c1-2855-4661-b42e-cfa855aeed8d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh">
-      <UniqueIdentifier>{13d409d3-5230-4f28-878c-6134f380114e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Core\GameObject\Components\Transform">
       <UniqueIdentifier>{75d7c8e2-b278-488c-b8ff-4054f6e3a576}</UniqueIdentifier>
     </Filter>
@@ -117,6 +114,9 @@
     <Filter Include="소스 파일\Editor\Script">
       <UniqueIdentifier>{50e66d12-5796-4938-bd69-a573893c7ff2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh">
+      <UniqueIdentifier>{2d99e536-e92f-4549-a02d-9bfba3c6f2df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -148,12 +148,6 @@
     </ClInclude>
     <ClInclude Include="StaticMesh.h">
       <Filter>소스 파일\Core\GameObject\Components\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="SkinnedMesh.h">
-      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="BoneHierarchyLoader.h">
-      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
     </ClInclude>
     <ClInclude Include="Transform3D.h">
       <Filter>소스 파일\Core\GameObject\Components\Transform</Filter>
@@ -314,6 +308,18 @@
     <ClInclude Include="PhysicsListener.h">
       <Filter>소스 파일\Core\Management\PhysicsManager</Filter>
     </ClInclude>
+    <ClInclude Include="AllocateHierarchyImp.h">
+      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="aSkinnedMesh.h">
+      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinnedMesh.h">
+      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="BoneHierarchyLoader.h">
+      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -342,12 +348,6 @@
     </ClCompile>
     <ClCompile Include="StaticMesh.cpp">
       <Filter>소스 파일\Core\GameObject\Components\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="SkinnedMesh.cpp">
-      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
-    </ClCompile>
-    <ClCompile Include="BoneHierarchyLoader.cpp">
-      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
     </ClCompile>
     <ClCompile Include="Transform2D.cpp">
       <Filter>소스 파일\Core\GameObject\Components\Transform</Filter>
@@ -498,6 +498,18 @@
     </ClCompile>
     <ClCompile Include="PhysicsListener.cpp">
       <Filter>소스 파일\Core\Management\PhysicsManager</Filter>
+    </ClCompile>
+    <ClCompile Include="AllocateHierarchyImp.cpp">
+      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="aSkinnedMesh.cpp">
+      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedMesh.cpp">
+      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="BoneHierarchyLoader.cpp">
+      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

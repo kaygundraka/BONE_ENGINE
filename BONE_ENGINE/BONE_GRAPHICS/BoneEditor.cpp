@@ -17,6 +17,7 @@
 #include "EditorCameraScript.h"
 #include "EditorLoadScene.h"
 #include "PosPivot.h"
+#include "SkinnedMesh.h"
 #include "RuntimeCompiler.h"
 #include "LogManager.h"
 
@@ -167,6 +168,18 @@ void BoneEditor::Run()
             EditorCamera* EditorCameraScript = new EditorCamera(MainCamera, this, "EditorCameraScript");
             MainCamera->AddComponent(EditorCameraScript);
             ViewScene->AddObject(MainCamera, "EditorCamera");
+ 
+            GameObject* testSkinnedMesh = new GameObject();
+            testSkinnedMesh->SetDefaultPipeLine();
+            Transform3D* tr = new Transform3D();
+            tr->SetPosition(0, 0, 0);
+            tr->SetScale(10, 10, 10);
+            testSkinnedMesh->AddComponent(tr);
+            SkinnedMesh* mesh = new SkinnedMesh();
+            mesh->SetFile("Skeleton.X");
+            //mesh->SetAnimation("Skeleton_1H_banging_shield");
+            testSkinnedMesh->AddComponent(mesh);
+            ViewScene->AddObject(testSkinnedMesh, "Skinning");
 
             GameObject* Pivot = new GameObject();
             PosPivot* PosPivotScript = new PosPivot(this, Pivot, "PosPivotScript");

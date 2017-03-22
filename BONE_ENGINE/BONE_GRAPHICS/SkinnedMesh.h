@@ -7,53 +7,48 @@ using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	typedef struct _KEYFRAMERATE {
-		LPD3DXANIMATIONSET AnimationSet;
-		UINT Vertex_Index;
-		float AnimationSpeed;
-		bool IsPlay;
-	} KEYFRAMERATE;
+    typedef struct _KEYFRAMERATE {
+        LPD3DXANIMATIONSET AnimationSet;
+        UINT Vertex_Index;
+        float AnimationSpeed;
+        bool IsPlay;
+    } KEYFRAMERATE;
 
-	class SkinnedMesh : public Component {
-	public:
+    class SkinnedMesh : public Component {
+    public:
         SkinnedMesh();
         virtual ~SkinnedMesh();
 
         void LoadContent();
-		void Render(IShader* shaderOpt, GameObject* object);
-		
-		void UpdateAnimation();
-		void PlayAnimation(std::string animationName, bool isPlay, bool rotateLoop);
+        void Render(IShader* shaderOpt, GameObject* object);
 
-        void SetAnimation(std::string name, int index, float animationSpeed);
-		void SetAnimation(std::string name, float animationSpeed);
+        void UpdateAnimation();
+
         void SetFile(std::string fileName);
+        void SetAnimation(std::string name);
 
         std::string GetFile();
-        
-        map<std::string, KEYFRAMERATE> GetAnmimationSet();
-        
-		void CheckInRay(RAY *ray, Bone* bone, float& curDist);
+        map<std::string, int> GetAnmimationSet();
 
-		std::string fileName;
-		LPD3DXMESH GetMesh();
+        void CheckInRay(RAY *ray, Bone* bone, float& curDist);
 
-	private:
-		void SetupBoneMatrixPointers(Bone* bone);
+        std::string fileName;
+        LPD3DXMESH GetMesh();
 
-		void UpdateMatrices(Bone *bone, D3DXMATRIX *parentMatrix);
-		void SoftwareRendering(IShader* shaderOpt, GameObject* object, Bone *bone);
+    private:
+        void SetupBoneMatrixPointers(Bone* bone);
 
-		D3DXFRAME *rootBone;
+        void UpdateMatrices(Bone *bone, D3DXMATRIX *parentMatrix);
+        void SoftwareRendering(IShader* shaderOpt, GameObject* object, Bone *bone);
 
-		BoneHierarchyLoader boneHierarchy;
+        void GetAnimationSets();
+
+        D3DXFRAME *rootBone;
+
+        BoneHierarchyLoader boneHierarchy;
         LPD3DXANIMATIONCONTROLLER animationContainer;
-		
-        map<std::string, KEYFRAMERATE> animationSet;
-		std::string animationName;
-        		
-        bool IsPlay;
-		bool IsRotateLoop;
+
+        map<std::string, int> animationSets;
         bool IsInit;
-	};
+    };
 }
