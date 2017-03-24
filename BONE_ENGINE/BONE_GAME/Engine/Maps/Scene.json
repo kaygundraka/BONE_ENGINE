@@ -1,0 +1,39 @@
+{
+    "GameObject": {
+        "GameObject0": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                7.0,
+                0.0
+            ],
+            "PrefabName": "Player",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.10000002384186,
+                1.10000002384186,
+                1.10000002384186
+            ],
+            "TreeDepth": 0
+        }
+    },
+    "Scene": {
+        "BackGroundColor": [
+            0.133333340287209,
+            0.443137258291245,
+            0.34901961684227,
+            1.0
+        ],
+        "EnableFog": false,
+        "GlobalAmbient": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ]
+    }
+}

@@ -17,7 +17,6 @@
 #include "EditorCameraScript.h"
 #include "EditorLoadScene.h"
 #include "PosPivot.h"
-#include "SkinnedMesh.h"
 #include "RuntimeCompiler.h"
 #include "LogManager.h"
 
@@ -169,18 +168,6 @@ void BoneEditor::Run()
             MainCamera->AddComponent(EditorCameraScript);
             ViewScene->AddObject(MainCamera, "EditorCamera");
  
-            GameObject* testSkinnedMesh = new GameObject();
-            testSkinnedMesh->SetDefaultPipeLine();
-            Transform3D* tr = new Transform3D();
-            tr->SetPosition(0, 0, 0);
-            tr->SetScale(10, 10, 10);
-            testSkinnedMesh->AddComponent(tr);
-            SkinnedMesh* mesh = new SkinnedMesh();
-            mesh->SetFile("Skeleton.X");
-            //mesh->SetAnimation("Skeleton_1H_banging_shield");
-            testSkinnedMesh->AddComponent(mesh);
-            ViewScene->AddObject(testSkinnedMesh, "Skinning");
-
             GameObject* Pivot = new GameObject();
             PosPivot* PosPivotScript = new PosPivot(this, Pivot, "PosPivotScript");
             Pivot->AddComponent(PosPivotScript);
@@ -1010,7 +997,7 @@ void BoneEditor::UpdateFrame()
                 
                 if (ImGui::Button("Create"))
                 {
-                    PointLight* Light = new PointLight;
+                    /*PointLight* Light = new PointLight;
 
                     Light->SetAmbient(1.0f, 1.0f, 1.0f, 1.0f);
                     Light->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
@@ -1023,12 +1010,11 @@ void BoneEditor::UpdateFrame()
                     int num = SceneMgr->CurrentScene()->GetPointLights().size();
                     char temp[100] = "";
                     itoa(num, temp, 10);
-
                     std::string name = "PointLight_";
                     name += temp;
 
                     SceneMgr->CurrentScene()->AddPointLight(Light);
-                    SceneMgr->CurrentScene()->AddObject(Light, name);
+                    SceneMgr->CurrentScene()->AddObject(Light, name);*/
                 }
 
                 ImGui::TreePop();
@@ -1364,6 +1350,36 @@ void BoneEditor::UpdateFrame()
             // SkinnedMesh
             case 3:
             {
+                auto Meshes = ResourceMgr->ExistFiles(".\\Resource\\SkinnedMesh\\*");
+
+                const int Size = Meshes.size();
+                char** ComboBoxItems = new char*[Size];
+
+                int i = 0;
+                for each(auto item in Meshes)
+                {
+                    ComboBoxItems[i] = new char[64];
+                    strcpy(ComboBoxItems[i], item.c_str());
+                    i++;
+                }
+
+                static int CurItem = 0;
+                ImGui::Combo("Meshes", &CurItem, ComboBoxItems, Size);
+
+                if (ImGui::Button("Add Component"))
+                {
+                    std::string fullpath = "";
+                    if (!ResourceMgr->ExistFile(ComboBoxItems[CurItem], &fullpath))
+                        break;
+
+                    SkinnedMesh* Mesh = new SkinnedMesh();
+                    Mesh->SetFile(ComboBoxItems[CurItem]);
+                    Mesh->LoadContent();
+                    auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+                    Object->AddComponent(Mesh);
+
+                    showAddComponent = false;
+                }
             }
             break;
 

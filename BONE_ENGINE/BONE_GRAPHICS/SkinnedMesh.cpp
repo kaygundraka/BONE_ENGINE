@@ -56,13 +56,12 @@ namespace BONE_GRAPHICS
             animationContainer->Release();
     }
 
-    void SkinnedMesh::CheckInRay(RAY* ray, Bone* bone, float& curDist)
+    bool SkinnedMesh::CheckInRay(RAY* ray, Bone* bone, float& curDist)
     {
         if (bone == nullptr)
-        {
-            UpdateMatrices((Bone*)rootBone, nullptr);
             bone = (Bone*)rootBone;
-        }
+
+        static bool exist = false;
 
         float Temp = -1;
 
@@ -93,7 +92,10 @@ namespace BONE_GRAPHICS
                     D3DXMatrixIdentity(&matIden);
                     if (RenderMgr->CheckRayInMesh(matIden, boneMesh->MeshData.pMesh, &Temp))
                         if (Temp <= curDist)
+                        {
+                            exist = true;
                             curDist = Temp;
+                        }
                 }
             }
         }
@@ -103,6 +105,8 @@ namespace BONE_GRAPHICS
 
         if (bone->pFrameFirstChild != nullptr)
             CheckInRay(ray, (Bone*)bone->pFrameFirstChild, curDist);
+
+        return exist;
     }
 
     void SkinnedMesh::SetupBoneMatrixPointers(Bone* bone)
@@ -141,12 +145,6 @@ namespace BONE_GRAPHICS
 
     void SkinnedMesh::UpdateAnimation()
     {
-        static bool onlyOne = false;
-        if (!onlyOne)
-        {
-            SetAnimation("Skeleton_Drinking");
-            onlyOne = true;
-        }
         animationContainer->AdvanceTime(
             SceneMgr->GetTimeDelta(),
             nullptr
@@ -169,6 +167,8 @@ namespace BONE_GRAPHICS
                 pAnim->Release();
             }
         }
+
+        SetAnimation(animationSets.begin()->first);
     }
 
     void SkinnedMesh::SetAnimation(std::string name) {
@@ -237,8 +237,7 @@ namespace BONE_GRAPHICS
                     {
                         int mtrl = boneMesh->attributeTables[i].AttribId;
 
-                        shaderOpt->Render(i, object);
-
+                        shaderOpt->Render(i, boneMesh->textures, object);
                         boneMesh->MeshData.pMesh->DrawSubset(mtrl);
                     }
                 }
@@ -264,6 +263,11 @@ namespace BONE_GRAPHICS
             );
         }
 
+        /*D3DXMatrixMultiply(&bone->CombinedTransformationMatrix,
+            &bone->TransformationMatrix,
+            parentMatrix
+        );*/
+        
         if (bone->pFrameSibling)
             UpdateMatrices((Bone*)bone->pFrameSibling, parentMatrix);
 
@@ -278,14 +282,38 @@ namespace BONE_GRAPHICS
 
     void SkinnedMesh::Render(IShader* shaderOpt, GameObject* object)
     {
-        UpdateMatrices((Bone*)rootBone, nullptr);
+        UpdateMatrices((Bone*)rootBone, nullptr);//&((Transform3D*)object->transform3D)->GetTransform());
 
         SoftwareRendering(shaderOpt, object, nullptr);
     }
 
-    LPD3DXMESH SkinnedMesh::GetMesh()
+    Matrix* SkinnedMesh::GetBoneMatrix(std::string name, Bone* bone, Matrix* mat)
     {
-        return rootBone->pMeshContainer->MeshData.pMesh;
+        static Matrix* result = nullptr;
+
+        if (bone == nullptr)
+            bone = (Bone*)rootBone;
+        
+        if (mat == nullptr)
+            bone->CombinedTransformationMatrix = bone->TransformationMatrix;
+        else
+        {
+            D3DXMatrixMultiply(&bone->CombinedTransformationMatrix,
+                &bone->TransformationMatrix,
+                mat
+            );
+        }
+
+        if (name == bone->Name)
+            return result = &(bone->CombinedTransformationMatrix);
+
+        if (bone->pFrameSibling != nullptr)
+            GetBoneMatrix(name, (Bone*)bone->pFrameSibling, &bone->CombinedTransformationMatrix);
+
+        if (bone->pFrameFirstChild != nullptr)
+            GetBoneMatrix(name, (Bone*)bone->pFrameFirstChild, &bone->CombinedTransformationMatrix);
+
+        return result;
     }
 
     map<std::string, int> SkinnedMesh::GetAnmimationSet()

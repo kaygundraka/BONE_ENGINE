@@ -27,10 +27,13 @@
     <ClCompile Include="TestScript2.cpp">
       <Filter>소스 파일\Runtime Modifiable</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerCamera.cpp">
+    <ClCompile Include="SetScript.cpp">
       <Filter>소스 파일\Script</Filter>
     </ClCompile>
-    <ClCompile Include="SetScript.cpp">
+    <ClCompile Include="PlayerCharacter.cpp">
+      <Filter>소스 파일\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomCamera.cpp">
       <Filter>소스 파일\Script</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,10 +41,13 @@
     <ClInclude Include="TestScript2.h">
       <Filter>소스 파일\Runtime Modifiable</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerCamera.h">
+    <ClInclude Include="SetScript.h">
       <Filter>소스 파일\Script</Filter>
     </ClInclude>
-    <ClInclude Include="SetScript.h">
+    <ClInclude Include="PlayerCharacter.h">
+      <Filter>소스 파일\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomCamera.h">
       <Filter>소스 파일\Script</Filter>
     </ClInclude>
   </ItemGroup>

@@ -10,6 +10,7 @@ namespace BONE_GRAPHICS
     private:
         Transform3D* tr;
         Vec3 pos;
+        Vec3 shadowAimPos;
 
         RGBA ambient;
         RGBA diffuse;
@@ -39,6 +40,11 @@ namespace BONE_GRAPHICS
         void SetIcon(bool show);
         bool ShowIcon();
 
+        bool IsOn();
+
+        void SetShadowAimPos(Vec3 aim);
+        Vec3 GetShadowAimPos();
+        
         virtual void SaveInMaps();
 
         RGBA GetAmbient();

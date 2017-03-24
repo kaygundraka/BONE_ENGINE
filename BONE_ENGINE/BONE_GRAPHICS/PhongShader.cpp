@@ -14,17 +14,16 @@ namespace BONE_GRAPHICS
     PhongShader::PhongShader()
     {
         SetAddress("blinn_phong_sm30.fx");
+        effect = nullptr;
     }
 
     PhongShader::~PhongShader()
     {
 
     }
-    
-    void PhongShader::Render(int index, GameObject* parent)
+
+    void PhongShader::SetMaterial(GameObject* parent)
     {
-        auto PhongEffect = ResourceMgr->LoadEffect(address);
-        
         auto material = (Material*)parent->GetComponent("Material");
 
         if (material == nullptr)
@@ -35,9 +34,9 @@ namespace BONE_GRAPHICS
 
         float MatAmbient[4] = {
             material->GetAmbient().r,
-            material->GetAmbient().g, 
-            material->GetAmbient().b, 
-            material->GetAmbient().a, 
+            material->GetAmbient().g,
+            material->GetAmbient().b,
+            material->GetAmbient().a,
         };
 
         float MatDiffuse[4] = {
@@ -60,109 +59,135 @@ namespace BONE_GRAPHICS
             material->GetSpecular().b,
             material->GetSpecular().a,
         };
-        
-        PhongEffect->SetValue("material.ambient", MatAmbient, sizeof(MatAmbient));
-        PhongEffect->SetValue("material.diffuse", MatDiffuse, sizeof(MatDiffuse));
-        PhongEffect->SetValue("material.emissive", MatEmissive, sizeof(MatEmissive));
-        PhongEffect->SetValue("material.specular", MatSpecular, sizeof(MatSpecular));
-        PhongEffect->SetFloat("material.shininess", material->GetShininess());
-        
+
+        effect->SetValue("material.ambient", MatAmbient, sizeof(MatAmbient));
+        effect->SetValue("material.diffuse", MatDiffuse, sizeof(MatDiffuse));
+        effect->SetValue("material.emissive", MatEmissive, sizeof(MatEmissive));
+        effect->SetValue("material.specular", MatSpecular, sizeof(MatSpecular));
+        effect->SetFloat("material.shininess", material->GetShininess());
+    }
+
+    void PhongShader::SetEnvironment(GameObject* parent)
+    {/*
+        auto CurScene = SceneMgr->CurrentScene();
+
+        auto LightList = CurScene->GetPointLights();
+        int LightNumber = LightList.size();
+
+        auto CurCameraObject = (GameObject*)SceneMgr->CurrentScene()->GetCurrentCamera();
+        auto CurCameraComponent = (Camera*)CurCameraObject->GetComponent("Camera");
+        auto CurCameraTransform = (Transform3D*)CurCameraObject->GetComponent("Transform3D");
+
+        float CameraPos[3] = {
+            CurCameraTransform->GetPosition().x,
+            CurCameraTransform->GetPosition().y,
+            CurCameraTransform->GetPosition().z,
+        };
+
+        float GlobalAmbient[4] = {
+            CurScene->GetAmbientColor().r,
+            CurScene->GetAmbientColor().g,
+            CurScene->GetAmbientColor().b,
+            CurScene->GetAmbientColor().a
+        };
+
+        auto MatViewProj = CurCameraComponent->GetViewMatrix(CurCameraObject) * CurCameraComponent->GetProjectionMatrix();
+
         Matrix MatWorld = ((Transform3D*)parent->transform3D)->GetTransform();
+
+        effect->SetMatrix("worldMatrix", &MatWorld);
+        effect->SetMatrix("worldInverseTransposeMatrix", &MatWorld);
+        effect->SetMatrix("worldViewProjectionMatrix", &MatViewProj);
+
+        effect->SetValue("cameraPos", &CameraPos, sizeof(CameraPos));
+        effect->SetValue("globalAmbient", &GlobalAmbient, sizeof(GlobalAmbient));
+        effect->SetValue("numLights", &LightNumber, sizeof(LightNumber));
+
+
+        D3DXHANDLE HandleLight;
+        D3DXHANDLE HandleLightPos;
+        D3DXHANDLE HandleLightAmbient;
+        D3DXHANDLE HandleLightDiffuse;
+        D3DXHANDLE HandleLightSpecular;
+        D3DXHANDLE HandleLightRadius;
+
+        int i = 0;
+
+        for (auto iter = LightList.begin(); iter != LightList.end(); iter++)
+        {
+            HandleLight = effect->GetParameterElement("lights", i++);
+
+            HandleLightPos = effect->GetParameterByName(HandleLight, "pos");
+            HandleLightAmbient = effect->GetParameterByName(HandleLight, "ambient");
+            HandleLightDiffuse = effect->GetParameterByName(HandleLight, "diffuse");
+            HandleLightSpecular = effect->GetParameterByName(HandleLight, "specular");
+            HandleLightRadius = effect->GetParameterByName(HandleLight, "radius");
+
+            float Pos[3] = {
+                (*iter)->GetPosition().x,
+                (*iter)->GetPosition().y,
+                (*iter)->GetPosition().z,
+            };
+
+            float LightAmbient[4] = {
+                (*iter)->GetAmbient().r,
+                (*iter)->GetAmbient().g,
+                (*iter)->GetAmbient().b,
+                (*iter)->GetAmbient().a
+            };
+
+            float LightDiffuse[4] = {
+                (*iter)->GetDiffuse().r,
+                (*iter)->GetDiffuse().g,
+                (*iter)->GetDiffuse().b,
+                (*iter)->GetDiffuse().a
+            };
+
+            float LightSpecular[4] = {
+                (*iter)->GetSpecular().r,
+                (*iter)->GetSpecular().g,
+                (*iter)->GetSpecular().b,
+                (*iter)->GetSpecular().a
+            };
+
+            effect->SetValue(HandleLightPos, Pos, sizeof(Pos));
+            effect->SetValue(HandleLightAmbient, LightAmbient, sizeof(LightAmbient));
+            effect->SetValue(HandleLightDiffuse, LightDiffuse, sizeof(LightDiffuse));
+            effect->SetValue(HandleLightSpecular, LightSpecular, sizeof(LightSpecular));
+            effect->SetFloat(HandleLightRadius, (*iter)->GetRadius());
+        }*/
+    }
+
+    void PhongShader::Render(int index, GameObject* parent)
+    {
+        if (effect == nullptr)
+            effect = ResourceMgr->LoadEffect(address);
+
+        SetMaterial(parent);
+        SetEnvironment(parent);
 
         auto Mesh = (StaticMesh*)parent->GetComponent("StaticMesh");
 
-        if (Mesh != nullptr)
-        {
-            auto CurScene = SceneMgr->CurrentScene();
+        if (Mesh)
+            effect->SetTexture("colorMapTexture", ResourceMgr->LoadTexture(Mesh->GetTextures()[index]));
 
-            auto LightList = CurScene->GetPointLights();
+        effect->CommitChanges();
+    }
+    
+    void PhongShader::Render(int index, std::vector<LPDIRECT3DTEXTURE9> textures, GameObject* parent)
+    {
+        if (effect == nullptr)
+            effect = ResourceMgr->LoadEffect(address);
+        
+        SetMaterial(parent);
+        SetEnvironment(parent);
+        
+        auto AnimatedMesh = (SkinnedMesh*)parent->GetComponent("SkinnedMesh");
 
-            auto CurCameraObject = (GameObject*)SceneMgr->CurrentScene()->GetCurrentCamera();
-            auto CurCameraComponent = (Camera*)CurCameraObject->GetComponent("Camera");
-            auto CurCameraTransform = (Transform3D*)CurCameraObject->GetComponent("Transform3D");
+        if (AnimatedMesh != nullptr)
+            effect->SetTexture("colorMapTexture", textures[index]);
 
-            int LightNumber = LightList.size();
-
-            float CameraPos[3] = {
-                CurCameraTransform->GetPosition().x,
-                CurCameraTransform->GetPosition().y,
-                CurCameraTransform->GetPosition().z,
-            };
-
-            float GlobalAmbient[4] = {
-                CurScene->GetAmbientColor().r,
-                CurScene->GetAmbientColor().g,
-                CurScene->GetAmbientColor().b,
-                CurScene->GetAmbientColor().a
-            };
-
-            auto MatViewProj = CurCameraComponent->GetViewMatrix(CurCameraObject) * CurCameraComponent->GetProjectionMatrix();
-            
-            PhongEffect->SetMatrix("worldMatrix", &MatWorld);
-            PhongEffect->SetMatrix("worldInverseTransposeMatrix", &MatWorld);
-            PhongEffect->SetMatrix("worldViewProjectionMatrix", &MatViewProj);
-
-            PhongEffect->SetValue("cameraPos", &CameraPos, sizeof(CameraPos));
-            PhongEffect->SetValue("globalAmbient", &GlobalAmbient, sizeof(GlobalAmbient));
-            PhongEffect->SetValue("numLights", &LightNumber, sizeof(LightNumber));
-
-            PhongEffect->SetTexture("colorMapTexture", ResourceMgr->LoadTexture(Mesh->GetTextures()[0]));
-                        
-            D3DXHANDLE HandleLight;
-            D3DXHANDLE HandleLightPos;
-            D3DXHANDLE HandleLightAmbient;
-            D3DXHANDLE HandleLightDiffuse;
-            D3DXHANDLE HandleLightSpecular;
-            D3DXHANDLE HandleLightRadius;
-
-            int i = 0;
-
-            for (auto iter = LightList.begin(); iter != LightList.end(); iter++)
-            {
-                HandleLight = PhongEffect->GetParameterElement("lights", i++);
-
-                HandleLightPos = PhongEffect->GetParameterByName(HandleLight, "pos");
-                HandleLightAmbient = PhongEffect->GetParameterByName(HandleLight, "ambient");
-                HandleLightDiffuse = PhongEffect->GetParameterByName(HandleLight, "diffuse");
-                HandleLightSpecular = PhongEffect->GetParameterByName(HandleLight, "specular");
-                HandleLightRadius = PhongEffect->GetParameterByName(HandleLight, "radius");
-
-                float Pos[3] = {
-                    (*iter)->GetPosition().x,
-                    (*iter)->GetPosition().y,
-                    (*iter)->GetPosition().z,
-                };
-
-                float LightAmbient[4] = {
-                    (*iter)->GetAmbient().r,
-                    (*iter)->GetAmbient().g,
-                    (*iter)->GetAmbient().b,
-                    (*iter)->GetAmbient().a
-                };
-
-                float LightDiffuse[4] = {
-                    (*iter)->GetDiffuse().r,
-                    (*iter)->GetDiffuse().g,
-                    (*iter)->GetDiffuse().b,
-                    (*iter)->GetDiffuse().a
-                };
-
-                float LightSpecular[4] = {
-                    (*iter)->GetSpecular().r,
-                    (*iter)->GetSpecular().g,
-                    (*iter)->GetSpecular().b,
-                    (*iter)->GetSpecular().a
-                };
-
-                PhongEffect->SetValue(HandleLightPos, Pos, sizeof(Pos));
-                PhongEffect->SetValue(HandleLightAmbient, LightAmbient, sizeof(LightAmbient));
-                PhongEffect->SetValue(HandleLightDiffuse, LightDiffuse, sizeof(LightDiffuse));
-                PhongEffect->SetValue(HandleLightSpecular, LightSpecular, sizeof(LightSpecular));
-                PhongEffect->SetFloat(HandleLightRadius, (*iter)->GetRadius());
-            }
-
-            PhongEffect->CommitChanges();
-        }
+        effect->CommitChanges();
     }
 }
 

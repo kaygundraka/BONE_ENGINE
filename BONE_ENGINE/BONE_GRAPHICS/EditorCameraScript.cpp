@@ -3,6 +3,7 @@
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "StaticMesh.h"
+#include "SkinnedMesh.h"
 using namespace BONE_GRAPHICS;
 
 EditorCamera::EditorCamera(GameObject* gameObject, BoneEditor* ui, std::string name)

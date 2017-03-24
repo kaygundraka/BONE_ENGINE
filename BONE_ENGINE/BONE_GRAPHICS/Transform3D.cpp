@@ -17,6 +17,7 @@ namespace BONE_GRAPHICS
 		D3DXMatrixIdentity(&scaleTransform);
 
 		parent = nullptr;
+        combineMatrix = nullptr;
 
 		SetTypeName("Transform3D");
 	}
@@ -94,7 +95,16 @@ namespace BONE_GRAPHICS
 
 	Vec3 Transform3D::GetPosition()
 	{
-		return position;
+        Vec3 result = position;
+
+        if (combineMatrix != nullptr)
+        {
+            //D3DXVec3TransformCoord(&result, &result, combineMatrix);
+            result.x += ((*combineMatrix)._41);
+            result.y += ((*combineMatrix)._42);
+            result.z += ((*combineMatrix)._43);
+        }
+		return result;
 	}
 
 	Vec3 Transform3D::GetWorldPositon()
@@ -102,6 +112,14 @@ namespace BONE_GRAPHICS
 		GameObject* parentPtr = parent;
 
 		Vec3 Posit = position;
+
+        if (combineMatrix != nullptr)
+        {
+            Posit.x += ((*combineMatrix)._41);
+            Posit.y += ((*combineMatrix)._42);
+            Posit.z += ((*combineMatrix)._43);
+            //D3DXVec3TransformCoord(&Posit, &Posit, combineMatrix);
+        }
 
 		while (parentPtr != nullptr)
 		{
@@ -234,6 +252,11 @@ namespace BONE_GRAPHICS
 		this->parent = parent;
 	}
 
+    void Transform3D::CombineMatrix(Matrix* matrix)
+    {
+        combineMatrix = matrix;
+    }
+
 	Matrix Transform3D::GetTransform()
 	{
 		GameObject* parentPtr = parent;
@@ -250,18 +273,13 @@ namespace BONE_GRAPHICS
 
 		while (parentPtr != nullptr)
 		{
-			/*Scale.x *= ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetScale().x;
-			Scale.y *= ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetScale().y;
-			Scale.z *= ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetScale().z;
-
-			Posit += ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetPosition();*/
-
-			//RotAngle *= ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetRotateQuater();
-
             transform *= ((Transform3D*)parentPtr->transform3D)->GetTransform();
 
             parentPtr = parentPtr->GetParent();
 		}
+
+        if (combineMatrix != nullptr)
+            transform *= *combineMatrix;
 
 		return transform;
 	}

@@ -25,7 +25,9 @@ namespace BONE_GRAPHICS
 	
 	void LoadThreadFunc(Scene* Framework)
 	{
+        Framework->LoadSceneData();
 		Framework->LoadContents();
+        Framework->Reference();
 	}
 
 	void SceneManager::AddScene(std::string name, Scene* scene)
@@ -148,9 +150,6 @@ namespace BONE_GRAPHICS
 		}
 
 		LoadingThread.join();
-
-		sceneList[name]->Reference();
-        sceneList[name]->LoadSceneData();
         
 		sceneList[name]->SortPriorityObject();
 

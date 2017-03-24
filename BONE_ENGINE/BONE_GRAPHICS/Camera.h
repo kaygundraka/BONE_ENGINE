@@ -59,6 +59,7 @@ namespace BONE_GRAPHICS
         Vec3 GetViewVector();
         Vec3 GetCrossVector();
 
+        void FixedUpdate(GameObject* owner, Vec3 tagert);
 		virtual void FixedUpdate(GameObject* owner);
 	};
 }

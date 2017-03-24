@@ -63,8 +63,23 @@ namespace BONE_GRAPHICS
                 Iter++;
         }
 
+        for (auto Iter = pointLightList.begin(); Iter != pointLightList.end();)
+        {
+            GameObject* Temp = *Iter;
+
+            if (Temp != nullptr)
+            {
+                Iter = pointLightList.erase(Iter);
+                delete Temp;
+            }
+            else
+                Iter++;
+        }
+
         delete physicsWorld;
         physicsWorld = nullptr;
+
+        RelShader();
     }
 
     void Scene::SetEditorScene()
@@ -105,6 +120,8 @@ namespace BONE_GRAPHICS
 
         IsFrameworkFlag = true;
 
+        InitShader();
+
         return IsFrameworkFlag;
     }
 
@@ -127,24 +144,13 @@ namespace BONE_GRAPHICS
         
         IsFrameworkFlag = true;
         CompleateLoading = true;
-
+        
         return IsFrameworkFlag;
     }
 
     float Scene::GetLoadPerTime()
     {
         return loadPerTime * 100;
-    }
-
-    void Scene::Render()
-    {
-        for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
-            if ((*Iter)->GetActive())
-                (*Iter)->Render();
-
-        for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-            if ((*Iter)->GetActive())
-                (*Iter)->Render();
     }
 
     void Scene::LateRender()
@@ -188,7 +194,9 @@ namespace BONE_GRAPHICS
                 (*Iter)->Update();
 
         if (enablePhysics)
-            physicsWorld->update(SceneMgr->GetTimeDelta());
+        {
+            physicsWorld->update(SceneMgr->GetTimeDelta() * 2.0f);
+        }
     }
 
     void Scene::LateUpdate()
@@ -460,37 +468,38 @@ namespace BONE_GRAPHICS
         color.a = BackGroundColor[3];
         SceneMgr->SetClearColor(color);
 
+        int i = 0;
         for (json::iterator it = j["Light"].begin(); it != j["Light"].end(); ++it) {
             auto Object = this->FindObjectByName(it.key());
 
             if (Object == nullptr)
             {
-                auto Position = j["Light"][it.key()]["Position"].get<std::vector<double>>();
-                auto Ambient = j["Light"][it.key()]["Ambient"].get<std::vector<double>>();
-                auto Diffuse = j["Light"][it.key()]["Diffuse"].get<std::vector<double>>();
-                auto Specular = j["Light"][it.key()]["Specular"].get<std::vector<double>>();
-                auto Radius = j["Light"][it.key()]["Radius"].get<double>();
+                //auto Position = j["Light"][it.key()]["Position"].get<std::vector<double>>();
+                //auto Ambient = j["Light"][it.key()]["Ambient"].get<std::vector<double>>();
+                //auto Diffuse = j["Light"][it.key()]["Diffuse"].get<std::vector<double>>();
+                //auto Specular = j["Light"][it.key()]["Specular"].get<std::vector<double>>();
+                //auto Radius = j["Light"][it.key()]["Radius"].get<double>();
 
-                PointLight* Light = new PointLight;
-                Transform3D* tr = new Transform3D();
-                Light->AddComponent(tr);
-                tr->SetPosition(Position[0], Position[1], Position[2]);
+                //Transform3D* tr = new Transform3D();
+                //pointLightList[i]->AddComponent(tr);
+                //tr->SetPosition(Position[0], Position[1], Position[2]);
+                //
+                //pointLightList[i]->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
+                //pointLightList[i]->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
+                //pointLightList[i]->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
+                //pointLightList[i]->SetRadius(Radius);
+                //pointLightList[i]->SetLight(true);
                 
-                Light->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
-                Light->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
-                Light->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
-                Light->SetRadius(Radius);
-                Light->SetLight(true);
+                //int num = SceneMgr->CurrentScene()->GetPointLights().size();
+                //char temp[100] = "";
+                //itoa(num, temp, 10);
+
+                //std::string name = "PointLight_";
+                //name += temp;
+
                 
-                int num = SceneMgr->CurrentScene()->GetPointLights().size();
-                char temp[100] = "";
-                itoa(num, temp, 10);
-
-                std::string name = "PointLight_";
-                name += temp;
-
-                SceneMgr->CurrentScene()->AddPointLight(Light);
-                SceneMgr->CurrentScene()->AddObject(Light, name);
+                //SceneMgr->CurrentScene()->AddPointLight(Light);
+                //SceneMgr->CurrentScene()->AddObject(Light, name);
             }
         }
 
@@ -513,7 +522,8 @@ namespace BONE_GRAPHICS
 
                 Object->SetPrfabName(it->find("PrefabName").value().get<std::string>());
                 Object->LoadPrefab();
-
+                Object->Init();
+                
                 this->AddObject(Object, it.key());
 
                 auto Position = it->find("Position").value().get<std::vector<float>>();
@@ -529,6 +539,7 @@ namespace BONE_GRAPHICS
             {
                 Object->SetPrfabName(it->find("PrefabName").value().get<std::string>());
                 Object->LoadPrefab();
+                Object->Init();
 
                 auto Position = it->find("Position").value().get<std::vector<float>>();
                 ((Transform3D*)Object->GetComponent("Transform3D"))->SetPosition(Position[0], Position[1], Position[2]);
@@ -567,7 +578,7 @@ namespace BONE_GRAPHICS
         onLoadScene = true;
     }
 
-    void Scene::AddPointLight(PointLight* object)
+    /*void Scene::AddPointLight(PointLight* object)
     {
         pointLightList.push_back(object);
     }
@@ -582,9 +593,9 @@ namespace BONE_GRAPHICS
                 break;
             }
         }
-    }
+    }*/
 
-    std::list<PointLight*> Scene::GetPointLights()
+    std::vector<PointLight*> Scene::GetPointLights()
     {
         return pointLightList;
     }

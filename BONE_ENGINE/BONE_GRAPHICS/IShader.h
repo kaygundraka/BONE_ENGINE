@@ -21,6 +21,7 @@ namespace BONE_GRAPHICS
 		
         std::string GetAddress();
 
+        virtual void Render(int index, std::vector<LPDIRECT3DTEXTURE9> textures, GameObject* parent) {}
 		virtual void Render(int index, GameObject* parent) = 0;
 
 		LPD3DXEFFECT GetShader();

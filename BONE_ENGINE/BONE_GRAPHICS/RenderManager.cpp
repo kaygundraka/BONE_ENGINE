@@ -46,6 +46,12 @@ namespace BONE_GRAPHICS
         d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
         d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
+        DWORD g_msaaSamples;
+
+        ChooseBestMSAAMode(d3dpp.BackBufferFormat, d3dpp.AutoDepthStencilFormat,
+            d3dpp.Windowed, d3dpp.MultiSampleType, d3dpp.MultiSampleQuality,
+            g_msaaSamples);
+               
         vp = d3d9->CreateDevice(
             D3DADAPTER_DEFAULT,
             D3DDEVTYPE_HAL,
@@ -64,12 +70,106 @@ namespace BONE_GRAPHICS
             return 0;
         }
 
+        if (SUCCEEDED(D3D_DEVICE->GetDeviceCaps(&caps)))
+        {
+            // Prefer anisotropic texture filtering if it's supported.
+            if (caps.RasterCaps & D3DPRASTERCAPS_ANISOTROPY)
+                caps.MaxAnisotropy;
+        }
+
         Is_init = true;
+
         LogMgr->Info("RenderManager is initialized");
 
         this->useImGUI = useImgui;
 
         return Is_init;
+    }
+
+    void RenderManager::ChooseBestMSAAMode(D3DFORMAT backBufferFmt, D3DFORMAT depthStencilFmt,
+        BOOL windowed, D3DMULTISAMPLE_TYPE &type,
+        DWORD &qualityLevels, DWORD &samplesPerPixel)
+    {
+        bool supported = false;
+
+        struct MSAAMode
+        {
+            D3DMULTISAMPLE_TYPE type;
+            DWORD samples;
+        }
+        multsamplingTypes[15] =
+        {
+            { D3DMULTISAMPLE_16_SAMPLES,  16 },
+            { D3DMULTISAMPLE_15_SAMPLES,  15 },
+            { D3DMULTISAMPLE_14_SAMPLES,  14 },
+            { D3DMULTISAMPLE_13_SAMPLES,  13 },
+            { D3DMULTISAMPLE_12_SAMPLES,  12 },
+            { D3DMULTISAMPLE_11_SAMPLES,  11 },
+            { D3DMULTISAMPLE_10_SAMPLES,  10 },
+            { D3DMULTISAMPLE_9_SAMPLES,   9 },
+            { D3DMULTISAMPLE_8_SAMPLES,   8 },
+            { D3DMULTISAMPLE_7_SAMPLES,   7 },
+            { D3DMULTISAMPLE_6_SAMPLES,   6 },
+            { D3DMULTISAMPLE_5_SAMPLES,   5 },
+            { D3DMULTISAMPLE_4_SAMPLES,   4 },
+            { D3DMULTISAMPLE_3_SAMPLES,   3 },
+            { D3DMULTISAMPLE_2_SAMPLES,   2 }
+        };
+
+        for (int i = 0; i < 15; ++i)
+        {
+            type = multsamplingTypes[i].type;
+
+            supported = MSAAModeSupported(type, backBufferFmt, depthStencilFmt,
+                windowed, qualityLevels);
+
+            if (supported)
+            {
+                samplesPerPixel = multsamplingTypes[i].samples;
+                return;
+            }
+        }
+
+        type = D3DMULTISAMPLE_NONE;
+        qualityLevels = 0;
+        samplesPerPixel = 1;
+    }
+
+    bool RenderManager::MSAAModeSupported(D3DMULTISAMPLE_TYPE type, D3DFORMAT backBufferFmt,
+        D3DFORMAT depthStencilFmt, BOOL windowed,
+        DWORD &qualityLevels)
+    {
+        DWORD backBufferQualityLevels = 0;
+        DWORD depthStencilQualityLevels = 0;
+
+        HRESULT hr = d3d9->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT,
+            D3DDEVTYPE_HAL, backBufferFmt, windowed, type,
+            &backBufferQualityLevels);
+
+        if (SUCCEEDED(hr))
+        {
+            hr = d3d9->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT,
+                D3DDEVTYPE_HAL, depthStencilFmt, windowed, type,
+                &depthStencilQualityLevels);
+
+            if (SUCCEEDED(hr))
+            {
+                if (backBufferQualityLevels == depthStencilQualityLevels)
+                {
+                    // The valid range is between zero and one less than the level
+                    // returned by IDirect3D9::CheckDeviceMultiSampleType().
+
+                    if (backBufferQualityLevels > 0)
+                        qualityLevels = backBufferQualityLevels - 1;
+                    else
+                        qualityLevels = backBufferQualityLevels;
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     void RenderManager::RenderText(std::string text, D3DXVECTOR2 pos, int length, const char* font, int opt, int setting, D3DXCOLOR color)

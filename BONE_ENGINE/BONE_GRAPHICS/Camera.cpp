@@ -49,7 +49,7 @@ namespace BONE_GRAPHICS
 		{
 			Vec3 Position = Tr->GetPosition();
 
-			D3DXMatrixLookAtLH(&viewMatrix, &Position, &targetPosition, &cameraUp);
+            D3DXMatrixLookAtLH(&viewMatrix, &Position, &this->targetPosition, &cameraUp);
 		}
 		else
 		{
@@ -81,11 +81,11 @@ namespace BONE_GRAPHICS
 			Vec3 Position(0, 0, 0);
 
 			if (Tr != nullptr)
-				Position = Tr->GetWorldPositon();
+				Position = Tr->GetPosition();
 			else
 				LogMgr->Error("Camera %d - Don't Exist Transform3D Component.", ID);
 
-            D3DXVec3Normalize(&viewVector, &(targetPosition - Tr->GetWorldPositon()));
+            D3DXVec3Normalize(&viewVector, &(targetPosition - Tr->GetPosition()));//->GetWorldPositon()));
             D3DXVec3Cross(&crossVector, &cameraUp, &viewVector);
 
 			D3DXMatrixLookAtLH(&viewMatrix, &Position, &targetPosition, &cameraUp);
@@ -99,6 +99,33 @@ namespace BONE_GRAPHICS
 			RenderMgr->GetDevice()->SetTransform(D3DTS_PROJECTION, &projectionMatrix);
 		}
 	}
+
+    void Camera::FixedUpdate(GameObject* owner, Vec3 tagert)
+    {
+        this->owner = owner;
+
+        if (SceneMgr->CurrentScene()->GetCameraIndex() == ID)
+        {
+            Transform3D* Tr = ((Transform3D*)owner->GetComponent("Transform3D"));
+
+            Vec3 Position(0, 0, 0);
+
+            Position = Tr->GetPosition();
+            
+            D3DXVec3Normalize(&viewVector, &(tagert - Tr->GetPosition()));//->GetWorldPositon()));
+            D3DXVec3Cross(&crossVector, &cameraUp, &viewVector);
+
+            D3DXMatrixLookAtLH(&viewMatrix, &Position, &tagert, &cameraUp);
+            RenderMgr->GetDevice()->SetTransform(D3DTS_VIEW, &viewMatrix);
+
+            if (type == PRJOJECTION_PERSPACTIVE)
+                D3DXMatrixPerspectiveFovLH(&projectionMatrix, fov, width / height, nearDistance, farDistance);
+            else if (type == PROJECTION_ORTHOGONAL)
+                D3DXMatrixOrthoLH(&projectionMatrix, width, height, nearDistance, farDistance);
+
+            RenderMgr->GetDevice()->SetTransform(D3DTS_PROJECTION, &projectionMatrix);
+        }
+    }
 
     int Camera::GetScreenWidth()
     {

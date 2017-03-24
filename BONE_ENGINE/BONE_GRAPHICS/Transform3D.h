@@ -20,6 +20,7 @@ namespace BONE_GRAPHICS
 		Matrix scaleTransform;
 
 		GameObject *parent;
+        Matrix* combineMatrix;
 
 	public:
 
@@ -54,6 +55,7 @@ namespace BONE_GRAPHICS
 		Quater GetWorldRotateAngle();
 
 		Matrix GetTransform();
+        void CombineMatrix(Matrix* matrix);
 
 		void AttachObject(GameObject* parent);
 	};

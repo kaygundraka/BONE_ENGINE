@@ -511,5 +511,8 @@
     <ClCompile Include="BoneHierarchyLoader.cpp">
       <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
     </ClCompile>
+    <ClCompile Include="SceneRender.cpp">
+      <Filter>소스 파일\Core\Management\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -15,7 +15,7 @@ namespace BONE_GRAPHICS
 	private:
 		std::list<GameObject*> objectList;
 		std::list<GameObject*> staticObjectList;
-        std::list<PointLight*> pointLightList;
+        std::vector<PointLight*> pointLightList;
 
         etuImage image_LoadingBackground;
 		int cameraIndex;
@@ -43,6 +43,30 @@ namespace BONE_GRAPHICS
 
         rp3d::DynamicsWorld* physicsWorld;
         PhysicsEventListener physicsEventListner;
+
+    private:
+        LPDIRECT3DVERTEXBUFFER9	quadVB;
+
+        LPDIRECT3DTEXTURE9	shadowMap[8];
+        LPDIRECT3DSURFACE9	shadowSurf[8];
+        LPDIRECT3DSURFACE9	shadowDepth[8];
+
+        LPDIRECT3DTEXTURE9	screenMap;
+        LPDIRECT3DSURFACE9	screenSurf;
+
+        LPDIRECT3DTEXTURE9	blurMap[2];
+        LPDIRECT3DSURFACE9	blurSurf[2];
+
+        LPDIRECT3DSURFACE9	newDepthRT;
+        LPDIRECT3DSURFACE9	oldColorRT;
+        LPDIRECT3DSURFACE9	oldDepthRT;
+
+        D3DXVECTOR2			sampleOffsets[15];
+        FLOAT				sampleWeights[15];
+
+    private:
+        bool InitShader();
+        bool RelShader();
         
  	public:
 		bool InitializeMembers();
@@ -105,10 +129,10 @@ namespace BONE_GRAPHICS
         void SetAmbientColor(RGBA color);
         RGBA GetAmbientColor();
 
-        void AddPointLight(PointLight* object);
-        void RemovePointLight(PointLight* object);
-        
-        std::list<PointLight*> GetPointLights();
+        //void AddPointLight(PointLight* object);
+        //void RemovePointLight(PointLight* object);
+
+        std::vector<PointLight*> GetPointLights();
         std::list<GameObject*> GetObjectList();
         std::list<GameObject*> GetStaticObjectList();
                 

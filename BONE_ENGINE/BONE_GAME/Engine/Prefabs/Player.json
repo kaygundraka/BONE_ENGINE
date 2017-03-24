@@ -2,7 +2,7 @@
     "1.Transform3D": {
         "Position": [
             0.0,
-            30.0,
+            7.0,
             0.0
         ],
         "Rotation": [
@@ -16,22 +16,38 @@
             1.0
         ]
     },
-    "2.Camera": {
-        "Height": 729,
-        "ID": 0,
-        "Type": 0,
-        "UpVector": [
-            0.0,
+    "5.Material": {
+        "Ambient": [
             1.0,
-            0.0
+            1.0,
+            1.0,
+            1.0
         ],
-        "Width": 1008,
-        "farDist": 1000.0,
-        "fov": 1.88495576381683,
-        "nearDist": 0.100000001490116
+        "Diffuse": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Emissive": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Shininess": 1.0,
+        "Specular": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "7.SkinnedMesh": {
+        "FileName": "Skeleton.X"
     },
     "8.Script": [
-        "PlayerCamera"
+        "PlayerCharacter"
     ],
     "IsActive": true,
     "IsEditorLock": false,

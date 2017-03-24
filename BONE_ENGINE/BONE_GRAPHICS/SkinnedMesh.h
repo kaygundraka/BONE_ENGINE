@@ -30,10 +30,10 @@ namespace BONE_GRAPHICS
         std::string GetFile();
         map<std::string, int> GetAnmimationSet();
 
-        void CheckInRay(RAY *ray, Bone* bone, float& curDist);
+        bool CheckInRay(RAY *ray, Bone* bone, float& curDist);
 
         std::string fileName;
-        LPD3DXMESH GetMesh();
+        Matrix* GetBoneMatrix(std::string name, Bone* bone = nullptr, Matrix* mat = nullptr);
 
     private:
         void SetupBoneMatrixPointers(Bone* bone);
@@ -42,7 +42,7 @@ namespace BONE_GRAPHICS
         void SoftwareRendering(IShader* shaderOpt, GameObject* object, Bone *bone);
 
         void GetAnimationSets();
-
+        
         D3DXFRAME *rootBone;
 
         BoneHierarchyLoader boneHierarchy;

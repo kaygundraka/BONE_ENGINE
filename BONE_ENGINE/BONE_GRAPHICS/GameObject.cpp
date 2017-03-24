@@ -159,6 +159,8 @@ namespace BONE_GRAPHICS
         if (isDefaultShader)
             Shader = &phongShader;
 
+
+
         if (Shader != nullptr)
         {
             UINT numPasses = 0;
@@ -177,6 +179,9 @@ namespace BONE_GRAPHICS
 
                         if (GetComponent("SpriteBillBoard") != nullptr)
                             ((SpriteBillBoard*)GetComponent("SpriteBillBoard"))->Render(Shader, this);
+
+                        if (GetComponent("SkinnedMesh") != nullptr)
+                            ((SkinnedMesh*)GetComponent("SkinnedMesh"))->Render(Shader, this);
 
                         if (GetComponent("TrailRenderer") != nullptr)
                             ((TrailRenderer*)GetComponent("TrailRenderer"))->Render(Shader);
@@ -503,15 +508,7 @@ namespace BONE_GRAPHICS
             }
             else if (TypeName == "SkinnedMesh")
             {
-                /*j["7.SkinnedMesh"]["FileName"] = ((SkinnedMesh*)(components[i]))->GetFile();
-
-                auto animationSet = ((SkinnedMesh*)(components[i]))->GetAnmimationSet();
-
-                for each(auto var in animationSet)
-                {
-                    j["7.SkinnedMesh"]["AnimationSet"][var.first]["Speed"] = var.second.AnimationSpeed;
-                    j["7.SkinnedMesh"]["AnimationSet"][var.first]["Index"] = var.second.Vertex_Index;
-                }*/
+                j["7.SkinnedMesh"]["FileName"] = ((SkinnedMesh*)(components[i]))->GetFile();
             }
         }
 
@@ -732,34 +729,13 @@ namespace BONE_GRAPHICS
             }
             else if (TypeName == "7.SkinnedMesh")
             {
-                auto Attributes = j["7.SkinnedMesh"].get<std::vector<std::string>>();
+                SkinnedMesh* skinnedMesh = (SkinnedMesh*)GetComponent("SkinnedMesh");
 
-                for (auto iter = Attributes.begin(); iter != Attributes.end(); iter++)
+                if (skinnedMesh == nullptr)
                 {
-                    if (*iter == "FileName")
-                    {
-                        SkinnedMesh* skinnedMesh = (SkinnedMesh*)GetComponent("SkinnedMesh");
-
-                        if (skinnedMesh == nullptr)
-                        {
-                            //skinnedMesh = new SkinnedMesh();
-
-                            //skinnedMesh->SetFileName(j["7.SkinnedMesh"]["FileName"]);
-
-                            //AddComponent(skinnedMesh);
-                        }
-                    }
-                    else if (*iter == "AnimationSet")
-                    {
-                        /*for 
-                        auto animationSet = ((SkinnedMesh*)(components[i]))->GetAnmimationSet();
-
-                        for each(auto var in animationSet)
-                        {
-                            j["SkinnedMesh"]["AnimationSet"][var.first]["Speed"] = var.second.AnimationSpeed;
-                            j["SkinnedMesh"]["AnimationSet"][var.first]["Index"] = var.second.Vertex_Index;
-                        }*/
-                    }
+                    skinnedMesh = new SkinnedMesh();
+                    skinnedMesh->SetFile(j["7.SkinnedMesh"]["FileName"]);
+                    AddComponent(skinnedMesh);
                 }
             }
             else if (TypeName == "8.Script")
@@ -908,5 +884,11 @@ namespace BONE_GRAPHICS
                 ((Script*)*var)->CollisionEvent(otherObject);
     
         CollisionEventFunc(this, otherObject);
+    }
+
+    void GameObject::SetDefaultShader()
+    {
+
+
     }
 }

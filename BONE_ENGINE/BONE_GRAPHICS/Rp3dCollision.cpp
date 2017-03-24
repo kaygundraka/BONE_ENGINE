@@ -192,7 +192,7 @@ namespace BONE_GRAPHICS
 
         collision = new SphereShape(Sphere.radius);
         collision->name = object->GetName();
-
+     
         type = COLL_SPHERE;
 
         return true;

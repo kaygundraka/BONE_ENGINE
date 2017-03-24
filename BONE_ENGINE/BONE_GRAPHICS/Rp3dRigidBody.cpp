@@ -125,20 +125,30 @@ namespace BONE_GRAPHICS
         return mass;
     }
 
+    void RigidBody::SetPosOnPivot(Vec3 pos)
+    {
+        this->pos = pos;
+    }
+
+    Vec3 RigidBody::GetPosOnPivot()
+    {
+        return pos;
+    }
+
     void RigidBody::UpdateTransform()
     {
         if (SceneMgr->CurrentScene()->IsEnablePhysics())
         {
-            rp3d::Transform Transform = rigidBody->getTransform();
-            rp3d::Quaternion Rot = Transform.getOrientation();
-            rp3d::Vector3 Pos = Transform.getPosition();
-
-            transform->SetPosition(Pos.x, Pos.y, Pos.z);
+            rp3dTransform = rigidBody->getTransform();
+            rp3d::Quaternion Rot = rp3dTransform.getOrientation();
+            rp3d::Vector3 Pos = rp3dTransform.getPosition();
+            
+            transform->SetPosition(Pos.x + pos.x, Pos.y + pos.y, -Pos.z - pos.z);
             transform->SetRotate(Rot.x, Rot.y, Rot.z);
         }
         else
         {
-            rp3d::Vector3 InitPosition(transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
+            rp3d::Vector3 InitPosition(transform->GetPosition().x, transform->GetPosition().y, -transform->GetPosition().z);
             rp3d::Quaternion InitOrientation(transform->GetRotateAngle().x, transform->GetRotateAngle().z, transform->GetRotateAngle().z);
             rp3d::Transform InitTransform(InitPosition, InitOrientation);
 

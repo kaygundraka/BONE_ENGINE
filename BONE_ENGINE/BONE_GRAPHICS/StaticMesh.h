@@ -35,7 +35,7 @@ namespace BONE_GRAPHICS
 
         void LoadContent();
 		void Render(IShader* shaderOpt, GameObject* object);
-
+        
         void SetRenderMode(int mode);
         void ShowMeshBox(bool show);
         bool IsShowMeshBOx();

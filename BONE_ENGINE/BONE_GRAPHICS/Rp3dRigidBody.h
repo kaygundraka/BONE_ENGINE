@@ -11,6 +11,9 @@ namespace BONE_GRAPHICS
         rp3d::RigidBody* rigidBody;
         GameObject* onwer;
         Transform3D* transform;
+        rp3d::Transform rp3dTransform;
+
+        Vec3 pos;
         float mass;
 
     public:
@@ -31,6 +34,9 @@ namespace BONE_GRAPHICS
         float GetFrictionCoefficient();
         bool GetIsAllowedToSleep();
         float GetMass();
+
+        void SetPosOnPivot(Vec3 pos);
+        Vec3 GetPosOnPivot();
 
         void AddForce(Vec3 force, Vec3 point);
         void ADDForce(rp3d::Vector3 force, rp3d::Vector3 point);

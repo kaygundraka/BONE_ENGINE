@@ -27,6 +27,14 @@ namespace BONE_GRAPHICS
         ID3DXFont*				font;
         bool                    useImGUI;
 
+        bool MSAAModeSupported(D3DMULTISAMPLE_TYPE type, D3DFORMAT backBufferFmt,
+            D3DFORMAT depthStencilFmt, BOOL windowed,
+            DWORD &qualityLevels);
+
+        void ChooseBestMSAAMode(D3DFORMAT backBufferFmt, D3DFORMAT depthStencilFmt,
+            BOOL windowed, D3DMULTISAMPLE_TYPE &type,
+            DWORD &qualityLevels, DWORD &samplesPerPixel);
+
     public:
         RenderManager() {}
         virtual ~RenderManager() {}

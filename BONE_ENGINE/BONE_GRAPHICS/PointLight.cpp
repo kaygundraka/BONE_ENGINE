@@ -10,7 +10,7 @@ namespace BONE_GRAPHICS
     PointLight::PointLight()
     {
         radius = 100;
-        this->status = true;
+        this->status = false;
         IsInit = false;
         tr = nullptr;
         showIcon = false;
@@ -124,18 +124,23 @@ namespace BONE_GRAPHICS
 
     void PointLight::SetLight(bool status)
     {
-        if (this->status == status)
-            return;
+        /*if (this->status == status)
+            return;*/
 
         this->status = status;
 
-        if (!IsInit)
-            return;
+        //if (!IsInit)
+         //   return;
 
-        if (this->status)
-            SceneMgr->CurrentScene()->AddPointLight(this);
-        else
-            SceneMgr->CurrentScene()->RemovePointLight(this);
+        //if (this->status)
+        //    SceneMgr->CurrentScene()->AddPointLight(this);
+        //else
+        //    SceneMgr->CurrentScene()->RemovePointLight(this);
+    }
+
+    bool PointLight::IsOn()
+    {
+        return status;
     }
 
     void PointLight::SetAmbient(float r, float g, float b, float a)
@@ -210,5 +215,15 @@ namespace BONE_GRAPHICS
     float PointLight::GetRadius()
     {
         return radius;
+    }
+
+    void PointLight::SetShadowAimPos(Vec3 aim)
+    {
+        shadowAimPos = aim;
+    }
+    
+    Vec3 PointLight::GetShadowAimPos()
+    {
+        return shadowAimPos;
     }
 }

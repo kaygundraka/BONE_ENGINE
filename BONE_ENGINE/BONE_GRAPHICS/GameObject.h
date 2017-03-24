@@ -33,6 +33,7 @@ namespace BONE_GRAPHICS
         Component* transform2D;
 
         void SetDefaultPipeLine();
+        void SetDefaultShader();
 
 		GameObject();
 		virtual ~GameObject();

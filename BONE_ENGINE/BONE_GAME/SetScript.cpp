@@ -1,6 +1,6 @@
 #include "SetScript.h"
 #include "TestScript2.h"
-#include "PlayerCamera.h"
+#include "PlayerCharacter.h"
 
 namespace BONE_GRAPHICS {
     void Init(GameObject* owner)
@@ -118,12 +118,12 @@ bool AddScriptHandler(GameObject* object, std::string name)
 {
     if (name == "TestScript2")
         object->AddScript(name);
-    else if (name == "PlayerCamera")
+    else if (name == "PlayerCharacter")
     {
-        PlayerCamera* Camera = new PlayerCamera();
-        Camera->SetInfo(object, name);
-        Camera->Init();
-        object->AddComponent(Camera);
+        PlayerCharacter* Character = new PlayerCharacter();
+        Character->SetInfo(object, name);
+        Character->Init();
+        object->AddComponent(Character);
     }
 
     return true;
@@ -133,5 +133,5 @@ void SetScriptProc(BoneEditor* editor)
 {
     editor->AddScript = AddScriptHandler;
     editor->AddScriptList("TestScript2");
-    editor->AddScriptList("PlayerCamera");
+    editor->AddScriptList("PlayerCharacter");
 }

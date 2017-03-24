@@ -158,13 +158,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="PlayerCamera.cpp" />
+    <ClCompile Include="CustomCamera.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PlayerCharacter.cpp" />
     <ClCompile Include="SetScript.cpp" />
     <ClCompile Include="TestScript2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PlayerCamera.h" />
+    <ClInclude Include="CustomCamera.h" />
+    <ClInclude Include="PlayerCharacter.h" />
     <ClInclude Include="SetScript.h" />
     <ClInclude Include="TestScript2.h" />
   </ItemGroup>

@@ -355,6 +355,7 @@
     <ClCompile Include="RuntimeCompiler.cpp" />
     <ClCompile Include="RuntimeCompilerLogger.cpp" />
     <ClCompile Include="SceneInfo.cpp" />
+    <ClCompile Include="SceneRender.cpp" />
     <ClCompile Include="ScreenButton.cpp" />
     <ClCompile Include="ScreenImage.cpp" />
     <ClCompile Include="InputManager.cpp" />
