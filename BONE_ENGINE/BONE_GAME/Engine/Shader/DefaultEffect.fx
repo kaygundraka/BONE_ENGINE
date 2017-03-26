@@ -8,27 +8,49 @@
 //--------------------------------------------
 // Global variables
 //--------------------------------------------
-matrix	g_matWorldViewProj	: WorldViewProjection;
-matrix	g_matLightViewProj	: LightViewProjection;
-matrix	g_matWorld			: World;
-matrix	g_matWorldIT		: WorldInverseTranspose;
-matrix	g_matTexture		: Texture;
-matrix  g_matTexture2		: Texture;
-matrix  g_matTexture3		: Texture;
-matrix  g_matTexture4		: Texture;
-matrix  g_matTexture5		: Texture;
-matrix  g_matTexture6		: Texture;
-matrix  g_matTexture7		: Texture;
-matrix  g_matTexture8		: Texture;
+#define MAX_POINT_LIGHTS 8
 
-vector	g_vLightPos			: LightPosition;
-vector	g_vLightColor		: LightColor;
+matrix	matWorldViewProj	: WorldViewProjection;
+matrix	matLightViewProj	: LightViewProjection;
+matrix	matWorld			: World;
+matrix	matWorldIT			: WorldInverseTranspose;
+float2  sampleOffsets[15];
+float   sampleWeights[15];
+bool	onLight[MAX_POINT_LIGHTS];
 
-vector	g_vEyePos			: EyePosition;
+vector 	eyePos				: EyePosition;
 
-float2  g_vSampleOffsets[15];
-float   g_fSampleWeights[15];
-bool	g_bOnLight[8];
+float4 	globalAmbient;
+
+struct PointLight
+{
+	vector pos;
+	float4 ambient;
+	float4 diffuse;
+	float4 specular;
+	float radius;
+};
+
+struct Material
+{
+	float4 ambient;
+	float4 diffuse;
+	float4 emissive;
+	float4 specular;
+	float shininess;
+};
+
+PointLight 	lights[MAX_POINT_LIGHTS];
+Material 	material;
+
+matrix	matTexture1		: Texture;
+matrix  matTexture2		: Texture;
+matrix  matTexture3		: Texture;
+matrix  matTexture4		: Texture;
+matrix  matTexture5		: Texture;
+matrix  matTexture6		: Texture;
+matrix  matTexture7		: Texture;
+matrix  matTexture8		: Texture;
 
 texture tShadowMap1;
 texture tShadowMap2;
@@ -191,30 +213,30 @@ sampler ColorSampler = sampler_state
 //// Shadow Tech
 ////////////////////////////////////////////////////////////////////////////////////
 
-struct VSOUTPUT_SHADOW
+struct VS_OUTPUT_SHADOW
 {
-	float4 vPosition	: POSITION;
-	float  fDepth		: TEXCOORD0;
+	float4 position	: POSITION;
+	float  depth	: TEXCOORD0;
 };
 
-VSOUTPUT_SHADOW VS_Shadow( float4 inPosition : POSITION )
+VS_OUTPUT_SHADOW VS_Shadow( float4 inPosition : POSITION )
 {
 	// Output struct
-	VSOUTPUT_SHADOW OUT = (VSOUTPUT_SHADOW)0;
+	VS_OUTPUT_SHADOW OUT = (VS_OUTPUT_SHADOW)0;
 
 	// Output the transformed position
-	inPosition = mul (inPosition, g_matWorld);
-	OUT.vPosition = mul( inPosition, g_matLightViewProj );
+	inPosition = mul (inPosition, matWorld);
+	OUT.position = mul(inPosition, matLightViewProj);
 
 	// Output the scene depth
-	OUT.fDepth = OUT.vPosition.z;
+	OUT.depth = OUT.position.z;
 
 	return OUT;
 }
 
-float4  PS_Shadow( VSOUTPUT_SHADOW IN ) : COLOR0
+float4  PS_Shadow( VS_OUTPUT_SHADOW IN ) : COLOR0
 {
-	return float4( IN.fDepth, IN.fDepth, IN.fDepth, 1.0f );
+	return float4( IN.depth, IN.depth, IN.depth, 1.0f );
 }
 	
 
@@ -222,68 +244,68 @@ float4  PS_Shadow( VSOUTPUT_SHADOW IN ) : COLOR0
 //// Unlit Tech
 ////////////////////////////////////////////////////////////////////////////////////
 
-struct VSOUTPUT_UNLIT
+struct VS_OUTPUT_UNLIT
 {
-	float4 vPosition	: POSITION;
-	float4 vTexCoord	: TEXCOORD0;
-	float4 vTexCoord2	: TEXCOORD1;
-	float4 vTexCoord3	: TEXCOORD2;
-	float4 vTexCoord4	: TEXCOORD3;
-	float4 vTexCoord5	: TEXCOORD4;
-	float4 vTexCoord6	: TEXCOORD5;
-	float4 vTexCoord7	: TEXCOORD6;
-    float4 vTexCoord8	: TEXCOORD7;
+	float4 position		: POSITION;
+	float4 texCoord1	: TEXCOORD0;
+	float4 texCoord2	: TEXCOORD1;
+	float4 texCoord3	: TEXCOORD2;
+	float4 texCoord4	: TEXCOORD3;
+	float4 texCoord5	: TEXCOORD4;
+	float4 texCoord6	: TEXCOORD5;
+	float4 texCoord7	: TEXCOORD6;
+    float4 texCoord8	: TEXCOORD7;
 };
 
-VSOUTPUT_UNLIT VS_Unlit( float4 inPosition : POSITION )
+VS_OUTPUT_UNLIT VS_Unlit(float4 inPosition : POSITION)
 {
 	// Output struct
-	VSOUTPUT_UNLIT OUT = (VSOUTPUT_UNLIT)0;
+	VS_OUTPUT_UNLIT OUT = (VS_OUTPUT_UNLIT)0;
 
 	// Output the transformed position
-    inPosition = mul(inPosition, g_matWorld);
-	OUT.vPosition = mul( inPosition, g_matWorldViewProj );
+    inPosition = mul(inPosition, matWorld);
+	OUT.position = mul(inPosition, matWorldViewProj);
 		
 	// Output the projective texture coordinates
-	OUT.vTexCoord = mul( inPosition, g_matTexture );
-	OUT.vTexCoord2 = mul( inPosition, g_matTexture2);
-	OUT.vTexCoord3 = mul( inPosition, g_matTexture3);
-	OUT.vTexCoord4 = mul( inPosition, g_matTexture4);
-	OUT.vTexCoord5 = mul( inPosition, g_matTexture5);
-	OUT.vTexCoord6 = mul( inPosition, g_matTexture6);
-	OUT.vTexCoord7 = mul( inPosition, g_matTexture7);
+	OUT.texCoord1 = mul(inPosition, matTexture1);
+	OUT.texCoord2 = mul(inPosition, matTexture2);
+	OUT.texCoord3 = mul(inPosition, matTexture3);
+	OUT.texCoord4 = mul(inPosition, matTexture4);
+	OUT.texCoord5 = mul(inPosition, matTexture5);
+	OUT.texCoord6 = mul(inPosition, matTexture6);
+	OUT.texCoord7 = mul(inPosition, matTexture7);
 	return OUT;
 }
 
 // Shadow mapping pixel shader
-float4  PS_Unlit( VSOUTPUT_UNLIT IN ) : COLOR0
+float4  PS_Unlit( VS_OUTPUT_UNLIT IN ) : COLOR0
 {
 	// Generate the 9 texture co-ordinates for a 3x3 PCF kernel
-	float4 vTexCoords[9];
+	float4 TexCoords[9];
 
 	// Texel size
-	float fTexelSize = 1.0f / 512.0f;
+	float TexelSize = 1.0f / 512.0f;
 
 	// Generate the tecture co-ordinates for the specified depth-map size
 	// 4 3 5
 	// 1 0 2
 	// 7 6 8
 
-	vTexCoords[0] = 0;
+	TexCoords[0] = 0;
 
-	vTexCoords[1] = float4( -fTexelSize, 0.0f, 0.0f, 0.0f );
-	vTexCoords[2] = float4(  fTexelSize, 0.0f, 0.0f, 0.0f );
-	vTexCoords[3] = float4( 0.0f, -fTexelSize, 0.0f, 0.0f );
-	vTexCoords[6] = float4( 0.0f,  fTexelSize, 0.0f, 0.0f );
+	TexCoords[1] = float4( -TexelSize, 0.0f, 0.0f, 0.0f );
+	TexCoords[2] = float4(  TexelSize, 0.0f, 0.0f, 0.0f );
+	TexCoords[3] = float4( 0.0f, -TexelSize, 0.0f, 0.0f );
+	TexCoords[6] = float4( 0.0f,  TexelSize, 0.0f, 0.0f );
 
-	vTexCoords[4] = float4( -fTexelSize, -fTexelSize, 0.0f, 0.0f );
-	vTexCoords[5] = float4(  fTexelSize, -fTexelSize, 0.0f, 0.0f );
-	vTexCoords[7] = float4( -fTexelSize,  fTexelSize, 0.0f, 0.0f );
-	vTexCoords[8] = float4(  fTexelSize,  fTexelSize, 0.0f, 0.0f );
+	TexCoords[4] = float4( -TexelSize, -TexelSize, 0.0f, 0.0f );
+	TexCoords[5] = float4(  TexelSize, -TexelSize, 0.0f, 0.0f );
+	TexCoords[7] = float4( -TexelSize,  TexelSize, 0.0f, 0.0f );
+	TexCoords[8] = float4(  TexelSize,  TexelSize, 0.0f, 0.0f );
 	
 
 	// Sample each of them checking whether the pixel under test is shadowed or not
-	float fShadowTerm = 0.0f;
+	float ShadowTerm = 0.0f;
     float4 temp;
 	
     for( int i = 0; i < 9; i++ )
@@ -297,98 +319,96 @@ float4  PS_Unlit( VSOUTPUT_UNLIT IN ) : COLOR0
 		float G1 = 1, G2= 0;
 		float H1 = 1, H2= 0;
 
-		if (g_bOnLight[0])
+		if (onLight[0])
 		{
-            temp = IN.vTexCoord + vTexCoords[i];
+            temp = IN.texCoord1 + TexCoords[i];
 
 			A1 = tex2Dproj( ShadowSampler1, temp ).r;
-			A2 = (IN.vTexCoord.z - 0.001f);
+			A2 = (IN.texCoord1.z - 0.001f);
 		}
 
-		if (g_bOnLight[1])
+		if (onLight[1])
 		{
-            temp = IN.vTexCoord2 + vTexCoords[i];
+            temp = IN.texCoord2 + TexCoords[i];
 	
 			B1 = tex2Dproj( ShadowSampler2, temp ).r;
-			B2 = (IN.vTexCoord2.z - 0.001f);
+			B2 = (IN.texCoord2.z - 0.001f);
 		}
 
-		if (g_bOnLight[2])
+		if (onLight[2])
 		{
-            temp = IN.vTexCoord3 + vTexCoords[i];
+            temp = IN.texCoord3 + TexCoords[i];
 	
 			C1 = tex2Dproj( ShadowSampler3, temp ).r;
-			C2 = (IN.vTexCoord3.z - 0.001f);
+			C2 = (IN.texCoord3.z - 0.001f);
 		}
 
-		if (g_bOnLight[3])
+		if (onLight[3])
 		{
-            temp = IN.vTexCoord4 + vTexCoords[i];
+            temp = IN.texCoord4 + TexCoords[i];
 	
 
 			D1 = tex2Dproj( ShadowSampler4, temp ).r;
-			D2 = (IN.vTexCoord4.z - 0.001f);
+			D2 = (IN.texCoord4.z - 0.001f);
 		}
 
-		if (g_bOnLight[4])
+		if (onLight[4])
 		{
-            temp = IN.vTexCoord5 + vTexCoords[i];
+            temp = IN.texCoord5 + TexCoords[i];
 	
 			E1 = tex2Dproj( ShadowSampler5, temp ).r;
-			E2 = (IN.vTexCoord5.z - 0.001f);
+			E2 = (IN.texCoord5.z - 0.001f);
 		}
 
-		if (g_bOnLight[5])
+		if (onLight[5])
 		{
-            temp = IN.vTexCoord6 + vTexCoords[i];
+            temp = IN.texCoord6 + TexCoords[i];
 	
 			F1 = tex2Dproj( ShadowSampler6, temp ).r;
-			F2 = (IN.vTexCoord6.z - 0.001f);
+			F2 = (IN.texCoord6.z - 0.001f);
 		}
 
-		if (g_bOnLight[6])
+		if (onLight[6])
 		{
-			temp = IN.vTexCoord7 + vTexCoords[i];
+			temp = IN.texCoord7 + TexCoords[i];
 	
-
 			G1 = tex2Dproj( ShadowSampler7, temp ).r;
-			G2 = (IN.vTexCoord7.z - 0.001f);
+			G2 = (IN.texCoord7.z - 0.001f);
 		}
 
-		if (g_bOnLight[7])
+		if (onLight[7])
 		{
-			temp = IN.vTexCoord8 + vTexCoords[i];
+			temp = IN.texCoord8 + TexCoords[i];
 	
-
 			H1 = tex2Dproj( ShadowSampler8, temp ).r;
-			H2 = (IN.vTexCoord8.z - 0.001f);
+			H2 = (IN.texCoord8.z - 0.001f);
 		}
 
 		// Texel is shadowed
-		if ( A1 < A2 && g_bOnLight[0] == true)
-			fShadowTerm += 0.1f;
-		else if ( B1 < B2 && g_bOnLight[1] == true)
-			fShadowTerm += 0.1f;
-		else if ( C1 < C2 && g_bOnLight[2] == true)
-			fShadowTerm += 0.1f;
-		else if ( D1 < D2 && g_bOnLight[3] == true)
-			fShadowTerm += 0.1f;
-		else if ( E1 < E2 && g_bOnLight[4] == true)
-			fShadowTerm += 0.1f;
-		else if ( F1 < F2 && g_bOnLight[5] == true)
-			fShadowTerm += 0.1f;
-		else if ( G1 < G2 && g_bOnLight[6] == true)
-			fShadowTerm += 0.1f;
-		else if ( H1 < H2 && g_bOnLight[7] == true)
-			fShadowTerm += 0.1f;
+		if ( A1 < A2 && onLight[0] == true)
+			ShadowTerm += 0.1f;
+		else if ( B1 < B2 && onLight[1] == true)
+			ShadowTerm += 0.1f;
+		else if ( C1 < C2 && onLight[2] == true)
+			ShadowTerm += 0.1f;
+		else if ( D1 < D2 && onLight[3] == true)
+			ShadowTerm += 0.1f;
+		else if ( E1 < E2 && onLight[4] == true)
+			ShadowTerm += 0.1f;
+		else if ( F1 < F2 && onLight[5] == true)
+			ShadowTerm += 0.1f;
+		else if ( G1 < G2 && onLight[6] == true)
+			ShadowTerm += 0.1f;
+		else if ( H1 < H2 && onLight[7] == true)
+			ShadowTerm += 0.1f;
 		else
-			fShadowTerm += 1.0f;
+			ShadowTerm += 1.0f;
 	}
 	
 	// Get the average
-	fShadowTerm /= 9.0f;
+	ShadowTerm /= 9.0f;
 	
-	return fShadowTerm;
+	return ShadowTerm;
 }
 
 
@@ -397,126 +417,138 @@ float4  PS_Unlit( VSOUTPUT_UNLIT IN ) : COLOR0
 //// BLUR Tech
 ////////////////////////////////////////////////////////////////////////////////////
 
-struct VSOUTPUT_BLUR
+struct VS_OUTPUT_BLUR
 {
-	float4 vPosition	: POSITION;
-	float2 vTexCoord	: TEXCOORD0;
+	float4 position	: POSITION;
+	float2 texCoord	: TEXCOORD0;
 };
 
 // Gaussian filter vertex shader
-VSOUTPUT_BLUR VS_Blur( float4 inPosition : POSITION, float2 inTexCoord : TEXCOORD0 )
+VS_OUTPUT_BLUR VS_Blur( float4 inPosition : POSITION, float2 inTexCoord : TEXCOORD0 )
 {
 	// Output struct
-	VSOUTPUT_BLUR OUT = (VSOUTPUT_BLUR)0;
+	VS_OUTPUT_BLUR OUT = (VS_OUTPUT_BLUR)0;
 
 	// Output the position
-	OUT.vPosition = inPosition;
+	OUT.position = inPosition;
 
 	// Output the texture coordinates
-	OUT.vTexCoord = inTexCoord;
+	OUT.texCoord = inTexCoord;
 
 	return OUT;
 }
 
 // Horizontal blur pixel shader
-float4 PS_BlurH( VSOUTPUT_BLUR IN ) : COLOR0
+float4 PS_BlurH( VS_OUTPUT_BLUR IN ) : COLOR0
 {
 	// Accumulated color
-	float4 vAccum = float4( 0.0f, 0.0f, 0.0f, 0.0f );
+	float4 Accum = float4( 0.0f, 0.0f, 0.0f, 0.0f );
 
-	// Sample the taps (g_vSampleOffsets holds the texel offsets and g_fSampleWeights holds the texel weights)
+	// Sample the taps (SampleOffsets holds the texel offsets and SampleWeights holds the texel weights)
 	for( int i = 0; i < 15; i++ )
 	{
-		vAccum += tex2D( ScreenSampler, IN.vTexCoord + g_vSampleOffsets[i] ) * g_fSampleWeights[i];
+		Accum += tex2D( ScreenSampler, IN.texCoord + sampleOffsets[i] ) * sampleWeights[i];
 	}
 
-	return vAccum;
+	return Accum;
 }
 
 // Vertical blur pixel shader
-float4 PS_BlurV( VSOUTPUT_BLUR IN ) : COLOR0
+float4 PS_BlurV( VS_OUTPUT_BLUR IN ) : COLOR0
 {
 	// Accumulated color
-	float4 vAccum = float4( 0.0f, 0.0f, 0.0f, 0.0f );
+	float4 Accum = float4( 0.0f, 0.0f, 0.0f, 0.0f );
 
-	// Sample the taps (g_vSampleOffsets holds the texel offsets and g_fSampleWeights holds the texel weights)
+	// Sample the taps (SampleOffsets holds the texel offsets and SampleWeights holds the texel weights)
 	for( int i = 0; i < 15; i++ )
 	{
-		vAccum += tex2D( BlurHSampler, IN.vTexCoord + g_vSampleOffsets[i] ) * g_fSampleWeights[i];
+		Accum += tex2D( BlurHSampler, IN.texCoord + sampleOffsets[i] ) * sampleWeights[i];
 	}
 
-	return vAccum;
+	return Accum;
 }
 		
-struct VSOUTPUT_SCENE
+struct VS_INPUT_SCENE
 {
-	float4 vPosition		: POSITION;
-	float2 vTexCoord		: TEXCOORD0;
-	float4 vProjCoord		: TEXCOORD1;
-	float4 vScreenCoord		: TEXCOORD2;
-	float3 vNormal			: TEXCOORD3;
-	float3 vLightVec		: TEXCOORD4;
-	float3 vEyeVec			: TEXCOORD5;
+	float4 position 	: POSITION;
+	float3 normal 		: NORMAL;
+	float2 texCoord 	: TEXCOORD0;
+};
+
+struct VS_OUTPUT_SCENE
+{
+	float4 position		: POSITION;
+	float2 texCoord		: TEXCOORD0;
+	float4 projCoord	: TEXCOORD1;
+	float4 screenCoord	: TEXCOORD2;
+	float3 normal		: TEXCOORD3;
+	float4 worldPos		: TEXCOORD4;
+	float3 viewDir		: TEXCOORD5;
 };
 
 // Scene pixel shader
-VSOUTPUT_SCENE VS_Scene( float4 inPosition : POSITION, float3 inNormal : NORMAL, float2 inTexCoord : TEXCOORD0 )
+VS_OUTPUT_SCENE VS_Scene(VS_INPUT_SCENE IN)
 {
-	VSOUTPUT_SCENE OUT = (VSOUTPUT_SCENE)0;
+	VS_OUTPUT_SCENE OUT = (VS_OUTPUT_SCENE)0;
 
-	// Output the transformed position
-	inPosition = mul (inPosition, g_matWorld);
-	OUT.vPosition = mul( inPosition, g_matWorldViewProj );
+	OUT.position = mul (IN.position, matWorld);
+	OUT.position = mul(OUT.position, matWorldViewProj);
 
-	// Output the texture coordinates
-	OUT.vTexCoord = inTexCoord;
+	OUT.texCoord = IN.texCoord;
 
-	// Output the projective texture coordinates
-	OUT.vProjCoord = mul( inPosition, g_matTexture );
+	OUT.projCoord = mul(IN.position, matTexture1);
 
-	// Output the screen-space texture coordinates
-	OUT.vScreenCoord.x = ( OUT.vPosition.x * 0.5 + OUT.vPosition.w * 0.5 );
-	OUT.vScreenCoord.y = ( OUT.vPosition.w * 0.5 - OUT.vPosition.y * 0.5 );
-	OUT.vScreenCoord.z = OUT.vPosition.w;
-	OUT.vScreenCoord.w = OUT.vPosition.w;
+	OUT.screenCoord.x = ( OUT.position.x * 0.5 + OUT.position.w * 0.5 );
+	OUT.screenCoord.y = ( OUT.position.w * 0.5 - OUT.position.y * 0.5 );
+	OUT.screenCoord.z = OUT.position.w;
+	OUT.screenCoord.w = OUT.position.w;
 
-	// Get the world space vertex position
-	float4 vWorldPos = mul( inPosition, g_matWorld );
-
-	// Output the world space normal
-	OUT.vNormal = mul( inNormal, g_matWorldIT );
-
-	// Move the light vector into tangent space
-	OUT.vLightVec = g_vLightPos.xyz - vWorldPos.xyz;
-
-	// Move the eye vector into tangent space
-	OUT.vEyeVec = g_vEyePos.xyz - vWorldPos.xyz;
+	OUT.worldPos = mul(IN.position, matWorld);
+	OUT.normal = mul(IN.normal, matWorldIT);
+	OUT.viewDir = eyePos.xyz - OUT.worldPos.xyz;
 	
 	return OUT;
 }
 
-float4 PS_Scene( VSOUTPUT_SCENE IN ) : COLOR0
+float4 PS_Scene( VS_OUTPUT_SCENE IN ) : COLOR0
 {
-	// Normalize the normal, light and eye vectors
-	IN.vNormal	 = normalize( IN.vNormal );
-	IN.vLightVec = normalize( IN.vLightVec );
-	IN.vEyeVec   = normalize( IN.vEyeVec );
+	float4 LightColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    
+    float3 n = normalize(IN.normal);
+    float3 v = normalize(IN.viewDir);
+    float3 l = float3(0.0f, 0.0f, 0.0f);
+    float3 h = float3(0.0f, 0.0f, 0.0f);
+    
+    float atten = 0.0f;
+    float nDotL = 0.0f;
+    float nDotH = 0.0f;
+    float power = 0.0f;
 
-	// Sample the color and normal maps
-	float4 vColor  = tex2D( ColorSampler, IN.vTexCoord );
+	float ShadowTerm = tex2Dproj( BlurVSampler, IN.screenCoord );
+    
+    for (int i = 0; i < 8; i++)
+    {
+		if (onLight[i] == false)
+			continue;
 
-	// Compute the diffuse and specular lighting terms
-	float diffuse  = max( dot( IN.vNormal, IN.vLightVec ), 0 );
-	float specular = pow( max( dot( 2 * dot( IN.vNormal, IN.vLightVec ) * IN.vNormal - IN.vLightVec, IN.vEyeVec ), 0 ), 8 );
+		l = (lights[i].pos - IN.worldPos) / lights[i].radius;
+        atten = saturate(1.0f - dot(l, l));
+        
+       	l = normalize(l);
+        h = normalize(l + v);
+        
+        nDotL = saturate(dot(n, l));
+        nDotH = saturate(dot(n, h));
+        power = (nDotL == 0.0f) ? 0.0f : pow(nDotH, material.shininess);
 
-	if( diffuse == 0 ) specular = 0;
+		LightColor += (material.ambient * (globalAmbient + (atten * lights[i].ambient)));
+		LightColor += (material.diffuse * lights[i].diffuse * nDotL * atten);
+        LightColor += (material.specular * lights[i].specular * power * atten);
+    }
 
-	// Grab the shadow term
-	float fShadowTerm = tex2Dproj( BlurVSampler, IN.vScreenCoord );
-
-	// Compute the final color
-	return (diffuse * vColor * g_vLightColor * fShadowTerm) +
-		   (specular * vColor * g_vLightColor.a * fShadowTerm);
+	float4 TextureColor  = tex2D( ColorSampler, IN.texCoord );
+	
+	return TextureColor * LightColor * ShadowTerm;
 }
 
 //--------------------------------------------

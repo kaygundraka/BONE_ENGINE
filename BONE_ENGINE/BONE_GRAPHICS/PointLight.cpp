@@ -9,7 +9,7 @@ namespace BONE_GRAPHICS
 {
     PointLight::PointLight()
     {
-        radius = 100;
+        radius = 50;
         this->status = false;
         IsInit = false;
         tr = nullptr;
@@ -37,6 +37,16 @@ namespace BONE_GRAPHICS
         billBoard->SetRenderMode(BillBoard::RENDER_ALPHA);
         this->AddComponent(billBoard);
 
+        this->lightViewSize.x = 1024;
+        this->lightViewSize.y = 1024;
+        this->SetAmbient(1.0f, 1.0f, 1.0f, 1.0f);
+        this->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+        this->SetSpecular(0.5f, 0.5f, 0.5f, 0.5f);
+        this->radius = 50;
+        this->shadowAimPos = Vec3(0, 0, 0);
+
+        this->SetLight(false);
+
         Transform3D* tr = new Transform3D();
         this->AddComponent(tr);
 
@@ -45,6 +55,16 @@ namespace BONE_GRAPHICS
         this->SetPipeLine(GameObject::DIRECT_DEFAULT);
 
         IsInit = true;
+    }
+
+    void PointLight::SetShadowViewSize(Vec2 size)
+    {
+        lightViewSize = size;
+    }
+    
+    Vec2 PointLight::GetShadowViewSize()
+    {
+        return lightViewSize;
     }
 
     void PointLight::Reference()
@@ -115,7 +135,15 @@ namespace BONE_GRAPHICS
         };
 
         j["Light"][name]["Radius"] = radius;
-        
+
+        j["Light"][name]["ShadowTarget"] = {
+            shadowAimPos.x,
+            shadowAimPos.y,
+            shadowAimPos.z
+        };
+
+        j["Light"][name]["Status"] = status;
+
         if (!isNewMap)
             file.close();
 
@@ -125,20 +153,8 @@ namespace BONE_GRAPHICS
         o.close();
     }
 
-    void PointLight::SetLight(bool status)
-    {
-        /*if (this->status == status)
-            return;*/
-
+    void PointLight::SetLight(bool status) {
         this->status = status;
-
-        //if (!IsInit)
-         //   return;
-
-        //if (this->status)
-        //    SceneMgr->CurrentScene()->AddPointLight(this);
-        //else
-        //    SceneMgr->CurrentScene()->RemovePointLight(this);
     }
 
     bool PointLight::IsOn()

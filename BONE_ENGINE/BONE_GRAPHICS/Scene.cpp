@@ -470,37 +470,24 @@ namespace BONE_GRAPHICS
 
         int i = 0;
         for (json::iterator it = j["Light"].begin(); it != j["Light"].end(); ++it) {
-            auto Object = this->FindObjectByName(it.key());
+            auto Position = j["Light"][it.key()]["Position"].get<std::vector<double>>();
+            auto Ambient = j["Light"][it.key()]["Ambient"].get<std::vector<double>>();
+            auto Diffuse = j["Light"][it.key()]["Diffuse"].get<std::vector<double>>();
+            auto Specular = j["Light"][it.key()]["Specular"].get<std::vector<double>>();
+            auto Radius = j["Light"][it.key()]["Radius"].get<double>();
+            auto TargetPos = j["Light"][it.key()]["ShadowTarget"].get<std::vector<double>>();
+            auto Status = j["Light"][it.key()]["Status"].get<bool>();
 
-            if (Object == nullptr)
-            {
-                //auto Position = j["Light"][it.key()]["Position"].get<std::vector<double>>();
-                //auto Ambient = j["Light"][it.key()]["Ambient"].get<std::vector<double>>();
-                //auto Diffuse = j["Light"][it.key()]["Diffuse"].get<std::vector<double>>();
-                //auto Specular = j["Light"][it.key()]["Specular"].get<std::vector<double>>();
-                //auto Radius = j["Light"][it.key()]["Radius"].get<double>();
+            Transform3D* tr = new Transform3D();
+            pointLightList[i]->AddComponent(tr);
+            tr->SetPosition(Position[0], Position[1], Position[2]);
 
-                //Transform3D* tr = new Transform3D();
-                //pointLightList[i]->AddComponent(tr);
-                //tr->SetPosition(Position[0], Position[1], Position[2]);
-                //
-                //pointLightList[i]->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
-                //pointLightList[i]->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
-                //pointLightList[i]->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
-                //pointLightList[i]->SetRadius(Radius);
-                //pointLightList[i]->SetLight(true);
-                
-                //int num = SceneMgr->CurrentScene()->GetPointLights().size();
-                //char temp[100] = "";
-                //itoa(num, temp, 10);
-
-                //std::string name = "PointLight_";
-                //name += temp;
-
-                
-                //SceneMgr->CurrentScene()->AddPointLight(Light);
-                //SceneMgr->CurrentScene()->AddObject(Light, name);
-            }
+            pointLightList[i]->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
+            pointLightList[i]->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
+            pointLightList[i]->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
+            pointLightList[i]->SetRadius(Radius);
+            pointLightList[i]->SetShadowAimPos(Vec3(TargetPos[0], TargetPos[1], TargetPos[2]));
+            pointLightList[i]->SetLight(Status);
         }
 
         for (json::iterator it = j["GameObject"].begin(); it != j["GameObject"].end(); ++it) {

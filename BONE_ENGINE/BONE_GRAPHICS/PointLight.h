@@ -21,6 +21,8 @@ namespace BONE_GRAPHICS
 
         bool IsInit;
 
+        Vec2 lightViewSize;
+
         bool showIcon;
         
     public:
@@ -44,6 +46,9 @@ namespace BONE_GRAPHICS
 
         void SetShadowAimPos(Vec3 aim);
         Vec3 GetShadowAimPos();
+
+        void SetShadowViewSize(Vec2 size);
+        Vec2 GetShadowViewSize();
         
         virtual void SaveInMaps();
 

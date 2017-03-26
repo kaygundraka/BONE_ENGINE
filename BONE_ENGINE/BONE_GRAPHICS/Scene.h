@@ -64,9 +64,13 @@ namespace BONE_GRAPHICS
         D3DXVECTOR2			sampleOffsets[15];
         FLOAT				sampleWeights[15];
 
+        BOOL                onLight[8];
+
     private:
         bool InitShader();
         bool RelShader();
+
+        void SetRenderMatrial(GameObject* object, ID3DXEffect* effect);
         
  	public:
 		bool InitializeMembers();

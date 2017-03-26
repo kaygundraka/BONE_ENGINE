@@ -4,6 +4,8 @@
 #include "SceneManager.h"
 #include "Transform3D.h"
 #include "StaticMesh.h"
+#include "Material.h"
+#pragma warning(disable:4996)
 
 D3DXVECTOR3			g_vUp = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 BOOL				g_bFiltered = TRUE;
@@ -18,9 +20,7 @@ BOOL				g_bFiltered = TRUE;
 D3DVERTEXELEMENT9 dwElement[] =
 {
     { 0,   0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
-
     { 0,  12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL,   0 },
-
     { 0,  24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
 
     D3DDECL_END()
@@ -143,23 +143,19 @@ namespace BONE_GRAPHICS
 
             Transform3D* tr = new Transform3D();
             light->AddComponent(tr);
-            
-            light->SetAmbient(1.0f, 1.0f, 1.0f, 1.0f);
-            light->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
-            light->SetSpecular(0.5f, 0.5f, 0.5f, 0.5f);
-            light->SetRadius(200);
-            light->SetShadowAimPos(Vec3(0, 0, 0));
-
-            if (i == 0)
-                light->SetLight(true);
-            else
-                light->SetLight(false);
 
             light->SetTag("EditorObject");
 
             light->Init();
             light->LoadContents();
             light->Reference();
+
+            char Temp[2];
+            itoa(i, Temp, 10);
+            std::string name = "PointLight_";
+            name += Temp;
+
+            light->SetName(name);
 
             pointLightList.push_back(light);
         }
@@ -215,7 +211,7 @@ namespace BONE_GRAPHICS
         if (DefaultShaderObjects.size() == 0)
             return;
 
-#pragma region ---------------- Set Shader ----------------
+        // ---------------- Set Shader ----------------
 
         auto DefaultEffect = ResourceMgr->LoadEffect("DefaultEffect.fx");
         auto MainCamera = GetCurrentCamera();
@@ -236,23 +232,91 @@ namespace BONE_GRAPHICS
         D3DXMatrixInverse(&matWorldIT, NULL, &matWorld);
         D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
 
-        DefaultEffect->SetMatrix("g_matWorld", &matWorld);
-        DefaultEffect->SetMatrix("g_matWorldIT", &matWorldIT);
-        DefaultEffect->SetMatrix("g_matWorldViewProj", &matWorldViewProj);
+        DefaultEffect->SetMatrix("matWorld", &matWorld);
+        DefaultEffect->SetMatrix("matWorldIT", &matWorldIT);
+        DefaultEffect->SetMatrix("matWorldViewProj", &matWorldViewProj);
+
+        float GlobalAmbient[4] = {
+            globalAmbient.r,
+            globalAmbient.g,
+            globalAmbient.b,
+            globalAmbient.a
+        };
+
+        DefaultEffect->SetValue("globalAmbient", &GlobalAmbient, sizeof(GlobalAmbient));
 
         D3DXMATRIX matLightViewProj[8];
 
         // Compute the texture matrix
         float fTexOffs = 0.5 + (0.5 / (float)SHADOW_MAP_SIZE);
+        
         D3DXMATRIX matTexAdj(0.5f, 0.0f, 0.0f, 0.0f,
             0.0f, -0.5f, 0.0f, 0.0f,
             0.0f, 0.0f, 1.0f, 0.0f,
-            fTexOffs, fTexOffs, 0.0f, 1.0f);
+            fTexOffs, fTexOffs, 0.0f, 1.0f
+        );
 
-        DefaultEffect->SetVector("g_vEyePos", (D3DXVECTOR4*)&(((Transform3D*)MainCamera->transform3D)->GetPosition()));
-        DefaultEffect->SetBool("g_bFiltered", g_bFiltered);
-
+        DefaultEffect->SetVector("eyePos", (D3DXVECTOR4*)&(((Transform3D*)MainCamera->transform3D)->GetPosition()));
+        
         UINT uPasses = 0;
+
+#pragma region ---------------- Set Lighting --------------------
+        D3DXHANDLE HandleLight;
+        D3DXHANDLE HandleLightPos;
+        D3DXHANDLE HandleLightAmbient;
+        D3DXHANDLE HandleLightDiffuse;
+        D3DXHANDLE HandleLightSpecular;
+        D3DXHANDLE HandleLightRadius;
+
+        int i = 0;
+                
+        for (auto iter = pointLightList.begin(); iter != pointLightList.end(); iter++)
+        {
+            onLight[i] = (*iter)->IsOn();
+            
+            HandleLight = DefaultEffect->GetParameterElement("lights", i++);
+
+            HandleLightPos = DefaultEffect->GetParameterByName(HandleLight, "pos");
+            HandleLightAmbient = DefaultEffect->GetParameterByName(HandleLight, "ambient");
+            HandleLightDiffuse = DefaultEffect->GetParameterByName(HandleLight, "diffuse");
+            HandleLightSpecular = DefaultEffect->GetParameterByName(HandleLight, "specular");
+            HandleLightRadius = DefaultEffect->GetParameterByName(HandleLight, "radius");
+
+            float Pos[3] = {
+                (*iter)->GetPosition().x,
+                (*iter)->GetPosition().y,
+                (*iter)->GetPosition().z,
+            };
+
+            float LightAmbient[4] = {
+                (*iter)->GetAmbient().r,
+                (*iter)->GetAmbient().g,
+                (*iter)->GetAmbient().b,
+                (*iter)->GetAmbient().a
+            };
+
+            float LightDiffuse[4] = {
+                (*iter)->GetDiffuse().r,
+                (*iter)->GetDiffuse().g,
+                (*iter)->GetDiffuse().b,
+                (*iter)->GetDiffuse().a
+            };
+
+            float LightSpecular[4] = {
+                (*iter)->GetSpecular().r,
+                (*iter)->GetSpecular().g,
+                (*iter)->GetSpecular().b,
+                (*iter)->GetSpecular().a
+            };
+
+            DefaultEffect->SetValue(HandleLightPos, Pos, sizeof(Pos));
+            DefaultEffect->SetValue(HandleLightAmbient, LightAmbient, sizeof(LightAmbient));
+            DefaultEffect->SetValue(HandleLightDiffuse, LightDiffuse, sizeof(LightDiffuse));
+            DefaultEffect->SetValue(HandleLightSpecular, LightSpecular, sizeof(LightSpecular));
+            DefaultEffect->SetFloat(HandleLightRadius, (*iter)->GetRadius());
+        }
+
+        DefaultEffect->SetBoolArray("onLight", onLight, 8);
 
 #pragma endregion
 
@@ -262,33 +326,17 @@ namespace BONE_GRAPHICS
         RenderMgr->GetDevice()->GetRenderTarget(0, &oldColorRT);
         RenderMgr->GetDevice()->GetDepthStencilSurface(&oldDepthRT);
 
-        auto Lights = SceneMgr->CurrentScene()->GetPointLights();
-
-        int i = 0;
-
-        BOOL OnLight[8] = { false };
-        for each (auto var in Lights)
-        {
-            OnLight[i] = var->IsOn();
-            i++;
-        }
-
-        DefaultEffect->SetBoolArray("g_bOnLight", const_cast<const BOOL*>(OnLight), 8);
-
         i = 0;
-        for each (auto var in Lights)
+        for each (auto var in pointLightList)
         {
-            var->SetPosition(Vec3(0, 30, 30));
-            D3DXMatrixLookAtLH(&matView, &Vec3(0, 30, 30), &var->GetShadowAimPos(), &g_vUp);
-            D3DXMatrixOrthoLH(&matProj, 45.0f, 45.0f, 1.0f, 1024.0f);
+            D3DXMatrixLookAtLH(&matView, &var->GetPosition(), &var->GetShadowAimPos(), &g_vUp);
+            D3DXMatrixOrthoLH(&matProj, 1024.0f, 1024.0f, 1.0f, 1024.0f);
             matLightViewProj[i] = matWorld * matView * matProj;
 
             RGBA diffuse = var->GetDiffuse();
 
             // Setup the effect variables
-            DefaultEffect->SetMatrix("g_matLightViewProj", &matLightViewProj[i]);
-            DefaultEffect->SetVector("g_vLightPos", (D3DXVECTOR4*)&Vec3(0, 30, 30));
-            DefaultEffect->SetVector("g_vLightColor", &D3DXVECTOR4(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
+            DefaultEffect->SetMatrix("matLightViewProj", &matLightViewProj[i]);
             DefaultEffect->CommitChanges();
 
             // Render the scene depth to the shadow map
@@ -320,12 +368,12 @@ namespace BONE_GRAPHICS
                             matWorld = ((Transform3D*)Iter->transform3D)->GetTransform();
                             D3DXMatrixInverse(&matWorldIT, NULL, &matWorld);
                             D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
-                            DefaultEffect->SetMatrix("g_matWorld", &matWorld);
-                            DefaultEffect->SetMatrix("g_matWorldIT", &matWorldIT);
+                            DefaultEffect->SetMatrix("matWorld", &matWorld);
+                            DefaultEffect->SetMatrix("matWorldIT", &matWorldIT);
                             DefaultEffect->CommitChanges();
 
-                            for (int i = 0; i < Mesh->numMaterials; i++)
-                                Mesh->mesh->DrawSubset(i);
+                            for (int j = 0; j < Mesh->numMaterials; j++)
+                                Mesh->mesh->DrawSubset(j);
                         }
                     }
                 
@@ -333,6 +381,8 @@ namespace BONE_GRAPHICS
             }
 
             DefaultEffect->End();
+            
+            i++;
         }
 
         D3DXMATRIX matTexture[8];
@@ -355,14 +405,14 @@ namespace BONE_GRAPHICS
             DefaultEffect->SetTechnique("techUnlit");
 
             // Set the textures
-            DefaultEffect->SetMatrix("g_matTexture", &matTexture[0]);
-            DefaultEffect->SetMatrix("g_matTexture2", &matTexture[1]);
-            DefaultEffect->SetMatrix("g_matTexture3", &matTexture[2]);
-            DefaultEffect->SetMatrix("g_matTexture4", &matTexture[3]);
-            DefaultEffect->SetMatrix("g_matTexture5", &matTexture[4]);
-            DefaultEffect->SetMatrix("g_matTexture6", &matTexture[5]);
-            DefaultEffect->SetMatrix("g_matTexture7", &matTexture[6]);
-            DefaultEffect->SetMatrix("g_matTexture8", &matTexture[7]);
+            DefaultEffect->SetMatrix("matTexture1", &matTexture[0]);
+            DefaultEffect->SetMatrix("matTexture2", &matTexture[1]);
+            DefaultEffect->SetMatrix("matTexture3", &matTexture[2]);
+            DefaultEffect->SetMatrix("matTexture4", &matTexture[3]);
+            DefaultEffect->SetMatrix("matTexture5", &matTexture[4]);
+            DefaultEffect->SetMatrix("matTexture6", &matTexture[5]);
+            DefaultEffect->SetMatrix("matTexture7", &matTexture[6]);
+            DefaultEffect->SetMatrix("matTexture8", &matTexture[7]);
             DefaultEffect->SetTexture("tShadowMap1", shadowMap[0]);
             DefaultEffect->SetTexture("tShadowMap2", shadowMap[1]);
             DefaultEffect->SetTexture("tShadowMap3", shadowMap[2]);
@@ -391,8 +441,8 @@ namespace BONE_GRAPHICS
                             matWorld = ((Transform3D*)Iter->transform3D)->GetTransform();
                             D3DXMatrixInverse(&matWorldIT, NULL, &matWorld);
                             D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
-                            DefaultEffect->SetMatrix("g_matWorld", &matWorld);
-                            DefaultEffect->SetMatrix("g_matWorldIT", &matWorldIT);
+                            DefaultEffect->SetMatrix("matWorld", &matWorld);
+                            DefaultEffect->SetMatrix("matWorldIT", &matWorldIT);
                             DefaultEffect->CommitChanges();
 
                             for (int i = 0; i < Mesh->numMaterials; i++)
@@ -424,8 +474,8 @@ namespace BONE_GRAPHICS
         // Compute the Gaussian offsets
         GetGaussianOffsets(TRUE, D3DXVECTOR2(1.0f / (FLOAT)SHADOW_MAP_SIZE, 1.0f / (FLOAT)SHADOW_MAP_SIZE),
             sampleOffsets, sampleWeights);
-        DefaultEffect->SetValue("g_vSampleOffsets", sampleOffsets, 15 * sizeof(D3DXVECTOR2));
-        DefaultEffect->SetValue("g_fSampleWeights", sampleWeights, 15 * sizeof(FLOAT));
+        DefaultEffect->SetValue("sampleOffsets", sampleOffsets, 15 * sizeof(D3DXVECTOR2));
+        DefaultEffect->SetValue("sampleWeights", sampleWeights, 15 * sizeof(FLOAT));
 
         // Set the textures
         DefaultEffect->SetTexture("tScreenMap", screenMap);
@@ -458,8 +508,8 @@ namespace BONE_GRAPHICS
 
         // Compute the Gaussian offsets
         GetGaussianOffsets(FALSE, D3DXVECTOR2(1.0f / (FLOAT)SHADOW_MAP_SIZE, 1.0f / (FLOAT)SHADOW_MAP_SIZE), sampleOffsets, sampleWeights);
-        DefaultEffect->SetValue("g_vSampleOffsets", sampleOffsets, 15 * sizeof(D3DXVECTOR2));
-        DefaultEffect->SetValue("g_fSampleWeights", sampleWeights, 15 * sizeof(FLOAT));
+        DefaultEffect->SetValue("sampleOffsets", sampleOffsets, 15 * sizeof(D3DXVECTOR2));
+        DefaultEffect->SetValue("sampleWeights", sampleWeights, 15 * sizeof(FLOAT));
 
         // Set the textures
         DefaultEffect->SetTexture("tBlurHMap", blurMap[0]);
@@ -506,6 +556,8 @@ namespace BONE_GRAPHICS
         //if (g_bWireframe)
         //    RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
+        i = 0;
+
         for (UINT uPass = 0; uPass < uPasses; uPass++)
         {
             DefaultEffect->BeginPass(uPass);
@@ -523,9 +575,11 @@ namespace BONE_GRAPHICS
                         matWorld = ((Transform3D*)Iter->transform3D)->GetTransform();
                         D3DXMatrixInverse(&matWorldIT, NULL, &matWorld);
                         D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
+                        SetRenderMatrial(Iter, DefaultEffect);
+
                         DefaultEffect->SetTexture("tColorMap", ResourceMgr->LoadTexture(Textures[i]));
-                        DefaultEffect->SetMatrix("g_matWorld", &matWorld);
-                        DefaultEffect->SetMatrix("g_matWorldIT", &matWorldIT);
+                        DefaultEffect->SetMatrix("matWorld", &matWorld);
+                        DefaultEffect->SetMatrix("matWorldIT", &matWorldIT);
                         DefaultEffect->CommitChanges();
 
                         for (int i = 0; i < Mesh->numMaterials; i++)
@@ -539,5 +593,50 @@ namespace BONE_GRAPHICS
         DefaultEffect->End();
 
 #pragma endregion
+    }
+
+    void Scene::SetRenderMatrial(GameObject* object, ID3DXEffect* effect) 
+    {
+        auto material = (Material*)object->GetComponent("Material");
+
+        if (material == nullptr)
+        {
+            material = new Material();
+            object->AddComponent(material);
+        }
+
+        float MatAmbient[4] = {
+            material->GetAmbient().r,
+            material->GetAmbient().g,
+            material->GetAmbient().b,
+            material->GetAmbient().a,
+        };
+
+        float MatDiffuse[4] = {
+            material->GetDiffuse().r,
+            material->GetDiffuse().g,
+            material->GetDiffuse().b,
+            material->GetDiffuse().a,
+        };
+
+        float MatEmissive[4] = {
+            material->GetEmissive().r,
+            material->GetEmissive().g,
+            material->GetEmissive().b,
+            material->GetEmissive().a,
+        };
+
+        float MatSpecular[4] = {
+            material->GetSpecular().r,
+            material->GetSpecular().g,
+            material->GetSpecular().b,
+            material->GetSpecular().a,
+        };
+
+        effect->SetValue("material.ambient", MatAmbient, sizeof(MatAmbient));
+        effect->SetValue("material.diffuse", MatDiffuse, sizeof(MatDiffuse));
+        effect->SetValue("material.emissive", MatEmissive, sizeof(MatEmissive));
+        effect->SetValue("material.specular", MatSpecular, sizeof(MatSpecular));
+        effect->SetFloat("material.shininess", material->GetShininess());
     }
 }
