@@ -129,9 +129,6 @@ namespace BONE_GRAPHICS
         void SetAmbientColor(RGBA color);
         RGBA GetAmbientColor();
 
-        //void AddPointLight(PointLight* object);
-        //void RemovePointLight(PointLight* object);
-
         std::vector<PointLight*> GetPointLights();
         std::list<GameObject*> GetObjectList();
         std::list<GameObject*> GetStaticObjectList();

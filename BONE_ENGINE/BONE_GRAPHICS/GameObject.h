@@ -5,13 +5,20 @@
 namespace BONE_GRAPHICS 
 {
 	class GameObject {
+    public:
+        enum PIPE_LINE
+        {
+            DIRECT_DEFAULT,
+            DEFAULT_SHADER,
+            CUSTOM_SHADER
+        };
+
 	protected:
 		std::string tag;
         std::string name;
         std::string prefab;
 
 		std::vector<Component*> components;
-
         std::list<std::string> scripts;
 
 		GameObject* parent;
@@ -20,20 +27,20 @@ namespace BONE_GRAPHICS
 
 		int priorty;
 
-        bool isDefaultShader;
-		
 		bool isStatic;
 		bool isActive;
         bool isEditorLock;
 
         bool enableScript;
 
+        PIPE_LINE pipeLine;
+
 	public:
         Component* transform3D;
         Component* transform2D;
 
-        void SetDefaultPipeLine();
-        void SetDefaultShader();
+        void SetPipeLine(PIPE_LINE pipeLine);
+        PIPE_LINE GetPipeLine();
 
 		GameObject();
 		virtual ~GameObject();

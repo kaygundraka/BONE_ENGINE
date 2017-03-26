@@ -26,7 +26,7 @@ namespace BONE_GRAPHICS
     {
         isActive = true;
         isStatic = false;
-        isDefaultShader = true;
+        pipeLine = PIPE_LINE::DEFAULT_SHADER;
         isEditorLock = false;
         name = "";
         enableScript = true;
@@ -52,11 +52,6 @@ namespace BONE_GRAPHICS
             Iter = components.erase(Iter);
             delete Temp;
         }
-    }
-
-    void GameObject::SetDefaultPipeLine()
-    {
-        isDefaultShader = false;
     }
 
 	void GameObject::SetStatic(bool isStatic)
@@ -154,12 +149,10 @@ namespace BONE_GRAPHICS
 	void GameObject::Render()
 	{
 		IShader* Shader = ((IShader*)GetComponent("IShader"));
-        static PhongShader phongShader;
+        //static PhongShader phongShader;
 
-        if (isDefaultShader)
-            Shader = &phongShader;
-
-
+        //if (pipeLine == PIPE_LINE::CUSTOM_SHADER)
+        //    Shader = &phongShader;
 
         if (Shader != nullptr)
         {
@@ -886,9 +879,13 @@ namespace BONE_GRAPHICS
         CollisionEventFunc(this, otherObject);
     }
 
-    void GameObject::SetDefaultShader()
+    void GameObject::SetPipeLine(PIPE_LINE pipeLine)
     {
-
-
+        this->pipeLine = pipeLine;
+    }
+    
+    GameObject::PIPE_LINE GameObject::GetPipeLine()
+    {
+        return pipeLine;
     }
 }

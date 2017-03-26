@@ -37,9 +37,12 @@ namespace BONE_GRAPHICS
         billBoard->SetRenderMode(BillBoard::RENDER_ALPHA);
         this->AddComponent(billBoard);
 
+        Transform3D* tr = new Transform3D();
+        this->AddComponent(tr);
+
         ((BillBoard*)GetComponent("BillBoard"))->SetShow(false);
 
-        this->SetDefaultPipeLine();
+        this->SetPipeLine(GameObject::DIRECT_DEFAULT);
 
         IsInit = true;
     }

@@ -194,6 +194,27 @@ namespace BONE_GRAPHICS
 
     void Scene::Render()
     {
+        std::vector<GameObject*> DefaultShaderObjects;
+        
+        for each(auto var in objectList)
+        {
+            if (var->GetPipeLine() == GameObject::PIPE_LINE::DEFAULT_SHADER)
+                DefaultShaderObjects.push_back(var);
+            else
+                var->Render();
+        }
+
+        for each(auto var in staticObjectList)
+        {
+            if (var->GetPipeLine() == GameObject::PIPE_LINE::DEFAULT_SHADER)
+                DefaultShaderObjects.push_back(var);
+            else
+                var->Render();
+        }
+
+        if (DefaultShaderObjects.size() == 0)
+            return;
+
 #pragma region ---------------- Set Shader ----------------
 
         auto DefaultEffect = ResourceMgr->LoadEffect("DefaultEffect.fx");
@@ -287,16 +308,16 @@ namespace BONE_GRAPHICS
             {
                 DefaultEffect->BeginPass(uPass);
 
-                for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
-                    if ((*Iter)->GetActive())
+                for each (auto Iter in DefaultShaderObjects)
+                    if (Iter->GetActive())
                     {
-                        auto staticMesh = ((StaticMesh*)(*Iter)->GetComponent("StaticMesh"));
+                        auto staticMesh = ((StaticMesh*)Iter->GetComponent("StaticMesh"));
                         if (staticMesh != nullptr)
                         {
                             auto Mesh = ResourceMgr->FindMesh(staticMesh->GetFile());
 
                             D3DXMATRIX matWorld, matWorldIT;
-                            matWorld = ((Transform3D*)(*Iter)->transform3D)->GetTransform();
+                            matWorld = ((Transform3D*)Iter->transform3D)->GetTransform();
                             D3DXMatrixInverse(&matWorldIT, NULL, &matWorld);
                             D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
                             DefaultEffect->SetMatrix("g_matWorld", &matWorld);
@@ -305,31 +326,6 @@ namespace BONE_GRAPHICS
 
                             for (int i = 0; i < Mesh->numMaterials; i++)
                                 Mesh->mesh->DrawSubset(i);
-                        }
-                    }
-
-                for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-                    if ((*Iter)->GetActive())
-                    {
-                        auto staticMesh = ((StaticMesh*)(*Iter)->GetComponent("StaticMesh"));
-                        if (staticMesh != nullptr)
-                        {
-                            auto staticMesh = ((StaticMesh*)(*Iter)->GetComponent("StaticMesh"));
-                            if (staticMesh != nullptr)
-                            {
-                                auto Mesh = ResourceMgr->FindMesh(staticMesh->GetFile());
-
-                                D3DXMATRIX matWorld, matWorldIT;
-                                matWorld = ((Transform3D*)(*Iter)->transform3D)->GetTransform();
-                                D3DXMatrixInverse(&matWorldIT, NULL, &matWorld);
-                                D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
-                                DefaultEffect->SetMatrix("g_matWorld", &matWorld);
-                                DefaultEffect->SetMatrix("g_matWorldIT", &matWorldIT);
-                                DefaultEffect->CommitChanges();
-
-                                for (int i = 0; i < Mesh->numMaterials; i++)
-                                    Mesh->mesh->DrawSubset(i);
-                            }
                         }
                     }
                 
@@ -383,16 +379,16 @@ namespace BONE_GRAPHICS
             {
                 DefaultEffect->BeginPass(uPass);
 
-                for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
-                    if ((*Iter)->GetActive())
+                for each (auto Iter in DefaultShaderObjects)
+                    if (Iter->GetActive())
                     {
-                        auto staticMesh = ((StaticMesh*)(*Iter)->GetComponent("StaticMesh"));
+                        auto staticMesh = ((StaticMesh*)Iter->GetComponent("StaticMesh"));
                         if (staticMesh != nullptr)
                         {
                             auto Mesh = ResourceMgr->FindMesh(staticMesh->GetFile());
 
                             D3DXMATRIX matWorld, matWorldIT;
-                            matWorld = ((Transform3D*)(*Iter)->transform3D)->GetTransform();
+                            matWorld = ((Transform3D*)Iter->transform3D)->GetTransform();
                             D3DXMatrixInverse(&matWorldIT, NULL, &matWorld);
                             D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
                             DefaultEffect->SetMatrix("g_matWorld", &matWorld);
@@ -401,31 +397,6 @@ namespace BONE_GRAPHICS
 
                             for (int i = 0; i < Mesh->numMaterials; i++)
                                 Mesh->mesh->DrawSubset(i);
-                        }
-                    }
-
-                for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-                    if ((*Iter)->GetActive())
-                    {
-                        auto staticMesh = ((StaticMesh*)(*Iter)->GetComponent("StaticMesh"));
-                        if (staticMesh != nullptr)
-                        {
-                            auto staticMesh = ((StaticMesh*)(*Iter)->GetComponent("StaticMesh"));
-                            if (staticMesh != nullptr)
-                            {
-                                auto Mesh = ResourceMgr->FindMesh(staticMesh->GetFile());
-
-                                D3DXMATRIX matWorld, matWorldIT;
-                                matWorld = ((Transform3D*)(*Iter)->transform3D)->GetTransform();
-                                D3DXMatrixInverse(&matWorldIT, NULL, &matWorld);
-                                D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
-                                DefaultEffect->SetMatrix("g_matWorld", &matWorld);
-                                DefaultEffect->SetMatrix("g_matWorldIT", &matWorldIT);
-                                DefaultEffect->CommitChanges();
-
-                                for (int i = 0; i < Mesh->numMaterials; i++)
-                                    Mesh->mesh->DrawSubset(i);
-                            }
                         }
                     }
 
@@ -531,7 +502,7 @@ namespace BONE_GRAPHICS
         uPasses = 0;
         DefaultEffect->Begin(&uPasses, 0);
 
-        // Do we need to render the scene in wireframe mode
+        // Do we need to render the scene in wireframe mode        
         //if (g_bWireframe)
         //    RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
@@ -539,40 +510,17 @@ namespace BONE_GRAPHICS
         {
             DefaultEffect->BeginPass(uPass);
 
-            for (auto Iter = staticObjectList.begin(); Iter != staticObjectList.end(); Iter++)
-                if ((*Iter)->GetActive())
+            for each (auto Iter in DefaultShaderObjects)
+                if (Iter->GetActive())
                 {
-                    auto staticMesh = ((StaticMesh*)(*Iter)->GetComponent("StaticMesh"));
+                    auto staticMesh = ((StaticMesh*)Iter->GetComponent("StaticMesh"));
                     if (staticMesh != nullptr)
                     {
                         auto Textures = staticMesh->GetTextures();
                         auto Mesh = ResourceMgr->FindMesh(staticMesh->GetFile());
 
                         D3DXMATRIX matWorld, matWorldIT;
-                        matWorld = ((Transform3D*)(*Iter)->transform3D)->GetTransform();
-                        D3DXMatrixInverse(&matWorldIT, NULL, &matWorld);
-                        D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
-                        DefaultEffect->SetTexture("tColorMap", ResourceMgr->LoadTexture(Textures[i]));
-                        DefaultEffect->SetMatrix("g_matWorld", &matWorld);
-                        DefaultEffect->SetMatrix("g_matWorldIT", &matWorldIT);
-                        DefaultEffect->CommitChanges();
-
-                        for (int i = 0; i < Mesh->numMaterials; i++)
-                            Mesh->mesh->DrawSubset(i);
-                    }
-                }
-
-            for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-                if ((*Iter)->GetActive())
-                {
-                    auto staticMesh = ((StaticMesh*)(*Iter)->GetComponent("StaticMesh"));
-                    if (staticMesh != nullptr)
-                    {
-                        auto Textures = staticMesh->GetTextures();
-                        auto Mesh = ResourceMgr->FindMesh(staticMesh->GetFile());
-
-                        D3DXMATRIX matWorld, matWorldIT;
-                        matWorld = ((Transform3D*)(*Iter)->transform3D)->GetTransform();
+                        matWorld = ((Transform3D*)Iter->transform3D)->GetTransform();
                         D3DXMatrixInverse(&matWorldIT, NULL, &matWorld);
                         D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
                         DefaultEffect->SetTexture("tColorMap", ResourceMgr->LoadTexture(Textures[i]));

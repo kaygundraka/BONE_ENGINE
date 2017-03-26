@@ -578,23 +578,6 @@ namespace BONE_GRAPHICS
         onLoadScene = true;
     }
 
-    /*void Scene::AddPointLight(PointLight* object)
-    {
-        pointLightList.push_back(object);
-    }
-
-    void Scene::RemovePointLight(PointLight* object)
-    {
-        for (auto iter = pointLightList.begin(); iter != pointLightList.end();)
-        {
-            if (*iter == object)
-            {
-                pointLightList.erase(iter);
-                break;
-            }
-        }
-    }*/
-
     std::vector<PointLight*> Scene::GetPointLights()
     {
         return pointLightList;

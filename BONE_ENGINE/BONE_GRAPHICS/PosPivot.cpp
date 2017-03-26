@@ -40,7 +40,7 @@ namespace BONE_GRAPHICS
             StaticMesh* PivotMesh = new StaticMesh();
             Transform3D* Transform = new Transform3D();
 
-            Pivot->SetDefaultPipeLine();
+            Pivot->SetPipeLine(GameObject::DIRECT_DEFAULT);
 
             PivotMesh->SetFile("PosPivot.X");
             PivotMesh->Hide();
