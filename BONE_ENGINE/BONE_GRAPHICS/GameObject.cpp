@@ -41,9 +41,11 @@ namespace BONE_GRAPHICS
     {
         for (auto Iter = childs.begin(); Iter != childs.end();)
         {
-            //GameObject* Temp = (*Iter);
+            GameObject* Temp = (*Iter);
             Iter = childs.erase(Iter);
-            //SceneMgr->CurrentScene()->Destroy(Temp);
+
+            if (SceneMgr->CurrentScene() != nullptr)
+                SceneMgr->CurrentScene()->Destroy(Temp);
         }
 
         for (auto Iter = components.begin(); Iter != components.end();)
@@ -188,7 +190,7 @@ namespace BONE_GRAPHICS
         else
         {
             if (GetComponent("SkinnedMesh") != nullptr)
-                ((SkinnedMesh*)GetComponent("SkinnedMesh"))->Render(nullptr, this);
+                ((SkinnedMesh*)GetComponent("SkinnedMesh"))->Render((IShader*)nullptr, this);
 
             if (GetComponent("StaticMesh") != nullptr)
                 ((StaticMesh*)GetComponent("StaticMesh"))->Render(nullptr, this);

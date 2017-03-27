@@ -24,7 +24,7 @@ float4 	globalAmbient;
 
 struct PointLight
 {
-	vector pos;
+	float3 pos;
 	float4 ambient;
 	float4 diffuse;
 	float4 specular;
@@ -64,6 +64,7 @@ texture tScreenMap;
 texture tBlurHMap;
 texture tBlurVMap;
 texture	tColorMap;
+texture normalMapTexture;
 
 sampler ShadowSampler1 = sampler_state
 {
@@ -209,6 +210,15 @@ sampler ColorSampler = sampler_state
 	AddressV = Wrap;
 };
 
+sampler2D normalMap = sampler_state
+{
+    Texture = <normalMapTexture>;
+    MagFilter = Linear;
+    MinFilter = Anisotropic;
+    MipFilter = Linear;
+    MaxAnisotropy = 16;
+};
+
 ////////////////////////////////////////////////////////////////////////////////////
 //// Shadow Tech
 ////////////////////////////////////////////////////////////////////////////////////
@@ -284,7 +294,7 @@ float4  PS_Unlit( VS_OUTPUT_UNLIT IN ) : COLOR0
 	float4 TexCoords[9];
 
 	// Texel size
-	float TexelSize = 1.0f / 512.0f;
+	float TexelSize = 1.0f / 1024.0f;
 
 	// Generate the tecture co-ordinates for the specified depth-map size
 	// 4 3 5
@@ -473,6 +483,7 @@ struct VS_INPUT_SCENE
 	float4 position 	: POSITION;
 	float3 normal 		: NORMAL;
 	float2 texCoord 	: TEXCOORD0;
+	float4 tangent 		: TANGENT;
 };
 
 struct VS_OUTPUT_SCENE
@@ -484,6 +495,8 @@ struct VS_OUTPUT_SCENE
 	float3 normal		: TEXCOORD3;
 	float4 worldPos		: TEXCOORD4;
 	float3 viewDir		: TEXCOORD5;
+	float3 tangent 		: TEXCOORD6;
+	float3 bitangent 	: TEXCOORD7;
 };
 
 // Scene pixel shader
@@ -491,7 +504,9 @@ VS_OUTPUT_SCENE VS_Scene(VS_INPUT_SCENE IN)
 {
 	VS_OUTPUT_SCENE OUT = (VS_OUTPUT_SCENE)0;
 
-	OUT.position = mul (IN.position, matWorld);
+	IN.position.w = 1.0f;
+
+	OUT.position = mul(IN.position, matWorld);
 	OUT.position = mul(OUT.position, matWorldViewProj);
 
 	OUT.texCoord = IN.texCoord;
@@ -505,17 +520,25 @@ VS_OUTPUT_SCENE VS_Scene(VS_INPUT_SCENE IN)
 
 	OUT.worldPos = mul(IN.position, matWorld);
 	OUT.normal = mul(IN.normal, matWorldIT);
-	OUT.viewDir = eyePos.xyz - OUT.worldPos.xyz;
+	OUT.viewDir = eyePos - OUT.worldPos;
+
+	OUT.tangent = mul(IN.tangent.xyz, (float3x3)matWorldIT);
+	OUT.bitangent = cross(OUT.normal, OUT.tangent) * IN.tangent.w;
 	
 	return OUT;
 }
 
-float4 PS_Scene( VS_OUTPUT_SCENE IN ) : COLOR0
+float4 PS_Scene( VS_OUTPUT_SCENE IN ) : COLOR
 {
-	float4 LightColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
-    
-    float3 n = normalize(IN.normal);
-    float3 v = normalize(IN.viewDir);
+	float3 t = normalize(IN.tangent);
+    float3 b = normalize(IN.bitangent);
+    float3 n = normalize(tex2D(normalMap, IN.texCoord).rgb * 2.0f - 1.0f);//normalize(IN.normal);
+
+    float3x3 tbnMatrix = float3x3(t.x, b.x, n.x,
+	                              t.y, b.y, n.y,
+	                              t.z, b.z, n.z);
+	                                 
+    float3 v = normalize(mul(eyePos - IN.worldPos, tbnMatrix)) * 2.0f;
     float3 l = float3(0.0f, 0.0f, 0.0f);
     float3 h = float3(0.0f, 0.0f, 0.0f);
     
@@ -523,32 +546,33 @@ float4 PS_Scene( VS_OUTPUT_SCENE IN ) : COLOR0
     float nDotL = 0.0f;
     float nDotH = 0.0f;
     float power = 0.0f;
-
-	float ShadowTerm = tex2Dproj( BlurVSampler, IN.screenCoord );
     
+    float4 color = float4(0.0f, 0.0f, 0.0f, 0.0f);
+        
     for (int i = 0; i < 8; i++)
     {
 		if (onLight[i] == false)
 			continue;
 
-		l = (lights[i].pos - IN.worldPos) / lights[i].radius;
+        l = (lights[i].pos - IN.worldPos) / lights[i].radius;
         atten = saturate(1.0f - dot(l, l));
         
-       	l = normalize(l);
+        l = normalize(l);
         h = normalize(l + v);
         
         nDotL = saturate(dot(n, l));
         nDotH = saturate(dot(n, h));
         power = (nDotL == 0.0f) ? 0.0f : pow(nDotH, material.shininess);
-
-		LightColor += (material.ambient * (globalAmbient + (atten * lights[i].ambient)));
-		LightColor += (material.diffuse * lights[i].diffuse * nDotL * atten);
-        LightColor += (material.specular * lights[i].specular * power * atten);
+        
+        color += (material.ambient * (globalAmbient + (atten * lights[i].ambient))) +
+                 (material.diffuse * lights[i].diffuse * nDotL * atten) +
+                 (material.specular * lights[i].specular * power * atten);
     }
 
-	float4 TextureColor  = tex2D( ColorSampler, IN.texCoord );
+	float ShadowTerm = tex2Dproj( BlurVSampler, IN.screenCoord );
+	float4 TextureColor = tex2D( ColorSampler, IN.texCoord );
 	
-	return TextureColor * LightColor * ShadowTerm;
+	return color * TextureColor * ShadowTerm;
 }
 
 //--------------------------------------------

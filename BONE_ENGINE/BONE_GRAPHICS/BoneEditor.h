@@ -57,7 +57,7 @@ namespace BONE_GRAPHICS
         void SelectObject(std::string name);
 
         void ShowObjectInfo(std::string name);
-        void ShowGameObjectTree(std::string treeName);
+        void ShowEditObjectTree(std::string treeName);
 
         bool IsEditMode();
 

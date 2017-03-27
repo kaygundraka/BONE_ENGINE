@@ -17,6 +17,7 @@ namespace BONE_GRAPHICS
 
         std::string fileName;
         std::string* textureFiles;
+        std::string* normalTextureFiles;
 
 		int renderMode;
 		bool IsInit;
@@ -50,6 +51,7 @@ namespace BONE_GRAPHICS
         bool IsShow();
 		
 		std::string* GetTextures();
+        std::string* GetNormalTextures();
 		std::string GetFile();
 	};
 }

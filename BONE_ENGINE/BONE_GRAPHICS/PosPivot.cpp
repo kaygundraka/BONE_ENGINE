@@ -260,8 +260,8 @@ namespace BONE_GRAPHICS
         {
             isShow = false;
 
-            //for each(auto var in gameObject->GetChileds())
-            //    ((StaticMesh*)var->GetComponent("StaticMesh"))->Hide();
+            for each(auto var in gameObject->GetChileds())
+                ((StaticMesh*)var->GetComponent("StaticMesh"))->Hide();
         }
 
         if ((moveX || moveY || moveZ) && selectObject != "")

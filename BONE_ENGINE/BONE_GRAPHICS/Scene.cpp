@@ -115,13 +115,13 @@ namespace BONE_GRAPHICS
 
     bool Scene::InitializeMembers()
     {
+        InitShader();
+
         for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
             (*Iter)->Init();
 
         IsFrameworkFlag = true;
-
-        InitShader();
-
+                
         return IsFrameworkFlag;
     }
 
@@ -404,11 +404,16 @@ namespace BONE_GRAPHICS
             SceneMgr->GetClearColor().b,
             SceneMgr->GetClearColor().a
         };
-                
+        
         std::string fullPath = ".\\Engine\\Maps\\" + SceneMgr->CurrentScene()->GetName() + ".json";
         std::ofstream o(fullPath);
         o << std::setw(4) << j << std::endl;
         o.close();
+
+        for each(auto var in pointLightList)
+        {
+            ((PointLight*)var)->SaveInMaps();
+        }
     }
 
     void Scene::ClearSceneData()
@@ -478,16 +483,14 @@ namespace BONE_GRAPHICS
             auto TargetPos = j["Light"][it.key()]["ShadowTarget"].get<std::vector<double>>();
             auto Status = j["Light"][it.key()]["Status"].get<bool>();
 
-            Transform3D* tr = new Transform3D();
-            pointLightList[i]->AddComponent(tr);
-            tr->SetPosition(Position[0], Position[1], Position[2]);
-
+            pointLightList[i]->SetPosition(Vec3(Position[0], Position[1], Position[2]));
             pointLightList[i]->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
             pointLightList[i]->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
             pointLightList[i]->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
             pointLightList[i]->SetRadius(Radius);
             pointLightList[i]->SetShadowAimPos(Vec3(TargetPos[0], TargetPos[1], TargetPos[2]));
             pointLightList[i]->SetLight(Status);
+            i++;
         }
 
         for (json::iterator it = j["GameObject"].begin(); it != j["GameObject"].end(); ++it) {

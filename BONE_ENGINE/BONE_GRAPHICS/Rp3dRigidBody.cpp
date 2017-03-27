@@ -71,6 +71,11 @@ namespace BONE_GRAPHICS
         rigidBody->setIsAllowedToSleep(value);
     }
 
+    void RigidBody::SetMass(float mass)
+    {
+        rigidBody->setMass(mass);
+    }
+
     void RigidBody::AddForce(Vec3 force, Vec3 point)
     {
         rp3d::Vector3 Force(force.x, force.y, force.z);

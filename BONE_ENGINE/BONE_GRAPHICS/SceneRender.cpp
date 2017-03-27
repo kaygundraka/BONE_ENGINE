@@ -4,15 +4,14 @@
 #include "SceneManager.h"
 #include "Transform3D.h"
 #include "StaticMesh.h"
+#include "SkinnedMesh.h"
 #include "Material.h"
 #pragma warning(disable:4996)
 
 D3DXVECTOR3			g_vUp = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 BOOL				g_bFiltered = TRUE;
 
-#define SHADOW_MAP_SIZE	512
-#define SCREEN_WIDTH	1024
-#define SCREEN_HEIGHT	768
+#define SHADOW_MAP_SIZE	1024
 
 #define SAFE_RELEASE( x )	{ if( x ) { x->Release(); x = NULL; } }
 
@@ -71,6 +70,9 @@ namespace BONE_GRAPHICS
 {
     bool Scene::InitShader()
     {
+        float SCREEN_HEIGHT = RenderMgr->GetHeight();
+        float SCREEN_WIDTH = RenderMgr->GetWidth();
+
         // Create the quad vertex buffer
         if (FAILED(RenderMgr->GetDevice()->CreateVertexBuffer(4 * sizeof(QuadVertex), D3DUSAGE_WRITEONLY, FVF_QUADVERTEX,
             D3DPOOL_DEFAULT, &quadVB, NULL)))
@@ -201,6 +203,14 @@ namespace BONE_GRAPHICS
         }
 
         for each(auto var in staticObjectList)
+        {
+            if (var->GetPipeLine() == GameObject::PIPE_LINE::DEFAULT_SHADER)
+                DefaultShaderObjects.push_back(var);
+            else
+                var->Render();
+        }
+
+        for each(auto var in pointLightList)
         {
             if (var->GetPipeLine() == GameObject::PIPE_LINE::DEFAULT_SHADER)
                 DefaultShaderObjects.push_back(var);
@@ -357,6 +367,7 @@ namespace BONE_GRAPHICS
                 DefaultEffect->BeginPass(uPass);
 
                 for each (auto Iter in DefaultShaderObjects)
+                {
                     if (Iter->GetActive())
                     {
                         auto staticMesh = ((StaticMesh*)Iter->GetComponent("StaticMesh"));
@@ -375,7 +386,12 @@ namespace BONE_GRAPHICS
                             for (int j = 0; j < Mesh->numMaterials; j++)
                                 Mesh->mesh->DrawSubset(j);
                         }
+
+                        auto skinnedMesh = ((SkinnedMesh*)Iter->GetComponent("SkinnedMesh"));
+                        if (skinnedMesh != nullptr)
+                            skinnedMesh->Render(DefaultEffect, Iter);
                     }
+                }
                 
                 DefaultEffect->EndPass();
             }
@@ -430,6 +446,7 @@ namespace BONE_GRAPHICS
                 DefaultEffect->BeginPass(uPass);
 
                 for each (auto Iter in DefaultShaderObjects)
+                {
                     if (Iter->GetActive())
                     {
                         auto staticMesh = ((StaticMesh*)Iter->GetComponent("StaticMesh"));
@@ -448,7 +465,12 @@ namespace BONE_GRAPHICS
                             for (int i = 0; i < Mesh->numMaterials; i++)
                                 Mesh->mesh->DrawSubset(i);
                         }
+
+                        auto skinnedMesh = ((SkinnedMesh*)Iter->GetComponent("SkinnedMesh"));
+                        if (skinnedMesh != nullptr)
+                            skinnedMesh->Render(DefaultEffect, Iter);
                     }
+                }
 
                 DefaultEffect->EndPass();
             }
@@ -563,12 +585,14 @@ namespace BONE_GRAPHICS
             DefaultEffect->BeginPass(uPass);
 
             for each (auto Iter in DefaultShaderObjects)
+            {
                 if (Iter->GetActive())
                 {
                     auto staticMesh = ((StaticMesh*)Iter->GetComponent("StaticMesh"));
                     if (staticMesh != nullptr)
                     {
-                        auto Textures = staticMesh->GetTextures();
+                        auto Diffuse = staticMesh->GetTextures();
+                        auto Normal = staticMesh->GetNormalTextures();
                         auto Mesh = ResourceMgr->FindMesh(staticMesh->GetFile());
 
                         D3DXMATRIX matWorld, matWorldIT;
@@ -577,7 +601,8 @@ namespace BONE_GRAPHICS
                         D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
                         SetRenderMatrial(Iter, DefaultEffect);
 
-                        DefaultEffect->SetTexture("tColorMap", ResourceMgr->LoadTexture(Textures[i]));
+                        DefaultEffect->SetTexture("tColorMap", ResourceMgr->LoadTexture(Diffuse[i]));
+                        DefaultEffect->SetTexture("normalMapTexture", ResourceMgr->LoadTexture(Normal[i]));
                         DefaultEffect->SetMatrix("matWorld", &matWorld);
                         DefaultEffect->SetMatrix("matWorldIT", &matWorldIT);
                         DefaultEffect->CommitChanges();
@@ -585,14 +610,22 @@ namespace BONE_GRAPHICS
                         for (int i = 0; i < Mesh->numMaterials; i++)
                             Mesh->mesh->DrawSubset(i);
                     }
+
+                    auto skinnedMesh = ((SkinnedMesh*)Iter->GetComponent("SkinnedMesh"));
+                    if (skinnedMesh != nullptr)
+                    {
+                        SetRenderMatrial(Iter, DefaultEffect);
+                        skinnedMesh->Render(DefaultEffect, Iter);
+                    }
                 }
+            }
             
             DefaultEffect->EndPass();
         }
 
         DefaultEffect->End();
-
 #pragma endregion
+
     }
 
     void Scene::SetRenderMatrial(GameObject* object, ID3DXEffect* effect) 

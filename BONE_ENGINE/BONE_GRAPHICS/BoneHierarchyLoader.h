@@ -12,7 +12,8 @@ namespace BONE_GRAPHICS
     struct BoneMesh : public D3DXMESHCONTAINER {
         ID3DXMesh* OriginalMesh;				// 스키닝 계산에 사용될 참조 메시
         vector<D3DMATERIAL9> materials;			// 재질 목록
-        vector<LPDIRECT3DTEXTURE9> textures;	// 텍스처 목록
+        vector<LPDIRECT3DTEXTURE9> diffuseTextures;	// 텍스처 목록
+        vector<LPDIRECT3DTEXTURE9> normalTextures;
 
         DWORD NumAttributeGroups;				// 속성 그룹의 수
         D3DXATTRIBUTERANGE* attributeTables;	// 속성 테이블

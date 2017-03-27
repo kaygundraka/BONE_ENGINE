@@ -23,9 +23,12 @@ namespace BONE_GRAPHICS
 		ResourceMgr->ReleaseMesh(fileName);
 
         if (ResourceMgr->FindMesh(fileName) != nullptr)
-    		for (int i = 0; i < ResourceMgr->FindMesh(fileName)->numMaterials; i++)
-	    		ResourceMgr->ReleaseTexture(textureFiles[i]);
-	}
+            for (int i = 0; i < ResourceMgr->FindMesh(fileName)->numMaterials; i++)
+            {
+                ResourceMgr->ReleaseTexture(textureFiles[i]);
+                ResourceMgr->ReleaseTexture(normalTextureFiles[i]);
+            }
+        }
 
 	void StaticMesh::LoadContent()
 	{
@@ -44,6 +47,7 @@ namespace BONE_GRAPHICS
             int MaterialSize = meshInfo->numMaterials;
 
             textureFiles = new string[MaterialSize];
+            normalTextureFiles = new string[MaterialSize];
 
             D3DXMATERIAL* d3dxMaterials = (D3DXMATERIAL*)meshInfo->buffer->GetBufferPointer();
 
@@ -69,11 +73,20 @@ namespace BONE_GRAPHICS
                         LogMgr->Error("%s : Could Not Find TextureFile.", file);
                         throw;
                     }
+
+                    std::string normalMap = d3dxMaterials[i].pTextureFilename;
+                    std::string file = "";
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        file = normalMap.back() + file;
+                        normalMap.pop_back();
+                    }
+
+                    normalMap += "_N" + file;
+                    normalTextureFiles[i] = normalMap;
                 }
             }
-
-            // 재질 버퍼 사용 완료;
-            //(D3DXMATERIAL*)meshInfo->_buffer->Release();
 
             IsInit = true;
 		}
@@ -99,6 +112,11 @@ namespace BONE_GRAPHICS
 	{
 		return textureFiles;
 	}
+
+    string* StaticMesh::GetNormalTextures()
+    {
+        return normalTextureFiles;
+    }
 
 	void StaticMesh::SetTextures(string* fileNames)
 	{

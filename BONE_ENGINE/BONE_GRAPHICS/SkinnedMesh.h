@@ -21,6 +21,7 @@ namespace BONE_GRAPHICS
 
         void LoadContent();
         void Render(IShader* shaderOpt, GameObject* object);
+        void Render(ID3DXEffect* effect, GameObject* object);
 
         void UpdateAnimation();
 
@@ -29,7 +30,8 @@ namespace BONE_GRAPHICS
 
         std::string GetFile();
         map<std::string, int> GetAnmimationSet();
-
+        std::string GetCurrentAnimation();
+        
         bool CheckInRay(RAY *ray, Bone* bone, float& curDist);
 
         std::string fileName;
@@ -40,15 +42,17 @@ namespace BONE_GRAPHICS
 
         void UpdateMatrices(Bone *bone, D3DXMATRIX *parentMatrix);
         void SoftwareRendering(IShader* shaderOpt, GameObject* object, Bone *bone);
+        void SoftwareRendering(ID3DXEffect* effect, GameObject* object, Bone* bone);
 
         void GetAnimationSets();
-        
+                
         D3DXFRAME *rootBone;
 
         BoneHierarchyLoader boneHierarchy;
         LPD3DXANIMATIONCONTROLLER animationContainer;
 
         map<std::string, int> animationSets;
+        std::string curAnimation;
         bool IsInit;
     };
 }

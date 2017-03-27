@@ -10,7 +10,7 @@ namespace BONE_GRAPHICS
     PointLight::PointLight()
     {
         radius = 50;
-        this->status = false;
+        status = false;
         IsInit = false;
         tr = nullptr;
         showIcon = false;
@@ -49,9 +49,9 @@ namespace BONE_GRAPHICS
 
         Transform3D* tr = new Transform3D();
         this->AddComponent(tr);
+        this->tr = (Transform3D*)transform3D;
 
         ((BillBoard*)GetComponent("BillBoard"))->SetShow(false);
-
         this->SetPipeLine(GameObject::DIRECT_DEFAULT);
 
         IsInit = true;
@@ -69,15 +69,6 @@ namespace BONE_GRAPHICS
 
     void PointLight::Reference()
     {
-        if (transform3D == nullptr)
-        {
-            Transform3D* tr = new Transform3D();
-            tr->SetPosition(pos);
-            this->AddComponent(tr);
-            this->tr = tr;
-        }
-        else
-            this->tr = (Transform3D*)transform3D;
     }
 
     void PointLight::SetIcon(bool show)
@@ -208,7 +199,7 @@ namespace BONE_GRAPHICS
 
     void PointLight::SetPosition(Vec3 pos)
     {
-        this->pos = pos;
+        tr->SetPosition(pos);
     }
 
     RGBA PointLight::GetAmbient()

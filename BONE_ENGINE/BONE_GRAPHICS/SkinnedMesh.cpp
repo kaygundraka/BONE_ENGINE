@@ -180,6 +180,7 @@ namespace BONE_GRAPHICS
         {
             //Set the current animation set
             animationContainer->SetTrackAnimationSet(0, pAnim);
+            curAnimation = name;
             pAnim->Release();
         }
     }
@@ -226,8 +227,8 @@ namespace BONE_GRAPHICS
                         RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSU, 0);
                         RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSV, 0);
 
-                        if (boneMesh->textures.size() != 0)
-                            RenderMgr->GetDevice()->SetTexture(0, boneMesh->textures[mtrl]);
+                        if (boneMesh->diffuseTextures.size() != 0)
+                            RenderMgr->GetDevice()->SetTexture(0, boneMesh->diffuseTextures[mtrl]);
                         boneMesh->MeshData.pMesh->DrawSubset(mtrl);
                     }
                 }
@@ -237,7 +238,7 @@ namespace BONE_GRAPHICS
                     {
                         int mtrl = boneMesh->attributeTables[i].AttribId;
 
-                        shaderOpt->Render(i, boneMesh->textures, object);
+                        shaderOpt->Render(i, boneMesh->diffuseTextures, object);
                         boneMesh->MeshData.pMesh->DrawSubset(mtrl);
                     }
                 }
@@ -262,11 +263,6 @@ namespace BONE_GRAPHICS
                 parentMatrix
             );
         }
-
-        /*D3DXMatrixMultiply(&bone->CombinedTransformationMatrix,
-            &bone->TransformationMatrix,
-            parentMatrix
-        );*/
         
         if (bone->pFrameSibling)
             UpdateMatrices((Bone*)bone->pFrameSibling, parentMatrix);
@@ -282,9 +278,74 @@ namespace BONE_GRAPHICS
 
     void SkinnedMesh::Render(IShader* shaderOpt, GameObject* object)
     {
-        UpdateMatrices((Bone*)rootBone, nullptr);//&((Transform3D*)object->transform3D)->GetTransform());
+        UpdateMatrices((Bone*)rootBone, nullptr);
 
         SoftwareRendering(shaderOpt, object, nullptr);
+    }
+
+    void SkinnedMesh::Render(ID3DXEffect* effect, GameObject* object)
+    {
+        UpdateMatrices((Bone*)rootBone, nullptr);
+
+        SoftwareRendering(effect, object, nullptr);
+    }
+
+    void SkinnedMesh::SoftwareRendering(ID3DXEffect* effect, GameObject* object, Bone* bone)
+    {
+        if (bone == nullptr)
+            bone = (Bone*)rootBone;
+
+        if (bone->pMeshContainer != nullptr)
+        {
+            BoneMesh *boneMesh = (BoneMesh*)bone->pMeshContainer;
+
+            if (boneMesh->pSkinInfo != nullptr)
+            {
+                int numBones = boneMesh->pSkinInfo->GetNumBones();
+
+                for (int i = 0; i < numBones; i++)
+                    D3DXMatrixMultiply(&boneMesh->currentBoneMatrices[i], &boneMesh->boneOffsetMatrices[i], boneMesh->boneMatrixPtrs[i]);
+
+                void* *src = nullptr, *dest = nullptr;
+
+                boneMesh->OriginalMesh->LockVertexBuffer(D3DLOCK_READONLY, (VOID**)&src);
+                boneMesh->MeshData.pMesh->LockVertexBuffer(0, (VOID**)&dest);
+
+                boneMesh->pSkinInfo->UpdateSkinnedMesh(boneMesh->currentBoneMatrices, nullptr, src, dest);
+
+                boneMesh->MeshData.pMesh->UnlockVertexBuffer();
+                boneMesh->OriginalMesh->UnlockVertexBuffer();
+
+                Matrix matWorld, matWorldIT;
+                matWorld = ((Transform3D*)object->transform3D)->GetTransform();
+                D3DXMatrixInverse(&matWorldIT, NULL, &matWorld);
+                D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
+                
+                effect->SetMatrix("matWorld", &matWorld);
+                effect->SetMatrix("matWorldIT", &matWorldIT);
+                
+                for (UINT i = 0; i < boneMesh->NumAttributeGroups; i++)
+                {
+                    int mtrl = boneMesh->attributeTables[i].AttribId;
+
+                    if (boneMesh->normalTextures.size() > i)
+                    {
+                        effect->SetTexture("normalMapTexture", boneMesh->normalTextures[i]);
+                        effect->SetTexture("tColorMap", boneMesh->diffuseTextures[i]);
+                    }
+
+                    effect->CommitChanges();
+
+                    boneMesh->MeshData.pMesh->DrawSubset(mtrl);
+                }
+            }
+        }
+
+        if (bone->pFrameSibling != nullptr)
+            SoftwareRendering(effect, object, (Bone*)bone->pFrameSibling);
+
+        if (bone->pFrameFirstChild != nullptr)
+            SoftwareRendering(effect, object, (Bone*)bone->pFrameFirstChild);
     }
 
     Matrix* SkinnedMesh::GetBoneMatrix(std::string name, Bone* bone, Matrix* mat)
@@ -319,5 +380,10 @@ namespace BONE_GRAPHICS
     map<std::string, int> SkinnedMesh::GetAnmimationSet()
     {
         return animationSets;
+    }
+
+    std::string SkinnedMesh::GetCurrentAnimation()
+    {
+        return curAnimation;
     }
 }

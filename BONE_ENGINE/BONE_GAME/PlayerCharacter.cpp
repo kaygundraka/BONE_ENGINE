@@ -83,12 +83,30 @@ void PlayerCharacter::Update()
     {
         Input = true;
         skinnedMesh->SetAnimation("Skeleton_1H_walk");
+
+        Vec3 Forward = ((Transform3D*)gameObject->transform3D)->GetForward();
+
+        ((Transform3D*)gameObject->transform3D)->Translate(
+            Forward *
+            SceneMgr->GetTimeDelta() * 15.0f
+        );
+
+        ((Transform3D*)cameraTr)->Translate(
+            Forward * 
+            SceneMgr->GetTimeDelta() * 15.0f
+        );
     }
 
     if (InputMgr->KeyDown('A', false))
     {
         Input = true;
-        ((Transform3D*)gameObject->transform3D)->Rotate(0, 1.0f * SceneMgr->GetTimeDelta(), 0.0f);
+        ((Transform3D*)gameObject->transform3D)->Rotate(0, - 1.5f * SceneMgr->GetTimeDelta(), 0.0f);
+    }
+
+    if (InputMgr->KeyDown('D', false))
+    {
+        Input = true;
+        ((Transform3D*)gameObject->transform3D)->Rotate(0, 1.5f * SceneMgr->GetTimeDelta(), 0.0f);
     }
 
     if (Input == false)
@@ -126,11 +144,15 @@ void PlayerCharacter::LateUpdate()
     D3DXMatrixRotationAxis(&CrossMat, &Cross, dy * fDelta);
     D3DXVec3TransformCoord(&FinalPos, &YRotatePos, &CrossMat);
 
-    ((Transform3D*)cameraObject->transform3D)->SetPosition(FinalPos + Target);
     pt.x = (RenderMgr->GetWidth()) / 2;
     pt.y = (RenderMgr->GetHeight()) / 2;
                       
     SetCursorPos(pt.x, pt.y);
     mouseX = pt.x;
     mouseY = pt.y;
+
+
+    mainCamera->SetTargetPosition(Target);
+    cameraTr->SetPosition(FinalPos + Target);
+    mainCamera->FixedUpdate(cameraObject);
 }

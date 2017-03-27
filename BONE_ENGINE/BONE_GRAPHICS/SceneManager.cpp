@@ -40,6 +40,9 @@ namespace BONE_GRAPHICS
 
 	Scene* SceneManager::CurrentScene()
 	{
+        if (sceneList.find(curScene) == sceneList.end())
+            return nullptr;
+
         return sceneList[curScene];
 	}
 
@@ -150,7 +153,7 @@ namespace BONE_GRAPHICS
 		}
 
 		LoadingThread.join();
-        
+
 		sceneList[name]->SortPriorityObject();
 
 		lastTime = (double)timeGetTime();

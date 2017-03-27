@@ -82,7 +82,23 @@ namespace BONE_GRAPHICS
             IDirect3DTexture9* newTexture = NULL;
 
             if (mtrl.pTextureFilename != NULL)
-                boneMesh->textures.push_back(ResourceMgr->LoadTexture(mtrl.pTextureFilename));
+            {
+                boneMesh->diffuseTextures.push_back(ResourceMgr->LoadTexture(mtrl.pTextureFilename));
+                std::string normalMap = mtrl.pTextureFilename;
+                std::string file = "";
+
+                for (int i = 0; i < 4; i++)
+                {
+                    file = normalMap.back() + file;
+                    normalMap.pop_back();
+                }
+
+                normalMap.pop_back();
+                normalMap.pop_back();
+
+                normalMap += "_N" + file;
+                boneMesh->normalTextures.push_back(ResourceMgr->LoadTexture(normalMap));
+            }
         }
 
         // 스킨 정보가 전달되었다면 이를 저장해야한다.

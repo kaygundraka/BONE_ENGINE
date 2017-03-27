@@ -9,7 +9,6 @@ namespace BONE_GRAPHICS
     {
     private:
         Transform3D* tr;
-        Vec3 pos;
         Vec3 shadowAimPos;
 
         RGBA ambient;

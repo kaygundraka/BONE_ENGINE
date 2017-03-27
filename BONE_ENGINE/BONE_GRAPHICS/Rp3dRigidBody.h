@@ -27,6 +27,7 @@ namespace BONE_GRAPHICS
         void SetBounciness(float value = 0.4f);
         void SetFrictionCoefficient(float value = 0.2f);
         void SetIsAllowedToSleep(bool value = false);
+        void SetMass(float mass);
 
         reactphysics3d::BodyType GetType();
         bool IsEnableGravity();
@@ -34,6 +35,7 @@ namespace BONE_GRAPHICS
         float GetFrictionCoefficient();
         bool GetIsAllowedToSleep();
         float GetMass();
+
 
         void SetPosOnPivot(Vec3 pos);
         Vec3 GetPosOnPivot();
