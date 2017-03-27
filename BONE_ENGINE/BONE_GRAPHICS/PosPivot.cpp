@@ -97,7 +97,7 @@ namespace BONE_GRAPHICS
                 auto Position = ((Transform3D*)Object->transform3D)->GetPosition();
                 ((Camera*)mainCamera->GetComponent("Camera"))->SetTargetPosition(Position);
                 ((Transform3D*)mainCamera->transform3D)->SetPosition(
-                    Position + Vec3(100, 100, 100)
+                    Position + Vec3(20, 20, 20)
                 );
             }
         }

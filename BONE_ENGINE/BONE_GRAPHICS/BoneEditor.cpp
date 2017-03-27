@@ -46,7 +46,7 @@ void LogDialog::AddLog(const char* fmt, ...) IM_PRINTFARGS(2)
 void LogDialog::Render(const char* title, bool* p_open)
 {
     ImGui::SetNextWindowPos(ImVec2(0, RenderMgr->GetHeight() - 200));
-    ImGui::Begin(title, p_open, ImVec2(RenderMgr->GetWidth() - 300, 200), -1.0f, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
+    ImGui::Begin(title, p_open, ImVec2(RenderMgr->GetWidth() - 400, 200), -1.0f, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
     if (ImGui::Button("Clear")) Clear();
     ImGui::SameLine();
     bool copy = ImGui::Button("Copy");
@@ -86,7 +86,6 @@ BoneEditor::BoneEditor() {
     showMainEditor = true;
     showAddComponent = false;
     showObjectInfo = false;
-    showPrefabInspector = false;
     showLogWindow = true;
     showEnvironmentSetting = false;
     isTestPlay = false;
@@ -422,9 +421,9 @@ void BoneEditor::ShowObjectInfo(std::string name)
                         float rot[3] = { oriRot.x, oriRot.y, oriRot.z };
                         float scale[3] = { oriScale.x, oriScale.y, oriScale.z };
                         
-                        ImGui::InputFloat3("Position", pos);
-                        ImGui::InputFloat3("Rotation", rot);
-                        ImGui::InputFloat3("Scale", scale);
+                        ImGui::DragFloat3("Position", pos);
+                        ImGui::DragFloat3("Rotation", rot);
+                        ImGui::DragFloat3("Scale", scale);
                         
                         ((Transform3D*)object->transform3D)->SetPosition(pos[0], pos[1], pos[2]);
                         ((Transform3D*)object->transform3D)->SetRotate(rot[0], rot[1], rot[2]);
@@ -484,11 +483,11 @@ void BoneEditor::ShowObjectInfo(std::string name)
                         float Specular[4] = { OriSpecular.r, OriSpecular.g, OriSpecular.b, OriSpecular.a };
                         float Shininess = OriShininess;
 
-                        ImGui::InputFloat3("Ambient", Ambient);
-                        ImGui::InputFloat3("Diffuse", Diffuse);
-                        ImGui::InputFloat3("Emissive", Emissive);
-                        ImGui::InputFloat3("Specular", Specular);
-                        ImGui::InputFloat("Shininess", &Shininess);
+                        ImGui::DragFloat3("Ambient", Ambient, 0.1f);
+                        ImGui::DragFloat3("Diffuse", Diffuse, 0.1);
+                        ImGui::DragFloat3("Emissive", Emissive, 0.1);
+                        ImGui::DragFloat3("Specular", Specular, 0.1);
+                        ImGui::DragFloat("Shininess", &Shininess, 0.1);
 
                         ((Material*)(*iter))->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
                         ((Material*)(*iter))->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
@@ -512,26 +511,33 @@ void BoneEditor::ShowObjectInfo(std::string name)
 
 void BoneEditor::ShowGameObjectTree(std::string treeName)
 {
-    if (ImGui::TreeNode(treeName.c_str()))
+    auto parent = SceneMgr->CurrentScene()->FindObjectByName(treeName);
+
+    ShowObjectInfo(treeName);
+
+    if (treeName != currentObjectName)
     {
-        auto parent = SceneMgr->CurrentScene()->FindObjectByName(treeName);
-
-        if (ImGui::TreeNode("Show Infos"))
+        if (ImGui::SmallButton("Remove Object"))
         {
-            ShowObjectInfo(treeName);
-            ImGui::TreePop();
+            parent->DetachParent();
+            SceneMgr->CurrentScene()->Destroy(parent);
         }
+    }
 
-        if (treeName != currentObjectName)
+    if (ImGui::CollapsingHeader("[Childs]"))
+    {
+        auto childs = parent->GetChileds();
+
+        for (auto iter = childs.begin(); iter != childs.end(); iter++)
         {
-            if (ImGui::SmallButton("Remove Object"))
+            if (ImGui::TreeNode((*iter)->GetName().c_str()))
             {
-                parent->DetachParent();
-                SceneMgr->CurrentScene()->Destroy(parent);
+                ShowGameObjectTree((*iter)->GetName());
+                ImGui::TreePop();
             }
         }
 
-        if (ImGui::TreeNode("Add New Child"))
+        if (ImGui::CollapsingHeader("[Add New Child]"))
         {
             static char Name[64] = "";
             ImGui::InputText("Name", Name, 64);
@@ -568,16 +574,7 @@ void BoneEditor::ShowGameObjectTree(std::string treeName)
                 parent->AttachChild(Child);
                 childSize++;
             }
-
-            ImGui::TreePop();
         }
-
-        auto childs = parent->GetChileds();
-
-        for (auto iter = childs.begin(); iter != childs.end(); iter++)
-            ShowGameObjectTree((*iter)->GetName());
-
-        ImGui::TreePop();
     }
 }
 
@@ -667,12 +664,9 @@ void BoneEditor::UpdateFrame()
 
         static int WindowHeight;
         
-        if (showPrefabInspector)
-            WindowHeight = RenderMgr->GetHeight() / 2 - 17;
-        else
-            WindowHeight = RenderMgr->GetHeight() - 18;
+        WindowHeight = RenderMgr->GetHeight() - 18;
 
-        ImGui::SetWindowSize(ImVec2(300, WindowHeight));
+        ImGui::SetWindowSize(ImVec2(400, WindowHeight));
         ImVec2 Size = ImGui::GetWindowSize();
         ImGui::SetWindowPos(ImVec2(RenderMgr->GetWidth() - Size.x, 19));
 
@@ -686,6 +680,8 @@ void BoneEditor::UpdateFrame()
         {
             static bool FindOption;
             ImGui::Checkbox("Enable Find Option", &FindOption);
+
+            ImGui::Separator();
 
             std::list<std::string> FindObjectName;
 
@@ -756,9 +752,9 @@ void BoneEditor::UpdateFrame()
 
                             ImGui::Checkbox("Active", &oriActive);
                             ImGui::DragFloat("Radius", &oriRadius, 1.0f, 0.1f);
-                            ImGui::InputFloat3("Ambient", Ambient);
-                            ImGui::InputFloat3("Diffuse", Diffuse);
-                            ImGui::InputFloat3("Specular", Specular);
+                            ImGui::DragFloat3("Ambient", Ambient, 0.1f);
+                            ImGui::DragFloat3("Diffuse", Diffuse, 0.1f);
+                            ImGui::DragFloat3("Specular", Specular, 0.1f);
 
                             ((PointLight*)(*iter))->SetActive(oriActive);
                             ((PointLight*)(*iter))->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
@@ -875,19 +871,17 @@ void BoneEditor::UpdateFrame()
                             }
                         }
 
-                        if (ImGui::SmallButton("Edit Object"))
+                        if (ImGui::TreeNode("Edit Object"))
                         {
-                            showPrefabInspector = true;
-
-                            currentObjectName = (*iter)->GetName();
+                            ShowGameObjectTree((*iter)->GetName());
+                            
+                            ImGui::TreePop();
                         }
                     }
 
                     if (ImGui::SmallButton("Remove Object"))
-                    {
                         SceneMgr->CurrentScene()->Destroy((*iter));
-                    }
-
+                    
                     if (ImGui::SmallButton("Focus On"))
                     {
                         auto Object = SceneMgr->CurrentScene()->FindObjectByName((*iter)->GetName().c_str());
@@ -899,7 +893,7 @@ void BoneEditor::UpdateFrame()
                             ((Camera*)(SceneMgr->CurrentScene()->GetCurrentCamera()->GetComponent("Camera")))->SetTargetPosition(Position);
 
                             ((Transform3D*)SceneMgr->CurrentScene()->GetCurrentCamera()->transform3D)->SetPosition(
-                                Position + Vec3(100, 100, 100)
+                                Position + Vec3(20, 20, 20)
                             );
                         }
                     }
@@ -907,10 +901,9 @@ void BoneEditor::UpdateFrame()
                     ImGui::TreePop();
                 }
             }
-        }
 
-        if (ImGui::CollapsingHeader("[New GameObject]", ImGuiTreeNodeFlags_DefaultOpen))
-        {
+            ImGui::Separator();
+
             if (ImGui::TreeNode("New Prefabs"))
             {
                 auto Prefabs = ResourceMgr->ExistFiles(".\\Engine\\Prefabs\\*");
@@ -987,39 +980,42 @@ void BoneEditor::UpdateFrame()
 
                 ImGui::TreePop();
             }
-        
-            if (ImGui::TreeNode("New Light"))
-            {
-                char* ComboBoxItems[] = { "Point", "Direction", "Spot" };
-                
-                static int CurItem = 0;
-                ImGui::Combo("Typs", &CurItem, ComboBoxItems, 3);
-                
-                if (ImGui::Button("Create"))
-                {
-                    /*PointLight* Light = new PointLight;
-
-                    Light->SetAmbient(1.0f, 1.0f, 1.0f, 1.0f);
-                    Light->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
-                    Light->SetSpecular(0.5f, 0.5f, 0.5f, 0.5f);
-                    Light->SetRadius(200);
-                    Light->SetLight(true);
-                    Light->SetPosition(Vec3(0, 0, 0));
-                    Light->SetTag("EditorObject");
-
-                    int num = SceneMgr->CurrentScene()->GetPointLights().size();
-                    char temp[100] = "";
-                    itoa(num, temp, 10);
-                    std::string name = "PointLight_";
-                    name += temp;
-
-                    SceneMgr->CurrentScene()->AddPointLight(Light);
-                    SceneMgr->CurrentScene()->AddObject(Light, name);*/
-                }
-
-                ImGui::TreePop();
-            }
         }
+
+        ImGui::SameLine();
+
+        if (ImGui::CollapsingHeader("[Light Menu]", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            // left
+            static int selected = 0;
+            
+            ImGui::BeginChild("left pane", ImVec2(150, 0), true);
+            
+            for (int i = 0; i < 100; i++)
+            {
+                char label[128];
+                sprintf(label, "MyObject %d", i);
+                if (ImGui::Selectable(label, selected == i))
+                    selected = i;
+            }
+
+            ImGui::EndChild();
+            ImGui::SameLine();
+
+            // right
+            ImGui::BeginGroup();
+            ImGui::BeginChild("item view", ImVec2(0,200), false); // Leave room for 1 line below us
+            ImGui::Text("MyObject: %d", selected);
+            ImGui::Separator();
+            ImGui::TextWrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ");
+            ImGui::EndChild();
+            ImGui::BeginChild("buttons");
+            if (ImGui::Button("Revert")) {}
+            ImGui::SameLine();
+            if (ImGui::Button("Save")) {}
+            ImGui::EndChild();
+            ImGui::EndGroup();
+        }      
         
         ImGui::End();
     }
@@ -1145,25 +1141,6 @@ void BoneEditor::UpdateFrame()
                 ImGui::TreePop();
             }
         }
-
-        ImGui::End();
-    }
-
-    if (showPrefabInspector)
-    {
-        std::string WindowName = " Prefab Inspector : " + currentObjectName;
-
-        ImGui::Begin(WindowName.c_str(), &showPrefabInspector,
-            ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoResize);  //ImGuiWindowFlags_AlwaysAutoResize
-
-        if (ImGui::IsRootWindowOrAnyChildFocused())
-            isFocusedWindow = true;
-
-        ImGui::SetWindowSize(ImVec2(300, RenderMgr->GetHeight() / 2));
-        ImVec2 Size = ImGui::GetWindowSize();
-        ImGui::SetWindowPos(ImVec2(RenderMgr->GetWidth() - Size.x, RenderMgr->GetHeight() / 2));
-        
-        ShowGameObjectTree(currentObjectName);
 
         ImGui::End();
     }
@@ -1398,11 +1375,11 @@ void BoneEditor::UpdateFrame()
                 static float Specular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
                 static float Shininess = 1.0f;
 
-                ImGui::InputFloat3("Ambient", Ambient);
-                ImGui::InputFloat3("Diffuse", Diffuse);
-                ImGui::InputFloat3("Emissive", Emissive);
-                ImGui::InputFloat3("Specular", Specular);
-                ImGui::InputFloat("Shininess", &Shininess);
+                ImGui::DragFloat3("Ambient", Ambient, 0.1f);
+                ImGui::DragFloat3("Diffuse", Diffuse, 0.1f);
+                ImGui::DragFloat3("Emissive", Emissive, 0.1f);
+                ImGui::DragFloat3("Specular", Specular, 0.1f);
+                ImGui::DragFloat("Shininess", &Shininess, 0.1f);
 
                 if (ImGui::Button("Add Component"))
                 {
@@ -1497,7 +1474,5 @@ void BoneEditor::UpdateFrame()
 
 void BoneEditor::SelectObject(std::string name)
 {
-    showPrefabInspector = true;
-
     currentObjectName = name;
 }

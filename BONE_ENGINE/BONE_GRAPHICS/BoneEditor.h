@@ -24,7 +24,6 @@ namespace BONE_GRAPHICS
         bool showObjectInfo;
         bool showAddComponent;
         bool showEnvironmentSetting;
-        bool showPrefabInspector;
         bool showLogWindow;
         bool showMainEditor;
 
