@@ -3,7 +3,7 @@
         "Position": [
             0.259869813919067,
             9.60932540893555,
-            -20.0
+            56.8571929931641
         ],
         "Rotation": [
             0.0,
@@ -68,7 +68,7 @@
         "BlockType2-Top"
     ],
     "IsActive": true,
-    "IsEditorLock": true,
+    "IsEditorLock": false,
     "IsStatic": false,
     "Priority": 1,
     "Tag": ""

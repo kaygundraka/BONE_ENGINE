@@ -25,27 +25,7 @@
             "Position": [
                 0.0,
                 10.0,
-                56.6535797119141
-            ],
-            "PrefabName": "BlockType1",
-            "Rotation": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "Scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "TreeDepth": 0
-        },
-        "BlockType1-2": {
-            "IsChild": false,
-            "Position": [
-                0.0,
-                10.0,
-                -97.1387481689453
+                -94.2916717529297
             ],
             "PrefabName": "BlockType1",
             "Rotation": [
@@ -66,6 +46,26 @@
                 0.259869813919067,
                 9.60932540893555,
                 -20.0
+            ],
+            "PrefabName": "BlockType2",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "BlockType2-2": {
+            "IsChild": false,
+            "Position": [
+                0.259869813919067,
+                9.60932540893555,
+                56.8571929931641
             ],
             "PrefabName": "BlockType2",
             "Rotation": [
@@ -151,6 +151,46 @@
             "Rotation": [
                 0.0,
                 3.14000010490417,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "BlockType3-3": {
+            "IsChild": false,
+            "Position": [
+                -75.9404525756836,
+                10.0,
+                57.0456428527832
+            ],
+            "PrefabName": "BlockType3",
+            "Rotation": [
+                0.0,
+                3.14000010490417,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "BlockType3-4": {
+            "IsChild": false,
+            "Position": [
+                76.0600051879883,
+                10.0,
+                57.0460014343262
+            ],
+            "PrefabName": "BlockType3",
+            "Rotation": [
+                0.0,
+                0.0,
                 0.0
             ],
             "Scale": [
@@ -260,6 +300,106 @@
             ],
             "TreeDepth": 1
         },
+        "FirstRoomDoor": {
+            "IsChild": true,
+            "Position": [
+                4.0,
+                2.0,
+                -14.0000009536743
+            ],
+            "PrefabName": "FirstRoomDoor",
+            "Rotation": [
+                0.0,
+                -0.800000011920929,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoomDoorFrame": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                9.60000038146973,
+                -131.0
+            ],
+            "PrefabName": "FirstRoomDoorFrame",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "FirstRoomFloor": {
+            "IsChild": true,
+            "Position": [
+                41.0000038146973,
+                0.0,
+                0.0
+            ],
+            "PrefabName": "FirstRoomFloor",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoomWall": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                9.69999980926514,
+                98.0000076293945
+            ],
+            "PrefabName": "FirstRoomWall",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "FirstRoomWall1": {
+            "IsChild": true,
+            "Position": [
+                75.0,
+                0.0,
+                0.0
+            ],
+            "PrefabName": "FirstRoomWall1",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
         "Player": {
             "IsChild": false,
             "Position": [
@@ -357,14 +497,14 @@
             ],
             "Position": [
                 0.0,
-                50.0,
-                0.0
+                44.6000022888184,
+                20.0
             ],
             "Radius": 63.0000038146973,
             "ShadowTarget": [
                 0.0,
                 0.0,
-                30.0000019073486
+                -1.70000004768372
             ],
             "Specular": [
                 0.5,
@@ -377,8 +517,8 @@
         "PointLight_1": {
             "Ambient": [
                 1.0,
-                1.0,
-                1.0,
+                0.800000011920929,
+                0.800000011920929,
                 1.0
             ],
             "Diffuse": [
@@ -389,14 +529,14 @@
             ],
             "Position": [
                 0.0,
-                0.0,
-                0.0
+                30.0,
+                -139.400009155273
             ],
-            "Radius": 50.0,
+            "Radius": 58.0000038146973,
             "ShadowTarget": [
                 0.0,
                 0.0,
-                0.0
+                -102.500007629395
             ],
             "Specular": [
                 0.5,
@@ -608,9 +748,9 @@
         ],
         "EnableFog": false,
         "GlobalAmbient": [
-            0.0299999993294477,
-            0.0299999993294477,
-            0.0299999993294477,
+            0.0199999995529652,
+            0.0199999995529652,
+            0.0199999995529652,
             1.0
         ]
     }

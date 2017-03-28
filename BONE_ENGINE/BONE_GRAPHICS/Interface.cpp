@@ -219,11 +219,13 @@ namespace BONE_GRAPHICS
 
             sprite->End();
 			Alpha += 1;
-
+            
             RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
 			RenderMgr->GetDevice()->EndScene();
 			RenderMgr->GetDevice()->Present(0, 0, 0, 0);
+
+            Sleep(1);
 		}
 
 		Sleep(2000);
@@ -252,11 +254,13 @@ namespace BONE_GRAPHICS
 
             sprite->End();
             Alpha -= 1;
-
+            
             RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
 			RenderMgr->GetDevice()->EndScene();
 			RenderMgr->GetDevice()->Present(0, 0, 0, 0);
+
+            Sleep(1);
         }
 
 		return true;

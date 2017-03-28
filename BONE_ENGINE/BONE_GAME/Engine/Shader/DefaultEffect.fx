@@ -572,7 +572,9 @@ float4 PS_Scene( VS_OUTPUT_SCENE IN ) : COLOR
 	float ShadowTerm = tex2Dproj( BlurVSampler, IN.screenCoord );
 	float4 TextureColor = tex2D( ColorSampler, IN.texCoord );
 	
-	return color * TextureColor * ShadowTerm;
+	color *= TextureColor * ShadowTerm;
+	
+	return color;
 }
 
 //--------------------------------------------

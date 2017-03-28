@@ -13,9 +13,9 @@ namespace BONE_GRAPHICS
 		loadScene = "";
 		frame = 0;
 
-        backColor.r = 247.0f / 255.0f;
-        backColor.g = 204.0f / 255.0f;
-        backColor.b = 130.0f / 255.0f;
+        backColor.r = 45.0f / 255.0f;
+        backColor.g = 45.0f / 255.0f;
+        backColor.b = 45.0f / 255.0f;
 	}
 
 	void SceneManager::LoadingRender() 

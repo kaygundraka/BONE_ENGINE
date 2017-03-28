@@ -1,13 +1,13 @@
 {
     "1.Transform3D": {
         "Position": [
-            76.0600051879883,
-            10.0,
-            57.0460014343262
+            0.0,
+            9.60000038146973,
+            -131.0
         ],
         "Rotation": [
             0.0,
-            0.0,
+            1.57000005245209,
             0.0
         ],
         "Scale": [
@@ -44,14 +44,12 @@
         ]
     },
     "6.StaticMesh": {
-        "FileName": "Floor.X"
+        "FileName": "DoorWay_A.X"
     },
     "ChildObjects": [
-        "BlockType3-Wall",
-        "BlockType3-Wall2",
-        "BlockType3-Wall3",
-        "BlockType3-Top",
-        "BlockType3-MetalDoor"
+        "FirstRoomDoor",
+        "FirstRoomFloor",
+        "FirstRoomWall1"
     ],
     "IsActive": true,
     "IsEditorLock": false,

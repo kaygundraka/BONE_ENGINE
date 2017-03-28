@@ -405,7 +405,7 @@ void BoneEditor::ShowObjectInfo(std::string name)
             {
                 if (ImGui::TreeNode(item.first.c_str()))
                 {
-                    if (item.first.c_str() == "Transform3D")
+                    if (item.first == "Transform3D")
                     {
                         Vec3 oriPos = ((Transform3D*)object->transform3D)->GetPosition();
                         Vec3 oriRot = ((Transform3D*)object->transform3D)->GetRotateAngle();

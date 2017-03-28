@@ -101,6 +101,264 @@
             "TreeDepth": 0
         }
     },
+    "Light": {
+        "PointLight_0": {
+            "Ambient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                50.0,
+                -7.10000038146973
+            ],
+            "Radius": 86.0000076293945,
+            "ShadowTarget": [
+                0.0,
+                0.0,
+                5.20000028610229
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": true
+        },
+        "PointLight_1": {
+            "Ambient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Radius": 50.0,
+            "ShadowTarget": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": false
+        },
+        "PointLight_2": {
+            "Ambient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Radius": 50.0,
+            "ShadowTarget": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": false
+        },
+        "PointLight_3": {
+            "Ambient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Radius": 50.0,
+            "ShadowTarget": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": false
+        },
+        "PointLight_4": {
+            "Ambient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Radius": 50.0,
+            "ShadowTarget": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": false
+        },
+        "PointLight_5": {
+            "Ambient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Radius": 50.0,
+            "ShadowTarget": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": false
+        },
+        "PointLight_6": {
+            "Ambient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Radius": 50.0,
+            "ShadowTarget": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": false
+        },
+        "PointLight_7": {
+            "Ambient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Radius": 50.0,
+            "ShadowTarget": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": false
+        }
+    },
     "Scene": {
         "BackGroundColor": [
             0.125490203499794,

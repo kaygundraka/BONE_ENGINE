@@ -1,9 +1,9 @@
 {
     "1.Transform3D": {
         "Position": [
-            76.0600051879883,
-            10.0,
-            57.0460014343262
+            41.0000038146973,
+            0.0,
+            0.0
         ],
         "Rotation": [
             0.0,
@@ -46,13 +46,6 @@
     "6.StaticMesh": {
         "FileName": "Floor.X"
     },
-    "ChildObjects": [
-        "BlockType3-Wall",
-        "BlockType3-Wall2",
-        "BlockType3-Wall3",
-        "BlockType3-Top",
-        "BlockType3-MetalDoor"
-    ],
     "IsActive": true,
     "IsEditorLock": false,
     "IsStatic": false,

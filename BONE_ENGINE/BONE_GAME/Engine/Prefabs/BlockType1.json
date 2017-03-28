@@ -3,7 +3,7 @@
         "Position": [
             0.0,
             10.0,
-            -97.1387481689453
+            -94.2916717529297
         ],
         "Rotation": [
             0.0,
@@ -68,7 +68,7 @@
         "Top"
     ],
     "IsActive": true,
-    "IsEditorLock": true,
+    "IsEditorLock": false,
     "IsStatic": false,
     "Priority": 1,
     "Tag": ""
