@@ -2,7 +2,7 @@
     "WindowsName":"BONE_ENGINE - Bone Editor",
     "WindowsWidth":1280,
     "WindowsHeight":768,
-    "ShowLogCmd":true,
+    "ShowLogCmd":false,
     "EnableLog":false,
 
     "ResourcePaths":[

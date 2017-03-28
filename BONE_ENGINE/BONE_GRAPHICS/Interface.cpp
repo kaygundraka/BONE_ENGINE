@@ -184,9 +184,16 @@ namespace BONE_GRAPHICS
         float WidthScale = (float)RenderMgr->GetWidth() / 1600;
         float HeightScale = (float)RenderMgr->GetHeight() / 1200;
 
+        float HeightMove = ((WidthScale * 1200) - (HeightScale * 1200));
+
+        if (HeightMove > 0)
+            HeightMove /= 2;
+        else
+            HeightMove = 0;
+
         Matrix matrix;
         D3DXMatrixIdentity(&matrix);
-        D3DXMatrixTransformation2D(&matrix, 0, 0, &Vec2(WidthScale, HeightScale), 0, 0, 0);
+        D3DXMatrixTransformation2D(&matrix, 0, 0, &Vec2(WidthScale, WidthScale), 0, 0, &Vec2(0, -HeightMove));
         sprite->SetTransform(&matrix);
 
 		int Alpha = 0;
@@ -217,8 +224,6 @@ namespace BONE_GRAPHICS
 
 			RenderMgr->GetDevice()->EndScene();
 			RenderMgr->GetDevice()->Present(0, 0, 0, 0);
-
-            Sleep(1);
 		}
 
 		Sleep(2000);
@@ -252,8 +257,6 @@ namespace BONE_GRAPHICS
 
 			RenderMgr->GetDevice()->EndScene();
 			RenderMgr->GetDevice()->Present(0, 0, 0, 0);
-		
-            Sleep(1);
         }
 
 		return true;

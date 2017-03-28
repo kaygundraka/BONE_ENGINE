@@ -17,8 +17,8 @@ namespace BONE_GRAPHICS
 		std::string tag;
         std::string name;
         std::string prefab;
-
-		std::vector<Component*> components;
+        
+		std::map<std::string, Component*> components;
         std::list<std::string> scripts;
 
 		GameObject* parent;
@@ -89,7 +89,7 @@ namespace BONE_GRAPHICS
         bool IsLockedEditor();
 
 		Component* GetComponent(std::string typeName);
-        std::vector<Component*> GetComponents();
+        std::map<std::string, Component*> GetComponents();
 		bool AddComponent(Component* component);
 
 		void LoadContents();

@@ -50,7 +50,7 @@ namespace BONE_GRAPHICS
 
         for (auto Iter = components.begin(); Iter != components.end();)
         {
-            Component* Temp = (*Iter);
+            Component* Temp = (Iter->second);
             Iter = components.erase(Iter);
             delete Temp;
         }
@@ -114,36 +114,34 @@ namespace BONE_GRAPHICS
 
 	Component* GameObject::GetComponent(std::string typeName)
 	{
-		for (auto Iter = components.begin(); Iter != components.end(); Iter++)
-			if ((*Iter)->GetTypeName() == typeName)
-				return (*Iter);
-		
-		return nullptr;
+        if (components.find(typeName) == components.end())
+            return nullptr;
+
+		return components[typeName];
 	}
 
-    std::vector<Component*> GameObject::GetComponents()
+    std::map<std::string, Component*> GameObject::GetComponents()
     {
         return components;
     }
 
 	void GameObject::LoadContents()
 	{
-		for (auto Iter = components.begin(); Iter != components.end(); Iter++)
-			(*Iter)->LoadContent();
+		for each(auto item in components)
+			(item.second)->LoadContent();
 	}
 
 	bool GameObject::AddComponent(Component* component)
 	{
-		for (auto Iter = components.begin(); Iter != components.end(); Iter++)
-			if ((*Iter)->GetTypeName() == component->GetTypeName())
-				return false;
-		
+        if (components.find(component->GetTypeName()) != components.end())
+            return false;
+
         if (component->GetTypeName() == "Transform3D")
             transform3D = (Transform3D*)component;
         else if (component->GetTypeName() == "Transform2D")
             transform2D = (Transform2D*)component;
 
-        components.push_back(component);
+        components.insert(std::pair<std::string, Component*>(component->GetTypeName(), component));
 
 		return true;
 	}
@@ -151,10 +149,6 @@ namespace BONE_GRAPHICS
 	void GameObject::Render()
 	{
 		IShader* Shader = ((IShader*)GetComponent("IShader"));
-        //static PhongShader phongShader;
-
-        //if (pipeLine == PIPE_LINE::CUSTOM_SHADER)
-        //    Shader = &phongShader;
 
         if (Shader != nullptr)
         {
@@ -421,75 +415,73 @@ namespace BONE_GRAPHICS
             j["ChildObjects"].push_back((*iter)->GetPrfabName());
 
         for each(auto item in components)
-            if (item->IsScript())
-                j["8.Script"].push_back(item->GetTypeName());
+            if (item.second->IsScript())
+                j["8.Script"].push_back(item.second->GetTypeName());
          
-        for (int i = 0; i < components.size(); i++)
+        for each(auto item in components)
         {
-            std::string TypeName = components[i]->GetTypeName();
-
-            if (TypeName == "Transform3D")
+            if (item.first == "Transform3D")
             {
-                auto Position = ((Transform3D*)(components[i]))->GetPosition();
-                auto Rotation = ((Transform3D*)(components[i]))->GetRotateAngle();
-                auto Scale = ((Transform3D*)(components[i]))->GetScale();
+                auto Position = ((Transform3D*)(item.second))->GetPosition();
+                auto Rotation = ((Transform3D*)(item.second))->GetRotateAngle();
+                auto Scale = ((Transform3D*)(item.second))->GetScale();
 
                 j["1.Transform3D"]["Position"] = { Position.x, Position.y, Position.z };
                 j["1.Transform3D"]["Rotation"] = { Rotation.x, Rotation.y, Rotation.z };
                 j["1.Transform3D"]["Scale"] = { Scale.x, Scale.y, Scale.z };
             }
-            else if (TypeName == "Camera")
+            else if (item.first == "Camera")
             {
-                j["2.Camera"]["ID"] = ((Camera*)(components[i]))->GetID();
-                j["2.Camera"]["Type"] = ((Camera*)(components[i]))->GetProjectionType();
-                j["2.Camera"]["Width"] = ((Camera*)(components[i]))->GetScreenWidth();
-                j["2.Camera"]["Height"] = ((Camera*)(components[i]))->GetScreenHeight();
-                j["2.Camera"]["farDist"] = ((Camera*)(components[i]))->GetFarDistance();
-                j["2.Camera"]["nearDist"] = ((Camera*)(components[i]))->GetNearDistance();
-                j["2.Camera"]["fov"] = ((Camera*)(components[i]))->GetFov();
+                j["2.Camera"]["ID"] = ((Camera*)(item.second))->GetID();
+                j["2.Camera"]["Type"] = ((Camera*)(item.second))->GetProjectionType();
+                j["2.Camera"]["Width"] = ((Camera*)(item.second))->GetScreenWidth();
+                j["2.Camera"]["Height"] = ((Camera*)(item.second))->GetScreenHeight();
+                j["2.Camera"]["farDist"] = ((Camera*)(item.second))->GetFarDistance();
+                j["2.Camera"]["nearDist"] = ((Camera*)(item.second))->GetNearDistance();
+                j["2.Camera"]["fov"] = ((Camera*)(item.second))->GetFov();
                 j["2.Camera"]["UpVector"] = {
-                    ((Camera*)(components[i]))->GetCameraUp().x,
-                    ((Camera*)(components[i]))->GetCameraUp().y,
-                    ((Camera*)(components[i]))->GetCameraUp().z
+                    ((Camera*)(item.second))->GetCameraUp().x,
+                    ((Camera*)(item.second))->GetCameraUp().y,
+                    ((Camera*)(item.second))->GetCameraUp().z
                 };
             }
-            else if (TypeName == "Collision")
+            else if (item.first == "Collision")
             {
-                auto Type = ((Collision*)(components[i]))->GetCollisionType();
+                auto Type = ((Collision*)(item.second))->GetCollisionType();
                 j["3.Collision"]["Type"] = (int)Type;
 
                 if (Type == Collision::COLL_BOX)
                 {
                     j["3.Collision"]["HalfExtens"] = {
-                        ((Collision*)(components[i]))->GetHalfExtens().x,
-                        ((Collision*)(components[i]))->GetHalfExtens().y,
-                        ((Collision*)(components[i]))->GetHalfExtens().z
+                        ((Collision*)(item.second))->GetHalfExtens().x,
+                        ((Collision*)(item.second))->GetHalfExtens().y,
+                        ((Collision*)(item.second))->GetHalfExtens().z
                     };
                 }
                 else if (Type == Collision::COLL_SPHERE)
-                    j["3.Collision"]["Radius"] = ((Collision*)(components[i]))->GetRadius();
+                    j["3.Collision"]["Radius"] = ((Collision*)(item.second))->GetRadius();
                 else
                 {
-                    j["3.Collision"]["Radius"] = ((Collision*)(components[i]))->GetRadius();
-                    j["3.Collision"]["Height"] = ((Collision*)(components[i]))->GetHeight();
+                    j["3.Collision"]["Radius"] = ((Collision*)(item.second))->GetRadius();
+                    j["3.Collision"]["Height"] = ((Collision*)(item.second))->GetHeight();
                 }
             }
-            else if (TypeName == "RigidBody")
+            else if (item.first == "RigidBody")
             {
-                j["4.RigidBody"]["Type"] = (int)(((RigidBody*)(components[i]))->GetType());
-                j["4.RigidBody"]["Mass"] = ((RigidBody*)(components[i]))->GetMass();
-                j["4.RigidBody"]["EnableGravity"] = ((RigidBody*)(components[i]))->IsEnableGravity();
-                j["4.RigidBody"]["Bounciness"] = ((RigidBody*)(components[i]))->GetBounciness();
-                j["4.RigidBody"]["FricitionCoefficient"] = ((RigidBody*)(components[i]))->GetFrictionCoefficient();
-                j["4.RigidBody"]["IsAllowedToSleep"] = ((RigidBody*)(components[i]))->GetIsAllowedToSleep();
+                j["4.RigidBody"]["Type"] = (int)(((RigidBody*)(item.second))->GetType());
+                j["4.RigidBody"]["Mass"] = ((RigidBody*)(item.second))->GetMass();
+                j["4.RigidBody"]["EnableGravity"] = ((RigidBody*)(item.second))->IsEnableGravity();
+                j["4.RigidBody"]["Bounciness"] = ((RigidBody*)(item.second))->GetBounciness();
+                j["4.RigidBody"]["FricitionCoefficient"] = ((RigidBody*)(item.second))->GetFrictionCoefficient();
+                j["4.RigidBody"]["IsAllowedToSleep"] = ((RigidBody*)(item.second))->GetIsAllowedToSleep();
             }
-            else if (TypeName == "Material")
+            else if (item.first == "Material")
             {
-                auto Ambient = ((Material*)(components[i]))->GetAmbient();
-                auto Diffuse = ((Material*)(components[i]))->GetDiffuse();
-                auto Emissive = ((Material*)(components[i]))->GetEmissive();
-                auto Specular = ((Material*)(components[i]))->GetSpecular();
-                auto Shininess = ((Material*)(components[i]))->GetShininess();
+                auto Ambient = ((Material*)(item.second))->GetAmbient();
+                auto Diffuse = ((Material*)(item.second))->GetDiffuse();
+                auto Emissive = ((Material*)(item.second))->GetEmissive();
+                auto Specular = ((Material*)(item.second))->GetSpecular();
+                auto Shininess = ((Material*)(item.second))->GetShininess();
 
                 j["5.Material"]["Ambient"] = { Ambient.r, Ambient.g, Ambient.b, Ambient.a };
                 j["5.Material"]["Diffuse"] = { Diffuse.r, Diffuse.g, Diffuse.b, Diffuse.a };
@@ -497,13 +489,13 @@ namespace BONE_GRAPHICS
                 j["5.Material"]["Specular"] = { Specular.r, Specular.g, Specular.b, Specular.a };
                 j["5.Material"]["Shininess"] = Shininess;
             }
-            else if (TypeName == "StaticMesh")
+            else if (item.first == "StaticMesh")
             {
-                j["6.StaticMesh"]["FileName"] = ((StaticMesh*)(components[i]))->GetFile();
+                j["6.StaticMesh"]["FileName"] = ((StaticMesh*)(item.second))->GetFile();
             }
-            else if (TypeName == "SkinnedMesh")
+            else if (item.first == "SkinnedMesh")
             {
-                j["7.SkinnedMesh"]["FileName"] = ((SkinnedMesh*)(components[i]))->GetFile();
+                j["7.SkinnedMesh"]["FileName"] = ((SkinnedMesh*)(item.second))->GetFile();
             }
         }
 
@@ -790,9 +782,9 @@ namespace BONE_GRAPHICS
         if (!enableScript)
             return;
 
-        for (int i = 0; i < components.size(); i++)
-            if ((components[i])->IsScript())
-                ((Script*)(components[i]))->Init();
+        for each(auto var in components)
+            if (var.second->IsScript())
+                ((Script*)(var.second))->Init();
         
         InitFunc(this);
     }
@@ -802,9 +794,9 @@ namespace BONE_GRAPHICS
         if (!enableScript)
             return;
 
-        for (auto var = components.begin(); var != components.end(); var++)
-            if ((*var)->IsScript())
-                ((Script*)*var)->Awake();
+        for each(auto var in components)
+            if (var.second->IsScript())
+                ((Script*)(var.second))->Awake();
     
         AwakeFunc(this);
     }
@@ -814,9 +806,9 @@ namespace BONE_GRAPHICS
         if (!enableScript)
             return;
 
-        for (auto var = components.begin(); var != components.end(); var++)
-            if ((*var)->IsScript())
-                ((Script*)*var)->Reference();
+        for each(auto var in components)
+            if (var.second->IsScript())
+                ((Script*)(var.second))->Reference();
     
         ReferenceFunc(this);
     }
@@ -834,12 +826,12 @@ namespace BONE_GRAPHICS
         if (!enableScript)
             return;
 
-        for (auto var = components.begin(); var != components.end(); var++)
+        for each(auto var in components)
         {
-            if ((*var)->IsScript())
-                ((Script*)*var)->Update();
-            else if ((*var)->GetTypeName() == "RigidBody")
-                ((RigidBody*)(*var))->UpdateTransform();
+            if ((var.second)->IsScript())
+                ((Script*)var.second)->Update();
+            else if (var.first == "RigidBody")
+                ((RigidBody*)var.second)->UpdateTransform();
         }
 
         UpdateFunc(this);
@@ -850,9 +842,9 @@ namespace BONE_GRAPHICS
         if (!enableScript)
             return;
 
-        for (auto var = components.begin(); var != components.end(); var++)
-            if ((*var)->IsScript())
-                ((Script*)*var)->LateUpdate();
+        for each(auto var in components)
+            if (var.second->IsScript())
+                ((Script*)(var.second))->LateUpdate();
     
         LateUpdateFunc(this);
     }
@@ -862,9 +854,9 @@ namespace BONE_GRAPHICS
         if (!enableScript)
             return;
 
-        for (auto var = components.begin(); var != components.end(); var++)
-            if ((*var)->IsScript())
-                ((Script*)*var)->LateRender();
+        for each(auto var in components)
+            if (var.second->IsScript())
+                ((Script*)(var.second))->LateRender();
     
         LateRenderFunc(this);
     }
@@ -874,9 +866,9 @@ namespace BONE_GRAPHICS
         if (!enableScript)
             return;
 
-        for (auto var = components.begin(); var != components.end(); var++)
-            if ((*var)->IsScript())
-                ((Script*)*var)->CollisionEvent(otherObject);
+        for each(auto var in components)
+            if (var.second->IsScript())
+                ((Script*)(var.second))->CollisionEvent(otherObject);
     
         CollisionEventFunc(this, otherObject);
     }

@@ -58,6 +58,8 @@ SOFTWARE.
 #include <utility> // declval, forward, make_pair, move, pair, swap
 #include <vector> // vector
 
+#pragma warning (disable:4003)
+
 // exclude unsupported compilers
 #if defined(__clang__)
     #if (__clang_major__ * 10000 + __clang_minor__ * 100 + __clang_patchlevel__) < 30400

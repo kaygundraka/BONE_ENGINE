@@ -54,6 +54,8 @@ using json = nlohmann::json;
 #pragma comment(lib, "dsound")
 #pragma comment(lib, "winmm")
 #pragma warning (disable:4251)
+#pragma warning (disable:4503)
+#pragma warning (disable:4244)
 
 using namespace std;
 
