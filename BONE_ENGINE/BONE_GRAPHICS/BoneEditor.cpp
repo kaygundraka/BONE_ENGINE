@@ -1400,6 +1400,8 @@ void BoneEditor::UpdateFrame()
                 }
 
                 static int CurItem = 0;
+
+                //ImGui::Image(0,)
                 ImGui::Combo("Meshes", &CurItem, ComboBoxItems, Size);
 
                 if (ImGui::Button("Add Component"))

@@ -702,13 +702,13 @@ namespace BONE_GRAPHICS
                     rigidBody = new RigidBody();
 
                     reactphysics3d::BodyType Type = (reactphysics3d::BodyType)j["4.RigidBody"]["Type"].get<int>();
-                    auto Mass = j["4.RigidBody"]["Mass"].get<double>();
-                    auto EnableGravity = j["4.RigidBody"]["EnableGravity"].get<bool>();
-                    auto Bounciness = j["4.RigidBody"]["Bounciness"].get<double>();
+                    auto Mass =                 j["4.RigidBody"]["Mass"].get<double>();
+                    auto EnableGravity =        j["4.RigidBody"]["EnableGravity"].get<bool>();
+                    auto Bounciness =           j["4.RigidBody"]["Bounciness"].get<double>();
                     auto FricitionCoefficient = j["4.RigidBody"]["FricitionCoefficient"].get<double>();
-                    auto IsAllowedToSleep = j["4.RigidBody"]["IsAllowedToSleep"].get<bool>();
-                    auto Pivot = j["4.RigidBody"]["Pivot"].get<std::vector<double>>();
-                    auto LockRotation = j["4.RigidBody"]["LockRotation"].get<std::vector<bool>>();
+                    auto IsAllowedToSleep =     j["4.RigidBody"]["IsAllowedToSleep"].get<bool>();
+                    auto Pivot =                j["4.RigidBody"]["Pivot"].get<std::vector<double>>();
+                    auto LockRotation =         j["4.RigidBody"]["LockRotation"].get<std::vector<bool>>();
                     
                     if (rigidBody->SetInfo(this, Mass))
                     {

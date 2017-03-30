@@ -267,12 +267,17 @@ namespace BONE_GRAPHICS
                 moveValue = Dist;
 
             auto Object = SceneMgr->CurrentScene()->FindObjectByName(selectObject);
+            
+            while (Object->GetParent() != nullptr)
+            {
+                if (Object->IsLockedEditor())
+                    return;
+
+                Object = Object->GetParent();
+            }
 
             if (Object->IsLockedEditor())
                 return;
-
-            while (Object->GetParent() != nullptr)
-                Object = Object->GetParent();
 
             RAY PickingRay = RenderMgr->GetPickingRayToView(false);
             Vec3 PickingPos = PickingRay.origin + PickingRay.direction * moveValue * 2;

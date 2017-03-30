@@ -71,8 +71,8 @@ void EditorCamera::Update()
         mainCamera->RotateLocalY(dx * fDelta); // 마우스의 X축 회전값은 3D world의  Y축 회전값
 
         pt.x = (RenderMgr->GetWidth()) / 2;
-        pt.y = (RenderMgr->GetHeight()) / 2;//(rc.bottom - rc.top) / 2;
-                                            //ClientToScreen(g_hwnd, &pt);
+        pt.y = (RenderMgr->GetHeight()) / 2;
+                                         
         SetCursorPos(pt.x, pt.y);
         mouseX = pt.x;
         mouseY = pt.y;
@@ -185,27 +185,27 @@ void EditorCamera::LateRender()
     Pos[0].y = 0;
     Pos[1].y = 0;
 
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 80; i++)
     {
-        Pos[0].x = -40 + i * 10;
-        Pos[1].x = -40 + i * 10;
-        Pos[0].z = -40;
-        Pos[1].z = 40;
+        Pos[0].x = -400 + i * 10;
+        Pos[1].x = -400 + i * 10;
+        Pos[0].z = -400;
+        Pos[1].z = 400;
 
-        if (i == 4)
+        if (i == 40)
             RenderMgr->DrawLine(Pos[0], Pos[1], COLOR::RED);
         else
             RenderMgr->DrawLine(Pos[0], Pos[1], COLOR::WHITE);
     }
 
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 80; i++)
     {
-        Pos[0].z = -40 + i * 10;
-        Pos[1].z = -40 + i * 10;
-        Pos[0].x = -40;
-        Pos[1].x = 40;
+        Pos[0].z = -400 + i * 10;
+        Pos[1].z = -400 + i * 10;
+        Pos[0].x = -400;
+        Pos[1].x = 400;
 
-        if (i == 4)
+        if (i == 40)
             RenderMgr->DrawLine(Pos[0], Pos[1], COLOR::BLUE);
         else
             RenderMgr->DrawLine(Pos[0], Pos[1], COLOR::WHITE);
