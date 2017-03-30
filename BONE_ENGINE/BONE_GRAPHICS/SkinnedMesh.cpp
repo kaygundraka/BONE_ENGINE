@@ -36,6 +36,10 @@ namespace BONE_GRAPHICS
         D3DXLoadMeshHierarchyFromX(FullPath.c_str(), D3DXMESH_MANAGED, RenderMgr->GetDevice(),
             &boneHierarchy, nullptr, &rootBone, &animationContainer);
 
+        LPD3DXANIMATIONSET temp;
+        animationContainer->GetAnimationSet(0, &temp);
+        curAnimation = temp->GetName();
+
         UpdateMatrices((Bone*)rootBone, nullptr);
 
         SetupBoneMatrixPointers(nullptr);
@@ -180,7 +184,7 @@ namespace BONE_GRAPHICS
         {
             //Set the current animation set
             animationContainer->SetTrackAnimationSet(0, pAnim);
-            curAnimation = name;
+            curAnimation = pAnim->GetName();
             pAnim->Release();
         }
     }

@@ -14,6 +14,11 @@ namespace BONE_GRAPHICS
         rp3d::Transform rp3dTransform;
 
         Vec3 pos;
+
+        bool enableRotateX;
+        bool enableRotateY;
+        bool enableRotateZ;
+
         float mass;
 
     public:
@@ -36,6 +41,13 @@ namespace BONE_GRAPHICS
         bool GetIsAllowedToSleep();
         float GetMass();
 
+        void LockRotation(bool x, bool y, bool z);
+        bool IsLockedRotationX();
+        bool IsLockedRotationY();
+        bool IsLockedRotationZ();
+
+        void SetAngularVelocity(float x, float y, float z);
+        void SetLinearVelocity(float x, float y, float z);
 
         void SetPosOnPivot(Vec3 pos);
         Vec3 GetPosOnPivot();

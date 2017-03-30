@@ -1,48 +1,5 @@
 #include "PlayerCharacter.h"
 #include <InputManager.h>
-//
-////Returns the Yaw, Pitch, and Roll components of this matrix. This
-////function only works with pure rotation matrices.
-////yaw=v[0], pitch=v[1], roll=v[2]
-//void GetRotation(Matrix mat, float *v)
-//{
-//    //yaw=v[0], pitch=v[1], roll=v[2]
-//    //Note, we use the cosf function rather than sinf just in case the
-//    //angles are greater than [-1,+1]
-//    v[1] = -asinf(mat._32); //pitch
-//    float cp = cosf(v[1]);
-//
-//    //_22 = cr * cp;
-//    float cr = mat._22 / cp;
-//    v[2] = acosf(cr);
-//
-//    //_33 = cy * cp;
-//    float cy = mat._33 / cp;
-//    v[0] = acosf(cy);
-//}
-//
-////creates a rotation matrix based on euler angles Y * P * R
-////in the same order as DirectX.
-//void Rotate(Matrix mat, const float *v)
-//{
-//    //yaw=v[0], pitch=v[1], roll=v[2]
-//    float cy = cosf(v[0]);
-//    float cp = cosf(v[1]);
-//    float cr = cosf(v[2]);
-//    float sp = sinf(v[1]);
-//    float sr = sinf(v[2]);
-//    float sy = sinf(v[0]);
-//
-//    mat._11 = cy * cr + sr * sp * sy;
-//    mat._12 = sr * cp;
-//    mat._13 = cr * -sy + sr * sp * cy;
-//    mat._21 = -sr * cy + cr * sp * sy;
-//    mat._22 = cr * cp;
-//    mat._23 = -sr * -sy + cr * sp * cy;
-//    mat._31 = cp * sy;
-//    mat._32 = -sp;
-//    mat._33 = cy * cp;
-//}
 
 void PlayerCharacter::Init()
 {
@@ -73,40 +30,83 @@ void PlayerCharacter::Update()
 {
     bool Input = false;
 
+    if (InputMgr->KeyDown('P', true))
+        CUR_SCENE->EnablePhysics(true);
+
     if (InputMgr->KeyDown(VK_ESCAPE, true))
     {
-        SceneMgr->CurrentScene()->SetSceneFlag(true);
-        SceneMgr->EndScene(SceneMgr->CurrentScene()->GetName());
+        CUR_SCENE->SetSceneFlag(true);
+        SceneMgr->EndScene(CUR_SCENE->GetName());
     }
 
+    static bool W_Key = false;
     if (InputMgr->KeyDown('W', false))
     {
         Input = true;
         skinnedMesh->SetAnimation("Skeleton_1H_walk");
 
-        Vec3 Forward = ((Transform3D*)gameObject->transform3D)->GetForward();
+        Vec3 Forward = GET_TRANSFORM_3D(gameObject)->GetForward();
 
-        ((Transform3D*)gameObject->transform3D)->Translate(
-            Forward *
-            SceneMgr->GetTimeDelta() * 15.0f
+        GET_RIGIDBODY(gameObject)->AddForce(
+            Vec3(Forward.x, Forward.y, -Forward.z) * 5,
+            Vec3(0, 0, 0)
         );
 
-        ((Transform3D*)cameraTr)->Translate(
-            Forward * 
-            SceneMgr->GetTimeDelta() * 15.0f
-        );
+        W_Key = true;
+    }
+    else if (W_Key)
+    {
+        GET_RIGIDBODY(gameObject)->SetLinearVelocity(0, 0, 0);
+        W_Key = false;
     }
 
+    static bool S_Key = false;
+    if (InputMgr->KeyDown('S', false))
+    {
+        Input = true;
+        skinnedMesh->SetAnimation("Skeleton_1H_walk");
+
+        Vec3 Forward = GET_TRANSFORM_3D(gameObject)->GetForward();
+
+        GET_RIGIDBODY(gameObject)->AddForce(
+            -Vec3(Forward.x, Forward.y, -Forward.z) * 5,
+            Vec3(0, 0, 0)
+        );
+
+        S_Key = true;
+    }
+    else if (S_Key)
+    {
+        GET_RIGIDBODY(gameObject)->SetLinearVelocity(0, 0, 0);
+        S_Key = false;
+    }
+
+    static bool A_Key = false;
     if (InputMgr->KeyDown('A', false))
     {
         Input = true;
-        ((Transform3D*)gameObject->transform3D)->Rotate(0, - 1.5f * SceneMgr->GetTimeDelta(), 0.0f);
+        A_Key = true;
+
+        GET_RIGIDBODY(gameObject)->SetAngularVelocity(0, -1.5f, 0);
+    }
+    else if (A_Key == true)
+    {
+        GET_RIGIDBODY(gameObject)->SetAngularVelocity(0, 0, 0);
+        A_Key = false;
     }
 
+    static bool D_Key = false;
     if (InputMgr->KeyDown('D', false))
     {
         Input = true;
-        ((Transform3D*)gameObject->transform3D)->Rotate(0, 1.5f * SceneMgr->GetTimeDelta(), 0.0f);
+        D_Key = true;
+
+        GET_RIGIDBODY(gameObject)->SetAngularVelocity(0, 1.5f, 0);
+    }
+    else if (D_Key == true)
+    {
+        GET_RIGIDBODY(gameObject)->SetAngularVelocity(0, 0, 0);
+        D_Key = false;
     }
 
     if (Input == false)
@@ -122,8 +122,8 @@ void PlayerCharacter::LateUpdate()
     int dx = pt.x - mouseX;
     int dy = pt.y - mouseY;
                           
-    Vec3 Target = ((Transform3D*)gameObject->transform3D)->GetPosition() + Vec3(0, 30, 0);
-    Vec3 Eye = ((Transform3D*)cameraObject->transform3D)->GetPosition();
+    Vec3 Target = GET_TRANSFORM_3D(gameObject)->GetPosition() + Vec3(0, 25, 0);
+    Vec3 Eye = GET_TRANSFORM_3D(cameraObject)->GetPosition();
 
     Vec3 Dir = Eye - Target;
 
@@ -143,6 +143,8 @@ void PlayerCharacter::LateUpdate()
     Matrix CrossMat;
     D3DXMatrixRotationAxis(&CrossMat, &Cross, dy * fDelta);
     D3DXVec3TransformCoord(&FinalPos, &YRotatePos, &CrossMat);
+    D3DXVec3Normalize(&FinalPos, &FinalPos);
+    FinalPos *= 15;
 
     pt.x = (RenderMgr->GetWidth()) / 2;
     pt.y = (RenderMgr->GetHeight()) / 2;
@@ -150,9 +152,9 @@ void PlayerCharacter::LateUpdate()
     SetCursorPos(pt.x, pt.y);
     mouseX = pt.x;
     mouseY = pt.y;
-
-
+    
     mainCamera->SetTargetPosition(Target);
     cameraTr->SetPosition(FinalPos + Target);
+
     mainCamera->FixedUpdate(cameraObject);
 }

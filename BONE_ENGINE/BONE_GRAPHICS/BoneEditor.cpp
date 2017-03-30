@@ -21,7 +21,6 @@
 #include "LogManager.h"
 
 #pragma warning (disable:4996)
-
 using namespace BONE_GRAPHICS;
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
@@ -206,14 +205,14 @@ std::list<std::string> BoneEditor::GetScriptList()
 void BoneEditor::SaveScene()
 {
     LogMgr->Info("Clean Old Scene Data");
-    SceneMgr->CurrentScene()->ClearSceneData();
+    CUR_SCENE->ClearSceneData();
 
-    LogMgr->Info("%s - Save Scene...", SceneMgr->CurrentScene()->GetName().c_str());
+    LogMgr->Info("%s - Save Scene...", CUR_SCENE->GetName().c_str());
 
-    SceneMgr->CurrentScene()->SaveSceneData();
+    CUR_SCENE->SaveSceneData();
 
-    auto DyamicObjectList = SceneMgr->CurrentScene()->GetObjectList();
-    auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
+    auto DyamicObjectList = CUR_SCENE->GetObjectList();
+    auto StaticObjectList = CUR_SCENE->GetStaticObjectList();
     
     for each(auto var in DyamicObjectList)
     {
@@ -237,7 +236,7 @@ void BoneEditor::SaveScene()
         }
     }
 
-    LogMgr->Info("%s - Save...", SceneMgr->CurrentScene()->GetName().c_str());
+    LogMgr->Info("%s - Save...", CUR_SCENE->GetName().c_str());
 }
 
 void BoneEditor::ShowFileMenu()
@@ -247,8 +246,8 @@ void BoneEditor::ShowFileMenu()
     
     if (ImGui::MenuItem("Quit", "Alt+F4"))
     {
-        SceneMgr->CurrentScene()->SetSceneFlag(true);
-        SceneMgr->EndScene(SceneMgr->CurrentScene()->GetName());
+        CUR_SCENE->SetSceneFlag(true);
+        SceneMgr->EndScene(CUR_SCENE->GetName());
     }
 }
 
@@ -276,7 +275,7 @@ void BoneEditor::ShowViewMenu()
     if (ImGui::MenuItem("Show Light Icon"))
     {
         static bool show = false;
-        auto PointLights = SceneMgr->CurrentScene()->GetPointLights();
+        auto PointLights = CUR_SCENE->GetPointLights();
 
         if (show)
             show = false;
@@ -297,8 +296,8 @@ void BoneEditor::ShowViewMenu()
 
     if (ImGui::MenuItem("Show Collision"))
     {
-        auto DyamicObjectList = SceneMgr->CurrentScene()->GetObjectList();
-        auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
+        auto DyamicObjectList = CUR_SCENE->GetObjectList();
+        auto StaticObjectList = CUR_SCENE->GetStaticObjectList();
 
         static bool EnableMeshBox = false;
 
@@ -309,16 +308,16 @@ void BoneEditor::ShowViewMenu()
 
         for each(auto var in DyamicObjectList)
         {
-            auto sm = ((StaticMesh*)var->GetComponent("StaticMesh"));
-            if (sm != nullptr)
-                sm->ShowMeshBox(EnableMeshBox);
+            auto coll = GET_COLLISION(var);
+            if (coll != nullptr)
+                coll->ShowShape(EnableMeshBox);
         }
 
         for each(auto var in StaticObjectList)
         {
-            auto sm = ((StaticMesh*)var->GetComponent("StaticMesh"));
-            if (sm != nullptr)
-                sm->ShowMeshBox(EnableMeshBox);
+            auto coll = GET_COLLISION(var);
+            if (coll != nullptr)
+                coll->ShowShape(EnableMeshBox);
         }
     }
 
@@ -340,14 +339,14 @@ void BoneEditor::ShowEditorMenu()
 
     if (ImGui::MenuItem("Enable Physics"))
     {
-        auto Enable = SceneMgr->CurrentScene()->IsEnablePhysics();
+        auto Enable = CUR_SCENE->IsEnablePhysics();
 
         if (Enable)
             Enable = false;
         else
             Enable = true;
             
-        SceneMgr->CurrentScene()->EnablePhysics(Enable);
+        CUR_SCENE->EnablePhysics(Enable);
     }
 
     if (ImGui::MenuItem("Game Play"))
@@ -356,8 +355,8 @@ void BoneEditor::ShowEditorMenu()
 
         isTestPlay = true;
 
-        SceneMgr->CurrentScene()->SetSceneFlag(true);
-        SceneMgr->EndScene(SceneMgr->CurrentScene()->GetName());
+        CUR_SCENE->SetSceneFlag(true);
+        SceneMgr->EndScene(CUR_SCENE->GetName());
     }
 }
 
@@ -371,7 +370,7 @@ void BoneEditor::ShowObjectInfo(std::string name)
 {
     if (ImGui::CollapsingHeader("[GameObject Info]", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        auto object = SceneMgr->CurrentScene()->FindObjectByName(name);
+        auto object = CUR_SCENE->FindObjectByName(name);
 
         if (object == nullptr)
             return;
@@ -383,7 +382,6 @@ void BoneEditor::ShowObjectInfo(std::string name)
         if (ImGui::Button("Change"))
         {
             name = buf;
-
             object->SetName(name);
         }
 
@@ -395,21 +393,21 @@ void BoneEditor::ShowObjectInfo(std::string name)
 
     if (ImGui::CollapsingHeader("[Components]"), ImGuiTreeNodeFlags_DefaultOpen)
     {
-        GameObject* object = SceneMgr->CurrentScene()->FindObjectByName(name);
+        GameObject* object = CUR_SCENE->FindObjectByName(name);
 
         if (object != nullptr)
         {
             auto components = object->GetComponents();
 
-            for each (auto item in components)
+            for (auto item = components.begin(); item != components.end();)
             {
-                if (ImGui::TreeNode(item.first.c_str()))
+                if (ImGui::TreeNode(item->first.c_str()))
                 {
-                    if (item.first == "Transform3D")
+                    if (item->first == "Transform3D")
                     {
-                        Vec3 oriPos = ((Transform3D*)object->transform3D)->GetPosition();
-                        Vec3 oriRot = ((Transform3D*)object->transform3D)->GetRotateAngle();
-                        Vec3 oriScale = ((Transform3D*)object->transform3D)->GetScale();
+                        Vec3 oriPos = ((Transform3D*)item->second)->GetPosition();
+                        Vec3 oriRot = ((Transform3D*)item->second)->GetRotateAngle();
+                        Vec3 oriScale = ((Transform3D*)item->second)->GetScale();
                         
                         float pos[3] = { oriPos.x, oriPos.y, oriPos.z };
                         float rot[3] = { oriRot.x, oriRot.y, oriRot.z };
@@ -419,13 +417,13 @@ void BoneEditor::ShowObjectInfo(std::string name)
                         ImGui::DragFloat3("Rotation", rot);
                         ImGui::DragFloat3("Scale", scale);
                         
-                        ((Transform3D*)object->transform3D)->SetPosition(pos[0], pos[1], pos[2]);
-                        ((Transform3D*)object->transform3D)->SetRotate(rot[0], rot[1], rot[2]);
-                        ((Transform3D*)object->transform3D)->SetScale(scale[0], scale[1], scale[2]);
+                        ((Transform3D*)item->second)->SetPosition(pos[0], pos[1], pos[2]);
+                        ((Transform3D*)item->second)->SetRotate(rot[0], rot[1], rot[2]);
+                        ((Transform3D*)item->second)->SetScale(scale[0], scale[1], scale[2]);
                     }
-                    else if (item.first == "StaticMesh")
+                    else if (item->first == "StaticMesh")
                     {
-                        auto MeshName = ((StaticMesh*)(item.second))->GetFile();
+                        auto MeshName = ((StaticMesh*)(item->second))->GetFile();
                         auto Meshes = ResourceMgr->ExistFiles(".\\Resource\\Mesh\\*");
 
                         const int Size = Meshes.size();
@@ -449,27 +447,36 @@ void BoneEditor::ShowObjectInfo(std::string name)
 
                         if (ImGui::Button("Chanage"))
                         {
+                            item++;
+                            object->RemoveComponent("StaticMesh");
 
+                            StaticMesh* mesh = new StaticMesh();
+                            mesh->SetFile(ComboBoxItems[CurItem]);
+                            mesh->LoadContent();
+                            object->AddComponent(mesh);
+                            continue;
                         }
 
                         ImGui::SameLine();
 
-                        if (ImGui::Button("Remove"))
-                        {
-
-                        }
-
                         for (int i = 0; i < Size; i++)
                             delete ComboBoxItems[i];
                         delete[] ComboBoxItems;
+
+                        if (ImGui::Button("Remove"))
+                        {
+                            item++;
+                            object->RemoveComponent("StaticMesh");
+                            continue;
+                        }
                     }
-                    else if (item.first == "Material")
+                    else if (item->first == "Material")
                     {
-                        RGBA OriAmbient = ((Material*)(item.second))->GetAmbient();
-                        RGBA OriDiffuse = ((Material*)(item.second))->GetDiffuse();
-                        RGBA OriEmissive = ((Material*)(item.second))->GetEmissive();
-                        RGBA OriSpecular = ((Material*)(item.second))->GetSpecular();
-                        float OriShininess = ((Material*)(item.second))->GetShininess();
+                        RGBA OriAmbient = ((Material*)(item->second))->GetAmbient();
+                        RGBA OriDiffuse = ((Material*)(item->second))->GetDiffuse();
+                        RGBA OriEmissive = ((Material*)(item->second))->GetEmissive();
+                        RGBA OriSpecular = ((Material*)(item->second))->GetSpecular();
+                        float OriShininess = ((Material*)(item->second))->GetShininess();
 
                         float Ambient[4] = { OriAmbient.r, OriAmbient.g, OriAmbient.b, OriAmbient.a };
                         float Diffuse[4] = { OriDiffuse.r, OriDiffuse.g, OriDiffuse.b, OriDiffuse.a };
@@ -483,15 +490,15 @@ void BoneEditor::ShowObjectInfo(std::string name)
                         ImGui::DragFloat3("Specular", Specular, 0.1);
                         ImGui::DragFloat("Shininess", &Shininess, 0.1);
 
-                        ((Material*)(item.second))->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
-                        ((Material*)(item.second))->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
-                        ((Material*)(item.second))->SetEmissive(Emissive[0], Emissive[1], Emissive[2], Emissive[3]);
-                        ((Material*)(item.second))->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
-                        ((Material*)(item.second))->SetShininess(Shininess);
+                        ((Material*)(item->second))->SetAmbient(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
+                        ((Material*)(item->second))->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
+                        ((Material*)(item->second))->SetEmissive(Emissive[0], Emissive[1], Emissive[2], Emissive[3]);
+                        ((Material*)(item->second))->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
+                        ((Material*)(item->second))->SetShininess(Shininess);
                     }
-                    else if (item.first == "SkinnedMesh")
+                    else if (item->first == "SkinnedMesh")
                     {
-                        auto AnimationSet = ((SkinnedMesh*)(item.second))->GetAnmimationSet();
+                        auto AnimationSet = ((SkinnedMesh*)(item->second))->GetAnmimationSet();
 
                         const int AnimationSize = AnimationSet.size();
                         char** AnimationsCombo = new char*[AnimationSize];
@@ -499,12 +506,12 @@ void BoneEditor::ShowObjectInfo(std::string name)
                         static int CurItem = 0;
 
                         int i = 0;
-                        for each(auto item in AnimationSet)
+                        for each(auto iter in AnimationSet)
                         {
                             AnimationsCombo[i] = new char[64];
-                            strcpy(AnimationsCombo[i], item.first.c_str());
+                            strcpy(AnimationsCombo[i], iter.first.c_str());
 
-                            if (((SkinnedMesh*)(item.second))->GetCurrentAnimation() == AnimationsCombo[i])
+                            if (((SkinnedMesh*)(item->second))->GetCurrentAnimation() == AnimationsCombo[i])
                                 CurItem == i;
 
                             i++;
@@ -513,9 +520,9 @@ void BoneEditor::ShowObjectInfo(std::string name)
                         ImGui::Combo("Animations", &CurItem, AnimationsCombo, AnimationSize);
                         
                         if (ImGui::Button("Chanage"))
-                            ((SkinnedMesh*)(item.second))->SetAnimation(AnimationsCombo[CurItem]);
+                            ((SkinnedMesh*)(item->second))->SetAnimation(AnimationsCombo[CurItem]);
 
-                        auto MeshName = ((SkinnedMesh*)(item.second))->GetFile();
+                        auto MeshName = ((SkinnedMesh*)(item->second))->GetFile();
                         auto Meshes = ResourceMgr->ExistFiles(".\\Resource\\Mesh\\*");
 
                         const int MeshSize = Meshes.size();
@@ -524,7 +531,7 @@ void BoneEditor::ShowObjectInfo(std::string name)
                         static int CurItem2 = 0;
 
                         i = 0;
-                        for each(auto item in Meshes)
+                        for each(auto iter in Meshes)
                         {
                             MeshesCombo[i] = new char[64];
                             strcpy(MeshesCombo[i], Meshes[i].c_str());
@@ -539,24 +546,54 @@ void BoneEditor::ShowObjectInfo(std::string name)
 
                         if (ImGui::Button("Chanage"))
                         {
+                            item++;
+                            object->RemoveComponent("SkinnedMesh");
+
+                            SkinnedMesh* mesh = new SkinnedMesh();
+                            mesh->SetFile(MeshesCombo[CurItem2]);
+                            mesh->LoadContent();
+                            object->AddComponent(mesh);
+
+                            for (int i = 0; i < AnimationSize; i++)
+                                delete AnimationsCombo[i];
+                            delete[] AnimationsCombo;
+
+                            for (int i = 0; i < MeshSize; i++)
+                                delete MeshesCombo[i];
+                            delete[] MeshesCombo;
+
+                            continue;
                         }
+
+                        for (int i = 0; i < AnimationSize; i++)
+                            delete AnimationsCombo[i];
+                        delete[] AnimationsCombo;
+
+                        for (int i = 0; i < MeshSize; i++)
+                            delete MeshesCombo[i];
+                        delete[] MeshesCombo;
 
                         ImGui::SameLine();
 
                         if (ImGui::Button("Remove"))
                         {
+                            item++;
+                            object->RemoveComponent("SkinnedMesh");
+
+                            continue;
                         }
+
                     }
-                    else if (item.first == "Collision")
+                    else if (item->first == "Collision")
                     {
-                        auto CollisionType = ((Collision*)(item.second))->GetCollisionType();
+                        auto CollisionType = ((Collision*)(item->second))->GetCollisionType();
                         
                         switch (CollisionType)
                         {
                         case Collision::COLL_BOX:
                         {
                             ImGui::Text("Type : Box");
-                            auto HalfExtens = ((Collision*)(item.second))->GetHalfExtens();
+                            auto HalfExtens = ((Collision*)(item->second))->GetHalfExtens();
 
                             ImGui::Text(
                                 "HalfExtens\nX : %f\nY : %f\nZ : %f",
@@ -570,46 +607,62 @@ void BoneEditor::ShowObjectInfo(std::string name)
                         case Collision::COLL_SPHERE:
                         {
                             ImGui::Text("Type : Sphere");
-                            ImGui::Text("Radius : %f", ((Collision*)item.second)->GetRadius());
+                            ImGui::Text("Radius : %f", ((Collision*)item->second)->GetRadius());
                         }
                         break;
 
                         case Collision::COLL_CAPSULE:
                         {
                             ImGui::Text("Type : Capsule");
-                            ImGui::Text("Radius : %f", ((Collision*)item.second)->GetRadius());
-                            ImGui::Text("Height : %f", ((Collision*)item.second)->GetHeight());
+                            ImGui::Text("Radius : %f", ((Collision*)item->second)->GetRadius());
+                            ImGui::Text("Height : %f", ((Collision*)item->second)->GetHeight());
                         }
                         break;
 
                         case Collision::COLL_CONE:
                         {
                             ImGui::Text("Type : Cone");
-                            ImGui::Text("Radius : %f", ((Collision*)item.second)->GetRadius());
-                            ImGui::Text("Height : %f", ((Collision*)item.second)->GetHeight());
+                            ImGui::Text("Radius : %f", ((Collision*)item->second)->GetRadius());
+                            ImGui::Text("Height : %f", ((Collision*)item->second)->GetHeight());
                         }
                         break;
 
                         case Collision::COLL_CYLINDER:
                         {
                             ImGui::Text("Type : Cylinder");
-                            ImGui::Text("Radius : %f", ((Collision*)item.second)->GetRadius());
-                            ImGui::Text("Height : %f", ((Collision*)item.second)->GetHeight());
+                            ImGui::Text("Radius : %f", ((Collision*)item->second)->GetRadius());
+                            ImGui::Text("Height : %f", ((Collision*)item->second)->GetHeight());
                         }
                         break;
                         }
+
+                        if (object->GetComponent("RigidBody") == nullptr)
+                        {
+                            if (ImGui::Button("Remove"))
+                            {
+                                item++;
+                                object->RemoveComponent("Collision");
+                                continue;
+                            }
+                        }
                     }
-                    else if (item.first == "RigidBody")
+                    else if (item->first == "RigidBody")
                     {
-                        auto RigidBodyType = ((RigidBody*)item.second)->GetType();
-                        auto Bounciness = ((RigidBody*)item.second)->GetBounciness();
-                        auto FrictionCoefficient = ((RigidBody*)item.second)->GetFrictionCoefficient();
-                        auto IsAllowedToSleep = ((RigidBody*)item.second)->GetIsAllowedToSleep();
-                        auto Mass = ((RigidBody*)item.second)->GetMass();
+                        auto RigidBodyType = ((RigidBody*)item->second)->GetType();
+                        auto Bounciness = ((RigidBody*)item->second)->GetBounciness();
+                        auto FrictionCoefficient = ((RigidBody*)item->second)->GetFrictionCoefficient();
+                        auto IsAllowedToSleep = ((RigidBody*)item->second)->GetIsAllowedToSleep();
+                        auto Mass = ((RigidBody*)item->second)->GetMass();
                         float PosOnPivot[3] = {
-                            ((RigidBody*)item.second)->GetPosOnPivot().x,
-                            ((RigidBody*)item.second)->GetPosOnPivot().y,
-                            ((RigidBody*)item.second)->GetPosOnPivot().z
+                            ((RigidBody*)item->second)->GetPosOnPivot().x,
+                            ((RigidBody*)item->second)->GetPosOnPivot().y,
+                            ((RigidBody*)item->second)->GetPosOnPivot().z
+                        };
+
+                        bool LockRoataion[3] = {
+                            ((RigidBody*)item->second)->IsLockedRotationX(),
+                            ((RigidBody*)item->second)->IsLockedRotationY(),
+                            ((RigidBody*)item->second)->IsLockedRotationZ()
                         };
 
                         char* Typs[3] = { "Static", "Kinemetic", "Dynamic"};
@@ -620,17 +673,34 @@ void BoneEditor::ShowObjectInfo(std::string name)
                         ImGui::DragFloat("Mass", &Mass, 0.1f);
                         ImGui::DragFloat3("PosOnPivot", PosOnPivot);
                         ImGui::Checkbox("IsAllowedToSleep", &IsAllowedToSleep);
+                        ImGui::Checkbox("LockRotationX", &LockRoataion[0]);
+                        ImGui::Checkbox("LockRotationY", &LockRoataion[1]);
+                        ImGui::Checkbox("LockRotationZ", &LockRoataion[2]);
 
-                        ((RigidBody*)item.second)->SetType((BodyType)CurItem);
-                        ((RigidBody*)item.second)->SetBounciness(Bounciness);
-                        ((RigidBody*)item.second)->SetFrictionCoefficient(FrictionCoefficient);
-                        ((RigidBody*)item.second)->SetIsAllowedToSleep(IsAllowedToSleep);
-                        ((RigidBody*)item.second)->SetMass(Mass);
-                        ((RigidBody*)item.second)->SetPosOnPivot(Vec3(PosOnPivot[0], PosOnPivot[1], PosOnPivot[2]));
+                        ((RigidBody*)item->second)->SetType((BodyType)CurItem);
+                        ((RigidBody*)item->second)->SetBounciness(Bounciness);
+                        ((RigidBody*)item->second)->SetFrictionCoefficient(FrictionCoefficient);
+                        ((RigidBody*)item->second)->SetIsAllowedToSleep(IsAllowedToSleep);
+                        ((RigidBody*)item->second)->SetMass(Mass);
+                        ((RigidBody*)item->second)->SetPosOnPivot(Vec3(PosOnPivot[0], PosOnPivot[1], PosOnPivot[2]));
+                        ((RigidBody*)item->second)->LockRotation(
+                            LockRoataion[0],
+                            LockRoataion[1],
+                            LockRoataion[2]
+                        );
+
+                        if (ImGui::Button("Remove"))
+                        {
+                            item++;
+                            object->RemoveComponent("RigidBody");
+                            continue;
+                        }
                     }
 
                     ImGui::TreePop();
                 }
+
+                item++;
             }
 
             if (ImGui::SmallButton("Add Component"))
@@ -644,7 +714,7 @@ void BoneEditor::ShowObjectInfo(std::string name)
 
 void BoneEditor::ShowEditObjectTree(std::string treeName)
 {
-    auto parent = SceneMgr->CurrentScene()->FindObjectByName(treeName);
+    auto parent = CUR_SCENE->FindObjectByName(treeName);
 
     if (parent == nullptr)
         return;
@@ -656,7 +726,7 @@ void BoneEditor::ShowEditObjectTree(std::string treeName)
         if (ImGui::SmallButton("Remove Object"))
         {
             parent->DetachParent();
-            SceneMgr->CurrentScene()->Destroy(parent);
+            CUR_SCENE->Destroy(parent);
         }
     }
 
@@ -697,33 +767,19 @@ void BoneEditor::ShowEditObjectTree(std::string treeName)
                     Child->SetPrfabName(ChildName);
                     Child->SetName(ChildName);
                     Child->SetPriority(1);
-                    SceneMgr->CurrentScene()->AddObject(Child, ChildName);
+                    CUR_SCENE->AddObject(Child, ChildName);
                 }
                 else
                 {
                     Child->SetPrfabName(Name);
                     Child->SetName(Name);
                     Child->SetPriority(1);
-                    SceneMgr->CurrentScene()->AddObject(Child, Name);
+                    CUR_SCENE->AddObject(Child, Name);
                 }
 
                 parent->AttachChild(Child);
                 childSize++;
             }
-        }
-    }
-}
-
-void BoneEditor::AllChildCheck(GameObject* parent)
-{
-    auto childs = parent->GetChileds();
-
-    for (auto iter = childs.begin(); iter != childs.end(); iter++)
-    {
-        if (ImGui::TreeNode((*iter)->GetName().c_str()))
-        {
-            AllChildCheck((*iter));
-            ImGui::TreePop();
         }
     }
 }
@@ -806,8 +862,8 @@ void BoneEditor::UpdateFrame()
         ImVec2 Size = ImGui::GetWindowSize();
         ImGui::SetWindowPos(ImVec2(RenderMgr->GetWidth() - Size.x, 19));
 
-        std::list<GameObject*> ObjectList = SceneMgr->CurrentScene()->GetObjectList();
-        auto StaticObjectList = SceneMgr->CurrentScene()->GetStaticObjectList();
+        std::list<GameObject*> ObjectList = CUR_SCENE->GetObjectList();
+        auto StaticObjectList = CUR_SCENE->GetStaticObjectList();
         ObjectList.sort();
         StaticObjectList.sort();
         ObjectList.merge(StaticObjectList);
@@ -858,7 +914,12 @@ void BoneEditor::UpdateFrame()
                         continue;
                 }
 
-                if (ImGui::TreeNode((*iter)->GetName().c_str()))
+                std::string ObjectName = (*iter)->GetName();
+                
+                if (ObjectName == currentObjectName)
+                    ObjectName += " - Select";
+
+                if (ImGui::TreeNode(ObjectName.c_str()))
                 {
                     if (ImGui::TreeNode("Information"))
                     {
@@ -887,7 +948,7 @@ void BoneEditor::UpdateFrame()
                         ImGui::InputText("Name", buf, 64);
                         if (ImGui::Button("Change Name"))
                         {
-                            auto object = SceneMgr->CurrentScene()->FindObjectByName((*iter)->GetName().c_str());
+                            auto object = CUR_SCENE->FindObjectByName((*iter)->GetName().c_str());
                             object->SetName(buf);
                         }
 
@@ -955,15 +1016,6 @@ void BoneEditor::UpdateFrame()
                         ImGui::TreePop();
                     }
 
-                    if ((*iter)->GetChileds().size() != 0)
-                    {
-                        if (ImGui::TreeNode("Childs"))
-                        {
-                            AllChildCheck((*iter));
-                            ImGui::TreePop();
-                        }
-                    }
-
                     if (ImGui::TreeNode("Edit Object"))
                     {
                         ShowEditObjectTree((*iter)->GetName());
@@ -972,19 +1024,19 @@ void BoneEditor::UpdateFrame()
                     }
 
                     if (ImGui::SmallButton("Remove Object"))
-                        SceneMgr->CurrentScene()->Destroy((*iter));
+                        CUR_SCENE->Destroy((*iter));
 
                     if (ImGui::SmallButton("Focus On"))
                     {
-                        auto Object = SceneMgr->CurrentScene()->FindObjectByName((*iter)->GetName().c_str());
+                        auto Object = CUR_SCENE->FindObjectByName((*iter)->GetName().c_str());
 
                         if (Object != nullptr)
                         {
                             auto Position = ((Transform3D*)Object->transform3D)->GetPosition();
 
-                            ((Camera*)(SceneMgr->CurrentScene()->GetCurrentCamera()->GetComponent("Camera")))->SetTargetPosition(Position);
+                            ((Camera*)(CUR_SCENE->GetCurrentCamera()->GetComponent("Camera")))->SetTargetPosition(Position);
 
-                            ((Transform3D*)SceneMgr->CurrentScene()->GetCurrentCamera()->transform3D)->SetPosition(
+                            ((Transform3D*)CUR_SCENE->GetCurrentCamera()->transform3D)->SetPosition(
                                 Position + Vec3(20, 20, 20)
                             );
                         }
@@ -1045,7 +1097,7 @@ void BoneEditor::UpdateFrame()
                         Object->AddComponent(tr);
                         Object->SetPrfabName(PrefabName);
                         Object->SavePrefab();
-                        SceneMgr->CurrentScene()->AddObject(Object, ObjectName);
+                        CUR_SCENE->AddObject(Object, ObjectName);
                     }
                     else if (Size != 0)
                     {
@@ -1062,7 +1114,7 @@ void BoneEditor::UpdateFrame()
                         Object->SetPrfabName(ComboBoxItems[CurItem]);
                         Object->LoadPrefab();
 
-                        SceneMgr->CurrentScene()->AddObject(Object, ObjectName);
+                        CUR_SCENE->AddObject(Object, ObjectName);
                     }
                 }
 
@@ -1076,7 +1128,7 @@ void BoneEditor::UpdateFrame()
 
         if (ImGui::CollapsingHeader("[Light Menu]", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            auto Lights = SceneMgr->CurrentScene()->GetPointLights();
+            auto Lights = CUR_SCENE->GetPointLights();
 
             static int selected = 0;
 
@@ -1219,7 +1271,7 @@ void BoneEditor::UpdateFrame()
                 ImGui::InputText("ImageType", TypeName, 64);
 
                 if (ImGui::Button("Chanage SkyBox"))
-                    SceneMgr->CurrentScene()->SetSkybox(ListBoxItems[CurItem], TypeName);
+                    CUR_SCENE->SetSkybox(ListBoxItems[CurItem], TypeName);
 
                 for (int i = 0; i<Size; i++)
                     delete[] ListBoxItems[i];
@@ -1230,13 +1282,13 @@ void BoneEditor::UpdateFrame()
 
             if (ImGui::TreeNode("World Ambient"))
             {
-                auto OriAmbient = SceneMgr->CurrentScene()->GetAmbientColor();
+                auto OriAmbient = CUR_SCENE->GetAmbientColor();
 
                 static float Ambient[4] = { OriAmbient.r, OriAmbient.g, OriAmbient.b, OriAmbient.a };
 
                 ImGui::InputFloat3("Ambient", Ambient);
 
-                SceneMgr->CurrentScene()->SetAmbientColor(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
+                CUR_SCENE->SetAmbientColor(Ambient[0], Ambient[1], Ambient[2], Ambient[3]);
 
                 ImGui::TreePop();
             }
@@ -1259,7 +1311,7 @@ void BoneEditor::UpdateFrame()
 
             if (ImGui::TreeNode("Fog"))
             {
-                auto CurScene = SceneMgr->CurrentScene();
+                auto CurScene = CUR_SCENE;
                 bool EnableFog = CurScene->OnFog();
                 ImGui::Checkbox("On Fog", &EnableFog);
 
@@ -1359,7 +1411,7 @@ void BoneEditor::UpdateFrame()
                     StaticMesh* Mesh = new StaticMesh();
                     Mesh->SetFile(ComboBoxItems[CurItem]);
                     Mesh->LoadContent();
-                    auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+                    auto Object = CUR_SCENE->FindObjectByName(currentShowInfoObject);
                     Object->AddComponent(Mesh);
 
                     showAddComponent = false;
@@ -1373,7 +1425,7 @@ void BoneEditor::UpdateFrame()
                 char* ComboBoxItems[] = { "Box", "Sphere", "Cone", "Cylinder", "Capsule" };
 
                 static int CurItem = 0;
-                ImGui::Combo("Collisions", &CurItem, ComboBoxItems, 3);
+                ImGui::Combo("Collisions", &CurItem, ComboBoxItems, 5);
 
                 static bool AutoCompute = true;
                 static float Radius = 1.0f;
@@ -1394,7 +1446,7 @@ void BoneEditor::UpdateFrame()
 
                 if (ImGui::Button("Add Component"))
                 {
-                    auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+                    auto Object = CUR_SCENE->FindObjectByName(currentShowInfoObject);
 
                     Collision* Coll = new Collision(Object);
 
@@ -1431,10 +1483,8 @@ void BoneEditor::UpdateFrame()
                     else if (CurItem == 2)
                         Coll->CreateCone(Radius, Height);
                     else if (CurItem == 3)
-                        Coll->CreateCone(Radius, Height);
-                    else if (CurItem == 4)
                         Coll->CreateCylinder(Radius, Height);
-                    else if (CurItem == 5)
+                    else if (CurItem == 4)
                         Coll->CreateCapsule(Radius, Height);
 
                     if (Init)
@@ -1460,16 +1510,20 @@ void BoneEditor::UpdateFrame()
                 static float Bounciness = 0.4f;
                 static float FrictionCoefficient = 0.2f;
                 static float Mass = 1.0f;
+                static bool LockRoataion[3] = { false };
 
                 ImGui::Checkbox("Enable Gravity", &EnableGravity);
                 ImGui::Checkbox("Allow To Sleep", &IsAllowedToSleep);
                 ImGui::DragFloat("Bounciness", &Bounciness, 1.0f, 0.1f);
                 ImGui::DragFloat("FrictionCoefficient", &FrictionCoefficient, 1.0f, 0.1f);
                 ImGui::DragFloat("Mass", &Mass, 1.0f, 0.1f);
+                ImGui::Checkbox("Lock RotationX", &LockRoataion[0]);
+                ImGui::Checkbox("Lock RotationY", &LockRoataion[1]);
+                ImGui::Checkbox("Lock RotationZ", &LockRoataion[2]);
 
                 if (ImGui::Button("Add Component"))
                 {
-                    auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+                    auto Object = CUR_SCENE->FindObjectByName(currentShowInfoObject);
 
                     RigidBody* rigidBody = new RigidBody();
 
@@ -1480,7 +1534,7 @@ void BoneEditor::UpdateFrame()
                         rigidBody->SetFrictionCoefficient(FrictionCoefficient);
                         rigidBody->SetIsAllowedToSleep(IsAllowedToSleep);
                         rigidBody->SetType(reactphysics3d::BodyType(CurItem));
-
+                        rigidBody->LockRotation(LockRoataion[0], LockRoataion[1], LockRoataion[2]);
                         Object->AddComponent(rigidBody);
 
                         showAddComponent = false;
@@ -1519,7 +1573,7 @@ void BoneEditor::UpdateFrame()
                     SkinnedMesh* Mesh = new SkinnedMesh();
                     Mesh->SetFile(ComboBoxItems[CurItem]);
                     Mesh->LoadContent();
-                    auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+                    auto Object = CUR_SCENE->FindObjectByName(currentShowInfoObject);
                     Object->AddComponent(Mesh);
 
                     showAddComponent = false;
@@ -1560,7 +1614,7 @@ void BoneEditor::UpdateFrame()
 
                     Mat->LoadContent();
 
-                    auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+                    auto Object = CUR_SCENE->FindObjectByName(currentShowInfoObject);
                     Object->AddComponent(Mat);
 
                     showAddComponent = false;
@@ -1587,7 +1641,7 @@ void BoneEditor::UpdateFrame()
 
                 if (ImGui::Button("Add Component"))
                 {
-                    auto Object = SceneMgr->CurrentScene()->FindObjectByName(currentShowInfoObject);
+                    auto Object = CUR_SCENE->FindObjectByName(currentShowInfoObject);
 
                     if (AddScript(Object, ComboBoxItems[CurItem]))
                         showAddComponent = false;

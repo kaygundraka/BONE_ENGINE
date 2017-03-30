@@ -1,9 +1,9 @@
 {
     "1.Transform3D": {
         "Position": [
+            -6.62400054931641,
             0.0,
-            7.82800674438477,
-            0.0
+            24.8606433868408
         ],
         "Rotation": [
             0.0,
@@ -11,16 +11,21 @@
             0.0
         ],
         "Scale": [
-            2.0,
             1.0,
-            2.0
+            1.0,
+            1.0
         ]
     },
     "3.Collision": {
         "HalfExtens": [
-            76.1062164306641,
+            38.1062316894531,
             3.89025378227234,
-            76.4791412353516
+            38.4791450500488
+        ],
+        "Pivot": [
+            -1.1444091796875e-05,
+            -3.89025187492371,
+            4.9591064453125e-05
         ],
         "Type": 0
     },
@@ -29,7 +34,17 @@
         "EnableGravity": false,
         "FricitionCoefficient": 0.200000002980232,
         "IsAllowedToSleep": false,
+        "LockRotation": [
+            false,
+            false,
+            false
+        ],
         "Mass": 1.0,
+        "Pivot": [
+            -1.1444091796875e-05,
+            -3.89025187492371,
+            4.9591064453125e-05
+        ],
         "Type": 0
     },
     "5.Material": {
@@ -60,10 +75,10 @@
         ]
     },
     "6.StaticMesh": {
-        "FileName": "Floor.X"
+        "FileName": "Floor2.X"
     },
     "IsActive": true,
-    "IsEditorLock": true,
+    "IsEditorLock": false,
     "IsStatic": false,
     "Priority": 1,
     "Tag": ""

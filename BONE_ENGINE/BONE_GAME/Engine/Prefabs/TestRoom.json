@@ -1,0 +1,33 @@
+{
+    "1.Transform3D": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "ChildObjects": [
+        "Floor",
+        "Wall1",
+        "Wall2",
+        "Wall3",
+        "Wall4",
+        "Floor2",
+        "Floo3"
+    ],
+    "IsActive": true,
+    "IsEditorLock": true,
+    "IsStatic": false,
+    "Priority": 1,
+    "Tag": ""
+}

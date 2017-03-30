@@ -1,9 +1,9 @@
 {
     "1.Transform3D": {
         "Position": [
-            -40.0,
+            69.3763580322266,
             0.0,
-            -15.0
+            24.8606433868408
         ],
         "Rotation": [
             0.0,
@@ -15,6 +15,37 @@
             1.0,
             1.0
         ]
+    },
+    "3.Collision": {
+        "HalfExtens": [
+            38.1062202453613,
+            3.89025378227234,
+            38.4791450500488
+        ],
+        "Pivot": [
+            0.0,
+            -3.89025187492371,
+            4.9591064453125e-05
+        ],
+        "Type": 0
+    },
+    "4.RigidBody": {
+        "Bounciness": 0.400000005960464,
+        "EnableGravity": false,
+        "FricitionCoefficient": 0.200000002980232,
+        "IsAllowedToSleep": false,
+        "LockRotation": [
+            false,
+            false,
+            false
+        ],
+        "Mass": 1.0,
+        "Pivot": [
+            0.0,
+            -3.89025187492371,
+            4.9591064453125e-05
+        ],
+        "Type": 0
     },
     "5.Material": {
         "Ambient": [
@@ -44,7 +75,7 @@
         ]
     },
     "6.StaticMesh": {
-        "FileName": "Door_A.X"
+        "FileName": "Floor.X"
     },
     "IsActive": true,
     "IsEditorLock": false,

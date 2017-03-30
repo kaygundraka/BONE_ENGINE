@@ -61,7 +61,13 @@ namespace BONE_GRAPHICS
 
         void DrawLine(D3DXMATRIX matrix, D3DXVECTOR3 start, D3DXVECTOR3 end, D3DXCOLOR color);
         void DrawLine(D3DXVECTOR3 start, D3DXVECTOR3 end, D3DXCOLOR color);
+
         bool DrawMeshBox(D3DXMATRIX matrix, LPD3DXMESH mesh, D3DXVECTOR3 pos, D3DXCOLOR color);
+
+        void RenderManager::DrawBox(D3DXMATRIX transform, D3DXVECTOR3 leftBottom, D3DXVECTOR3 rightTop, D3DXCOLOR color);
+        void DrawSphere(D3DXMATRIX transform, float radius, D3DXCOLOR color);
+        void DrawCylinder(D3DXMATRIX transform, float radius, float height, D3DXCOLOR color);
+        void DrawCone(D3DXMATRIX transform, float edge, float edge2, float edge3, D3DXCOLOR color);
 
         bool UseImGUI();
         void UseImGUI(bool use);

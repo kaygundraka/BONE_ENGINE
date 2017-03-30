@@ -224,28 +224,39 @@ namespace BONE_GRAPHICS
 		return Vec3(pitch, yaw, roll);
 	}
 
+    Vec3 Transform3D::GetWorldRotateAngle()
+    {
+        GameObject* parentPtr = parent;
+
+        Quater result = rotAngle;
+
+        while (parentPtr != nullptr)
+        {
+            result *= ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetRotateQuater();
+
+            parentPtr = parentPtr->GetParent();
+        }
+
+        float sqw = result.w * result.w;
+        float sqx = result.x * result.x;
+        float sqy = result.y * result.y;
+        float sqz = result.z * result.z;
+
+        float pitch = asinf(2.0f * (result.w * result.x - result.y * result.z));
+        float yaw = atan2f(2.0f * (result.x * result.z + result.w * result.y), (-sqx - sqy + sqz + sqw));
+        float roll = atan2f(2.0f * (result.x * result.y + result.w * result.z), (-sqx + sqy - sqz + sqw));
+
+        return Vec3(pitch, yaw, roll);
+
+        //D3DXMatrixRotationQuaternion(&rotateTransform, &result);
+
+        //return result;
+    }
+
     Quater Transform3D::GetRotateQuater()
     {
         return rotAngle;
     }
-
-	Quater Transform3D::GetWorldRotateAngle()
-	{
-		GameObject* parentPtr = parent;
-
-		Quater result = rotAngle;
-
-		while (parentPtr != nullptr)
-		{
-			result *= ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetRotateQuater();
-
-			parentPtr = parentPtr->GetParent();
-		}
-
-		D3DXMatrixRotationQuaternion(&rotateTransform, &result);
-		
-		return result;
-	}
 
 	void Transform3D::AttachObject(GameObject* parent)
 	{

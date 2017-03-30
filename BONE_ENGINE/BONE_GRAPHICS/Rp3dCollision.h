@@ -46,6 +46,10 @@ namespace BONE_GRAPHICS
 
         COLLISION_TYPE type;
 
+        bool showShape;
+
+        Vec3 pivot;
+
     public:
         Collision(GameObject* attachObject);
         virtual ~Collision();
@@ -63,7 +67,15 @@ namespace BONE_GRAPHICS
         Vec3 GetHalfExtens();
         float GetRadius();
         float GetHeight();
-                
+
+        void ShowShape(bool show);
+        bool IsShow();
+        
+        void RenderShape();
+
+        Vec3 GetModelPivot();
+        void SetModelPivot(Vec3 pivot);
+
         COLLISION_TYPE GetCollisionType();
 
         ConvexShape* GetCollision();

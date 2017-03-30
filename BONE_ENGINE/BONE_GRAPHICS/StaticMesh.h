@@ -38,9 +38,7 @@ namespace BONE_GRAPHICS
 		void Render(IShader* shaderOpt, GameObject* object);
         
         void SetRenderMode(int mode);
-        void ShowMeshBox(bool show);
         bool IsShowMeshBOx();
-        void SetMeshBoxColor(D3DXCOLOR color);
         void SetTextures(std::string* fileNames);
         void SetFile(std::string fileName);
 

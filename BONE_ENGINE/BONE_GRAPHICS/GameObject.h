@@ -91,6 +91,7 @@ namespace BONE_GRAPHICS
 		Component* GetComponent(std::string typeName);
         std::map<std::string, Component*> GetComponents();
 		bool AddComponent(Component* component);
+        bool RemoveComponent(std::string typeName);
 
 		void LoadContents();
 

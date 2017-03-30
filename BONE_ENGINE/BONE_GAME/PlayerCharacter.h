@@ -5,7 +5,7 @@
 #include <Camera.h>
 #include <SkinnedMesh.h>
 #include <SceneManager.h>
-#include "CustomCamera.h"
+#include <Rp3dRigidBody.h>
 
 using namespace BONE_GRAPHICS;
 
@@ -17,8 +17,7 @@ private:
     SkinnedMesh* skinnedMesh;
     float mouseX;
     float mouseY;
-    CustomCamera camera;
-
+    
 public:
     virtual void Init();
     virtual void Reference();

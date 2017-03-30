@@ -14,6 +14,8 @@ namespace BONE_GRAPHICS
         transform = (Transform3D*)((this->object)->transform3D);
 
         this->SetTypeName("Collision");
+
+        showShape = false;
     }
 
     Collision::~Collision()
@@ -100,10 +102,10 @@ namespace BONE_GRAPHICS
             return false;
 
         TAG_BOX Box;
-
+        
         LPVOID pVertices(nullptr);
         mesh->LockVertexBuffer(D3DLOCK_NOSYSLOCK, &pVertices);
-
+                
         if (FAILED(D3DXComputeBoundingBox((Vec3*)pVertices,
             mesh->GetNumVertices(),
             D3DXGetFVFVertexSize(mesh->GetFVF()),
@@ -127,6 +129,7 @@ namespace BONE_GRAPHICS
         Box.leftBottom.z *= ((Transform3D*)object->transform3D)->GetScale().z;
 
         Vec3 HalfExtens = (Box.rightTop - Box.leftBottom) / 2;
+        pivot = (Box.rightTop + Box.leftBottom) / 2;
 
         this->halfExtens = HalfExtens;
        
@@ -138,6 +141,16 @@ namespace BONE_GRAPHICS
         type = COLL_BOX;
 
         return true;
+    }
+
+    Vec3 Collision::GetModelPivot()
+    {
+        return pivot;
+    }
+    
+    void Collision::SetModelPivot(Vec3 pivot)
+    {
+        this->pivot = pivot;
     }
 
     bool Collision::ComputeBoundingSphere(LPD3DXMESH mesh)
@@ -165,6 +178,8 @@ namespace BONE_GRAPHICS
         mesh->UnlockVertexBuffer();
 
         this->radius = Sphere.radius;
+
+        pivot = Sphere.pivot;
         
         collision = new SphereShape(Sphere.radius);
         collision->name = object->GetName();
@@ -189,6 +204,7 @@ namespace BONE_GRAPHICS
         }
 
         this->radius = Sphere.radius;
+        pivot = Sphere.pivot;
 
         collision = new SphereShape(Sphere.radius);
         collision->name = object->GetName();
@@ -196,6 +212,59 @@ namespace BONE_GRAPHICS
         type = COLL_SPHERE;
 
         return true;
+    }
+
+    void Collision::ShowShape(bool show)
+    {
+        showShape = show;
+    }
+    
+    bool Collision::IsShow()
+    {
+        return showShape;
+    }
+
+    void Collision::RenderShape()
+    {
+        if (showShape)
+        {
+            if (type == COLLISION_TYPE::COLL_BOX)
+            {
+                Vec3 LeftBottom = -halfExtens;
+                Vec3 RightTop = halfExtens;
+                RenderMgr->DrawBox(
+                    ((Transform3D*)object->transform3D)->GetTransform(),
+                    LeftBottom + pivot,
+                    RightTop + pivot,
+                    COLOR::GREEN
+                );
+            }
+            else if (type == COLLISION_TYPE::COLL_SPHERE)
+            {
+                RenderMgr->DrawSphere(
+                    ((Transform3D*)object->transform3D)->GetTransform(),
+                    radius,
+                    COLOR::GREEN
+                );
+            }
+            else if (type == COLLISION_TYPE::COLL_CYLINDER)
+            {
+                RenderMgr->DrawCylinder(
+                    ((Transform3D*)object->transform3D)->GetTransform(),
+                    radius,
+                    height,
+                    COLOR::GREEN
+                );
+            }
+            else if (type == COLLISION_TYPE::COLL_CAPSULE)
+            {
+
+            }
+            else if (type == COLLISION_TYPE::COLL_CONE)
+            {
+
+            }
+        }
     }
     
     Vec3 Collision::GetHalfExtens()

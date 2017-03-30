@@ -1,14 +1,14 @@
 {
     "1.Transform3D": {
         "Position": [
-            -34.0,
-            0.0,
-            0.0
+            -4.99172210693359,
+            2.38612461090088,
+            31.71457862854
         ],
         "Rotation": [
-            0.0,
-            0.0,
-            0.0
+            -0.00697201164439321,
+            0.752247929573059,
+            -1.58410775661469
         ],
         "Scale": [
             1.0,
@@ -18,19 +18,34 @@
     },
     "3.Collision": {
         "HalfExtens": [
-            5.90286350250244,
-            38.1170272827148,
-            38.6685447692871
+            6.09670686721802,
+            3.49602556228638,
+            7.91529083251953
+        ],
+        "Pivot": [
+            5.24520874023438e-06,
+            3.49598598480225,
+            0.00922560691833496
         ],
         "Type": 0
     },
     "4.RigidBody": {
         "Bounciness": 0.400000005960464,
-        "EnableGravity": false,
+        "EnableGravity": true,
         "FricitionCoefficient": 0.200000002980232,
-        "IsAllowedToSleep": false,
+        "IsAllowedToSleep": true,
+        "LockRotation": [
+            false,
+            false,
+            false
+        ],
         "Mass": 1.0,
-        "Type": 0
+        "Pivot": [
+            5.24520874023438e-06,
+            3.49598598480225,
+            0.00922560691833496
+        ],
+        "Type": 2
     },
     "5.Material": {
         "Ambient": [
@@ -60,7 +75,7 @@
         ]
     },
     "6.StaticMesh": {
-        "FileName": "DoorWay_A.X"
+        "FileName": "Crate_A.X"
     },
     "IsActive": true,
     "IsEditorLock": false,

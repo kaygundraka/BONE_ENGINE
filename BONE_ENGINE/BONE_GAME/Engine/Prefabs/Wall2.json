@@ -1,9 +1,9 @@
 {
     "1.Transform3D": {
         "Position": [
-            -34.0,
+            103.376373291016,
             0.0,
-            0.0
+            24.8600597381592
         ],
         "Rotation": [
             0.0,
@@ -22,6 +22,11 @@
             38.1062202453613,
             38.4791488647461
         ],
+        "Pivot": [
+            -3.75509262084961e-05,
+            38.1062202453613,
+            1.71661376953125e-05
+        ],
         "Type": 0
     },
     "4.RigidBody": {
@@ -29,7 +34,17 @@
         "EnableGravity": false,
         "FricitionCoefficient": 0.200000002980232,
         "IsAllowedToSleep": false,
+        "LockRotation": [
+            false,
+            false,
+            false
+        ],
         "Mass": 1.0,
+        "Pivot": [
+            -3.75509262084961e-05,
+            38.1062202453613,
+            1.71661376953125e-05
+        ],
         "Type": 0
     },
     "5.Material": {

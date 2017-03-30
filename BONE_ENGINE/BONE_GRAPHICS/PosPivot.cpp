@@ -209,25 +209,9 @@ namespace BONE_GRAPHICS
                 sm = ((StaticMesh*)Object->GetComponent("StaticMesh"));
 
             if (NoSelect)
-            {
-                if (Object != nullptr)
-                {
-                    sm->ShowMeshBox(false);
-                    sm->SetMeshBoxColor(COLOR::WHITE);
-                }
-
                 selectObject = "";
-            }
             else
-            {
                 ui->SelectObject(selectObject);
-
-                if (Object != nullptr)
-                {
-                    sm->ShowMeshBox(true);
-                    sm->SetMeshBoxColor(COLOR::GREEN);
-                }
-            }
         }
         
         if (selectObject != "")
@@ -286,10 +270,10 @@ namespace BONE_GRAPHICS
 
             if (Object->IsLockedEditor())
                 return;
-/*
+
             while (Object->GetParent() != nullptr)
                 Object = Object->GetParent();
-*/
+
             RAY PickingRay = RenderMgr->GetPickingRayToView(false);
             Vec3 PickingPos = PickingRay.origin + PickingRay.direction * moveValue * 2;
 
@@ -306,6 +290,21 @@ namespace BONE_GRAPHICS
             }
 
             ((Transform3D*)Object->transform3D)->SetPosition(MovePos);
+        }
+    }
+
+    void PosPivot::LateRender()
+    {
+        if (selectObject != "") {
+            auto Object = SceneMgr->CurrentScene()->FindObjectByName(selectObject);
+
+            if (Object == nullptr)
+                return;
+
+            auto MatWorld = ((Transform3D*)Object->transform3D)->GetTransform();
+            auto PMesh = ResourceMgr->LoadMesh(((StaticMesh*)Object->GetComponent("StaticMesh"))->GetFile());
+
+            RenderMgr->DrawMeshBox(MatWorld, PMesh->mesh, ((Transform3D*)Object->transform3D)->GetPosition(), COLOR::MAGENTA);
         }
     }
 }

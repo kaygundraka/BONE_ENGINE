@@ -256,7 +256,8 @@ float4  PS_Shadow( VS_OUTPUT_SHADOW IN ) : COLOR0
 
 struct VS_OUTPUT_UNLIT
 {
-	float4 position		: POSITION;
+	float4 position		: POSITION0;
+	float4 worldPos		: POSITION1;
 	float4 texCoord1	: TEXCOORD0;
 	float4 texCoord2	: TEXCOORD1;
 	float4 texCoord3	: TEXCOORD2;
@@ -274,6 +275,7 @@ VS_OUTPUT_UNLIT VS_Unlit(float4 inPosition : POSITION)
 
 	// Output the transformed position
     inPosition = mul(inPosition, matWorld);
+	OUT.worldPos = inPosition;
 	OUT.position = mul(inPosition, matWorldViewProj);
 		
 	// Output the projective texture coordinates
@@ -394,24 +396,98 @@ float4  PS_Unlit( VS_OUTPUT_UNLIT IN ) : COLOR0
 			H2 = (IN.texCoord8.z - 0.001f);
 		}
 
+		bool shaded = false;
+
 		// Texel is shadowed
 		if ( A1 < A2 && onLight[0] == true)
-			ShadowTerm += 0.1f;
-		else if ( B1 < B2 && onLight[1] == true)
-			ShadowTerm += 0.1f;
-		else if ( C1 < C2 && onLight[2] == true)
-			ShadowTerm += 0.1f;
-		else if ( D1 < D2 && onLight[3] == true)
-			ShadowTerm += 0.1f;
-		else if ( E1 < E2 && onLight[4] == true)
-			ShadowTerm += 0.1f;
-		else if ( F1 < F2 && onLight[5] == true)
-			ShadowTerm += 0.1f;
-		else if ( G1 < G2 && onLight[6] == true)
-			ShadowTerm += 0.1f;
-		else if ( H1 < H2 && onLight[7] == true)
-			ShadowTerm += 0.1f;
-		else
+		{
+			float dist = distance(lights[0].pos, IN.worldPos);
+
+			if (dist < lights[0].radius)
+			{
+				ShadowTerm += 0.1f;
+				shaded = true;
+			}
+		}
+
+		if ( B1 < B2 && onLight[1] == true)
+		{
+			float dist = distance(lights[1].pos, IN.worldPos);
+
+			if (dist < lights[1].radius && !shaded)
+			{
+				ShadowTerm += 0.1f;
+				shaded = true;
+			}
+		}
+
+		if ( C1 < C2 && onLight[2] == true)
+		{
+			float dist = distance(lights[2].pos, IN.worldPos);
+
+			if (dist < lights[2].radius && !shaded)
+			{
+				ShadowTerm += 0.1f;
+				shaded = true;
+			}
+		}
+
+		if ( D1 < D2 && onLight[3] == true)
+		{
+			float dist = distance(lights[3].pos, IN.worldPos);
+
+			if (dist < lights[3].radius && !shaded)
+			{
+				ShadowTerm += 0.1f;
+				shaded = true;
+			}
+		}
+
+		if ( E1 < E2 && onLight[4] == true)
+		{
+			float dist = distance(lights[4].pos, IN.worldPos);
+
+			if (dist < lights[4].radius && !shaded)
+			{
+				ShadowTerm += 0.1f;
+				shaded = true;
+			}
+		}
+
+		if ( F1 < F2 && onLight[5] == true)
+		{
+			float dist = distance(lights[5].pos, IN.worldPos);
+
+			if (dist < lights[5].radius && !shaded)
+			{
+				ShadowTerm += 0.1f;
+				shaded = true;
+			}
+		}
+
+		if ( G1 < G2 && onLight[6] == true)
+		{
+			float dist = distance(lights[6].pos, IN.worldPos);
+
+			if (dist < lights[6].radius && !shaded)
+			{
+				ShadowTerm += 0.1f;
+				shaded = true;
+			}
+		}
+		
+		if ( H1 < H2 && onLight[7] == true)
+		{
+			float dist = distance(lights[7].pos, IN.worldPos);
+
+			if (dist < lights[7].radius && !shaded)
+			{
+				ShadowTerm += 0.1f;
+				shaded = true;
+			}
+		}
+		
+		if (shaded == false)
 			ShadowTerm += 1.0f;
 	}
 	

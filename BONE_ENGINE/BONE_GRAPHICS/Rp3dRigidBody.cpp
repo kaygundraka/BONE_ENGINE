@@ -12,6 +12,8 @@ namespace BONE_GRAPHICS
 
     RigidBody::~RigidBody()
     {
+        if (SceneMgr->CurrentScene() != nullptr && rigidBody != nullptr)
+            SceneMgr->CurrentScene()->GetPhysicsWorld()->destroyRigidBody(rigidBody);
     }
 
     bool RigidBody::SetInfo(GameObject* onwer, float mass)
@@ -40,6 +42,12 @@ namespace BONE_GRAPHICS
             InitTransform2,
             mass
         );
+
+        pos = ((Collision*)this->onwer)->GetModelPivot();
+
+        enableRotateX = false;
+        enableRotateY = false;
+        enableRotateZ = false;
 
         return true;
     }
@@ -81,7 +89,8 @@ namespace BONE_GRAPHICS
         rp3d::Vector3 Force(force.x, force.y, force.z);
         rp3d::Vector3 Point(point.x, point.y, point.z);
 
-        rigidBody->applyForce(Force, Point);
+        rigidBody->applyForceToCenterOfMass(Force);
+        //rigidBody->applyForce(Force, Point);
     }
     
     void RigidBody::ADDForce(rp3d::Vector3 force, rp3d::Vector3 point)
@@ -98,6 +107,16 @@ namespace BONE_GRAPHICS
     void RigidBody::ApplyTorque(rp3d::Vector3 torque)
     {
         rigidBody->applyTorque(torque);
+    }
+
+    void RigidBody::SetAngularVelocity(float x, float y, float z)
+    {
+        rigidBody->setAngularVelocity(Vector3(x, y, z));
+    }
+
+    void RigidBody::SetLinearVelocity(float x, float y, float z)
+    {
+        rigidBody->setLinearVelocity(Vector3(x, y, z));
     }
 
     reactphysics3d::BodyType RigidBody::GetType()
@@ -140,6 +159,28 @@ namespace BONE_GRAPHICS
         return pos;
     }
 
+    void RigidBody::LockRotation(bool x, bool y, bool z)
+    {
+        enableRotateX = x;
+        enableRotateY = y;
+        enableRotateZ = z;
+    }
+    
+    bool RigidBody::IsLockedRotationX()
+    {
+        return enableRotateX;
+    }
+    
+    bool RigidBody::IsLockedRotationY()
+    {
+        return enableRotateY;
+    }
+    
+    bool RigidBody::IsLockedRotationZ()
+    {
+        return enableRotateZ;
+    }
+    
     void RigidBody::UpdateTransform()
     {
         if (SceneMgr->CurrentScene()->IsEnablePhysics())
@@ -147,14 +188,34 @@ namespace BONE_GRAPHICS
             rp3dTransform = rigidBody->getTransform();
             rp3d::Quaternion Rot = rp3dTransform.getOrientation();
             rp3d::Vector3 Pos = rp3dTransform.getPosition();
-            
-            transform->SetPosition(Pos.x + pos.x, Pos.y + pos.y, -Pos.z - pos.z);
-            transform->SetRotate(Rot.x, Rot.y, Rot.z);
+
+            transform->SetPosition(Pos.x - pos.x, Pos.y - pos.y, (-Pos.z) - pos.z);
+
+            Quater quater;
+            quater.x = Rot.x;
+            quater.y = -Rot.y;
+            quater.z = Rot.z;
+            quater.w = -Rot.w;
+
+            transform->SetRotate(quater);
+
+            Vector3 AngularAxis = rigidBody->getAngularVelocity();
+
+            if (enableRotateX)
+                AngularAxis.x = 0;
+
+            if (enableRotateY)
+                AngularAxis.y = 0;
+
+            if (enableRotateZ)
+                AngularAxis.z = 0;
+
+            rigidBody->setAngularVelocity(AngularAxis);
         }
         else
         {
-            rp3d::Vector3 InitPosition(transform->GetPosition().x, transform->GetPosition().y, -transform->GetPosition().z);
-            rp3d::Quaternion InitOrientation(transform->GetRotateAngle().x, transform->GetRotateAngle().z, transform->GetRotateAngle().z);
+            rp3d::Vector3 InitPosition(transform->GetWorldPositon().x + pos.x, transform->GetWorldPositon().y + pos.y, -(transform->GetWorldPositon().z + pos.z));
+            rp3d::Quaternion InitOrientation(transform->GetWorldRotateAngle().x, transform->GetWorldRotateAngle().y, transform->GetWorldRotateAngle().z);
             rp3d::Transform InitTransform(InitPosition, InitOrientation);
 
             rigidBody->setTransform(InitTransform);

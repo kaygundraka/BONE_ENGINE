@@ -39,9 +39,6 @@
     <Filter Include="소스 파일\Core\Management\Configuration">
       <UniqueIdentifier>{9c0d54b8-2d1b-4ade-ac20-2e352dd37980}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Core\Management\PhysicsManager">
-      <UniqueIdentifier>{da535f07-15b5-4757-b49d-98f9753e42bd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Core\GameObject">
       <UniqueIdentifier>{34124952-3ed1-40dc-a74d-fc5b9edfba21}</UniqueIdentifier>
     </Filter>
@@ -116,6 +113,9 @@
     </Filter>
     <Filter Include="소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh">
       <UniqueIdentifier>{2d99e536-e92f-4549-a02d-9bfba3c6f2df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\Management\Physics">
+      <UniqueIdentifier>{da535f07-15b5-4757-b49d-98f9753e42bd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -306,13 +306,7 @@
       <Filter>소스 파일\Core\Management\RuntimeCompiler</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsListener.h">
-      <Filter>소스 파일\Core\Management\PhysicsManager</Filter>
-    </ClInclude>
-    <ClInclude Include="AllocateHierarchyImp.h">
-      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="aSkinnedMesh.h">
-      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
+      <Filter>소스 파일\Core\Management\Physics</Filter>
     </ClInclude>
     <ClInclude Include="SkinnedMesh.h">
       <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
@@ -497,13 +491,7 @@
       <Filter>소스 파일\Core\Management\Log</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsListener.cpp">
-      <Filter>소스 파일\Core\Management\PhysicsManager</Filter>
-    </ClCompile>
-    <ClCompile Include="AllocateHierarchyImp.cpp">
-      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
-    </ClCompile>
-    <ClCompile Include="aSkinnedMesh.cpp">
-      <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
+      <Filter>소스 파일\Core\Management\Physics</Filter>
     </ClCompile>
     <ClCompile Include="SkinnedMesh.cpp">
       <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
@@ -513,6 +501,9 @@
     </ClCompile>
     <ClCompile Include="SceneRender.cpp">
       <Filter>소스 파일\Core\Management\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawBasicShape.cpp">
+      <Filter>소스 파일\Core\Management\Render</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

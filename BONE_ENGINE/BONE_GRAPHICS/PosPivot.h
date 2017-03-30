@@ -26,5 +26,6 @@ namespace BONE_GRAPHICS
         virtual void Init();
         virtual void Reference();
         virtual void Update();
+        virtual void LateRender();
     };
 }

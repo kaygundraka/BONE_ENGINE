@@ -146,6 +146,22 @@ namespace BONE_GRAPHICS
 		return true;
 	}
 
+    bool GameObject::RemoveComponent(std::string typeName)
+    {
+        auto com = components.find(typeName);
+        auto pCom = com->second;
+
+        if (com != components.end())
+        {
+            components.erase(com);
+            delete pCom;
+
+            return true;
+        }
+
+        return false;
+    }
+
 	void GameObject::Render()
 	{
 		IShader* Shader = ((IShader*)GetComponent("IShader"));
@@ -449,6 +465,11 @@ namespace BONE_GRAPHICS
             {
                 auto Type = ((Collision*)(item.second))->GetCollisionType();
                 j["3.Collision"]["Type"] = (int)Type;
+                j["3.Collision"]["Pivot"] = {
+                    ((Collision*)(item.second))->GetModelPivot().x,
+                    ((Collision*)(item.second))->GetModelPivot().y,
+                    ((Collision*)(item.second))->GetModelPivot().z
+                };
 
                 if (Type == Collision::COLL_BOX)
                 {
@@ -474,6 +495,16 @@ namespace BONE_GRAPHICS
                 j["4.RigidBody"]["Bounciness"] = ((RigidBody*)(item.second))->GetBounciness();
                 j["4.RigidBody"]["FricitionCoefficient"] = ((RigidBody*)(item.second))->GetFrictionCoefficient();
                 j["4.RigidBody"]["IsAllowedToSleep"] = ((RigidBody*)(item.second))->GetIsAllowedToSleep();
+                j["4.RigidBody"]["Pivot"] = {
+                    ((RigidBody*)(item.second))->GetPosOnPivot().x,
+                    ((RigidBody*)(item.second))->GetPosOnPivot().y,
+                    ((RigidBody*)(item.second))->GetPosOnPivot().z
+                };
+                j["4.RigidBody"]["LockRotation"] = {
+                    ((RigidBody*)(item.second))->IsLockedRotationX(),
+                    ((RigidBody*)(item.second))->IsLockedRotationY(),
+                    ((RigidBody*)(item.second))->IsLockedRotationZ()
+                };
             }
             else if (item.first == "Material")
             {
@@ -615,6 +646,8 @@ namespace BONE_GRAPHICS
 
                     Collision::COLLISION_TYPE Type = (Collision::COLLISION_TYPE)j["3.Collision"]["Type"].get<int>();
 
+                    auto Pivot = j["3.Collision"]["Pivot"].get<std::vector<double>>();
+                    
                     if (Type == Collision::COLL_BOX)
                     {
                         auto HalfExtens = j["3.Collision"]["HalfExtens"].get<std::vector<double>>();
@@ -649,6 +682,14 @@ namespace BONE_GRAPHICS
                         collision->CreateSphere(Radius);
                     }
 
+                    collision->SetModelPivot(
+                        Vec3(
+                            Pivot[0],
+                            Pivot[1],
+                            Pivot[2]
+                        )
+                    );
+
                     AddComponent(collision);
                 }
             }
@@ -666,7 +707,9 @@ namespace BONE_GRAPHICS
                     auto Bounciness = j["4.RigidBody"]["Bounciness"].get<double>();
                     auto FricitionCoefficient = j["4.RigidBody"]["FricitionCoefficient"].get<double>();
                     auto IsAllowedToSleep = j["4.RigidBody"]["IsAllowedToSleep"].get<bool>();
-
+                    auto Pivot = j["4.RigidBody"]["Pivot"].get<std::vector<double>>();
+                    auto LockRotation = j["4.RigidBody"]["LockRotation"].get<std::vector<bool>>();
+                    
                     if (rigidBody->SetInfo(this, Mass))
                     {
                         rigidBody->EnableGravity(EnableGravity);
@@ -674,6 +717,18 @@ namespace BONE_GRAPHICS
                         rigidBody->SetFrictionCoefficient(FricitionCoefficient);
                         rigidBody->SetIsAllowedToSleep(IsAllowedToSleep);
                         rigidBody->SetType(Type);
+                        rigidBody->SetPosOnPivot(
+                            Vec3(
+                                Pivot[0],
+                                Pivot[1],
+                                Pivot[2]
+                            )
+                        );
+                        rigidBody->LockRotation(
+                            LockRotation[0], 
+                            LockRotation[1], 
+                            LockRotation[2]
+                        );
 
                         AddComponent(rigidBody);
                     }
@@ -851,13 +906,21 @@ namespace BONE_GRAPHICS
 
 	void GameObject::LateRender()
 	{
+        for each(auto var in components)
+        {
+            if (var.first == "Collision")
+                ((Collision*)var.second)->RenderShape();
+        }
+
         if (!enableScript)
             return;
 
         for each(auto var in components)
+        {
             if (var.second->IsScript())
                 ((Script*)(var.second))->LateRender();
-    
+        }
+
         LateRenderFunc(this);
     }
 

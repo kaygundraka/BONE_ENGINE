@@ -75,7 +75,7 @@ namespace BONE_GRAPHICS
             else
                 Iter++;
         }
-
+        
         delete physicsWorld;
         physicsWorld = nullptr;
 

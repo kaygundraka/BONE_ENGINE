@@ -50,9 +50,10 @@ namespace BONE_GRAPHICS
 		void Rotate(float x, float y, float z);
 		void SetRotate(Quater rotAngle);
 		void SetRotate(float x, float y, float z);
+
         Vec3 GetRotateAngle();
         Quater GetRotateQuater();
-		Quater GetWorldRotateAngle();
+		Vec3 GetWorldRotateAngle();
 
 		Matrix GetTransform();
         void CombineMatrix(Matrix* matrix);

@@ -12,10 +12,7 @@ namespace BONE_GRAPHICS
 		SetTypeName("StaticMesh");
 
 		renderMode = RENDER_DEFAULT;
-        showBox = false;
         show = true;
-
-        color = COLOR::WHITE;
 	}
 
 	StaticMesh::~StaticMesh()
@@ -122,17 +119,7 @@ namespace BONE_GRAPHICS
 	{
 		textureFiles = fileNames;
 	}
-
-    void StaticMesh::ShowMeshBox(bool show)
-    {
-        this->showBox = show;
-    }
-
-    void StaticMesh::SetMeshBoxColor(D3DXCOLOR color)
-    {
-        this->color = color;
-    }
-
+    
     bool StaticMesh::IsShowMeshBOx()
     {
         return showBox;
@@ -183,9 +170,6 @@ namespace BONE_GRAPHICS
 				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 			else if (renderMode == RENDER_STENCIL)
 				RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, false);
-		
-            if (showBox)
-                RenderMgr->DrawMeshBox(Transform, ResourceMgr->FindMesh(fileName)->mesh, ((Transform3D*)object->GetComponent("Transform3D"))->GetPosition(), color);
         }
 	}
 

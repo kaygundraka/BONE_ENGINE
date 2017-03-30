@@ -48,7 +48,10 @@ namespace BONE_GRAPHICS
             FindHandle = FindFirstFile((LPCSTR)path, &FindData);
 
             if (FindHandle == INVALID_HANDLE_VALUE)
+            {
+                FindClose(FindHandle);
                 return false;
+            }
             do {
                 if (!strcmp(FindData.cFileName, name.c_str()))
                 {
@@ -59,6 +62,8 @@ namespace BONE_GRAPHICS
                     return true;
                 }
             } while (FindNextFile(FindHandle, &FindData));
+
+            FindClose(FindHandle);
         }
 
         *full_path == "";
@@ -101,7 +106,6 @@ namespace BONE_GRAPHICS
 		{
 			MESH_INFO Temp;
 
-			
             std::string full_path = "";
             if (!ExistFile(name, &full_path))
                 return nullptr;
