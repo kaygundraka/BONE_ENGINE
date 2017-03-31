@@ -19,6 +19,7 @@ namespace BONE_GRAPHICS
     SkinnedMesh::SkinnedMesh()
     {
         SetTypeName("SkinnedMesh");
+        animationLoop = true;
     }
 
     void SkinnedMesh::SetFile(std::string fileName)
@@ -149,10 +150,23 @@ namespace BONE_GRAPHICS
 
     void SkinnedMesh::UpdateAnimation()
     {
-        animationContainer->AdvanceTime(
-            SceneMgr->GetTimeDelta(),
-            nullptr
-        );
+        if (GetAnimationRate() < 0.99f || animationLoop)
+        {
+            animationContainer->AdvanceTime(
+                SceneMgr->GetTimeDelta(),
+                nullptr
+            );
+        }
+    }
+
+    void SkinnedMesh::SetAnimationLoop(bool loop)
+    {
+        animationLoop = loop;
+    }
+    
+    bool SkinnedMesh::GetAnimationLoop()
+    {
+        return animationLoop;
     }
     
     void SkinnedMesh::GetAnimationSets() {
@@ -175,14 +189,41 @@ namespace BONE_GRAPHICS
         SetAnimation(animationSets.begin()->first);
     }
 
-    void SkinnedMesh::SetAnimation(std::string name) {
+    double SkinnedMesh::GetAnimationRate()
+    {
         ID3DXAnimationSet* pAnim = NULL;
         //Get the animation set from the name.
+        animationContainer->GetAnimationSet(animationSets[curAnimation], &pAnim);
+     
+        D3DXTRACK_DESC Track;
+        animationContainer->GetTrackDesc(0, &Track);
+
+        double result = Track.Position / pAnim->GetPeriod();
+
+        if (result >= 0.99f && animationLoop == false)
+        {
+            result = 1.0f;
+            animationContainer->SetTrackPosition(0, pAnim->GetPeriod());
+        }
+
+        return result;
+    }
+
+    void SkinnedMesh::ResetTime()
+    {
+        animationContainer->ResetTime();
+    }
+
+    void SkinnedMesh::SetAnimation(std::string name) {
+        if (name == curAnimation)
+            return;
+
+        ID3DXAnimationSet* pAnim = NULL;
         animationContainer->GetAnimationSet(animationSets[name], &pAnim);
 
         if (pAnim != NULL)
         {
-            //Set the current animation set
+            animationContainer->ResetTime();
             animationContainer->SetTrackAnimationSet(0, pAnim);
             curAnimation = pAnim->GetName();
             pAnim->Release();

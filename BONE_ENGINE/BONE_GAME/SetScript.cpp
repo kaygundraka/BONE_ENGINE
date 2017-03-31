@@ -1,6 +1,7 @@
 #include "SetScript.h"
 #include "TestScript2.h"
 #include "PlayerCharacter.h"
+#include "GameManager.h"
 
 namespace BONE_GRAPHICS {
     void Init(GameObject* owner)
@@ -122,8 +123,13 @@ bool AddScriptHandler(GameObject* object, std::string name)
     {
         PlayerCharacter* Character = new PlayerCharacter();
         Character->SetInfo(object, name);
-        Character->Init();
         object->AddComponent(Character);
+    }
+    else if (name == "GameManager")
+    {
+        GameManager* GameMgr = new GameManager();
+        GameMgr->SetInfo(object, name);
+        object->AddComponent(GameMgr);
     }
 
     return true;
@@ -134,4 +140,5 @@ void SetScriptProc(BoneEditor* editor)
     editor->AddScript = AddScriptHandler;
     editor->AddScriptList("TestScript2");
     editor->AddScriptList("PlayerCharacter");
+    editor->AddScriptList("GameManager");
 }

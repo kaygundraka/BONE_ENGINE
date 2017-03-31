@@ -17,8 +17,10 @@ private:
     SkinnedMesh* skinnedMesh;
     float mouseX;
     float mouseY;
-    
+
 public:
+    bool isEvent;
+    
     virtual void Init();
     virtual void Reference();
     virtual void Update();

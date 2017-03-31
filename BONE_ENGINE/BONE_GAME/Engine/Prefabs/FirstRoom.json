@@ -1,0 +1,69 @@
+{
+    "1.Transform3D": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "ChildObjects": [
+        "FirstRoom_Floor1",
+        "FirstRoom_Floor2",
+        "FirstRoom_Floor3",
+        "FirstRoom_Floor4",
+        "FirstRoom_DoorWay1",
+        "FirstRoom_DoorWay2",
+        "FirstRoom_DoorWay3",
+        "FirstRoom_DoorWay4",
+        "FirstRoom_DoorWay5",
+        "FirstRoom_Floor5",
+        "FirstRoom_Floor6",
+        "FirstRoom_Floor7",
+        "FirstRoom_Floor8",
+        "FirstRoom_Walls",
+        "FirstRoom_Wall2",
+        "FirstRoom_Wall3",
+        "FirstRoom_Wall4",
+        "FirstRoom_Wall5",
+        "FirstRoom_LFWall1",
+        "FirstRoom_LFWall2",
+        "FirstRoom_LFWall3",
+        "FirstRoom_RFWall1",
+        "FirstRoom_RFWall2",
+        "FirstRoom_RFWall3",
+        "FirstRoom_LSWall1",
+        "FirstRoom_LSWall2",
+        "FirstRoom_LSWall3",
+        "FirstRoom_RSWall1",
+        "FirstRoom_RSWall2",
+        "FirstRoom_RSWall3",
+        "FirstRoom_Door1",
+        "FirstRoom_Door2",
+        "FirstRoom_Door3",
+        "FirstRoom_Door4",
+        "FirstRoom_MainDoor",
+        "FirstRoom_Top1",
+        "FirstRoom_Top2",
+        "FirstRoom_Top3",
+        "FirstRoom_Top4",
+        "FirstRoom_Top5",
+        "FirstRoom_Top6",
+        "FirstRoom_Top7",
+        "FirstRoom_Top8"
+    ],
+    "IsActive": true,
+    "IsEditorLock": false,
+    "IsStatic": false,
+    "Priority": 1,
+    "Tag": ""
+}

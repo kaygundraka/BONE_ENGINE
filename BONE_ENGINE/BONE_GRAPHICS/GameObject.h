@@ -114,5 +114,6 @@ namespace BONE_GRAPHICS
         void (*CollisionEventFunc)(GameObject* owner, GameObject* otherObject);
         
 		void Render();
+        void Render2D();
 	};
 }

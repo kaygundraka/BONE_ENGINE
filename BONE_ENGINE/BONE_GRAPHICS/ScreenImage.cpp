@@ -9,7 +9,7 @@ namespace BONE_GRAPHICS
 	{
 		SetTypeName("ScreenImage");
 
-		alpha = 255;
+        myalpha = 255;
 
 		D3DXCreateSprite(RenderMgr->GetDevice(), &sprite);
 	}
@@ -47,7 +47,7 @@ namespace BONE_GRAPHICS
 
 	void ScreenImage::SetAlpha(float alpha)
 	{
-		this->alpha = alpha;
+		myalpha = alpha;
 	}
 	
 	void ScreenImage::Render(GameObject* owner)
@@ -73,9 +73,8 @@ namespace BONE_GRAPHICS
 		RenderMgr->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 		sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
-		sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
-
-		D3DCOLOR RGB = D3DCOLOR_ARGB((int)alpha, 255, 255, 255);
+		
+		D3DCOLOR RGB = D3DCOLOR_ARGB((int)(myalpha), 255, 255, 255);
 		sprite->Draw(texture, &rect, nullptr, &Vec3(0, 0, 0), RGB);
 		sprite->End();
 
@@ -84,6 +83,6 @@ namespace BONE_GRAPHICS
 	
 	float ScreenImage::GetAlpha()
 	{
-		return alpha;
+		return myalpha;
 	}
 }

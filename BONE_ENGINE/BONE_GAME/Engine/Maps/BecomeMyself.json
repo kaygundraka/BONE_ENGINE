@@ -1,0 +1,1237 @@
+{
+    "GameObject": {
+        "FirstRoom": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "PrefabName": "FirstRoom",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "FirstRoom_Door1": {
+            "IsChild": true,
+            "Position": [
+                -15.0000009536743,
+                5.0,
+                33.0
+            ],
+            "PrefabName": "FirstRoom_Door1",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Door2": {
+            "IsChild": true,
+            "Position": [
+                -16.0,
+                5.0,
+                -35.0
+            ],
+            "PrefabName": "FirstRoom_Door2",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Door3": {
+            "IsChild": true,
+            "Position": [
+                -136.0,
+                5.0,
+                -33.0
+            ],
+            "PrefabName": "FirstRoom_Door3",
+            "Rotation": [
+                0.0,
+                -1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Door4": {
+            "IsChild": true,
+            "Position": [
+                -137.0,
+                5.0,
+                37.0
+            ],
+            "PrefabName": "FirstRoom_Door4",
+            "Rotation": [
+                0.0,
+                -3.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_DoorWay1": {
+            "IsChild": true,
+            "Position": [
+                0.0,
+                5.0,
+                34.0
+            ],
+            "PrefabName": "FirstRoom_DoorWay1",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_DoorWay2": {
+            "IsChild": true,
+            "Position": [
+                0.0,
+                5.0,
+                -34.0
+            ],
+            "PrefabName": "FirstRoom_DoorWay2",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_DoorWay3": {
+            "IsChild": true,
+            "Position": [
+                -152.0,
+                5.0,
+                -34.0
+            ],
+            "PrefabName": "FirstRoom_DoorWay3",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_DoorWay4": {
+            "IsChild": true,
+            "Position": [
+                -152.0,
+                5.0,
+                34.0
+            ],
+            "PrefabName": "FirstRoom_DoorWay4",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_DoorWay5": {
+            "IsChild": true,
+            "Position": [
+                110.000007629395,
+                5.0,
+                0.0
+            ],
+            "PrefabName": "FirstRoom_DoorWay5",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Floor1": {
+            "IsChild": true,
+            "Position": [
+                76.0,
+                5.0,
+                0.0
+            ],
+            "PrefabName": "FirstRoom_Floor1",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Floor2": {
+            "IsChild": true,
+            "Position": [
+                0.0,
+                5.0,
+                0.0
+            ],
+            "PrefabName": "FirstRoom_Floor2",
+            "Rotation": [
+                0.0,
+                3.14000010490417,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Floor3": {
+            "IsChild": true,
+            "Position": [
+                -76.0,
+                5.0,
+                0.0
+            ],
+            "PrefabName": "FirstRoom_Floor3",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Floor4": {
+            "IsChild": true,
+            "Position": [
+                -152.0,
+                5.0,
+                0.0
+            ],
+            "PrefabName": "FirstRoom_Floor4",
+            "Rotation": [
+                0.0,
+                3.14000010490417,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Floor5": {
+            "IsChild": true,
+            "Position": [
+                0.0,
+                5.0,
+                77.0
+            ],
+            "PrefabName": "FirstRoom_Floor5",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Floor6": {
+            "IsChild": true,
+            "Position": [
+                0.0,
+                5.0,
+                -77.0
+            ],
+            "PrefabName": "FirstRoom_Floor6",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Floor7": {
+            "IsChild": true,
+            "Position": [
+                -152.0,
+                5.0,
+                77.0
+            ],
+            "PrefabName": "FirstRoom_Floor7",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Floor8": {
+            "IsChild": true,
+            "Position": [
+                -152.0,
+                5.0,
+                -77.0
+            ],
+            "PrefabName": "FirstRoom_Floor8",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_LFWall1": {
+            "IsChild": true,
+            "Position": [
+                34.0,
+                5.0,
+                77.0
+            ],
+            "PrefabName": "FirstRoom_LFWall1",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_LFWall2": {
+            "IsChild": true,
+            "Position": [
+                -34.0,
+                5.0,
+                77.0
+            ],
+            "PrefabName": "FirstRoom_LFWall2",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_LFWall3": {
+            "IsChild": true,
+            "Position": [
+                0.0,
+                5.0,
+                112.000007629395
+            ],
+            "PrefabName": "FirstRoom_LFWall3",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_LSWall1": {
+            "IsChild": true,
+            "Position": [
+                -118.000007629395,
+                5.0,
+                77.0
+            ],
+            "PrefabName": "FirstRoom_LSWall1",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_LSWall2": {
+            "IsChild": true,
+            "Position": [
+                -186.000015258789,
+                5.0,
+                77.0
+            ],
+            "PrefabName": "FirstRoom_LSWall2",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_LSWall3": {
+            "IsChild": true,
+            "Position": [
+                -152.0,
+                5.0,
+                111.000007629395
+            ],
+            "PrefabName": "FirstRoom_LSWall3",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_MainDoor": {
+            "IsChild": true,
+            "Position": [
+                104.000007629395,
+                5.0,
+                24.0000019073486
+            ],
+            "PrefabName": "FirstRoom_MainDoor",
+            "Rotation": [
+                -8.94074574375736e-08,
+                -2.0,
+                -7.10542820463395e-15
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_RFWall1": {
+            "IsChild": true,
+            "Position": [
+                34.0,
+                5.0,
+                -77.0
+            ],
+            "PrefabName": "FirstRoom_RFWall1",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_RFWall2": {
+            "IsChild": true,
+            "Position": [
+                -34.0,
+                5.0,
+                -77.0
+            ],
+            "PrefabName": "FirstRoom_RFWall2",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_RFWall3": {
+            "IsChild": true,
+            "Position": [
+                0.0,
+                5.0,
+                -112.000007629395
+            ],
+            "PrefabName": "FirstRoom_RFWall3",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_RSWall1": {
+            "IsChild": true,
+            "Position": [
+                -118.000007629395,
+                5.0,
+                -77.0
+            ],
+            "PrefabName": "FirstRoom_RSWall1",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_RSWall2": {
+            "IsChild": true,
+            "Position": [
+                -187.000015258789,
+                5.0,
+                -77.0
+            ],
+            "PrefabName": "FirstRoom_RSWall2",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_RSWall3": {
+            "IsChild": true,
+            "Position": [
+                -152.0,
+                5.0,
+                -111.000007629395
+            ],
+            "PrefabName": "FirstRoom_RSWall3",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Top1": {
+            "IsChild": true,
+            "Position": [
+                77.0,
+                81.0000076293945,
+                0.0
+            ],
+            "PrefabName": "FirstRoom_Top1",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Top2": {
+            "IsChild": true,
+            "Position": [
+                0.0,
+                81.0000076293945,
+                0.0
+            ],
+            "PrefabName": "FirstRoom_Top2",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Top3": {
+            "IsChild": true,
+            "Position": [
+                0.0,
+                81.0000076293945,
+                76.0
+            ],
+            "PrefabName": "FirstRoom_Top3",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Top4": {
+            "IsChild": true,
+            "Position": [
+                -76.0,
+                81.0000076293945,
+                0.0
+            ],
+            "PrefabName": "FirstRoom_Top4",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Top5": {
+            "IsChild": true,
+            "Position": [
+                -152.0,
+                81.0000076293945,
+                0.0
+            ],
+            "PrefabName": "FirstRoom_Top5",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Top6": {
+            "IsChild": true,
+            "Position": [
+                -152.0,
+                81.0,
+                76.0
+            ],
+            "PrefabName": "FirstRoom_Top6",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Top7": {
+            "IsChild": true,
+            "Position": [
+                -152.0,
+                81.0,
+                -76.0
+            ],
+            "PrefabName": "FirstRoom_Top7",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Top8": {
+            "IsChild": true,
+            "Position": [
+                0.0,
+                81.0000076293945,
+                -76.0
+            ],
+            "PrefabName": "FirstRoom_Top8",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Torch": {
+            "IsChild": false,
+            "Position": [
+                -72.0,
+                62.0000038146973,
+                -31.0000019073486
+            ],
+            "PrefabName": "Torch",
+            "Rotation": [
+                0.0,
+                -1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "FirstRoom_Torch2": {
+            "IsChild": false,
+            "Position": [
+                -72.0,
+                62.0,
+                31.0000019073486
+            ],
+            "PrefabName": "Torch",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "FirstRoom_Wall2": {
+            "IsChild": true,
+            "Position": [
+                76.0,
+                5.0,
+                -35.0
+            ],
+            "PrefabName": "FirstRoom_Wall2",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Wall3": {
+            "IsChild": true,
+            "Position": [
+                -76.0,
+                5.0,
+                35.0
+            ],
+            "PrefabName": "FirstRoom_Wall3",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Wall4": {
+            "IsChild": true,
+            "Position": [
+                -76.0,
+                5.0,
+                -35.0
+            ],
+            "PrefabName": "FirstRoom_Wall4",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Wall5": {
+            "IsChild": true,
+            "Position": [
+                -187.000015258789,
+                5.0,
+                0.0
+            ],
+            "PrefabName": "FirstRoom_Wall5",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FirstRoom_Walls": {
+            "IsChild": true,
+            "Position": [
+                76.0,
+                5.0,
+                35.0
+            ],
+            "PrefabName": "FirstRoom_Walls",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "GameManager": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "PrefabName": "GameManager",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "Player": {
+            "IsChild": false,
+            "Position": [
+                -151.0,
+                5.0,
+                69.0
+            ],
+            "PrefabName": "Player",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.5,
+                1.5,
+                1.5
+            ],
+            "TreeDepth": 0
+        }
+    },
+    "Light": {
+        "PointLight_0": {
+            "Ambient": [
+                0.5,
+                0.5,
+                0.5,
+                1.0
+            ],
+            "Diffuse": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Position": [
+                82.3000030517578,
+                12.3000001907349,
+                -14.6000003814697
+            ],
+            "Radius": 80.0,
+            "ShadowTarget": [
+                79.0,
+                0.0,
+                -4.80000019073486
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": true
+        },
+        "PointLight_1": {
+            "Ambient": [
+                0.5,
+                0.675000011920929,
+                0.875000059604645,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                -126.000007629395,
+                40.0,
+                0.0
+            ],
+            "Radius": 101.000007629395,
+            "ShadowTarget": [
+                -174.700012207031,
+                0.0,
+                0.0
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": true
+        },
+        "PointLight_2": {
+            "Ambient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Radius": 50.0,
+            "ShadowTarget": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": false
+        },
+        "PointLight_3": {
+            "Ambient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Radius": 50.0,
+            "ShadowTarget": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": false
+        },
+        "PointLight_4": {
+            "Ambient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Radius": 50.0,
+            "ShadowTarget": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": false
+        },
+        "PointLight_5": {
+            "Ambient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Radius": 50.0,
+            "ShadowTarget": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": false
+        },
+        "PointLight_6": {
+            "Ambient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Radius": 50.0,
+            "ShadowTarget": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": false
+        },
+        "PointLight_7": {
+            "Ambient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Diffuse": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Radius": 50.0,
+            "ShadowTarget": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Specular": [
+                0.5,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Status": false
+        }
+    },
+    "Scene": {
+        "BackGroundColor": [
+            0.176470592617989,
+            0.176470592617989,
+            0.176470592617989,
+            1.0
+        ],
+        "EnableFog": false,
+        "GlobalAmbient": [
+            0.0199999995529652,
+            0.0199999995529652,
+            0.0199999995529652,
+            1.0
+        ]
+    }
+}

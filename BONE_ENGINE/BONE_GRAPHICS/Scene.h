@@ -103,7 +103,6 @@ namespace BONE_GRAPHICS
 
 		GameObject* GetCurrentCamera();
 
-		void SetCamera(int ID);
 		bool SetLoading(std::string imageAddress, int width, int height);
 
 		void SetSkybox(std::string dirName, std::string fileType);

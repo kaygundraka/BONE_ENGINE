@@ -214,16 +214,19 @@ namespace BONE_GRAPHICS
             if (GetComponent("TrailRenderer") != nullptr)
                 ((TrailRenderer*)GetComponent("TrailRenderer"))->Render(nullptr);
         }
-
-        if (GetComponent("ScreenSprite") != nullptr)
-			((ScreenSprite*)GetComponent("ScreenSprite"))->Render(this);
-
-		if (GetComponent("ScreenImage") != nullptr)
-			((ScreenImage*)GetComponent("ScreenImage"))->Render(this);
-
-		if (GetComponent("ScreenButton") != nullptr)
-			((ScreenButton*)GetComponent("ScreenButton"))->Render(this);
 	}
+
+    void GameObject::Render2D()
+    {
+        if (GetComponent("ScreenSprite") != nullptr)
+            ((ScreenSprite*)GetComponent("ScreenSprite"))->Render(this);
+
+        if (GetComponent("ScreenImage") != nullptr)
+            ((ScreenImage*)GetComponent("ScreenImage"))->Render(this);
+
+        if (GetComponent("ScreenButton") != nullptr)
+            ((ScreenButton*)GetComponent("ScreenButton"))->Render(this);
+    }
 
 	void GameObject::AttachParent(GameObject* parent)
 	{

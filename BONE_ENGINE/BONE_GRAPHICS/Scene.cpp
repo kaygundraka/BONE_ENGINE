@@ -339,10 +339,6 @@ namespace BONE_GRAPHICS
         delete gameObject;
     }
 
-    void Scene::SetCamera(int ID)
-    {
-    }
-
     void Scene::SetSceneFlag(bool _flag)
     {
         IsFrameworkFlag = _flag;

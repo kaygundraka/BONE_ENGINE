@@ -367,7 +367,7 @@ void BoneEditor::ShowHelpMenu()
 
 void BoneEditor::ShowObjectInfo(std::string name)
 {
-    if (ImGui::CollapsingHeader("[GameObject Info]", ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::CollapsingHeader("[GameObject Info]"))
     {
         auto object = CUR_SCENE->FindObjectByName(name);
 
@@ -721,15 +721,6 @@ void BoneEditor::ShowEditObjectTree(std::string treeName)
 
     ShowObjectInfo(treeName);
 
-    if (treeName != currentObjectName)
-    {
-        if (ImGui::SmallButton("Remove Object"))
-        {
-            parent->DetachParent();
-            CUR_SCENE->Destroy(parent);
-        }
-    }
-
     if (ImGui::CollapsingHeader("[Childs]"))
     {
         auto childs = parent->GetChileds();
@@ -739,11 +730,18 @@ void BoneEditor::ShowEditObjectTree(std::string treeName)
             if (ImGui::TreeNode((*iter)->GetName().c_str()))
             {
                 ShowEditObjectTree((*iter)->GetName());
+                
+                if (ImGui::SmallButton("Remove Object"))
+                {
+                    (*iter)->DetachParent();
+                    CUR_SCENE->Destroy((*iter));
+                }
+
                 ImGui::TreePop();
             }
         }
 
-        if (ImGui::CollapsingHeader("[Add New Child]"))
+        if (ImGui::TreeNode("[Add New Child]"))
         {
             static char Name[64] = "";
             ImGui::InputText("Name", Name, 64);
@@ -780,6 +778,8 @@ void BoneEditor::ShowEditObjectTree(std::string treeName)
                 parent->AttachChild(Child);
                 childSize++;
             }
+
+            ImGui::TreePop();
         }
     }
 }

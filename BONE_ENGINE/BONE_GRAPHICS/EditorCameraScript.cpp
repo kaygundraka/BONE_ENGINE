@@ -185,7 +185,7 @@ void EditorCamera::LateRender()
     Pos[0].y = 0;
     Pos[1].y = 0;
 
-    for (int i = 0; i < 80; i++)
+    for (int i = 0; i < 81; i++)
     {
         Pos[0].x = -400 + i * 10;
         Pos[1].x = -400 + i * 10;
@@ -198,7 +198,7 @@ void EditorCamera::LateRender()
             RenderMgr->DrawLine(Pos[0], Pos[1], COLOR::WHITE);
     }
 
-    for (int i = 0; i < 80; i++)
+    for (int i = 0; i < 81; i++)
     {
         Pos[0].z = -400 + i * 10;
         Pos[1].z = -400 + i * 10;

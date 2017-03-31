@@ -12,7 +12,7 @@ namespace BONE_GRAPHICS
 		LPD3DXSPRITE sprite;
 		Rect originRect;
 		std::string fileName;
-		float alpha;
+		float myalpha;
 
 	public:
 		ScreenImage();

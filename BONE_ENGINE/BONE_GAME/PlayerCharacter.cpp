@@ -4,6 +4,7 @@
 void PlayerCharacter::Init()
 {
     gameObject->SetPriority(1);
+    gameObject->SetTag("Player");
 }
 
 void PlayerCharacter::Reference()
@@ -28,16 +29,13 @@ void PlayerCharacter::Reference()
 
 void PlayerCharacter::Update()
 {
+    if (isEvent)
+        return;
+
     bool Input = false;
 
     if (InputMgr->KeyDown('P', true))
         CUR_SCENE->EnablePhysics(true);
-
-    if (InputMgr->KeyDown(VK_ESCAPE, true))
-    {
-        CUR_SCENE->SetSceneFlag(true);
-        SceneMgr->EndScene(CUR_SCENE->GetName());
-    }
 
     static bool W_Key = false;
     if (InputMgr->KeyDown('W', false))
@@ -64,7 +62,7 @@ void PlayerCharacter::Update()
     if (InputMgr->KeyDown('S', false))
     {
         Input = true;
-        skinnedMesh->SetAnimation("Skeleton_1H_walk");
+        skinnedMesh->SetAnimation("Skeleton_walking_back");
 
         Vec3 Forward = GET_TRANSFORM_3D(gameObject)->GetForward();
 
@@ -115,6 +113,9 @@ void PlayerCharacter::Update()
 
 void PlayerCharacter::LateUpdate()
 {
+    if (isEvent)
+        return;
+     
     POINT pt;
     float fDelta = 0.001f; // 마우스의 민감도, 이 값이 커질수록 많이 움직인다.
 

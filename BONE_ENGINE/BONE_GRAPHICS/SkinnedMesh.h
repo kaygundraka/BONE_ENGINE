@@ -37,6 +37,12 @@ namespace BONE_GRAPHICS
         std::string fileName;
         Matrix* GetBoneMatrix(std::string name, Bone* bone = nullptr, Matrix* mat = nullptr);
 
+        void ResetTime();
+        double GetAnimationRate();
+
+        void SetAnimationLoop(bool loop);
+        bool GetAnimationLoop();
+
     private:
         void SetupBoneMatrixPointers(Bone* bone);
 
@@ -47,6 +53,8 @@ namespace BONE_GRAPHICS
         void GetAnimationSets();
                 
         D3DXFRAME *rootBone;
+
+        bool animationLoop;
 
         BoneHierarchyLoader boneHierarchy;
         LPD3DXANIMATIONCONTROLLER animationContainer;

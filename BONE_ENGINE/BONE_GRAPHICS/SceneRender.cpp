@@ -198,24 +198,18 @@ namespace BONE_GRAPHICS
         {
             if (var->GetPipeLine() == GameObject::PIPE_LINE::DEFAULT_SHADER)
                 DefaultShaderObjects.push_back(var);
-            else
-                var->Render();
         }
 
         for each(auto var in staticObjectList)
         {
             if (var->GetPipeLine() == GameObject::PIPE_LINE::DEFAULT_SHADER)
                 DefaultShaderObjects.push_back(var);
-            else
-                var->Render();
         }
 
         for each(auto var in pointLightList)
         {
             if (var->GetPipeLine() == GameObject::PIPE_LINE::DEFAULT_SHADER)
                 DefaultShaderObjects.push_back(var);
-            else
-                var->Render();
         }
 
         if (DefaultShaderObjects.size() == 0)
@@ -626,6 +620,28 @@ namespace BONE_GRAPHICS
         DefaultEffect->End();
 #pragma endregion
 
+
+        for each(auto var in objectList)
+        {
+            if (var->GetPipeLine() != GameObject::PIPE_LINE::DEFAULT_SHADER)
+                var->Render();
+
+            var->Render2D();
+        }
+
+        for each(auto var in staticObjectList)
+        {
+            if (var->GetPipeLine() != GameObject::PIPE_LINE::DEFAULT_SHADER)
+                var->Render();
+
+            var->Render2D();
+        }
+
+        for each(auto var in pointLightList)
+        {
+            if (var->GetPipeLine() != GameObject::PIPE_LINE::DEFAULT_SHADER)
+                var->Render();
+        }
     }
 
     void Scene::SetRenderMatrial(GameObject* object, ID3DXEffect* effect) 
