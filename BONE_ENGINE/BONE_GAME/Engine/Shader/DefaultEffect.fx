@@ -493,7 +493,15 @@ float4  PS_Unlit( VS_OUTPUT_UNLIT IN ) : COLOR0
 	
 	// Get the average
 	ShadowTerm /= 9.0f;
-	
+
+	int lights = 0;
+
+	for (int i = 0; i < 8; i++)
+		if (onLight[i])
+			lights++;
+
+	ShadowTerm /= lights;
+
 	return ShadowTerm;
 }
 

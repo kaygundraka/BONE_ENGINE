@@ -21,7 +21,6 @@ namespace BONE_GRAPHICS
 
     class BoneEditor : public GUI_Scene {
     private:
-        bool showObjectInfo;
         bool showAddComponent;
         bool showEnvironmentSetting;
         bool showLogWindow;
@@ -60,8 +59,6 @@ namespace BONE_GRAPHICS
         void ShowEditObjectTree(std::string treeName);
 
         bool IsEditMode();
-
-        void AllChildCheck(GameObject* parent);
 
         virtual void UpdateFrame();
 

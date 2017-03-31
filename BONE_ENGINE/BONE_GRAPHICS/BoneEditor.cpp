@@ -84,7 +84,6 @@ void LogDialog::Render(const char* title, bool* p_open)
 BoneEditor::BoneEditor() {
     showMainEditor = true;
     showAddComponent = false;
-    showObjectInfo = false;
     showLogWindow = true;
     showEnvironmentSetting = false;
     isTestPlay = false;
@@ -383,6 +382,7 @@ void BoneEditor::ShowObjectInfo(std::string name)
         {
             name = buf;
             object->SetName(name);
+            strcpy(buf, "");
         }
 
         bool IsLocked = object->IsLockedEditor();
@@ -391,7 +391,7 @@ void BoneEditor::ShowObjectInfo(std::string name)
         object->LockEditor(IsLocked);
     }
 
-    if (ImGui::CollapsingHeader("[Components]"), ImGuiTreeNodeFlags_DefaultOpen)
+    if (ImGui::CollapsingHeader("[Components]"))
     {
         GameObject* object = CUR_SCENE->FindObjectByName(name);
 
@@ -1159,7 +1159,7 @@ void BoneEditor::UpdateFrame()
 
             ImGui::BeginGroup();
 
-            ImGui::BeginChild("item view", ImVec2(0, 0), false); // Leave room for 1 line below us
+            ImGui::BeginChild("item view", ImVec2(250, 250), false); // Leave room for 1 line below us
             ImGui::Text("Light : %d", selected);
             ImGui::Separator();
 
@@ -1389,11 +1389,13 @@ void BoneEditor::UpdateFrame()
                 auto Meshes = ResourceMgr->ExistFiles(".\\Resource\\Mesh\\*");
 
                 const int Size = Meshes.size();
-                char** ComboBoxItems = new char*[Size];
+                char** ComboBoxItems = new char*[Size- 1];
 
                 int i = 0;
                 for each(auto item in Meshes)
                 {
+                    if (item == "Preview")
+                        continue;
                     ComboBoxItems[i] = new char[64];
                     strcpy(ComboBoxItems[i], item.c_str());
                     i++;
@@ -1401,8 +1403,32 @@ void BoneEditor::UpdateFrame()
 
                 static int CurItem = 0;
 
-                //ImGui::Image(0,)
-                ImGui::Combo("Meshes", &CurItem, ComboBoxItems, Size);
+                ImGui::ListBox("Meshes", &CurItem, ComboBoxItems, Size - 1);
+
+                std::string CurItemName = ComboBoxItems[CurItem];
+                CurItemName.pop_back();
+                CurItemName.pop_back();
+                CurItemName += ".jpg";
+
+                ImVec2 tex_screen_pos = ImGui::GetCursorScreenPos();
+                float tex_w = (float)128;
+                float tex_h = (float)128;
+
+                ImGui::Image(ResourceMgr->LoadTexture(CurItemName), ImVec2(tex_w, tex_h), ImVec2(0, 0), ImVec2(1, 1), ImColor(255, 255, 255, 255), ImColor(255, 255, 255, 128));
+
+                if (ImGui::IsItemHovered())
+                {
+                    ImGui::BeginTooltip();
+                    float focus_sz = 32.0f;
+                    float focus_x = ImGui::GetMousePos().x - tex_screen_pos.x - focus_sz * 0.5f; if (focus_x < 0.0f) focus_x = 0.0f; else if (focus_x > tex_w - focus_sz) focus_x = tex_w - focus_sz;
+                    float focus_y = ImGui::GetMousePos().y - tex_screen_pos.y - focus_sz * 0.5f; if (focus_y < 0.0f) focus_y = 0.0f; else if (focus_y > tex_h - focus_sz) focus_y = tex_h - focus_sz;
+                    ImGui::Text("Min: (%.2f, %.2f)", focus_x, focus_y);
+                    ImGui::Text("Max: (%.2f, %.2f)", focus_x + focus_sz, focus_y + focus_sz);
+                    ImVec2 uv0 = ImVec2((focus_x) / tex_w, (focus_y) / tex_h);
+                    ImVec2 uv1 = ImVec2((focus_x + focus_sz) / tex_w, (focus_y + focus_sz) / tex_h);
+                    ImGui::Image(ResourceMgr->LoadTexture(CurItemName), ImVec2(128, 128), uv0, uv1, ImColor(255, 255, 255, 255), ImColor(255, 255, 255, 128));
+                    ImGui::EndTooltip();
+                }
 
                 if (ImGui::Button("Add Component"))
                 {

@@ -14,6 +14,7 @@
         ".\\Engine\\Prefabs\\*",
         ".\\Resource\\Skybox\\*",
         ".\\Resource\\Mesh\\*",
+        ".\\Resource\\Mesh\\Preview\\*",
         ".\\Resource\\SkinnedMesh\\*",
         ".\\Resource\\Textures\\*"
     ]
