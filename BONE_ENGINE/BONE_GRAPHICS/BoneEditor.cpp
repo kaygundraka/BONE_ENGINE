@@ -454,6 +454,7 @@ void BoneEditor::ShowObjectInfo(std::string name)
                             mesh->SetFile(ComboBoxItems[CurItem]);
                             mesh->LoadContent();
                             object->AddComponent(mesh);
+                            ImGui::TreePop();
                             continue;
                         }
 
@@ -467,6 +468,7 @@ void BoneEditor::ShowObjectInfo(std::string name)
                         {
                             item++;
                             object->RemoveComponent("StaticMesh");
+                            ImGui::TreePop();
                             continue;
                         }
                     }
@@ -579,7 +581,7 @@ void BoneEditor::ShowObjectInfo(std::string name)
                         {
                             item++;
                             object->RemoveComponent("SkinnedMesh");
-
+                            ImGui::TreePop();
                             continue;
                         }
 
@@ -642,6 +644,7 @@ void BoneEditor::ShowObjectInfo(std::string name)
                             {
                                 item++;
                                 object->RemoveComponent("Collision");
+                                ImGui::TreePop();
                                 continue;
                             }
                         }
@@ -693,6 +696,7 @@ void BoneEditor::ShowObjectInfo(std::string name)
                         {
                             item++;
                             object->RemoveComponent("RigidBody");
+                            ImGui::TreePop();
                             continue;
                         }
                     }
