@@ -16,16 +16,16 @@ namespace BONE_GRAPHICS
             SceneMgr->CurrentScene()->GetPhysicsWorld()->destroyRigidBody(rigidBody);
     }
 
-    bool RigidBody::SetInfo(GameObject* onwer, float mass)
+    bool RigidBody::SetInfo(GameObject* owner, float mass)
     {
-        this->onwer = onwer;
+        this->owner = owner;
         
-        if (this->onwer->GetComponent("Collision") == nullptr)
+        if (this->owner->GetComponent("Collision") == nullptr)
             return false;
 
         this->mass = mass;
         
-        transform = (Transform3D*)this->onwer->transform3D;
+        transform = (Transform3D*)this->owner->transform3D;
         
         rp3d::Vector3 InitPosition(transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
         rp3d::Quaternion InitOrientation(transform->GetRotateAngle().x, transform->GetRotateAngle().z, transform->GetRotateAngle().z);
@@ -38,16 +38,16 @@ namespace BONE_GRAPHICS
         rp3d::Transform InitTransform2(InitPosition2, InitOrientation2);
 
         rigidBody->addCollisionShape(
-            ((Collision*)this->onwer->GetComponent("Collision"))->GetCollision(),
+            ((Collision*)this->owner->GetComponent("Collision"))->GetCollision(),
             InitTransform2,
             mass
         );
 
-        pos = ((Collision*)this->onwer)->GetModelPivot();
+        pos = ((Collision*)this->owner)->GetModelPivot();
 
-        enableRotateX = false;
-        enableRotateY = false;
-        enableRotateZ = false;
+        lockRotateX = false;
+        lockRotateY = false;
+        lockRotateZ = false;
 
         return true;
     }
@@ -149,6 +149,11 @@ namespace BONE_GRAPHICS
         return mass;
     }
 
+    Vector3 RigidBody::GetLinearVelocity()
+    {
+        return rigidBody->getLinearVelocity();
+    }
+
     void RigidBody::SetPosOnPivot(Vec3 pos)
     {
         this->pos = pos;
@@ -161,24 +166,40 @@ namespace BONE_GRAPHICS
 
     void RigidBody::LockRotation(bool x, bool y, bool z)
     {
-        enableRotateX = x;
-        enableRotateY = y;
-        enableRotateZ = z;
+        lockRotateX = x;
+        lockRotateY = y;
+        lockRotateZ = z;
     }
     
     bool RigidBody::IsLockedRotationX()
     {
-        return enableRotateX;
+        return lockRotateX;
     }
     
     bool RigidBody::IsLockedRotationY()
     {
-        return enableRotateY;
+        return lockRotateY;
     }
     
     bool RigidBody::IsLockedRotationZ()
     {
-        return enableRotateZ;
+        return lockRotateZ;
+    }
+
+    void RigidBody::LockUpdate()
+    {
+        Vector3 AngularAxis = rigidBody->getAngularVelocity();
+
+        if (lockRotateX)
+            AngularAxis.x = 0;
+
+        if (lockRotateY)
+            AngularAxis.y = 0;
+
+        if (lockRotateZ)
+            AngularAxis.z = 0;
+
+        rigidBody->setAngularVelocity(AngularAxis);
     }
     
     void RigidBody::UpdateTransform()
@@ -198,19 +219,6 @@ namespace BONE_GRAPHICS
             quater.w = -Rot.w;
 
             transform->SetRotate(quater);
-
-            Vector3 AngularAxis = rigidBody->getAngularVelocity();
-
-            if (enableRotateX)
-                AngularAxis.x = 0;
-
-            if (enableRotateY)
-                AngularAxis.y = 0;
-
-            if (enableRotateZ)
-                AngularAxis.z = 0;
-
-            rigidBody->setAngularVelocity(AngularAxis);
         }
         else
         {

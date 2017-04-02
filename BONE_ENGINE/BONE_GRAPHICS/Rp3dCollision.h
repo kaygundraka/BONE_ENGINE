@@ -28,7 +28,7 @@ namespace BONE_GRAPHICS
 
     class Collision : public Component {
     public:
-        enum COLLISION_TYPE { COLL_BOX, COLL_SPHERE, COLL_CONE, COLL_CYLINDER, COLL_CAPSULE };
+        enum COLLISION_TYPE { COLL_BOX = 0, COLL_SPHERE, COLL_CONE, COLL_CYLINDER, COLL_CAPSULE };
 
     private:
         GameObject* object;

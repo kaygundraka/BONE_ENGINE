@@ -20,6 +20,106 @@
             ],
             "TreeDepth": 0
         },
+        "FirstRoomCrate1": {
+            "IsChild": false,
+            "Position": [
+                -103.59041595459,
+                38.6290016174316,
+                -11.4270009994507
+            ],
+            "PrefabName": "Crate_A",
+            "Rotation": [
+                0.00581375788897276,
+                0.953764021396637,
+                0.00062803307082504
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "FirstRoomCrate2": {
+            "IsChild": false,
+            "Position": [
+                -103.806816101074,
+                11.0475368499756,
+                -12.9125328063965
+            ],
+            "PrefabName": "Crate_B",
+            "Rotation": [
+                -0.0267865397036076,
+                -0.0341676808893681,
+                0.0114961490035057
+            ],
+            "Scale": [
+                1.0,
+                2.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "FirstRoomCrate3": {
+            "IsChild": false,
+            "Position": [
+                -98.9837493896484,
+                26.0080013275146,
+                -8.01476669311523
+            ],
+            "PrefabName": "Crate_C",
+            "Rotation": [
+                -0.0310438275337219,
+                0.821318447589874,
+                -0.000157796457642689
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "FirstRoomNpc": {
+            "IsChild": false,
+            "Position": [
+                -155.0,
+                6.0,
+                -60.0
+            ],
+            "PrefabName": "FirstRoomNpc",
+            "Rotation": [
+                0.0,
+                3.14000010490417,
+                0.0
+            ],
+            "Scale": [
+                1.29999995231628,
+                1.29999995231628,
+                1.29999995231628
+            ],
+            "TreeDepth": 0
+        },
+        "FirstRoomNpcChair": {
+            "IsChild": false,
+            "Position": [
+                -154.0,
+                7.30000019073486,
+                -68.0
+            ],
+            "PrefabName": "FirstRoomNpcChair",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.75,
+                0.75,
+                0.75
+            ],
+            "TreeDepth": 0
+        },
         "FirstRoom_Door1": {
             "IsChild": true,
             "Position": [
@@ -805,7 +905,7 @@
             "Position": [
                 -72.0,
                 62.0,
-                31.0000019073486
+                31.0
             ],
             "PrefabName": "Torch",
             "Rotation": [
@@ -943,20 +1043,520 @@
         "Player": {
             "IsChild": false,
             "Position": [
-                -151.0,
-                5.0,
-                69.0
+                -151.055038452148,
+                8.74075698852539,
+                69.9358978271484
             ],
             "PrefabName": "Player",
+            "Rotation": [
+                0.00113878271076828,
+                -2.7550797767617e-06,
+                -0.000388966902391985
+            ],
+            "Scale": [
+                1.29999995231628,
+                1.29999995231628,
+                1.29999995231628
+            ],
+            "TreeDepth": 0
+        },
+        "SecondRoom": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "PrefabName": "Second",
             "Rotation": [
                 0.0,
                 0.0,
                 0.0
             ],
             "Scale": [
-                1.5,
-                1.5,
-                1.5
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "SecondRoomDoorWay1": {
+            "IsChild": true,
+            "Position": [
+                223.000015258789,
+                5.0,
+                262.0
+            ],
+            "PrefabName": "SecondRoomDoorWay1",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomDoorWay2": {
+            "IsChild": true,
+            "Position": [
+                228.000015258789,
+                5.0,
+                -33.0
+            ],
+            "PrefabName": "SecondRoomDoorWay2",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomFloor": {
+            "IsChild": true,
+            "Position": [
+                190.000015258789,
+                5.0,
+                39.0
+            ],
+            "PrefabName": "SecondRoomFloor",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                2.0,
+                1.0,
+                2.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomFloor2": {
+            "IsChild": true,
+            "Position": [
+                190.000015258789,
+                5.0,
+                192.000015258789
+            ],
+            "PrefabName": "SecondRoomFloor2",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                2.0,
+                1.0,
+                2.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomPillar": {
+            "IsChild": true,
+            "Position": [
+                190.0,
+                5.0,
+                43.0000038146973
+            ],
+            "PrefabName": "SecondRoomPillar",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomPillar2": {
+            "IsChild": true,
+            "Position": [
+                190.0,
+                5.0,
+                240.000015258789
+            ],
+            "PrefabName": "SecondRoomPillar2",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomPillar3": {
+            "IsChild": true,
+            "Position": [
+                156.0,
+                5.0,
+                153.0
+            ],
+            "PrefabName": "SecondRoomPillar3",
+            "Rotation": [
+                0.0,
+                -1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomTop": {
+            "IsChild": true,
+            "Position": [
+                190.000015258789,
+                89.0000076293945,
+                47.0000038146973
+            ],
+            "PrefabName": "SecondRoomTop",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                2.0,
+                1.0,
+                2.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomTop2": {
+            "IsChild": true,
+            "Position": [
+                185.000015258789,
+                89.0000076293945,
+                201.000015258789
+            ],
+            "PrefabName": "SecondRoomTop2",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                2.0,
+                1.0,
+                2.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomWall0": {
+            "IsChild": true,
+            "Position": [
+                195.000015258789,
+                5.0,
+                1.0
+            ],
+            "PrefabName": "SecondRoomWall0",
+            "Rotation": [
+                0.0,
+                3.14000010490417,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomWall1": {
+            "IsChild": true,
+            "Position": [
+                113.000007629395,
+                5.0,
+                77.0
+            ],
+            "PrefabName": "SecondRoomWall1",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomWall2": {
+            "IsChild": true,
+            "Position": [
+                113.000007629395,
+                5.0,
+                154.0
+            ],
+            "PrefabName": "SecondRoomWall2",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomWall3": {
+            "IsChild": true,
+            "Position": [
+                113.000007629395,
+                5.0,
+                231.000015258789
+            ],
+            "PrefabName": "SecondRoomWall3",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomWall4": {
+            "IsChild": true,
+            "Position": [
+                153.0,
+                5.0,
+                -33.0
+            ],
+            "PrefabName": "SecondRoomWall4",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomWall5": {
+            "IsChild": true,
+            "Position": [
+                151.0,
+                5.0,
+                265.0
+            ],
+            "PrefabName": "SecondRoomWall5",
+            "Rotation": [
+                0.0,
+                1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomWall6": {
+            "IsChild": true,
+            "Position": [
+                262.0,
+                5.0,
+                154.0
+            ],
+            "PrefabName": "SecondRoomWall6",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomWall7": {
+            "IsChild": true,
+            "Position": [
+                262.0,
+                5.0,
+                230.000015258789
+            ],
+            "PrefabName": "SecondRoomWall7",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomWall8": {
+            "IsChild": true,
+            "Position": [
+                262.0,
+                5.0,
+                77.0
+            ],
+            "PrefabName": "SecondRoomWall8",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoomWall9": {
+            "IsChild": true,
+            "Position": [
+                262.0,
+                5.0,
+                1.0
+            ],
+            "PrefabName": "SecondRoomWall9",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "SecondRoom_Barrel": {
+            "IsChild": false,
+            "Position": [
+                245.000015258789,
+                5.0,
+                127.000007629395
+            ],
+            "PrefabName": "Barrel",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "SecondRoom_Chain": {
+            "IsChild": false,
+            "Position": [
+                176.000015258789,
+                24.0000019073486,
+                179.000015258789
+            ],
+            "PrefabName": "Chain_C",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "SecondRoom_Crate": {
+            "IsChild": false,
+            "Position": [
+                237.000015258789,
+                6.00000047683716,
+                107.985008239746
+            ],
+            "PrefabName": "Crate_C",
+            "Rotation": [
+                -0.0310436692088842,
+                -1.0,
+                -0.000157787129865028
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "SecondRoom_HangingCage": {
+            "IsChild": false,
+            "Position": [
+                151.0,
+                23.0000019073486,
+                247.000015258789
+            ],
+            "PrefabName": "Hanging_Cage",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "SecondRoom_Table": {
+            "IsChild": false,
+            "Position": [
+                175.000015258789,
+                5.0,
+                179.000015258789
+            ],
+            "PrefabName": "Table_C",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
             ],
             "TreeDepth": 0
         }
@@ -964,9 +1564,9 @@
     "Light": {
         "PointLight_0": {
             "Ambient": [
-                0.5,
-                0.5,
-                0.5,
+                0.300000011920929,
+                0.700000047683716,
+                1.02500009536743,
                 1.0
             ],
             "Diffuse": [
@@ -976,18 +1576,18 @@
                 0.0
             ],
             "Position": [
-                82.3000030517578,
-                12.3000001907349,
-                -14.6000003814697
+                120.700004577637,
+                61.1000022888184,
+                -3.20000004768372
             ],
-            "Radius": 80.0,
+            "Radius": 102.000007629395,
             "ShadowTarget": [
-                79.0,
+                73.9000015258789,
                 0.0,
-                -4.80000019073486
+                2.5
             ],
             "Specular": [
-                0.5,
+                0.850000023841858,
                 0.5,
                 0.5,
                 0.5
@@ -996,9 +1596,9 @@
         },
         "PointLight_1": {
             "Ambient": [
+                0.300000011920929,
                 0.5,
-                0.675000011920929,
-                0.875000059604645,
+                0.5,
                 1.0
             ],
             "Diffuse": [
@@ -1009,10 +1609,10 @@
             ],
             "Position": [
                 -126.000007629395,
-                40.0,
+                41.7000007629395,
                 0.0
             ],
-            "Radius": 101.000007629395,
+            "Radius": 90.0000076293945,
             "ShadowTarget": [
                 -174.700012207031,
                 0.0,
@@ -1028,35 +1628,35 @@
         },
         "PointLight_2": {
             "Ambient": [
-                1.0,
-                1.0,
+                2.05000019073486,
+                0.975000023841858,
                 1.0,
                 1.0
             ],
             "Diffuse": [
+                2.82500004768372,
+                1.0,
+                1.0,
+                0.5
+            ],
+            "Position": [
+                240.0,
+                77.2000045776367,
+                180.0
+            ],
+            "Radius": 154.0,
+            "ShadowTarget": [
+                281.5,
+                0.0,
+                175.500015258789
+            ],
+            "Specular": [
                 1.0,
                 1.0,
                 1.0,
                 1.0
             ],
-            "Position": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "Radius": 50.0,
-            "ShadowTarget": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "Specular": [
-                0.5,
-                0.5,
-                0.5,
-                0.5
-            ],
-            "Status": false
+            "Status": true
         },
         "PointLight_3": {
             "Ambient": [
@@ -1221,9 +1821,9 @@
     },
     "Scene": {
         "BackGroundColor": [
-            0.176470592617989,
-            0.176470592617989,
-            0.176470592617989,
+            0.0,
+            0.0,
+            0.0,
             1.0
         ],
         "EnableFog": false,

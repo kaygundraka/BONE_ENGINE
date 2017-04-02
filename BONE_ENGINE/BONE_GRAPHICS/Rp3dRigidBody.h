@@ -9,15 +9,15 @@ namespace BONE_GRAPHICS
     class RigidBody : public Component {
     private:
         rp3d::RigidBody* rigidBody;
-        GameObject* onwer;
+        GameObject* owner;
         Transform3D* transform;
         rp3d::Transform rp3dTransform;
 
         Vec3 pos;
 
-        bool enableRotateX;
-        bool enableRotateY;
-        bool enableRotateZ;
+        bool lockRotateX;
+        bool lockRotateY;
+        bool lockRotateZ;
 
         float mass;
 
@@ -25,7 +25,7 @@ namespace BONE_GRAPHICS
         RigidBody();
         virtual ~RigidBody();
 
-        bool SetInfo(GameObject* onwer, float mass);
+        bool SetInfo(GameObject* owner, float mass);
 
         void SetType(reactphysics3d::BodyType type = reactphysics3d::BodyType::DYNAMIC);
         void EnableGravity(bool enable = false);
@@ -36,11 +36,13 @@ namespace BONE_GRAPHICS
 
         reactphysics3d::BodyType GetType();
         bool IsEnableGravity();
+        bool GetIsAllowedToSleep();
         float GetBounciness();
         float GetFrictionCoefficient();
-        bool GetIsAllowedToSleep();
         float GetMass();
+        Vector3 GetLinearVelocity();
 
+        void LockUpdate();
         void LockRotation(bool x, bool y, bool z);
         bool IsLockedRotationX();
         bool IsLockedRotationY();

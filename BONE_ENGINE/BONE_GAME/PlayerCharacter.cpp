@@ -30,12 +30,12 @@ void PlayerCharacter::Reference()
 void PlayerCharacter::Update()
 {
     if (isEvent)
+    {
+        GET_RIGIDBODY(gameObject)->SetLinearVelocity(0, 0, 0);
         return;
+    }
 
     bool Input = false;
-
-    if (InputMgr->KeyDown('P', true))
-        CUR_SCENE->EnablePhysics(true);
 
     static bool W_Key = false;
     if (InputMgr->KeyDown('W', false))
@@ -45,10 +45,13 @@ void PlayerCharacter::Update()
 
         Vec3 Forward = GET_TRANSFORM_3D(gameObject)->GetForward();
 
-        GET_RIGIDBODY(gameObject)->AddForce(
-            Vec3(Forward.x, Forward.y, -Forward.z) * 5,
-            Vec3(0, 0, 0)
-        );
+        if (GET_RIGIDBODY(gameObject)->GetLinearVelocity().length() < 10)
+        {
+            GET_RIGIDBODY(gameObject)->AddForce(
+                Vec3(Forward.x, Forward.y, -Forward.z) * 15,
+                Vec3(0, 0, 0)
+            );
+        }
 
         W_Key = true;
     }
@@ -64,12 +67,15 @@ void PlayerCharacter::Update()
         Input = true;
         skinnedMesh->SetAnimation("Skeleton_walking_back");
 
-        Vec3 Forward = GET_TRANSFORM_3D(gameObject)->GetForward();
+        if (GET_RIGIDBODY(gameObject)->GetLinearVelocity().length() < 10)
+        {
+            Vec3 Forward = GET_TRANSFORM_3D(gameObject)->GetForward();
 
-        GET_RIGIDBODY(gameObject)->AddForce(
-            -Vec3(Forward.x, Forward.y, -Forward.z) * 5,
-            Vec3(0, 0, 0)
-        );
+            GET_RIGIDBODY(gameObject)->AddForce(
+                -Vec3(Forward.x, Forward.y, -Forward.z) * 15,
+                Vec3(0, 0, 0)
+            );
+        }
 
         S_Key = true;
     }
@@ -123,7 +129,7 @@ void PlayerCharacter::LateUpdate()
     int dx = pt.x - mouseX;
     int dy = pt.y - mouseY;
                           
-    Vec3 Target = GET_TRANSFORM_3D(gameObject)->GetPosition() + Vec3(0, 25, 0);
+    Vec3 Target = GET_TRANSFORM_3D(gameObject)->GetPosition() + Vec3(0, 40, 0);
     Vec3 Eye = GET_TRANSFORM_3D(cameraObject)->GetPosition();
 
     Vec3 Dir = Eye - Target;

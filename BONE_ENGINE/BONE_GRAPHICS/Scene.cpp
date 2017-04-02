@@ -9,6 +9,7 @@
 #include "Transform3D.h"
 #include "PhysicsListener.h"
 #include "etuImage.h"
+#include "Rp3dRigidBody.h"
 
 #pragma warning(disable:4996)
 
@@ -43,8 +44,10 @@ namespace BONE_GRAPHICS
 
         physicsWorld->setNbIterationsVelocitySolver(15);
         physicsWorld->setNbIterationsPositionSolver(8);
-        physicsWorld->enableSleeping(false);
-
+        physicsWorld->enableSleeping(true);
+        physicsWorld->setSleepAngularVelocity(1.0f);
+        physicsWorld->setSleepLinearVelocity(1.0f);
+        physicsWorld->setTimeBeforeSleep(0.1f);
         physicsWorld->setEventListener(&physicsEventListner);
     }
 
@@ -183,20 +186,27 @@ namespace BONE_GRAPHICS
     {
         for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
             (*Iter)->Reference();
+
+        for (auto Iter = pointLightList.begin(); Iter != pointLightList.end(); Iter++)
+            (*Iter)->Reference();
     }
 
     void Scene::Update()
     {
         skybox.Render(GetCurrentCamera());
 
+        if (enablePhysics)
+        {
+            for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
+                if (GET_RIGIDBODY((*Iter)) != nullptr)
+                    GET_RIGIDBODY((*Iter))->LockUpdate();
+
+            physicsWorld->update(SceneMgr->GetTimeDelta() * 2.0f);
+        }
+
         for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
             if ((*Iter)->GetActive())
                 (*Iter)->Update();
-
-        if (enablePhysics)
-        {
-            physicsWorld->update(SceneMgr->GetTimeDelta() * 2.0f);
-        }
     }
 
     void Scene::LateUpdate()

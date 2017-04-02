@@ -1,0 +1,45 @@
+{
+    "1.Transform3D": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "ChildObjects": [
+        "SecondRoomFloor",
+        "SecondRoomFloor2",
+        "SecondRoomPillar",
+        "SecondRoomPillar2",
+        "SecondRoomPillar3",
+        "SecondRoomWall0",
+        "SecondRoomWall1",
+        "SecondRoomWall2",
+        "SecondRoomWall3",
+        "SecondRoomWall4",
+        "SecondRoomWall5",
+        "SecondRoomWall6",
+        "SecondRoomWall7",
+        "SecondRoomWall8",
+        "SecondRoomWall9",
+        "SecondRoomDoorWay1",
+        "SecondRoomDoorWay2",
+        "SecondRoomTop",
+        "SecondRoomTop2"
+    ],
+    "IsActive": true,
+    "IsEditorLock": false,
+    "IsStatic": false,
+    "Priority": 1,
+    "Tag": ""
+}

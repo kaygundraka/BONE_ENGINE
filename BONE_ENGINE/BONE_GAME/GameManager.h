@@ -9,17 +9,21 @@ using namespace BONE_GRAPHICS;
 
 class GameManager : public Script {
 private:
-    GameObject* firstSceneCamera;
+    GameObject* sceneCamera_1_1;
+    GameObject* sceneCamera_1_2;
+
+    Camera* FSCameraComponent_1_1;
+    Camera* FSCameraComponent_1_2;
+    
     GameObject* player;
     ScreenImage* screenImage;
 
-    Camera* FSCameraComponent;
 
     int totalSceneFlow;
-    int firstSceneFlow;
+
+    int sceneFlow[5];
 
     int subtitleSize;
-
     float screenAlpha;
     
 public:
@@ -31,4 +35,5 @@ public:
 
     void FadeIn();
     void FadeOut();
+    void ShowSubtitle(std::string str);
 };

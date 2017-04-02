@@ -14,6 +14,7 @@ namespace BONE_GRAPHICS
         transform = (Transform3D*)((this->object)->transform3D);
 
         this->SetTypeName("Collision");
+        type = COLL_CAPSULE;
 
         showShape = false;
     }

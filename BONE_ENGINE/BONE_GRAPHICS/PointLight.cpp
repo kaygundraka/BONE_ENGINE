@@ -32,7 +32,6 @@ namespace BONE_GRAPHICS
         rect.RightBottom = Vec2(512, 512);
         billBoard->SetOriginRect(rect);
         billBoard->SetRectSize(20, 20);
-        billBoard->SetTarget(SceneMgr->CurrentScene()->GetCurrentCamera());
         billBoard->SetTexture("PointLight.png", 512, 512);
         billBoard->SetRenderMode(BillBoard::RENDER_ALPHA);
         this->AddComponent(billBoard);
@@ -51,7 +50,7 @@ namespace BONE_GRAPHICS
         this->AddComponent(tr);
         this->tr = (Transform3D*)transform3D;
 
-        ((BillBoard*)GetComponent("BillBoard"))->SetShow(false);
+        billBoard->SetShow(false);
         this->SetPipeLine(GameObject::DIRECT_DEFAULT);
 
         IsInit = true;
@@ -69,13 +68,15 @@ namespace BONE_GRAPHICS
 
     void PointLight::Reference()
     {
+        GET_BILLBOARD(this)->SetTarget(SceneMgr->CurrentScene()->GetCurrentCamera());
     }
 
     void PointLight::SetIcon(bool show)
     {
-        showIcon = show;
+        if (status == true)
+            ((BillBoard*)GetComponent("BillBoard"))->SetShow(show);
 
-        ((BillBoard*)GetComponent("BillBoard"))->SetShow(show);
+        showIcon = show;
     }
     
     bool PointLight::ShowIcon()

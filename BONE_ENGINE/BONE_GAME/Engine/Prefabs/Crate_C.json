@@ -1,0 +1,85 @@
+{
+    "1.Transform3D": {
+        "Position": [
+            237.000015258789,
+            6.00000047683716,
+            107.985008239746
+        ],
+        "Rotation": [
+            -0.0310436692088842,
+            -1.0,
+            -0.000157787129865028
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "3.Collision": {
+        "HalfExtens": [
+            6.0966944694519,
+            5.92882823944092,
+            11.1471977233887
+        ],
+        "Pivot": [
+            -1.09672546386719e-05,
+            5.92881393432617,
+            4.76837158203125e-07
+        ],
+        "Type": 0
+    },
+    "4.RigidBody": {
+        "Bounciness": 0.400000005960464,
+        "EnableGravity": true,
+        "FricitionCoefficient": 0.200000002980232,
+        "IsAllowedToSleep": true,
+        "LockRotation": [
+            false,
+            false,
+            false
+        ],
+        "Mass": 3.0,
+        "Pivot": [
+            1.09362557739133e-33,
+            2.65326891066845e-34,
+            5.60519385729927e-45
+        ],
+        "Type": 0
+    },
+    "5.Material": {
+        "Ambient": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Diffuse": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Emissive": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Shininess": 1.0,
+        "Specular": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "6.StaticMesh": {
+        "FileName": "Crate_C.X"
+    },
+    "IsActive": true,
+    "IsEditorLock": false,
+    "IsStatic": false,
+    "Priority": 1,
+    "Tag": ""
+}

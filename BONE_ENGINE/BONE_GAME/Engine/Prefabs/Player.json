@@ -1,46 +1,49 @@
 {
     "1.Transform3D": {
         "Position": [
-            -151.0,
-            5.0,
-            69.0
+            -151.055038452148,
+            8.74075698852539,
+            69.9358978271484
         ],
         "Rotation": [
-            0.0,
-            0.0,
-            0.0
+            0.00113878271076828,
+            -2.7550797767617e-06,
+            -0.000388966902391985
         ],
         "Scale": [
-            1.5,
-            1.5,
-            1.5
+            1.29999995231628,
+            1.29999995231628,
+            1.29999995231628
         ]
     },
     "3.Collision": {
-        "Height": 10.0,
+        "HalfExtens": [
+            5.0,
+            10.0,
+            5.0
+        ],
         "Pivot": [
             0.0,
             0.0,
             0.0
         ],
-        "Radius": 5.0,
-        "Type": 3
+        "Type": 0
     },
     "4.RigidBody": {
-        "Bounciness": 0.0,
+        "Bounciness": 0.400000005960464,
         "EnableGravity": true,
-        "FricitionCoefficient": 0.0,
-        "IsAllowedToSleep": false,
+        "FricitionCoefficient": 0.200000002980232,
+        "IsAllowedToSleep": true,
         "LockRotation": [
             true,
             false,
             true
         ],
-        "Mass": 2.0,
+        "Mass": 1.0,
         "Pivot": [
-            9.99948228522395e-34,
-            5.64536471222025e-37,
-            5.60519385729927e-45
+            1.32168250171039e-33,
+            10.0,
+            7.00649232162409e-45
         ],
         "Type": 2
     },

@@ -569,9 +569,6 @@ namespace BONE_GRAPHICS
         DefaultEffect->Begin(&uPasses, 0);
 
         // Do we need to render the scene in wireframe mode        
-        //if (g_bWireframe)
-        //    RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-
         i = 0;
 
         for (UINT uPass = 0; uPass < uPasses; uPass++)
