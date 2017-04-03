@@ -15,7 +15,6 @@ namespace BONE_GRAPHICS
 	{
 	private:
 		float loadingBarValue;
-		bool closeThread;
 		D3DXCOLOR backColor;
 
 		string curScene;
@@ -29,8 +28,13 @@ namespace BONE_GRAPHICS
 
         GUI_Scene* guiScene;  
         GUI_Scene* loadGuiScene;
+        std::thread* physicsUpdateThread;
+        
+        bool isPhysicsUpdate;
 
 	public:
+        bool uiUpdate;
+
 		void InitializeMembers();
 
 		SceneManager() {}
@@ -55,9 +59,15 @@ namespace BONE_GRAPHICS
         D3DXCOLOR GetClearColor();
 
         void SetGUIScene(GUI_Scene* scene);
+        GUI_Scene* GetGUIScene();
 
 		int GetFrame();
+        void SetFrame(int frame);
+
 		double GetTimeDelta();
+        void SetTimeDelta(double timeDelta);
+
+        bool IsPhysicsUpdate();
 
         bool(*AddScript)(GameObject* object, std::string scripts);
 

@@ -142,13 +142,13 @@ namespace BONE_GRAPHICS
         
         line_vertex* pVertex;
 
-        D3D_DEVICE->CreateVertexBuffer(79 * sizeof(line_vertex), 0, line_fvf, D3DPOOL_DEFAULT, &VertexBuffer, NULL);
+        D3D_DEVICE->CreateVertexBuffer(79 * sizeof(line_vertex), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, line_fvf, D3DPOOL_DEFAULT, &VertexBuffer, NULL);
 
         WORD wVertexIndex = 0;
 
         int nCurrentSegment;
         //Lock the vertex buffer
-        VertexBuffer->Lock(0, 0, (VOID**)&pVertex, 0);
+        VertexBuffer->Lock(0, 0, (VOID**)&pVertex, D3DLOCK_NOSYSLOCK | D3DLOCK_DISCARD);
                 
         float rDeltaSegAngle = (2.0f * D3DX_PI / 12);
         float rSegmentLength = 1.0f / (float)12;

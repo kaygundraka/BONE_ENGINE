@@ -40,6 +40,7 @@ namespace BONE_GRAPHICS
         D3DXCOLOR fogColor;
 
         bool enablePhysics;
+        double accumulator;
 
         rp3d::DynamicsWorld* physicsWorld;
         PhysicsEventListener physicsEventListner;
@@ -80,6 +81,7 @@ namespace BONE_GRAPHICS
 		void Update();
 		void LateUpdate();
 		void LateRender();
+        void PhysicsUpdate(double timeDelta);
 
 	public:
 		Scene();
@@ -136,6 +138,8 @@ namespace BONE_GRAPHICS
         std::list<GameObject*> GetObjectList();
         std::list<GameObject*> GetStaticObjectList();
                 
+        void SkyboxRender();
+
         void SetFogStatus(bool on, D3DXCOLOR fogColor, float fogStart, float fogEnd, float fogDensity, int mode);
         bool OnFog();
         float GetFogStart();

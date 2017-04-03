@@ -33,7 +33,7 @@ namespace BONE_GRAPHICS
 
         d3dpp.BackBufferWidth = width;
         d3dpp.BackBufferHeight = height;
-        d3dpp.BackBufferFormat = D3DFMT_A8R8G8B8;
+        d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;// D3DFMT_A8R8G8B8;
         d3dpp.BackBufferCount = 1;
         d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
         d3dpp.MultiSampleQuality = 0;
@@ -41,7 +41,7 @@ namespace BONE_GRAPHICS
         d3dpp.hDeviceWindow = this->hWnd;
         d3dpp.Windowed = true;
         d3dpp.EnableAutoDepthStencil = true;
-        d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
+        d3dpp.AutoDepthStencilFormat = D3DFMT_D16;//D3DFMT_D24S8;
         d3dpp.Flags = 0;
         d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
         d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;

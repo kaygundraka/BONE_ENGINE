@@ -278,7 +278,7 @@ namespace BONE_GRAPHICS
 		}
 
 		if (!Terrain_Info.VertexBuffer && FAILED(RenderMgr->GetDevice()->CreateVertexBuffer(Terrain_Info.HeightSize * Terrain_Info.WidthSize * sizeof(VERTEX),
-			D3DUSAGE_WRITEONLY, VERTEX::FVF, D3DPOOL_DEFAULT, &Terrain_Info.VertexBuffer, nullptr)))
+            D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, VERTEX::FVF, D3DPOOL_DEFAULT, &Terrain_Info.VertexBuffer, nullptr)))
 		{
 			return;
 		}
@@ -288,7 +288,7 @@ namespace BONE_GRAPHICS
 		VOID* pVertices;
 
 		// 정점 버퍼 락
-		if (FAILED(Terrain_Info.VertexBuffer->Lock(0, Terrain_Info.HeightSize * Terrain_Info.WidthSize * sizeof(VERTEX), (void**)&pVertices, 0)))
+		if (FAILED(Terrain_Info.VertexBuffer->Lock(0, Terrain_Info.HeightSize * Terrain_Info.WidthSize * sizeof(VERTEX), (void**)&pVertices, D3DLOCK_NOSYSLOCK | D3DLOCK_DISCARD)))
 		{
 			return;
 		}
@@ -344,7 +344,7 @@ namespace BONE_GRAPHICS
 
 		// 정점 버퍼 락
 		if (FAILED(Terrain_Info.IndexBuffer->Lock(0, (Terrain_Info.HeightSize - 1) * (Terrain_Info.WidthSize - 1) * 2 * sizeof(VERTEX_INDEX),
-			(void**)&pI, 0)))
+			(void**)&pI, D3DLOCK_NOSYSLOCK | D3DLOCK_DISCARD)))
 		{
 			return;
 		}
@@ -462,7 +462,7 @@ namespace BONE_GRAPHICS
 
 		LPWORD pI;
 
-		Terrain_Info.IndexBuffer->Lock(0, (Terrain_Info.WidthSize - 1) * (Terrain_Info.HeightSize - 1) * 2 * sizeof(VERTEX_INDEX), (void**)&pI, 0);
+		Terrain_Info.IndexBuffer->Lock(0, (Terrain_Info.WidthSize - 1) * (Terrain_Info.HeightSize - 1) * 2 * sizeof(VERTEX_INDEX), (void**)&pI, D3DLOCK_NOSYSLOCK | D3DLOCK_DISCARD);
 		Terrain_Info.Triangles = m_pQuadTree->GenerateIndex(pI, Terrain_Info.Vertex, &m_pFrustum, 0.005f);
 		Terrain_Info.IndexBuffer->Unlock();
 

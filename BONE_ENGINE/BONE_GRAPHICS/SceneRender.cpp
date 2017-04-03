@@ -74,7 +74,7 @@ namespace BONE_GRAPHICS
         float SCREEN_WIDTH = RenderMgr->GetWidth();
 
         // Create the quad vertex buffer
-        if (FAILED(RenderMgr->GetDevice()->CreateVertexBuffer(4 * sizeof(QuadVertex), D3DUSAGE_WRITEONLY, FVF_QUADVERTEX,
+        if (FAILED(RenderMgr->GetDevice()->CreateVertexBuffer(4 * sizeof(QuadVertex), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, FVF_QUADVERTEX,
             D3DPOOL_DEFAULT, &quadVB, NULL)))
         {
             return E_FAIL;
@@ -82,7 +82,7 @@ namespace BONE_GRAPHICS
 
         // Copy the vertices
         QuadVertex* pVertices;
-        quadVB->Lock(0, 0, (void**)&pVertices, 0);
+        quadVB->Lock(0, 0, (void**)&pVertices, D3DLOCK_NOSYSLOCK | D3DLOCK_DISCARD);
         pVertices[0].p = D3DXVECTOR4(0.0f, 0.0f, 0.0f, 1.0f);
         pVertices[1].p = D3DXVECTOR4(0.0f, SCREEN_HEIGHT / 2, 0.0f, 1.0f);
         pVertices[2].p = D3DXVECTOR4(SCREEN_WIDTH / 2, 0.0f, 0.0f, 1.0f);
@@ -190,9 +190,14 @@ namespace BONE_GRAPHICS
         return true;
     }
 
+    void Scene::SkyboxRender()
+    {
+        skybox.Render();
+    }
+
     void Scene::Render()
     {
-        std::vector<GameObject*> DefaultShaderObjects;
+        std::list<GameObject*> DefaultShaderObjects;
         
         for each(auto var in objectList)
         {
@@ -616,8 +621,7 @@ namespace BONE_GRAPHICS
 
         DefaultEffect->End();
 #pragma endregion
-
-
+        
         for each(auto var in objectList)
         {
             if (var->GetPipeLine() != GameObject::PIPE_LINE::DEFAULT_SHADER)

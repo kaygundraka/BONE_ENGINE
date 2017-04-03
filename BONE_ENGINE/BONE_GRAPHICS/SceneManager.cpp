@@ -4,14 +4,37 @@
 
 namespace BONE_GRAPHICS
 {
+    void LoadThreadFunc(Scene* Framework)
+    {
+        Framework->LoadSceneData();
+        Framework->LoadContents();
+        Framework->Reference();
+    }
+
+    void UpdateThreadFunc(Scene* Framework)
+    {
+        double lastTime = (double)timeGetTime();
+        
+        while (SceneMgr->IsPhysicsUpdate() == false)
+        {
+            double currTime = (double)timeGetTime();
+            double deltaTime = (currTime - lastTime) * 0.001f;
+            
+            Framework->PhysicsUpdate(deltaTime);
+            
+            lastTime = currTime;
+        }
+    }
+    
 	void SceneManager::InitializeMembers()
 	{
 		ThreadSync sync;
 
-		closeThread = false;
-		loadingBarValue = 0;
+        loadingBarValue = 0;
 		loadScene = "";
 		frame = 0;
+        isPhysicsUpdate = false;
+        uiUpdate = false;
 
         backColor.r = 45.0f / 255.0f;
         backColor.g = 45.0f / 255.0f;
@@ -22,14 +45,7 @@ namespace BONE_GRAPHICS
 	{
 		ThreadSync sync;
 	}
-	
-	void LoadThreadFunc(Scene* Framework)
-	{
-        Framework->LoadSceneData();
-		Framework->LoadContents();
-        Framework->Reference();
-	}
-
+		
 	void SceneManager::AddScene(std::string name, Scene* scene)
 	{
 		ThreadSync sync;
@@ -65,6 +81,11 @@ namespace BONE_GRAPHICS
         this->loadGuiScene = scene;
     }
 
+    void SceneManager::SetFrame(int frame)
+    {
+        this->frame = frame;
+    }
+
 	int SceneManager::GetFrame()
 	{
 		return frame;
@@ -74,6 +95,11 @@ namespace BONE_GRAPHICS
 	{
 		return timeDelta;
 	}
+
+    void SceneManager::SetTimeDelta(double timeDelta)
+    {
+        this->timeDelta = timeDelta;
+    }
 
     void SceneManager::SetClearColor(D3DXCOLOR color)
     {
@@ -153,91 +179,97 @@ namespace BONE_GRAPHICS
 		}
 
 		LoadingThread.join();
-
+        isPhysicsUpdate = false;
+        
 		sceneList[name]->SortPriorityObject();
-
-		lastTime = (double)timeGetTime();
 
 		MSG msg;
 		::ZeroMemory(&msg, sizeof(MSG));
 
-		double OneSecond = 0;
-		int Frame = 0;
+        physicsUpdateThread = new thread(UpdateThreadFunc, sceneList[name]);
+        
+        double OneSecond = 0;
+        int Frame = 0;
 
+        lastTime = (double)timeGetTime();
+        
 		while (msg.message != WM_QUIT)
 		{
 			if (::PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
 			{
 				::TranslateMessage(&msg);
 				::DispatchMessage(&msg);
-			}
-			else
-			{
-				if (sceneList[name]->GetSceneFlag())
-				{
-					double currTime = (double)timeGetTime();
-					double deltaTime = (currTime - lastTime) * 0.001f;
-					timeDelta = deltaTime;
+                continue;
+            }
 
-                    if (RenderMgr->UseImGUI())
-                    {
-                        ImGui_ImplDX9_NewFrame();
+            if (sceneList[name]->GetSceneFlag())
+            {
+                double currTime = (double)timeGetTime();
+                double deltaTime = (currTime - lastTime) * 0.001f;
+                timeDelta = deltaTime;
 
-                        guiScene->UpdateFrame();
-                    }
+                if (RenderMgr->UseImGUI())
+                {
+                    ImGui_ImplDX9_NewFrame();
+                    SceneMgr->GetGUIScene()->UpdateFrame();
+                }
+             
+                RenderMgr->GetDevice()->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, backColor, 1.0f, 0);
 
-					RenderMgr->GetDevice()->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, backColor, 1.0f, 0);
-					RenderMgr->GetDevice()->BeginScene();
+                RenderMgr->GetDevice()->BeginScene();
 
-					if (sceneList[name]->GetSceneFlag())
-					{
-						sceneList[name]->Update();
-						sceneList[name]->LateUpdate();
-						sceneList[name]->Render();
-						sceneList[name]->LateRender();
-					}
+                sceneList[name]->Update();
+                sceneList[name]->LateUpdate();
+                sceneList[name]->Render();
+                sceneList[name]->LateRender();
 
-                    if (RenderMgr->UseImGUI())
-                    {
-                        RenderMgr->GetDevice()->SetRenderState(D3DRS_FOGENABLE, FALSE);
-                        RenderMgr->GetDevice()->SetRenderState(D3DRS_ZENABLE, false);
-                        RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
-                        RenderMgr->GetDevice()->SetRenderState(D3DRS_SCISSORTESTENABLE, false);
-                        DWORD temp;
-                        RenderMgr->GetDevice()->GetRenderState(D3DRS_FILLMODE, &temp);
-                        RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+                if (RenderMgr->UseImGUI())
+                {
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_FOGENABLE, FALSE);
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_ZENABLE, false);
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_SCISSORTESTENABLE, false);
+                    DWORD temp;
+                    RenderMgr->GetDevice()->GetRenderState(D3DRS_FILLMODE, &temp);
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
-                        ImGui::Render();
+                    ImGui::Render();
 
-                        RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, temp);
-                        RenderMgr->GetDevice()->SetRenderState(D3DRS_ZENABLE, true);
-                        RenderMgr->GetDevice()->SetRenderState(D3DRS_SCISSORTESTENABLE, true);
-                        RenderMgr->GetDevice()->SetRenderState(D3DRS_FOGENABLE, sceneList[name]->OnFog());
-                    }
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_FILLMODE, temp);
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_ZENABLE, true);
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_SCISSORTESTENABLE, true);
+                    RenderMgr->GetDevice()->SetRenderState(D3DRS_FOGENABLE, sceneList[name]->OnFog());
+                }
 
-					RenderMgr->GetDevice()->EndScene();
-					RenderMgr->GetDevice()->Present(0, 0, 0, 0);
+                RenderMgr->GetDevice()->EndScene();
+                RenderMgr->GetDevice()->Present(0, 0, 0, 0);
 
-					InputMgr->SetMouseWheelStatus(MOUSE_WHEEL_NONE);
+                InputMgr->SetMouseWheelStatus(MOUSE_WHEEL_NONE);
 
-					lastTime = currTime;
+                lastTime = currTime;
 
-					OneSecond += deltaTime;
-					Frame++;
+                OneSecond += deltaTime;
+                Frame++;
 
-					if (OneSecond >= 1.0f)
-					{
-						frame = Frame;
-						Frame = 0;
-						OneSecond = 0;
-					}
-				}
-				else
-					break;
-			}
+                if (OneSecond >= 1.0f)
+                {
+                    frame = Frame;
+                    Frame = 0;
+                    OneSecond = 0;
+                }
+            }
+            else
+                break;
 		}
+        
+        if (physicsUpdateThread != nullptr)
+        {
+            isPhysicsUpdate = true;
+            physicsUpdateThread->join();
 
-		closeThread = true;
+            delete physicsUpdateThread;
+            physicsUpdateThread = nullptr;
+        }
 
 		if (sceneList[name]->GetSceneFlag() == false)
 		{
@@ -259,6 +291,11 @@ namespace BONE_GRAPHICS
         this->guiScene = scene;
     }
 
+    GUI_Scene* SceneManager::GetGUIScene()
+    {
+        return guiScene;
+    }
+
 	void SceneManager::EndScene(std::string name)
 	{
 		ThreadSync sync;
@@ -266,7 +303,20 @@ namespace BONE_GRAPHICS
 		sceneList[name]->SetSceneFlag(false);
 	}
 
+    bool SceneManager::IsPhysicsUpdate()
+    {
+        return isPhysicsUpdate;
+    }
+    
 	void SceneManager::ReleaseMembers()
 	{
+        isPhysicsUpdate = true;
+        
+        if (physicsUpdateThread != nullptr)
+        {
+            physicsUpdateThread->join();
+            delete physicsUpdateThread;
+            physicsUpdateThread = nullptr;
+        }
 	}
 }

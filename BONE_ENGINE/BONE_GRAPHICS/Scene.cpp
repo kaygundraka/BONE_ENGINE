@@ -27,6 +27,8 @@ namespace BONE_GRAPHICS
         globalAmbient.b = 1.0f;
         globalAmbient.a = 1.0f;
 
+        accumulator = 0;
+
         enableFog = false;
         fogStart = 50.0f;
         fogEnd = 100.0f;
@@ -193,20 +195,30 @@ namespace BONE_GRAPHICS
 
     void Scene::Update()
     {
-        skybox.Render(GetCurrentCamera());
+        skybox.Render();
+        skybox.Update(GetCurrentCamera());
 
+        for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
+            if ((*Iter)->GetActive())
+                (*Iter)->Update();
+    }
+
+    void Scene::PhysicsUpdate(double timeDelta)
+    {
         if (enablePhysics)
         {
             for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
                 if (GET_RIGIDBODY((*Iter)) != nullptr)
                     GET_RIGIDBODY((*Iter))->LockUpdate();
 
-            physicsWorld->update(SceneMgr->GetTimeDelta() * 2.0f);
-        }
+            const float timeStep = 1.0 / 60.0;
+            accumulator += timeDelta;
 
-        for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
-            if ((*Iter)->GetActive())
-                (*Iter)->Update();
+            while (accumulator >= timeStep) {
+                physicsWorld->update(timeStep);
+                accumulator -= timeStep;
+            }
+        }
     }
 
     void Scene::LateUpdate()
@@ -349,14 +361,14 @@ namespace BONE_GRAPHICS
         delete gameObject;
     }
 
-    void Scene::SetSceneFlag(bool _flag)
+    void Scene::SetSceneFlag(bool flag)
     {
-        IsFrameworkFlag = _flag;
+        IsFrameworkFlag = flag;
     }
 
-    void Scene::SetCameraIndex(int _index)
+    void Scene::SetCameraIndex(int index)
     {
-        cameraIndex = _index;
+        cameraIndex = index;
     }
 
     int Scene::GetCameraIndex()

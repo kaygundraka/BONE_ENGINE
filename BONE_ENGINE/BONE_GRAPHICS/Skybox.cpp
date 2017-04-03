@@ -60,46 +60,46 @@ namespace BONE_GRAPHICS
 		VERTEX* pv;
 
 		for (int i = 0; i<6; i++)
-			if (FAILED(RenderMgr->GetDevice()->CreateVertexBuffer(sizeof(VERTEX) * 4, 0,
+			if (FAILED(RenderMgr->GetDevice()->CreateVertexBuffer(sizeof(VERTEX) * 4, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
 				VERTEX::FVF, D3DPOOL_DEFAULT, &VB[i], nullptr))) return false;
 		
         //top
-		if (FAILED(VB[0]->Lock(0, 0, (void**)&pv, 0))) return false;
+		if (FAILED(VB[0]->Lock(0, 0, (void**)&pv, D3DLOCK_NOSYSLOCK | D3DLOCK_DISCARD))) return false;
 		SetVtx3DTexture(pv[0], D3DXVECTOR3(1.f, 1.f, -1.f), D3DXVECTOR3(1, 1, 1), 0, 1);
 		SetVtx3DTexture(pv[1], D3DXVECTOR3(-1.f, 1.f, -1.f), D3DXVECTOR3(1, 1, 1), 0, 0);
 		SetVtx3DTexture(pv[2], D3DXVECTOR3(1.f, 1.f, 1.f), D3DXVECTOR3(1, 1, 1), 1, 1);
 		SetVtx3DTexture(pv[3], D3DXVECTOR3(-1.f, 1.f, 1.f), D3DXVECTOR3(1, 1, 1), 1, 0);
 		VB[0]->Unlock();
 		//bottom
-		if (FAILED(VB[1]->Lock(0, 0, (void**)&pv, 0))) return false;
+		if (FAILED(VB[1]->Lock(0, 0, (void**)&pv, D3DLOCK_NOSYSLOCK | D3DLOCK_DISCARD))) return false;
 		SetVtx3DTexture(pv[0], D3DXVECTOR3(1.f, -1.f, 1.f), D3DXVECTOR3(1, 1, 1), 0, 0);
 		SetVtx3DTexture(pv[1], D3DXVECTOR3(-1.f, -1.f, 1.f), D3DXVECTOR3(1, 1, 1), 1, 0);
 		SetVtx3DTexture(pv[2], D3DXVECTOR3(1.f, -1.f, -1.f), D3DXVECTOR3(1, 1, 1), 0, 1);
 		SetVtx3DTexture(pv[3], D3DXVECTOR3(-1.f, -1.f, -1.f), D3DXVECTOR3(1, 1, 1), 1, 1);
 		VB[1]->Unlock();
 		//left
-		if (FAILED(VB[2]->Lock(0, 0, (void**)&pv, 0))) return false;
+		if (FAILED(VB[2]->Lock(0, 0, (void**)&pv, D3DLOCK_NOSYSLOCK | D3DLOCK_DISCARD))) return false;
 		SetVtx3DTexture(pv[0], D3DXVECTOR3(-1.f, 1.f, 1.f), D3DXVECTOR3(1, 1, 1), 0, 0);
 		SetVtx3DTexture(pv[1], D3DXVECTOR3(-1.f, 1.f, -1.f), D3DXVECTOR3(1, 1, 1), 1, 0);
 		SetVtx3DTexture(pv[2], D3DXVECTOR3(-1.f, -1.f, 1.f), D3DXVECTOR3(1, 1, 1), 0, 1);
 		SetVtx3DTexture(pv[3], D3DXVECTOR3(-1.f, -1.f, -1.f), D3DXVECTOR3(1, 1, 1), 1, 1);
 		VB[2]->Unlock();
 		//right
-		if (FAILED(VB[3]->Lock(0, 0, (void**)&pv, 0))) return false;
+		if (FAILED(VB[3]->Lock(0, 0, (void**)&pv, D3DLOCK_NOSYSLOCK | D3DLOCK_DISCARD))) return false;
 		SetVtx3DTexture(pv[0], D3DXVECTOR3(1.f, 1.f, -1.f), D3DXVECTOR3(1, 1, 1), 0, 0);
 		SetVtx3DTexture(pv[1], D3DXVECTOR3(1.f, 1.f, 1.f), D3DXVECTOR3(1, 1, 1), 1, 0);
 		SetVtx3DTexture(pv[2], D3DXVECTOR3(1.f, -1.f, -1.f), D3DXVECTOR3(1, 1, 1), 0, 1);
 		SetVtx3DTexture(pv[3], D3DXVECTOR3(1.f, -1.f, 1.f), D3DXVECTOR3(1, 1, 1), 1, 1);
 		VB[3]->Unlock();
 		//front
-		if (FAILED(VB[4]->Lock(0, 0, (void**)&pv, 0))) return false;
+		if (FAILED(VB[4]->Lock(0, 0, (void**)&pv, D3DLOCK_NOSYSLOCK | D3DLOCK_DISCARD))) return false;
 		SetVtx3DTexture(pv[0], D3DXVECTOR3(1.f, 1.f, 1.f), D3DXVECTOR3(1, 1, 1), 0, 0);
 		SetVtx3DTexture(pv[1], D3DXVECTOR3(-1.f, 1.f, 1.f), D3DXVECTOR3(1, 1, 1), 1, 0);
 		SetVtx3DTexture(pv[2], D3DXVECTOR3(1.f, -1.f, 1.f), D3DXVECTOR3(1, 1, 1), 0, 1);
 		SetVtx3DTexture(pv[3], D3DXVECTOR3(-1.f, -1.f, 1.f), D3DXVECTOR3(1, 1, 1), 1, 1);
 		VB[4]->Unlock();
 		//back
-		if (FAILED(VB[5]->Lock(0, 0, (void**)&pv, 0))) return false;
+		if (FAILED(VB[5]->Lock(0, 0, (void**)&pv, D3DLOCK_NOSYSLOCK | D3DLOCK_DISCARD))) return false;
 		SetVtx3DTexture(pv[0], D3DXVECTOR3(-1.f, 1.f, -1.f), D3DXVECTOR3(1, 1, 1), 0, 0);
 		SetVtx3DTexture(pv[1], D3DXVECTOR3(1.f, 1.f, -1.f), D3DXVECTOR3(1, 1, 1), 1, 0);
 		SetVtx3DTexture(pv[2], D3DXVECTOR3(-1.f, -1.f, -1.f), D3DXVECTOR3(1, 1, 1), 0, 1);
@@ -113,7 +113,7 @@ namespace BONE_GRAPHICS
 		VERTEX_INDEX* iv;
 		for (int i = 0; i<6; i++)
 		{
-			if (FAILED(IB[i]->Lock(0, 0, (void**)&iv, 0))) return false;
+			if (FAILED(IB[i]->Lock(0, 0, (void**)&iv, D3DLOCK_NOSYSLOCK | D3DLOCK_DISCARD))) return false;
 			SetIdx(iv[0], 0, 1, 2);
 			SetIdx(iv[1], 2, 1, 3);
 			IB[i]->Unlock();
@@ -128,7 +128,18 @@ namespace BONE_GRAPHICS
 		return Is_Init;
 	}
 
-	void Skybox::Render(GameObject* cameraObject)
+    void Skybox::Update(GameObject* cameraObject)
+    {
+        if (Is_Init)
+        {
+            D3DXVECTOR3 vPos = ((Transform3D*)cameraObject->GetComponent("Transform3D"))->GetPosition();
+
+            D3DXMatrixIdentity(&matWrd);
+            D3DXMatrixTranslation(&matWrd, vPos.x, vPos.y, vPos.z);
+        }
+    }
+
+	void Skybox::Render()
 	{
 		if (Is_Init)
 		{
@@ -148,13 +159,7 @@ namespace BONE_GRAPHICS
 				RenderMgr->GetDevice()->SetRenderState(D3DRS_ZENABLE, FALSE);			//Z버퍼 끄기
 				RenderMgr->GetDevice()->SetRenderState(D3DRS_LIGHTING, FALSE);			//조명 끄기
 
-																						//스카이 박스 이동.
-				D3DXVECTOR3 vPos = ((Transform3D*)cameraObject->GetComponent("Transform3D"))->GetPosition();
-
-				D3DXMatrixIdentity(&matWrd);
-				D3DXMatrixTranslation(&matWrd, vPos.x, vPos.y, vPos.z);
-				RenderMgr->GetDevice()->SetTransform(D3DTS_WORLD, &matWrd);
-
+                RenderMgr->GetDevice()->SetTransform(D3DTS_WORLD, &matWrd);
 				//텍스쳐 UV Address를 설정.
 				//RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
 				//RenderMgr->GetDevice()->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);

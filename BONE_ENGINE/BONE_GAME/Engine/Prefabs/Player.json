@@ -7,8 +7,8 @@
         ],
         "Rotation": [
             0.00113878271076828,
-            -2.7550797767617e-06,
-            -0.000388966902391985
+            -2.75508136837743e-06,
+            -0.000388967397157103
         ],
         "Scale": [
             1.29999995231628,
@@ -30,9 +30,9 @@
         "Type": 0
     },
     "4.RigidBody": {
-        "Bounciness": 0.400000005960464,
+        "Bounciness": 0.0,
         "EnableGravity": true,
-        "FricitionCoefficient": 0.200000002980232,
+        "FricitionCoefficient": 0.0,
         "IsAllowedToSleep": true,
         "LockRotation": [
             true,

@@ -113,6 +113,20 @@ namespace BONE_GRAPHICS
 			if (FAILED(D3DXLoadMeshFromX(full_path.c_str(), 0, RenderMgr->GetDevice(), 0, &Temp.buffer, 0, (DWORD*)&Temp.numMaterials, &Temp.mesh)))
 				return nullptr;
 			
+            std::vector<DWORD> faces(Temp.mesh->GetNumFaces() * 3);
+            Temp.mesh->GenerateAdjacency(0.0f, &faces[0]); // 읽어온다
+
+            Temp.mesh->OptimizeInplace(
+                D3DXMESHOPT_ATTRSORT | // 속성으로 삼각형을 정렬하고 속성 테이블을 생성한다.
+                                       // 이것은 DrawSubset의 효율을 높여준다.
+                D3DXMESHOPT_COMPACT | // 메쉬에서 이용되지 은 인덱스와 버텍스를 제거한다.
+                D3DXMESHOPT_VERTEXCACHE, // 버텍스 캐시의 히트율을 높인다.
+                &faces[0], // 최적화 되지 않은 메쉬의 인접 배열
+                0, // 최적화된 메쉬의 인접배열 정보를 받을 것인가?
+                0, // 면 리맵정보로 채워질 DWORD 배열로의 포인터 정보
+                   // 면 리맵정보는 원래의 면이 어느 곳으로 이동했는지를 알려주는것
+                0); // 버텍스 리맵정보
+
 			staticMeshList.insert(std::pair<std::string, MESH_INFO>(name, Temp));
 			
 			char log[MAX_PATH] = "";

@@ -145,7 +145,7 @@ namespace BONE_GRAPHICS
         }
 
         if (FAILED(RenderMgr->GetDevice()->CreateVertexBuffer(
-            trailList.size() * 2 * sizeof(VERTEX), D3DUSAGE_WRITEONLY,
+            trailList.size() * 2 * sizeof(VERTEX), D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
             VERTEX::FVF, D3DPOOL_DEFAULT, &vertexBuffer, nullptr)))
         {
             return;
@@ -153,7 +153,7 @@ namespace BONE_GRAPHICS
 
         VOID* pVertices;
 
-        if (FAILED(vertexBuffer->Lock(0, trailList.size() * 2 * sizeof(VERTEX), (void**)&pVertices, 0)))
+        if (FAILED(vertexBuffer->Lock(0, trailList.size() * 2 * sizeof(VERTEX), (void**)&pVertices, D3DLOCK_NOSYSLOCK | D3DLOCK_DISCARD)))
             return;
 
         VERTEX* pV = (VERTEX*)pVertices;
@@ -180,7 +180,7 @@ namespace BONE_GRAPHICS
         int IB_Index = 0;
         VOID* pVertices2;
 
-        if (FAILED(indexBuffer->Lock(0, (trailList.size() * 2 - 2) * sizeof(VERTEX_INDEX), (void**)&pVertices2, 0)))
+        if (FAILED(indexBuffer->Lock(0, (trailList.size() * 2 - 2) * sizeof(VERTEX_INDEX), (void**)&pVertices2, D3DLOCK_NOSYSLOCK | D3DLOCK_DISCARD)))
             return;
 
         VERTEX_INDEX* pI = (VERTEX_INDEX*)pVertices2;
