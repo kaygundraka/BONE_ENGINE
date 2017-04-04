@@ -790,9 +790,6 @@ void BoneEditor::ShowEditObjectTree(std::string treeName)
 
 void BoneEditor::UpdateFrame()
 {
-    ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    ImGui::Text("%d frame", SceneMgr->GetFrame());
-    
     if (InputMgr->KeyDown(VK_F1, true))
         if (isEditMode)
             isEditMode = false;
@@ -866,7 +863,9 @@ void BoneEditor::UpdateFrame()
         ImGui::SetWindowSize(ImVec2(400, WindowHeight));
         ImVec2 Size = ImGui::GetWindowSize();
         ImGui::SetWindowPos(ImVec2(RenderMgr->GetWidth() - Size.x, 19));
-                
+        
+        ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
         std::list<GameObject*> ObjectList = CUR_SCENE->GetObjectList();
         auto StaticObjectList = CUR_SCENE->GetStaticObjectList();
         ObjectList.sort();

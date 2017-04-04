@@ -261,14 +261,14 @@ void GameManager::LateRender()
     {
         if (sceneFlow[0] < 6)
         {
-            std::string text = "Am I alive? Is it dead?";
+            std::string text = "Am I alive? ... or dead?";
 
             if (sceneFlow[0] == 1)
-                text = "3 days ago, I was able to think.";
+                text = "The very next day, I was able to think.";
             else if (sceneFlow[0] == 2)
-                text = "On the second day, I was able to see.";
+                text = "On the second day, I was able to hear.";
             else if (sceneFlow[0] == 3)
-                text = "On the third day, I was able to hear.";
+                text = "On the third day, My eyes became clear.";
             else if (sceneFlow[0] == 4)
                 text = "And now I am able to move weakly.";
 
