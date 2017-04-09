@@ -6,7 +6,7 @@
 
 namespace BONE_GRAPHICS
 {
-    HRESULT BoneHierarchyLoader::CreateFrame(LPCTSTR Name, LPD3DXFRAME *ppNewFrame)
+    HRESULT BoneHierarchyLoader::CreateFrame(LPCSTR Name, LPD3DXFRAME *ppNewFrame)
     {
         Bone *newBone = new Bone;
         memset(newBone, 0, sizeof(Bone));

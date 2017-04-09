@@ -84,8 +84,8 @@
     <LibraryPath>..\Library\Lib\x86;$(DXSDK_DIR)\Lib\x86;..\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ExecutablePath>$(DXSDK_DIR)\Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>..\Library\RuntimeObjectSystem\;..\Library\reactphysics3d\;..\Library\RuntimeCompiler\;$(DXSDK_DIR)\Include\;..\BONE_SYSTEM\;$(IncludePath)</IncludePath>
+    <ExecutablePath>..\Library\bin;$(DXSDK_DIR)\Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>..\Library\irrKlang\;..\Library\RuntimeObjectSystem\;..\Library\reactphysics3d\;..\Library\RuntimeCompiler\;$(DXSDK_DIR)\Include\;..\BONE_SYSTEM\;$(IncludePath)</IncludePath>
     <LibraryPath>..\Library\Lib\x86;$(DXSDK_DIR)\Lib\x86;..\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -127,7 +127,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>BONE_SYSTEM.lib;RuntimeCompiler.lib;reactphysics3d.lib;RuntimeObjectSystem.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BONE_SYSTEM.lib;RuntimeCompiler.lib;reactphysics3d.lib;RuntimeObjectSystem.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -257,6 +257,8 @@
     <ClInclude Include="SkinnedMesh.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="ScreenSprite.h" />
+    <ClInclude Include="SoundClip.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="SpriteBillBoard.h" />
     <ClInclude Include="StaticMesh.h" />
     <ClInclude Include="stb_rect_pack.h" />
@@ -391,6 +393,8 @@
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="ScreenSprite.cpp" />
     <ClCompile Include="SnowParticle.cpp" />
+    <ClCompile Include="SoundClip.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="SpriteBillBoard.cpp" />
     <ClCompile Include="StaticMesh.cpp" />
     <ClCompile Include="TrailRenderer.cpp" />

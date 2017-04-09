@@ -19,6 +19,7 @@
 #include "RuntimeCompiler.h"
 #include "Rp3dCollision.h"
 #include "Rp3dRigidBody.h"
+#include "SoundClip.h"
 
 namespace BONE_GRAPHICS
 {
@@ -890,6 +891,8 @@ namespace BONE_GRAPHICS
                 ((Script*)var.second)->Update();
             else if (var.first == "RigidBody")
                 ((RigidBody*)var.second)->UpdateTransform();
+            else if (var.first == "SoundClip")
+                ((SoundClip*)var.second)->Update();
         }
 
         UpdateFunc(this);

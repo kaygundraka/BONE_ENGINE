@@ -348,6 +348,11 @@ void BoneEditor::ShowEditorMenu()
         CUR_SCENE->EnablePhysics(Enable);
     }
 
+    if (ImGui::MenuItem("Sort Object Render"))
+    {
+        CUR_SCENE->SortRenderOptimizeObject();
+    }
+
     if (ImGui::MenuItem("Game Play"))
     {
         SaveScene();
@@ -514,7 +519,7 @@ void BoneEditor::ShowObjectInfo(std::string name)
                             strcpy(AnimationsCombo[i], iter.first.c_str());
 
                             if (((SkinnedMesh*)(item->second))->GetCurrentAnimation() == AnimationsCombo[i])
-                                CurItem == i;
+                                CurItem = i;
 
                             i++;
                         }

@@ -24,7 +24,6 @@
 #include <tuple>
 #include <shlwapi.h>
 
-
 #include "Strsafe.h"
 #include "Interface.h"
 #include <tinystr.h>
@@ -45,7 +44,10 @@
 #include "imgui.h"
 #include "imgui_impl_dx9.h"
 
+// IrrKlang
+#include <irrKlang.h>
 
+// Json
 #include <json.hpp>
 using json = nlohmann::json;
 
@@ -100,6 +102,7 @@ typedef struct _RGBA {
 #define ConfigMgr ConfigManager::GetInstance()
 #define PhysicsMgr PhysicsManager::GetInstance()
 #define LogMgr LogManager::GetInstance()
+#define SoundMgr SoundManager::GetInstance()
 
 using namespace reactphysics3d;
 

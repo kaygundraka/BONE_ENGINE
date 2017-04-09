@@ -13,6 +13,8 @@ namespace BONE_GRAPHICS
     {
         ThreadSync sync;
 
+        lastRenderedMesh = "";
+
         this->hWnd = hWnd;
 
         d3d9 = Direct3DCreate9(D3D_SDK_VERSION);
@@ -467,5 +469,17 @@ namespace BONE_GRAPHICS
         ThreadSync sync;
 
         useImGUI = use;
+    }
+
+    std::string RenderManager::GetLastRenderedMesh()
+    {
+        return lastRenderedMesh;
+    }
+
+    void RenderManager::SetLastRenderedMesh(std::string name)
+    {
+        ThreadSync sync;
+
+        lastRenderedMesh = name;
     }
 }

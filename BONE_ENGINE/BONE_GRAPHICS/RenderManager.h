@@ -1,6 +1,6 @@
 #pragma once
-#include "ISingleton.h"
 #include "Common.h"
+#include "ISingleton.h"
 #include <MultiThreadSync.h>
 
 namespace BONE_GRAPHICS
@@ -14,7 +14,7 @@ namespace BONE_GRAPHICS
         _RAY();
     } RAY;
 
-    class RenderManager : public ISingleton <RenderManager>, public BONE_SYSTEM::MultiThreadSync <RenderManager>
+    class RenderManager : public ISingleton<RenderManager>, public BONE_SYSTEM::MultiThreadSync<RenderManager>
     {
     private:
         HWND					hWnd;
@@ -26,6 +26,7 @@ namespace BONE_GRAPHICS
         ID3DXLine*				line;
         ID3DXFont*				font;
         bool                    useImGUI;
+        std::string             lastRenderedMesh;
 
         bool MSAAModeSupported(D3DMULTISAMPLE_TYPE type, D3DFORMAT backBufferFmt,
             D3DFORMAT depthStencilFmt, BOOL windowed,
@@ -43,6 +44,10 @@ namespace BONE_GRAPHICS
         virtual void ReleaseMembers();
 
         IDirect3DDevice9* GetDevice();
+
+        std::string GetLastRenderedMesh();
+        void SetLastRenderedMesh(std::string name);
+
         int GetHeight();
         int GetWidth();
         int GetMatrixPaletteSize();
@@ -64,7 +69,7 @@ namespace BONE_GRAPHICS
 
         bool DrawMeshBox(D3DXMATRIX matrix, LPD3DXMESH mesh, D3DXVECTOR3 pos, D3DXCOLOR color);
 
-        void RenderManager::DrawBox(D3DXMATRIX transform, D3DXVECTOR3 leftBottom, D3DXVECTOR3 rightTop, D3DXCOLOR color);
+        void DrawBox(D3DXMATRIX transform, D3DXVECTOR3 leftBottom, D3DXVECTOR3 rightTop, D3DXCOLOR color);
         void DrawSphere(D3DXMATRIX transform, float radius, D3DXCOLOR color);
         void DrawCylinder(D3DXMATRIX transform, float radius, float height, D3DXCOLOR color);
         void DrawCone(D3DXMATRIX transform, float edge, float edge2, float edge3, D3DXCOLOR color);

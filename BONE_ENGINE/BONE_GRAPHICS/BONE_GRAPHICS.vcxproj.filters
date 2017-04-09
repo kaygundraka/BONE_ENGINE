@@ -117,6 +117,12 @@
     <Filter Include="소스 파일\Core\Management\Physics">
       <UniqueIdentifier>{da535f07-15b5-4757-b49d-98f9753e42bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Core\GameObject\Components\Sound">
+      <UniqueIdentifier>{5f4b2e51-0024-4231-852d-d61890325778}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Core\Management\Sound">
+      <UniqueIdentifier>{0d8e025b-e13a-4423-8f9c-e8cba4a27473}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -314,6 +320,12 @@
     <ClInclude Include="BoneHierarchyLoader.h">
       <Filter>소스 파일\Core\GameObject\Components\Mesh\SkinnedMesh</Filter>
     </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>소스 파일\Core\Management\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundClip.h">
+      <Filter>소스 파일\Core\GameObject\Components\Sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -504,6 +516,12 @@
     </ClCompile>
     <ClCompile Include="DrawBasicShape.cpp">
       <Filter>소스 파일\Core\Management\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>소스 파일\Core\Management\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundClip.cpp">
+      <Filter>소스 파일\Core\GameObject\Components\Sound</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

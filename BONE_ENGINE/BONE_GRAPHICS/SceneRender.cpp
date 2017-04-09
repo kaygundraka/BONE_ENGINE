@@ -597,8 +597,13 @@ namespace BONE_GRAPHICS
                         D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
                         SetRenderMatrial(Iter, DefaultEffect);
 
-                        DefaultEffect->SetTexture("tColorMap", ResourceMgr->LoadTexture(Diffuse[i]));
-                        DefaultEffect->SetTexture("normalMapTexture", ResourceMgr->LoadTexture(Normal[i]));
+                        if (RenderMgr->GetLastRenderedMesh() != staticMesh->GetFile())
+                        {
+                            DefaultEffect->SetTexture("tColorMap", ResourceMgr->LoadTexture(Diffuse[i]));
+                            DefaultEffect->SetTexture("normalMapTexture", ResourceMgr->LoadTexture(Normal[i]));
+                            RenderMgr->SetLastRenderedMesh(staticMesh->GetFile());
+                        }
+
                         DefaultEffect->SetMatrix("matWorld", &matWorld);
                         DefaultEffect->SetMatrix("matWorldIT", &matWorldIT);
                         DefaultEffect->CommitChanges();

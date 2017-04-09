@@ -91,6 +91,7 @@ namespace BONE_GRAPHICS
 		void AddObjects(GameObject** objects, int size);
 
 		void SortPriorityObject();
+        void SortRenderOptimizeObject();
 
         void SetEditorScene();
         bool IsEditorScene();

@@ -10,6 +10,7 @@
 #include "PhysicsListener.h"
 #include "etuImage.h"
 #include "Rp3dRigidBody.h"
+#include "StaticMesh.h"
 
 #pragma warning(disable:4996)
 
@@ -254,11 +255,36 @@ namespace BONE_GRAPHICS
         }
     };
 
+    class ObjSortClass2 {
+    public:
+        bool operator() (GameObject* left, GameObject* right) const {
+            auto leftCom = GET_STATIC_MESH(left);
+            auto rightCom = GET_STATIC_MESH(right);
+
+            if (leftCom != nullptr && rightCom != nullptr)
+                return leftCom->GetFile() < rightCom->GetFile();
+            
+            if (leftCom == nullptr && rightCom != nullptr)
+                return true;
+
+            if (leftCom != nullptr && rightCom == nullptr)
+                return false;
+
+            return false;
+        }
+    };
+
     void Scene::SortPriorityObject()
     {
         objectList.sort(ObjSortClass());
         staticObjectList.sort(ObjSortClass());
     }
+
+    void Scene::SortRenderOptimizeObject()
+    {
+        objectList.sort(ObjSortClass2());
+        staticObjectList.sort(ObjSortClass2());
+     }
 
     void Scene::AddObjects(GameObject** objects, int size)
     {
