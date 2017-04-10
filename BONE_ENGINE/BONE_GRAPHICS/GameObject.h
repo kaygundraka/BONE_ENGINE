@@ -8,7 +8,7 @@ namespace BONE_GRAPHICS
     public:
         enum PIPE_LINE
         {
-            DIRECT_DEFAULT,
+            DIRECT_DEFAULT = 0,
             DEFAULT_SHADER,
             CUSTOM_SHADER
         };

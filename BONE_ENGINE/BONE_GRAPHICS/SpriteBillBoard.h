@@ -9,7 +9,14 @@ using namespace BONE_SYSTEM;
 
 namespace BONE_GRAPHICS
 {
-	class SpriteBillBoard : public Component
+    typedef struct _SPRITE_INFO {
+        int width;
+        int height;
+        int animationCut;
+        int animationScene;
+    } SPRITE_INFO;
+
+    class SpriteBillBoard : public Component
 	{
 	public:
 		enum RENDER_MODE {
@@ -41,6 +48,8 @@ namespace BONE_GRAPHICS
 		RENDER_MODE renderMode;
 		bool IsInit;
 
+        bool fullAnimations;
+
 	public:
 		void SetAnimation(int width, int height, int animationCut, int animationScene, float alpha);
 
@@ -52,8 +61,13 @@ namespace BONE_GRAPHICS
 		void SetRectSize(float width, float height);
 		Vec2 GetRectSize();
 
+        SPRITE_INFO GetSpriteInfo();
+
 		SpriteBillBoard();
 		virtual ~SpriteBillBoard();
+
+        void IsFullAnimation(bool isFull);
+        bool IsFullAnimation();
 
         void LoadContent();
         void Render(IShader* shaderOpt, GameObject* cameraObject);

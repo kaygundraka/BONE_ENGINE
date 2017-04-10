@@ -430,13 +430,15 @@ namespace BONE_GRAPHICS
         j["IsActive"] = isActive;
         j["IsStatic"] = isStatic;
         j["IsEditorLock"] = isEditorLock;
+        j["PipeLine"] = (int)pipeLine;
+
         
         for (auto iter = childs.begin(); iter != childs.end(); iter++)
             j["ChildObjects"].push_back((*iter)->GetPrfabName());
 
         for each(auto item in components)
             if (item.second->IsScript())
-                j["8.Script"].push_back(item.second->GetTypeName());
+                j["7.Script"].push_back(item.second->GetTypeName());
          
         for each(auto item in components)
         {
@@ -446,20 +448,20 @@ namespace BONE_GRAPHICS
                 auto Rotation = ((Transform3D*)(item.second))->GetRotateAngle();
                 auto Scale = ((Transform3D*)(item.second))->GetScale();
 
-                j["1.Transform3D"]["Position"] = { Position.x, Position.y, Position.z };
-                j["1.Transform3D"]["Rotation"] = { Rotation.x, Rotation.y, Rotation.z };
-                j["1.Transform3D"]["Scale"] = { Scale.x, Scale.y, Scale.z };
+                j["0.Transform3D"]["Position"] = { Position.x, Position.y, Position.z };
+                j["0.Transform3D"]["Rotation"] = { Rotation.x, Rotation.y, Rotation.z };
+                j["0.Transform3D"]["Scale"] = { Scale.x, Scale.y, Scale.z };
             }
             else if (item.first == "Camera")
             {
-                j["2.Camera"]["ID"] = ((Camera*)(item.second))->GetID();
-                j["2.Camera"]["Type"] = ((Camera*)(item.second))->GetProjectionType();
-                j["2.Camera"]["Width"] = ((Camera*)(item.second))->GetScreenWidth();
-                j["2.Camera"]["Height"] = ((Camera*)(item.second))->GetScreenHeight();
-                j["2.Camera"]["farDist"] = ((Camera*)(item.second))->GetFarDistance();
-                j["2.Camera"]["nearDist"] = ((Camera*)(item.second))->GetNearDistance();
-                j["2.Camera"]["fov"] = ((Camera*)(item.second))->GetFov();
-                j["2.Camera"]["UpVector"] = {
+                j["1.Camera"]["ID"] = ((Camera*)(item.second))->GetID();
+                j["1.Camera"]["Type"] = ((Camera*)(item.second))->GetProjectionType();
+                j["1.Camera"]["Width"] = ((Camera*)(item.second))->GetScreenWidth();
+                j["1.Camera"]["Height"] = ((Camera*)(item.second))->GetScreenHeight();
+                j["1.Camera"]["farDist"] = ((Camera*)(item.second))->GetFarDistance();
+                j["1.Camera"]["nearDist"] = ((Camera*)(item.second))->GetNearDistance();
+                j["1.Camera"]["fov"] = ((Camera*)(item.second))->GetFov();
+                j["1.Camera"]["UpVector"] = {
                     ((Camera*)(item.second))->GetCameraUp().x,
                     ((Camera*)(item.second))->GetCameraUp().y,
                     ((Camera*)(item.second))->GetCameraUp().z
@@ -468,8 +470,8 @@ namespace BONE_GRAPHICS
             else if (item.first == "Collision")
             {
                 auto Type = ((Collision*)(item.second))->GetCollisionType();
-                j["3.Collision"]["Type"] = (int)Type;
-                j["3.Collision"]["Pivot"] = {
+                j["2.Collision"]["Type"] = (int)Type;
+                j["2.Collision"]["Pivot"] = {
                     ((Collision*)(item.second))->GetModelPivot().x,
                     ((Collision*)(item.second))->GetModelPivot().y,
                     ((Collision*)(item.second))->GetModelPivot().z
@@ -477,34 +479,34 @@ namespace BONE_GRAPHICS
 
                 if (Type == Collision::COLL_BOX)
                 {
-                    j["3.Collision"]["HalfExtens"] = {
+                    j["2.Collision"]["HalfExtens"] = {
                         ((Collision*)(item.second))->GetHalfExtens().x,
                         ((Collision*)(item.second))->GetHalfExtens().y,
                         ((Collision*)(item.second))->GetHalfExtens().z
                     };
                 }
                 else if (Type == Collision::COLL_SPHERE)
-                    j["3.Collision"]["Radius"] = ((Collision*)(item.second))->GetRadius();
+                    j["2.Collision"]["Radius"] = ((Collision*)(item.second))->GetRadius();
                 else
                 {
-                    j["3.Collision"]["Radius"] = ((Collision*)(item.second))->GetRadius();
-                    j["3.Collision"]["Height"] = ((Collision*)(item.second))->GetHeight();
+                    j["2.Collision"]["Radius"] = ((Collision*)(item.second))->GetRadius();
+                    j["2.Collision"]["Height"] = ((Collision*)(item.second))->GetHeight();
                 }
             }
             else if (item.first == "RigidBody")
             {
-                j["4.RigidBody"]["Type"] = (int)(((RigidBody*)(item.second))->GetType());
-                j["4.RigidBody"]["Mass"] = ((RigidBody*)(item.second))->GetMass();
-                j["4.RigidBody"]["EnableGravity"] = ((RigidBody*)(item.second))->IsEnableGravity();
-                j["4.RigidBody"]["Bounciness"] = ((RigidBody*)(item.second))->GetBounciness();
-                j["4.RigidBody"]["FricitionCoefficient"] = ((RigidBody*)(item.second))->GetFrictionCoefficient();
-                j["4.RigidBody"]["IsAllowedToSleep"] = ((RigidBody*)(item.second))->GetIsAllowedToSleep();
-                j["4.RigidBody"]["Pivot"] = {
+                j["3.RigidBody"]["Type"] = (int)(((RigidBody*)(item.second))->GetType());
+                j["3.RigidBody"]["Mass"] = ((RigidBody*)(item.second))->GetMass();
+                j["3.RigidBody"]["EnableGravity"] = ((RigidBody*)(item.second))->IsEnableGravity();
+                j["3.RigidBody"]["Bounciness"] = ((RigidBody*)(item.second))->GetBounciness();
+                j["3.RigidBody"]["FricitionCoefficient"] = ((RigidBody*)(item.second))->GetFrictionCoefficient();
+                j["3.RigidBody"]["IsAllowedToSleep"] = ((RigidBody*)(item.second))->GetIsAllowedToSleep();
+                j["3.RigidBody"]["Pivot"] = {
                     ((RigidBody*)(item.second))->GetPosOnPivot().x,
                     ((RigidBody*)(item.second))->GetPosOnPivot().y,
                     ((RigidBody*)(item.second))->GetPosOnPivot().z
                 };
-                j["4.RigidBody"]["LockRotation"] = {
+                j["3.RigidBody"]["LockRotation"] = {
                     ((RigidBody*)(item.second))->IsLockedRotationX(),
                     ((RigidBody*)(item.second))->IsLockedRotationY(),
                     ((RigidBody*)(item.second))->IsLockedRotationZ()
@@ -518,19 +520,19 @@ namespace BONE_GRAPHICS
                 auto Specular = ((Material*)(item.second))->GetSpecular();
                 auto Shininess = ((Material*)(item.second))->GetShininess();
 
-                j["5.Material"]["Ambient"] = { Ambient.r, Ambient.g, Ambient.b, Ambient.a };
-                j["5.Material"]["Diffuse"] = { Diffuse.r, Diffuse.g, Diffuse.b, Diffuse.a };
-                j["5.Material"]["Emissive"] = { Emissive.r, Emissive.g, Emissive.b, Emissive.a };
-                j["5.Material"]["Specular"] = { Specular.r, Specular.g, Specular.b, Specular.a };
-                j["5.Material"]["Shininess"] = Shininess;
+                j["4.Material"]["Ambient"] = { Ambient.r, Ambient.g, Ambient.b, Ambient.a };
+                j["4.Material"]["Diffuse"] = { Diffuse.r, Diffuse.g, Diffuse.b, Diffuse.a };
+                j["4.Material"]["Emissive"] = { Emissive.r, Emissive.g, Emissive.b, Emissive.a };
+                j["4.Material"]["Specular"] = { Specular.r, Specular.g, Specular.b, Specular.a };
+                j["4.Material"]["Shininess"] = Shininess;
             }
             else if (item.first == "StaticMesh")
             {
-                j["6.StaticMesh"]["FileName"] = ((StaticMesh*)(item.second))->GetFile();
+                j["5.StaticMesh"]["FileName"] = ((StaticMesh*)(item.second))->GetFile();
             }
             else if (item.first == "SkinnedMesh")
             {
-                j["7.SkinnedMesh"]["FileName"] = ((SkinnedMesh*)(item.second))->GetFile();
+                j["6.SkinnedMesh"]["FileName"] = ((SkinnedMesh*)(item.second))->GetFile();
             }
             else if (item.first == "SoundClip")
             {
@@ -538,12 +540,23 @@ namespace BONE_GRAPHICS
                 
                 for each(auto var in *Clips)
                 {
-                    j["9.SoundClip"]["Clips"][var.first]["Loop"] = var.second.loop;
-                    j["9.SoundClip"]["Clips"][var.first]["MinDist"] = var.second.minDist;
-                    j["9.SoundClip"]["Clips"][var.first]["MaxDist"] = var.second.maxDist;
-                    j["9.SoundClip"]["Clips"][var.first]["StartPaused"] = var.second.startPaused;
-                    j["9.SoundClip"]["Clips"][var.first]["Volume"] = var.second.volume;
+                    j["8.SoundClip"]["Clips"][var.first]["Loop"] = var.second.loop;
+                    j["8.SoundClip"]["Clips"][var.first]["MinDist"] = var.second.minDist;
+                    j["8.SoundClip"]["Clips"][var.first]["MaxDist"] = var.second.maxDist;
+                    j["8.SoundClip"]["Clips"][var.first]["StartPaused"] = var.second.startPaused;
+                    j["8.SoundClip"]["Clips"][var.first]["Volume"] = var.second.volume;
                 }
+            }
+            else if (item.first == "SpriteBillBoard")
+            {
+                auto Info = ((SpriteBillBoard*)item.second)->GetSpriteInfo();
+
+                j["9.SpriteBillBoard"]["Texture"] = ((SpriteBillBoard*)item.second)->GetTexture();
+                j["9.SpriteBillBoard"]["Width"] = Info.width;
+                j["9.SpriteBillBoard"]["Height"] = Info.height;
+                j["9.SpriteBillBoard"]["AnimationCut"] = Info.animationCut;
+                j["9.SpriteBillBoard"]["AnimationScene"] = Info.animationScene;
+                j["9.SpriteBillBoard"]["IsFullAnimation"] = ((SpriteBillBoard*)item.second)->IsFullAnimation();
             }
         }
 
@@ -585,6 +598,10 @@ namespace BONE_GRAPHICS
             {
                 this->SetPriority(j["Priority"].get<int>());
             }
+            else if (TypeName == "PipeLine")
+            {
+                this->SetPipeLine((GameObject::PIPE_LINE)j["PipeLine"].get<int>());
+            }
             else if (TypeName == "IsActive")
             {
                 this->SetActive(j["IsActive"].get<bool>());
@@ -613,11 +630,11 @@ namespace BONE_GRAPHICS
             
                 this->AttachParent(Parent);
             }
-            else if (TypeName == "1.Transform3D")
+            else if (TypeName == "0.Transform3D")
             {
-                auto Position = j["1.Transform3D"]["Position"].get<std::vector<double>>();
-                auto Rotation = j["1.Transform3D"]["Rotation"].get<std::vector<double>>();
-                auto Scale = j["1.Transform3D"]["Scale"].get<std::vector<double>>();
+                auto Position = j["0.Transform3D"]["Position"].get<std::vector<double>>();
+                auto Rotation = j["0.Transform3D"]["Rotation"].get<std::vector<double>>();
+                auto Scale = j["0.Transform3D"]["Scale"].get<std::vector<double>>();
 
                 Transform3D* tr = (Transform3D*)GetComponent("Transform3D");
 
@@ -631,29 +648,29 @@ namespace BONE_GRAPHICS
                     tr->SetScale(Scale[0], Scale[1], Scale[2]);
                 }
             }
-            else if (TypeName == "2.Camera")
+            else if (TypeName == "1.Camera")
             {
-                auto UpVector = j["2.Camera"]["UpVector"].get<std::vector<double>>();
+                auto UpVector = j["1.Camera"]["UpVector"].get<std::vector<double>>();
                 
                 Camera* camera = (Camera*)GetComponent("Camera");
 
                 if (camera == nullptr)
                 {
                     camera = new Camera(
-                        j["2.Camera"]["ID"],
-                        j["2.Camera"]["Type"],
+                        j["1.Camera"]["ID"],
+                        j["1.Camera"]["Type"],
                         Vec3(UpVector[0], UpVector[1], UpVector[2]),
-                        j["2.Camera"]["Width"],
-                        j["2.Camera"]["Height"],
-                        j["2.Camera"]["farDist"],
-                        j["2.Camera"]["nearDist"],
-                        j["2.Camera"]["fov"]
+                        j["1.Camera"]["Width"],
+                        j["1.Camera"]["Height"],
+                        j["1.Camera"]["farDist"],
+                        j["1.Camera"]["nearDist"],
+                        j["1.Camera"]["fov"]
                     );
 
                     AddComponent(camera);
                 }
             }
-            else if (TypeName == "3.Collision")
+            else if (TypeName == "2.Collision")
             {
                 Collision* collision = (Collision*)GetComponent("Collision");
 
@@ -661,40 +678,40 @@ namespace BONE_GRAPHICS
                 {
                     collision = new Collision(this);
 
-                    Collision::COLLISION_TYPE Type = (Collision::COLLISION_TYPE)j["3.Collision"]["Type"].get<int>();
+                    Collision::COLLISION_TYPE Type = (Collision::COLLISION_TYPE)j["2.Collision"]["Type"].get<int>();
 
-                    auto Pivot = j["3.Collision"]["Pivot"].get<std::vector<double>>();
+                    auto Pivot = j["2.Collision"]["Pivot"].get<std::vector<double>>();
                     
                     if (Type == Collision::COLL_BOX)
                     {
-                        auto HalfExtens = j["3.Collision"]["HalfExtens"].get<std::vector<double>>();
+                        auto HalfExtens = j["2.Collision"]["HalfExtens"].get<std::vector<double>>();
 
                         collision->CreateBox(Vector3((float)HalfExtens[0], (float)HalfExtens[1], (float)HalfExtens[2]));
                     }
                     else if (Type == Collision::COLL_CAPSULE)
                     {
-                        auto Radius = j["3.Collision"]["Radius"].get<double>();
-                        auto Height = j["3.Collision"]["Height"].get<double>();
+                        auto Radius = j["2.Collision"]["Radius"].get<double>();
+                        auto Height = j["2.Collision"]["Height"].get<double>();
 
                         collision->CreateCapsule(Radius, Height);
                     }
                     else if (Type == Collision::COLL_CONE)
                     {
-                        auto Radius = j["3.Collision"]["Radius"].get<double>();
-                        auto Height = j["3.Collision"]["Height"].get<double>();
+                        auto Radius = j["2.Collision"]["Radius"].get<double>();
+                        auto Height = j["2.Collision"]["Height"].get<double>();
 
                         collision->CreateCone(Radius, Height);
                     }
                     else if (Type == Collision::COLL_CYLINDER)
                     {
-                        auto Radius = j["3.Collision"]["Radius"].get<double>();
-                        auto Height = j["3.Collision"]["Height"].get<double>();
+                        auto Radius = j["2.Collision"]["Radius"].get<double>();
+                        auto Height = j["2.Collision"]["Height"].get<double>();
 
                         collision->CreateCylinder(Radius, Height);
                     }
                     else if (Type == Collision::COLL_SPHERE)
                     {
-                        auto Radius = j["3.Collision"]["Radius"].get<double>();
+                        auto Radius = j["2.Collision"]["Radius"].get<double>();
                         
                         collision->CreateSphere(Radius);
                     }
@@ -710,7 +727,7 @@ namespace BONE_GRAPHICS
                     AddComponent(collision);
                 }
             }
-            else if (TypeName == "4.RigidBody")
+            else if (TypeName == "3.RigidBody")
             {
                 RigidBody* rigidBody = (RigidBody*)GetComponent("RigidBody");
 
@@ -718,14 +735,14 @@ namespace BONE_GRAPHICS
                 {
                     rigidBody = new RigidBody();
 
-                    reactphysics3d::BodyType Type = (reactphysics3d::BodyType)j["4.RigidBody"]["Type"].get<int>();
-                    auto Mass =                 j["4.RigidBody"]["Mass"].get<double>();
-                    auto EnableGravity =        j["4.RigidBody"]["EnableGravity"].get<bool>();
-                    auto Bounciness =           j["4.RigidBody"]["Bounciness"].get<double>();
-                    auto FricitionCoefficient = j["4.RigidBody"]["FricitionCoefficient"].get<double>();
-                    auto IsAllowedToSleep =     j["4.RigidBody"]["IsAllowedToSleep"].get<bool>();
-                    auto Pivot =                j["4.RigidBody"]["Pivot"].get<std::vector<double>>();
-                    auto LockRotation =         j["4.RigidBody"]["LockRotation"].get<std::vector<bool>>();
+                    reactphysics3d::BodyType Type = (reactphysics3d::BodyType)j["3.RigidBody"]["Type"].get<int>();
+                    auto Mass =                 j["3.RigidBody"]["Mass"].get<double>();
+                    auto EnableGravity =        j["3.RigidBody"]["EnableGravity"].get<bool>();
+                    auto Bounciness =           j["3.RigidBody"]["Bounciness"].get<double>();
+                    auto FricitionCoefficient = j["3.RigidBody"]["FricitionCoefficient"].get<double>();
+                    auto IsAllowedToSleep =     j["3.RigidBody"]["IsAllowedToSleep"].get<bool>();
+                    auto Pivot =                j["3.RigidBody"]["Pivot"].get<std::vector<double>>();
+                    auto LockRotation =         j["3.RigidBody"]["LockRotation"].get<std::vector<bool>>();
                     
                     if (rigidBody->SetInfo(this, Mass))
                     {
@@ -751,12 +768,12 @@ namespace BONE_GRAPHICS
                     }
                 }
             }
-            else if (TypeName == "5.Material")
+            else if (TypeName == "4.Material")
             {
-                auto Ambient = j["5.Material"]["Ambient"].get<std::vector<double>>();
-                auto Diffuse = j["5.Material"]["Diffuse"].get<std::vector<double>>();
-                auto Emissive = j["5.Material"]["Emissive"].get<std::vector<double>>();
-                auto Specular = j["5.Material"]["Specular"].get<std::vector<double>>();
+                auto Ambient = j["4.Material"]["Ambient"].get<std::vector<double>>();
+                auto Diffuse = j["4.Material"]["Diffuse"].get<std::vector<double>>();
+                auto Emissive = j["4.Material"]["Emissive"].get<std::vector<double>>();
+                auto Specular = j["4.Material"]["Specular"].get<std::vector<double>>();
 
                 Material* material = (Material*)GetComponent("Material");
 
@@ -768,12 +785,12 @@ namespace BONE_GRAPHICS
                     material->SetDiffuse(Diffuse[0], Diffuse[1], Diffuse[2], Diffuse[3]);
                     material->SetEmissive(Emissive[0], Emissive[1], Emissive[2], Emissive[3]);
                     material->SetSpecular(Specular[0], Specular[1], Specular[2], Specular[3]);
-                    material->SetShininess(j["5.Material"]["Shininess"]);
+                    material->SetShininess(j["4.Material"]["Shininess"]);
                     
                     AddComponent(material);
                 }
             }
-            else if (TypeName == "6.StaticMesh")
+            else if (TypeName == "5.StaticMesh")
             {
                 StaticMesh* staticMesh = (StaticMesh*)GetComponent("StaticMesh");
 
@@ -781,64 +798,82 @@ namespace BONE_GRAPHICS
                 {
                     staticMesh = new StaticMesh();
 
-                    staticMesh->SetFile(j["6.StaticMesh"]["FileName"]);
+                    staticMesh->SetFile(j["5.StaticMesh"]["FileName"]);
 
                     AddComponent(staticMesh);
                 }
             }
-            else if (TypeName == "7.SkinnedMesh")
+            else if (TypeName == "6.SkinnedMesh")
             {
                 SkinnedMesh* skinnedMesh = (SkinnedMesh*)GetComponent("SkinnedMesh");
 
                 if (skinnedMesh == nullptr)
                 {
                     skinnedMesh = new SkinnedMesh();
-                    skinnedMesh->SetFile(j["7.SkinnedMesh"]["FileName"]);
+                    skinnedMesh->SetFile(j["6.SkinnedMesh"]["FileName"]);
                     AddComponent(skinnedMesh);
                 }
             }
-            else if (TypeName == "8.Script")
+            else if (TypeName == "7.Script")
             {
-                auto Scripts = j["8.Script"].get<std::vector<std::string>>();
+                auto Scripts = j["7.Script"].get<std::vector<std::string>>();
 
                 for each(auto item in Scripts)
                     SceneMgr->AddScript(this, item);
             }
-            else if (TypeName == "9.SoundClip")
+            else if (TypeName == "8.SoundClip")
             {
                 SoundClip* soundClip = new SoundClip();
                 soundClip->AttachObject(this);
 
-                if (j["9.SoundClip"]["Clips"].is_array())
+                if (j["8.SoundClip"]["Clips"].is_array())
                 {
-                    auto Clips = j["9.SoundClip"]["Clips"].get<std::vector<std::string>>();
+                    auto Clips = j["8.SoundClip"]["Clips"].get<std::vector<std::string>>();
 
                     for (auto iter = Clips.begin(); iter != Clips.end(); iter++)
                     {
-                        auto Loop = j["9.SoundClip"]["Clips"][*iter]["Loop"];
-                        auto MinDist = j["9.SoundClip"]["Clips"][*iter]["MinDist"];
-                        auto MaxDist = j["9.SoundClip"]["Clips"][*iter]["MaxDist"];
-                        auto StartPaused = j["9.SoundClip"]["Clips"][*iter]["StartPaused"];
-                        auto Volume = j["9.SoundClip"]["Clips"][*iter]["Volume"];
+                        auto Loop = j["8.SoundClip"]["Clips"][*iter]["Loop"];
+                        auto MinDist = j["8.SoundClip"]["Clips"][*iter]["MinDist"];
+                        auto MaxDist = j["8.SoundClip"]["Clips"][*iter]["MaxDist"];
+                        auto StartPaused = j["8.SoundClip"]["Clips"][*iter]["StartPaused"];
+                        auto Volume = j["8.SoundClip"]["Clips"][*iter]["Volume"];
 
                         soundClip->AddClip(*iter, Volume, Loop, StartPaused, MinDist, MaxDist);
                     }
                 }
                 else
                 {
-                    json::iterator it = j["9.SoundClip"]["Clips"].begin();
+                    json::iterator it = j["8.SoundClip"]["Clips"].begin();
 
-                    auto Loop = j["9.SoundClip"]["Clips"][it.key()]["Loop"];
-                    auto MinDist = j["9.SoundClip"]["Clips"][it.key()]["MinDist"];
-                    auto MaxDist = j["9.SoundClip"]["Clips"][it.key()]["MaxDist"];
-                    auto StartPaused = j["9.SoundClip"]["Clips"][it.key()]["StartPaused"];
-                    auto Volume = j["9.SoundClip"]["Clips"][it.key()]["Volume"];
+                    auto Loop = j["8.SoundClip"]["Clips"][it.key()]["Loop"];
+                    auto MinDist = j["8.SoundClip"]["Clips"][it.key()]["MinDist"];
+                    auto MaxDist = j["8.SoundClip"]["Clips"][it.key()]["MaxDist"];
+                    auto StartPaused = j["8.SoundClip"]["Clips"][it.key()]["StartPaused"];
+                    auto Volume = j["8.SoundClip"]["Clips"][it.key()]["Volume"];
 
                     soundClip->AddClip(it.key(), Volume, Loop, StartPaused, MinDist, MaxDist);
 
                 }
 
                 AddComponent(soundClip);
+            }
+            else if (TypeName == "9.SpriteBillBoard")
+            {
+                SpriteBillBoard* sb = new SpriteBillBoard();
+
+                sb->SetTexture(j["9.SpriteBillBoard"]["Texture"]);
+                sb->SetAnimation(
+                    j["9.SpriteBillBoard"]["Width"],
+                    j["9.SpriteBillBoard"]["Height"],
+                    j["9.SpriteBillBoard"]["AnimationCut"],
+                    j["9.SpriteBillBoard"]["AnimationScene"],
+                    255
+                );
+                sb->IsFullAnimation(
+                    j["9.SpriteBillBoard"]["IsFullAnimation"]
+                );
+
+                AddComponent(sb);
             }
         }
 
@@ -934,6 +969,13 @@ namespace BONE_GRAPHICS
         auto soundClip = this->GetComponent("SoundClip");
         if (soundClip != nullptr)
             ((SoundClip*)soundClip)->Update();
+
+        auto spriteBillboard = this->GetComponent("SpriteBillBoard");
+        if (spriteBillboard != nullptr)
+            if (((SpriteBillBoard*)spriteBillboard)->IsFullAnimation())
+                ((SpriteBillBoard*)spriteBillboard)->PlayFullAnimation(SceneMgr->GetTimeDelta());
+            else
+                ((SpriteBillBoard*)spriteBillboard)->PlayCutAnimation(SceneMgr->GetTimeDelta());
 
         if (!enableScript)
             return;

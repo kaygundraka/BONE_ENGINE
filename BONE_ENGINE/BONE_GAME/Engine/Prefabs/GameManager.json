@@ -1,5 +1,5 @@
 {
-    "1.Transform3D": {
+    "0.Transform3D": {
         "Position": [
             0.0,
             0.0,
@@ -16,12 +16,13 @@
             1.0
         ]
     },
-    "8.Script": [
+    "7.Script": [
         "GameManager"
     ],
     "IsActive": true,
     "IsEditorLock": false,
     "IsStatic": false,
+    "PipeLine": 1,
     "Priority": 1,
     "Tag": ""
 }

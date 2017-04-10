@@ -1108,6 +1108,15 @@ void BoneEditor::UpdateFrame()
                         auto Priority = (*iter)->GetPriority();
                         ImGui::InputInt("Priority", &Priority);
 
+                        auto PipeLine = (int)(*iter)->GetPipeLine();
+
+                        char* PipeLines[] = {
+                            "DIRECT_DEFAULT", "DEFAULT_SHADER", "CUSTOM_SHADER"
+                        };
+
+                        ImGui::Combo("PipeLine", &PipeLine, PipeLines, 3);
+                        
+                        (*iter)->SetPipeLine((GameObject::PIPE_LINE)PipeLine);
                         (*iter)->SetActive(IsActive);
                         (*iter)->SetStatic(IsStatic);
                         (*iter)->SetPriority(Priority);
@@ -1574,7 +1583,7 @@ void BoneEditor::UpdateFrame()
         if (ImGui::IsRootWindowOrAnyChildFocused())
             isFocusedWindow = true;
 
-        const char* listbox_items[] = { "StaticMesh", "Collision", "RigidBody", "SkinnedMesh", "SoundClip", "Material", "Script", "Camera", "TrailRenderer", "BillBoard", "SpriteBillBoard" };
+        const char* listbox_items[] = { "StaticMesh", "Collision", "RigidBody", "SkinnedMesh", "SoundClip", "Material", "Script", "BillBoard", "SpriteBillBoard", "TrailRenderer" };
         static int listbox_item_current = 0;
 
         if (ImGui::CollapsingHeader("[Select Component]"), ImGuiTreeNodeFlags_DefaultOpen)
@@ -1901,30 +1910,69 @@ void BoneEditor::UpdateFrame()
                 delete[] ComboBoxItems;
             }
             break;
-
-            // Camera
+            
+            // BillBoard
             case 7:
             {
 
             }
             break;
 
-            // TrailRenderer
+            // SpriteBillBoard
             case 8:
             {
+                auto Sprites = ResourceMgr->ExistFiles(".\\Resource\\Sprites\\*");
 
+                const int Size = Sprites.size();
+                char** ComboBoxItems = new char*[Size];
+
+                int i = 0;
+                for each(auto item in Sprites)
+                {
+                    ComboBoxItems[i] = new char[64];
+                    strcpy(ComboBoxItems[i], item.c_str());
+                    i++;
+                }
+
+                static int CurItem = 0;
+                ImGui::Combo("Sprites", &CurItem, ComboBoxItems, Size);
+
+                static float Width = 0;
+                static float Height = 0;
+                static int Cut = 0;
+                static int Scene = 0;
+                static float Alpha = 0;
+                static bool Full = 0;
+
+                ImGui::InputFloat("Width", &Width);
+                ImGui::InputFloat("Height", &Height);
+                ImGui::InputInt("Cut", &Cut);
+                ImGui::InputInt("Scene", &Scene);
+                ImGui::InputFloat("Alpha", &Alpha);
+                ImGui::Checkbox("FullAnimation", &Full);
+
+                if (ImGui::Button("Add Component"))
+                {
+                    SpriteBillBoard* sb = new SpriteBillBoard();
+                    sb->SetTexture(ComboBoxItems[CurItem]);
+                    sb->SetAnimation(Width, Height, Cut, Scene, Alpha);
+                    sb->IsFullAnimation(Full);
+                    sb->LoadContent();
+
+                    auto Object = CUR_SCENE->FindObjectByName(currentShowInfoObject);
+                    Object->AddComponent(sb);
+
+                    showAddComponent = false;
+                }
+
+                for (int i = 0; i < Size; i++)
+                    delete ComboBoxItems[i];
+                delete[] ComboBoxItems;
             }
             break;
 
-            // BillBoard
+            // TrailRenderer
             case 9:
-            {
-
-            }
-            break;
-
-            // SpriteBillBoard
-            case 10:
             {
 
             }

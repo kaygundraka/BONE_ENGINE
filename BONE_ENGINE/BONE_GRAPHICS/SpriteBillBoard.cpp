@@ -20,7 +20,7 @@ namespace BONE_GRAPHICS
 		rectWidth = 1;
 		rectHeight = 1;
 
-		renderMode = RENDER_DEFAULT;
+		renderMode = RENDER_ALPHA;
 
 		rightPlay = true;
 	}
@@ -161,6 +161,28 @@ namespace BONE_GRAPHICS
 		return Vec2(rectWidth, rectHeight);
 	}
 
+    void SpriteBillBoard::IsFullAnimation(bool isFull)
+    {
+        fullAnimations = isFull;
+    }
+    
+    bool SpriteBillBoard::IsFullAnimation()
+    {
+        return fullAnimations;
+    }
+
+    SPRITE_INFO SpriteBillBoard::GetSpriteInfo()
+    {
+        SPRITE_INFO info;
+
+        info.width = width;
+        info.height = height;
+        info.animationCut = animeCut;
+        info.animationScene = animeScene;
+
+        return info;
+    }
+
 	void SpriteBillBoard::SetAnimation(int width, int height, int animationCut, int animationScene, float alpha)
 	{
 		this->width = width;
@@ -176,7 +198,7 @@ namespace BONE_GRAPHICS
 
 		curAnimeCut = 0;
 		curAnimeScene = 0;
-		alpha = 255;
+		this->alpha = alpha;
 
 		RECT rect2 = {
 			width / animeCut * curAnimeCut, height / animeScene * curAnimeScene,
@@ -294,46 +316,45 @@ namespace BONE_GRAPHICS
 
 	void SpriteBillBoard::Render(IShader* shaderOpt, GameObject* object)
 	{
-		if (IsInit)
-		{
-			if (target != nullptr)
-			{
-				Vec3 Dir = ((Camera*)target->GetComponent("Camera"))->GetTargetPosition() - ((Transform3D*)target->GetComponent("Transform3D"))->GetPosition();
-				D3DXVec3Normalize(&Dir, &Dir);
+        if (IsInit)
+        {
+            Vec3 Dir = 
+                ((Camera*)(CUR_SCENE->GetCurrentCamera()->GetComponent("Camera")))->GetTargetPosition() 
+                - ((Transform3D*)(CUR_SCENE->GetCurrentCamera()->transform3D))->GetPosition();
+            D3DXVec3Normalize(&Dir, &Dir);
 
-				float x = Dir.x;
-				float y = Dir.y;
-				float z = Dir.z;
+            float x = Dir.x;
+            float y = Dir.y;
+            float z = Dir.z;
 
-				float YAngle = asin(z / (sqrt(pow(x, 2) + pow(z, 2))));
-				float ZAngle = asin(y / (sqrt(pow(x, 2) + pow(y, 2))));
+            float YAngle = asin(z / (sqrt(pow(x, 2) + pow(z, 2))));
+            float ZAngle = asin(y / (sqrt(pow(x, 2) + pow(y, 2))));
 
-				ZAngle = 0;
+            ZAngle = 0;
 
-				if (Dir.x >= 0 && Dir.z >= 0)
-				{
-					YAngle = asin(z / (sqrt(pow(x, 2) + pow(z, 2))));
-				}
-				else if (Dir.x < 0 && Dir.z >= 0)
-				{
-					YAngle = asin(-x / (sqrt(pow(x, 2) + pow(z, 2))));
-                    YAngle += 3.14f / 2;
-				}
-				else if (Dir.z < 0 && Dir.x < 0)
-				{
-					YAngle = asin(-z / (sqrt(pow(x, 2) + pow(z, 2))));
-                    YAngle += 3.14f;
-				}
-				else if (Dir.z < 0 && Dir.x >= 0)
-				{
-					YAngle = asin(x / (sqrt(pow(x, 2) + pow(z, 2))));
-                    YAngle += 3.14f * (3.0f / 2.0f);
-				}
+            if (Dir.x >= 0 && Dir.z >= 0)
+            {
+                YAngle = asin(z / (sqrt(pow(x, 2) + pow(z, 2))));
+            }
+            else if (Dir.x < 0 && Dir.z >= 0)
+            {
+                YAngle = asin(-x / (sqrt(pow(x, 2) + pow(z, 2))));
+                YAngle += 3.14f / 2;
+            }
+            else if (Dir.z < 0 && Dir.x < 0)
+            {
+                YAngle = asin(-z / (sqrt(pow(x, 2) + pow(z, 2))));
+                YAngle += 3.14f;
+            }
+            else if (Dir.z < 0 && Dir.x >= 0)
+            {
+                YAngle = asin(x / (sqrt(pow(x, 2) + pow(z, 2))));
+                YAngle += 3.14f * (3.0f / 2.0f);
+            }
 
-				YAngle += 3.14f + (3.0f / 2.0f);
+            YAngle += 3.14f + (3.0f / 2.0f);
 
-				((Transform3D*)object->GetComponent("Transform3D"))->SetRotate(0, -YAngle, -ZAngle);
-			}
+            ((Transform3D*)object->GetComponent("Transform3D"))->SetRotate(0, -YAngle, -ZAngle);
 
 			Matrix Transform = ((Transform3D*)object->GetComponent("Transform3D"))->GetTransform();
 			RenderMgr->GetDevice()->SetTransform(D3DTS_WORLD, &Transform);

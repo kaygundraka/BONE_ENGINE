@@ -1,0 +1,33 @@
+{
+    "0.Transform3D": {
+        "Position": [
+            253.000015258789,
+            66.0,
+            150.5
+        ],
+        "Rotation": [
+            0.0,
+            0.739386916160583,
+            -0.0
+        ],
+        "Scale": [
+            8.5,
+            30.0000019073486,
+            7.5
+        ]
+    },
+    "9.SpriteBillBoard": {
+        "AnimationCut": 8,
+        "AnimationScene": 4,
+        "Height": 512,
+        "IsFullAnimation": true,
+        "Texture": "fire.png",
+        "Width": 512
+    },
+    "IsActive": true,
+    "IsEditorLock": false,
+    "IsStatic": false,
+    "PipeLine": 0,
+    "Priority": 1,
+    "Tag": ""
+}

@@ -1,5 +1,5 @@
 {
-    "1.Transform3D": {
+    "0.Transform3D": {
         "Position": [
             -151.055038452148,
             8.74075698852539,
@@ -7,8 +7,8 @@
         ],
         "Rotation": [
             0.00113878271076828,
-            -2.75508227787213e-06,
-            -0.000388967659091577
+            -2.75508250524581e-06,
+            -0.000388967775506899
         ],
         "Scale": [
             1.29999995231628,
@@ -16,7 +16,7 @@
             1.29999995231628
         ]
     },
-    "3.Collision": {
+    "2.Collision": {
         "HalfExtens": [
             5.0,
             10.0,
@@ -29,7 +29,7 @@
         ],
         "Type": 0
     },
-    "4.RigidBody": {
+    "3.RigidBody": {
         "Bounciness": 0.0,
         "EnableGravity": true,
         "FricitionCoefficient": 0.0,
@@ -47,7 +47,7 @@
         ],
         "Type": 2
     },
-    "5.Material": {
+    "4.Material": {
         "Ambient": [
             1.0,
             1.0,
@@ -74,15 +74,16 @@
             1.0
         ]
     },
-    "7.SkinnedMesh": {
+    "6.SkinnedMesh": {
         "FileName": "Skeleton.X"
     },
-    "8.Script": [
+    "7.Script": [
         "PlayerCharacter"
     ],
     "IsActive": true,
     "IsEditorLock": false,
     "IsStatic": false,
+    "PipeLine": 1,
     "Priority": 1,
     "Tag": "Player"
 }

@@ -17,6 +17,7 @@
         ".\\Resource\\Mesh\\*",
         ".\\Resource\\Mesh\\Preview\\*",
         ".\\Resource\\SkinnedMesh\\*",
-        ".\\Resource\\Textures\\*"
+        ".\\Resource\\Textures\\*",
+        ".\\Resource\\Sprites\\*"
     ]
 }
