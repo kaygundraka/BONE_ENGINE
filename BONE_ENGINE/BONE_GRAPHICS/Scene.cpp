@@ -537,6 +537,17 @@ namespace BONE_GRAPHICS
             i++;
         }
 
+        for (json::iterator it = j["GraphNode"].begin(); it != j["GraphNode"].end(); ++it) {
+            GraphNode* node = new GraphNode();
+            
+            auto Position = j["GraphNode"][it.key()]["Position"].get<std::vector<double>>();
+            auto ConnectionNodes = j["GraphNode"][it.key()]["Connections"].get<std::vector<std::string>>();
+            node->SetPosition(Vec3(Position[0], Position[1], Position[2]));
+
+            for each (auto var in ConnectionNodes)
+                node->ConnectNode(var);
+        }
+
         for (json::iterator it = j["GameObject"].begin(); it != j["GameObject"].end(); ++it) {
             auto Object = this->FindObjectByName(it.key());
 
@@ -587,6 +598,21 @@ namespace BONE_GRAPHICS
         }
 
         file.close();
+    }
+
+    std::list<GraphNode*> Scene::GetGraphNodes()
+    {
+        return graphNodeList;
+    }
+    
+    void Scene::AddGraphNode(GraphNode* node)
+    {
+        graphNodeList.push_back(node);
+    }
+
+    Vec3 Scene::FindNodeByDistance(Vec3 pos)
+    {
+
     }
 
     void Scene::SetAmbientColor(float r, float g, float b, float a)

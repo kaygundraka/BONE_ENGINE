@@ -53,6 +53,8 @@ namespace BONE_GRAPHICS
         void ShowViewMenu();
         void ShowHelpMenu();
 
+        void ShowGraphNodeInfo(GraphNode* node);
+
         void SelectObject(std::string name);
 
         void ShowObjectInfo(std::string name);

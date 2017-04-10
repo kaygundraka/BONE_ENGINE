@@ -326,6 +326,9 @@
     <ClInclude Include="SoundClip.h">
       <Filter>소스 파일\Core\GameObject\Components\Sound</Filter>
     </ClInclude>
+    <ClInclude Include="GraphNode.h">
+      <Filter>소스 파일\Core\GameObject\BasicGameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -522,6 +525,9 @@
     </ClCompile>
     <ClCompile Include="SoundClip.cpp">
       <Filter>소스 파일\Core\GameObject\Components\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphNode.cpp">
+      <Filter>소스 파일\Core\GameObject\BasicGameObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

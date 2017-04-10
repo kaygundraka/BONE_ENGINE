@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "Skybox.h"
 #include "PointLight.h"
+#include "GraphNode.h"
 #include "PhysicsListener.h"
 
 namespace BONE_GRAPHICS
@@ -15,7 +16,9 @@ namespace BONE_GRAPHICS
 	private:
 		std::list<GameObject*> objectList;
 		std::list<GameObject*> staticObjectList;
+
         std::vector<PointLight*> pointLightList;
+        std::list<GraphNode*> graphNodeList;
 
         etuImage image_LoadingBackground;
 		int cameraIndex;
@@ -125,6 +128,12 @@ namespace BONE_GRAPHICS
 
 		void SetCameraIndex(int index);
 		int GetCameraIndex();
+
+        std::list<GraphNode*> GetGraphNodes();
+        void AddGraphNode(GraphNode* node);
+
+        Vec3 FindNodeByDistance(Vec3 pos);
+        
         
         void SetName(std::string name);
         std::string GetName();

@@ -19,6 +19,7 @@
 #include "PosPivot.h"
 #include "RuntimeCompiler.h"
 #include "LogManager.h"
+#include "GraphNode.h"
 
 #pragma warning (disable:4996)
 using namespace BONE_GRAPHICS;
@@ -285,6 +286,20 @@ void BoneEditor::ShowViewMenu()
             ((PointLight*)var)->SetIcon(show);
     }
 
+    if (ImGui::MenuItem("Show Graph Node Icon"))
+    {
+        static bool show = false;
+        auto NodeList = CUR_SCENE->GetGraphNodes();
+
+        if (show)
+            show = false;
+        else
+            show = true;
+
+        for each(auto var in NodeList)
+            ((GraphNode*)var)->SetIcon(show);
+    }
+
     if (ImGui::MenuItem("Show Main Editor"))
     {
         if (showMainEditor)
@@ -361,6 +376,27 @@ void BoneEditor::ShowEditorMenu()
 
         CUR_SCENE->SetSceneFlag(true);
         SceneMgr->EndScene(CUR_SCENE->GetName());
+    }
+}
+
+void BoneEditor::ShowGraphNodeInfo(GraphNode* node)
+{
+    if (ImGui::TreeNode(node->GetName().c_str()))
+    {
+        float pos[3] = {
+            node->GetPosition().x,
+            node->GetPosition().y,
+            node->GetPosition().z
+        };
+
+        ImGui::DragFloat3("Position", pos, 1.0f);
+
+        char name[20];
+        strcpy(name, node->GetName().c_str());
+
+        ImGui::InputText("Name", name);
+
+        ImGui::TreePop();
     }
 }
 
@@ -1133,6 +1169,16 @@ void BoneEditor::UpdateFrame()
 
                 ImGui::TreePop();
             }
+        }
+
+        if (ImGui::CollapsingHeader("[Graph Menu]", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            auto GraphNodes = CUR_SCENE->GetGraphNodes();
+
+            for each(auto var in GraphNodes)
+            {
+            }
+
         }
 
         if (ImGui::CollapsingHeader("[Light Menu]", ImGuiTreeNodeFlags_DefaultOpen))
