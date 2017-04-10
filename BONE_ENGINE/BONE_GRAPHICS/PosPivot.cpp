@@ -214,10 +214,10 @@ namespace BONE_GRAPHICS
                 ui->SelectObject(selectObject);
         }
         
-        if (selectObject != "")
-        {
-            auto Object = SceneMgr->CurrentScene()->FindObjectByName(selectObject);
+        auto Object = SceneMgr->CurrentScene()->FindObjectByName(selectObject);
 
+        if (selectObject != "" && Object->GetParent() != nullptr)
+        {            
             while (Object->GetParent() != nullptr)
                 Object = Object->GetParent();
             
@@ -265,8 +265,6 @@ namespace BONE_GRAPHICS
 
             if (mesh->CheckMouseRayInMesh((Transform3D*)pivot->transform3D, &Dist))
                 moveValue = Dist;
-
-            auto Object = SceneMgr->CurrentScene()->FindObjectByName(selectObject);
             
             while (Object->GetParent() != nullptr)
             {

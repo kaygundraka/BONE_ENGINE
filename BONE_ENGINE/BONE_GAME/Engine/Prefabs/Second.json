@@ -38,7 +38,7 @@
         "SecondRoomTop2"
     ],
     "IsActive": true,
-    "IsEditorLock": false,
+    "IsEditorLock": true,
     "IsStatic": false,
     "PipeLine": 1,
     "Priority": 1,
