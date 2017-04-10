@@ -192,6 +192,9 @@ namespace BONE_GRAPHICS
 
         for (auto Iter = pointLightList.begin(); Iter != pointLightList.end(); Iter++)
             (*Iter)->Reference();
+
+        for (auto Iter = graphNodeList.begin(); Iter != graphNodeList.end(); Iter++)
+            (*Iter)->Reference();
     }
 
     void Scene::Update()
@@ -458,6 +461,11 @@ namespace BONE_GRAPHICS
         {
             ((PointLight*)var)->SaveInMaps();
         }
+
+        for each(auto var in graphNodeList)
+        {
+            ((GraphNode*)var)->SaveInMaps();
+        }
     }
 
     void Scene::ClearSceneData()
@@ -539,13 +547,22 @@ namespace BONE_GRAPHICS
 
         for (json::iterator it = j["GraphNode"].begin(); it != j["GraphNode"].end(); ++it) {
             GraphNode* node = new GraphNode();
+            node->Init();
+            node->LoadContents();
             
             auto Position = j["GraphNode"][it.key()]["Position"].get<std::vector<double>>();
-            auto ConnectionNodes = j["GraphNode"][it.key()]["Connections"].get<std::vector<std::string>>();
             node->SetPosition(Vec3(Position[0], Position[1], Position[2]));
 
-            for each (auto var in ConnectionNodes)
-                node->ConnectNode(var);
+            if (j["GraphNode"][it.key()].find("Connections") != j["GraphNode"][it.key()].end())
+            {
+                auto ConnectionNodes = j["GraphNode"][it.key()]["Connections"].get<std::vector<std::string>>();
+
+                for each (auto var in ConnectionNodes)
+                    node->ConnectNode(var);
+            }
+
+            node->SetName(it.key());
+            graphNodeList.push_back(node);
         }
 
         for (json::iterator it = j["GameObject"].begin(); it != j["GameObject"].end(); ++it) {
@@ -610,9 +627,21 @@ namespace BONE_GRAPHICS
         graphNodeList.push_back(node);
     }
 
+    void Scene::RemoveGraphNode(GraphNode* node)
+    {
+        for (auto iter = graphNodeList.begin(); iter != graphNodeList.end(); iter++)
+        {
+            if (*iter == node)
+            {
+                graphNodeList.erase(iter);
+                break;
+            }
+        }
+    }
+
     Vec3 Scene::FindNodeByDistance(Vec3 pos)
     {
-
+        return Vec3(0, 0, 0);
     }
 
     void Scene::SetAmbientColor(float r, float g, float b, float a)

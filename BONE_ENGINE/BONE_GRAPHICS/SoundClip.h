@@ -9,7 +9,6 @@ using namespace BONE_SYSTEM;
 namespace BONE_GRAPHICS
 {
     struct Sound {
-        ISoundSource* source;
         ISound* sound;
 
         float volume;
@@ -19,6 +18,11 @@ namespace BONE_GRAPHICS
 
         float minDist;
         float maxDist;
+
+        Sound()
+        {
+            sound = nullptr;
+        }
     };
 
     class SoundClip : public Component
@@ -34,8 +38,10 @@ namespace BONE_GRAPHICS
         void LoadContent();
 
         void AttachObject(GameObject* owner);
+        std::map<std::string, Sound>* GetClips();
 
         void AddClip(std::string file, float volume, bool loop, bool startPaused, float minDist, float maxDist);
+        void ChangeInfo(std::string file, float volume, bool loop, bool startPaused, float minDist, float maxDist);
         void RemoveClip(std::string file);
         
         void Update();

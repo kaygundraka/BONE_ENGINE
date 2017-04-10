@@ -20,6 +20,7 @@
 #include "RuntimeCompiler.h"
 #include "LogManager.h"
 #include "GraphNode.h"
+#include "SoundClip.h"
 
 #pragma warning (disable:4996)
 using namespace BONE_GRAPHICS;
@@ -391,11 +392,57 @@ void BoneEditor::ShowGraphNodeInfo(GraphNode* node)
 
         ImGui::DragFloat3("Position", pos, 1.0f);
 
-        char name[20];
-        strcpy(name, node->GetName().c_str());
+        node->SetPosition(Vec3(pos[0], pos[1], pos[2]));
+        
+        static char Name[20];
+        strcpy(Name, node->GetName().c_str());
 
-        ImGui::InputText("Name", name);
+        ImGui::InputText("Name", Name, 20);
 
+        if (ImGui::Button("Change"))
+            node->SetName(Name);
+
+        if (ImGui::TreeNode("Connections"))
+        {
+            for each(auto var in node->GetConnections())
+                ImGui::Text(var.c_str());
+
+            ImGui::Separator();
+
+            auto GraphNodes = CUR_SCENE->GetGraphNodes();
+            
+            const int Size = GraphNodes.size() - 1;
+            char** ComboBoxItems = new char*[Size];
+
+            int CurItem = 0;
+
+            int i = 0;
+            for each(auto item in GraphNodes)
+            {
+                if (item->GetName() == node->GetName())
+                    continue;
+
+                ComboBoxItems[i] = new char[64];
+                strcpy(ComboBoxItems[i], item->GetName().c_str());
+                
+                i++;
+            }
+
+            ImGui::Combo("Nodes", &CurItem, ComboBoxItems, Size);
+
+            if (ImGui::Button("Connect"))
+                node->ConnectNode(ComboBoxItems[CurItem]);
+            
+            for (int i = 0; i < Size; i++)
+                delete ComboBoxItems[i];
+            delete[] ComboBoxItems;
+
+            ImGui::TreePop();
+        }
+
+        if (ImGui::Button("Remove"))
+            CUR_SCENE->RemoveGraphNode(node);
+        
         ImGui::TreePop();
     }
 }
@@ -741,6 +788,89 @@ void BoneEditor::ShowObjectInfo(std::string name)
                             continue;
                         }
                     }
+                    else if (item->first == "SoundClip")
+                    {
+                        if (ImGui::TreeNode("Clips"))
+                        {
+                            for each (auto var in *((SoundClip*)item->second)->GetClips())
+                            {
+                                if (ImGui::TreeNode(var.first.c_str()))
+                                {
+                                    auto Loop = var.second.loop;
+                                    auto MinDist = var.second.minDist;
+                                    auto MaxDist = var.second.maxDist;
+                                    auto StartPaused = var.second.startPaused;
+                                    auto Volume = var.second.volume;
+
+                                    ImGui::Checkbox("Loop", &Loop);
+                                    ImGui::Checkbox("StartPaused", &StartPaused);
+                                    ImGui::DragFloat("MinDist", &MinDist);
+                                    ImGui::DragFloat("MaxDist", &MaxDist);
+                                    ImGui::DragFloat("Volume", &Volume);
+
+                                    ((SoundClip*)item->second)->ChangeInfo(var.first, Volume, Loop, StartPaused, MinDist, MaxDist);
+
+                                    if (ImGui::Button("Play"))
+                                        ((SoundClip*)item->second)->PlaySoundA(var.first);
+
+                                    if (ImGui::Button("Stop"))
+                                        ((SoundClip*)item->second)->StopSound(var.first);
+
+                                    if (ImGui::Button("Remove"))
+                                    {
+                                        ((SoundClip*)item->second)->RemoveClip(var.first);
+                                    
+                                        ImGui::TreePop();
+                                        break;
+                                    }
+
+                                    ImGui::TreePop();
+                                }
+                            }
+
+                            ImGui::TreePop();
+                        }
+                        
+                        if (ImGui::TreeNode("New Clips"))
+                        {
+                            auto Sounds = ResourceMgr->ExistFiles(".\\Resource\\Sound\\*");
+
+                            const int Size = Sounds.size();
+                            char** ComboBoxItems = new char*[Size - 1];
+
+                            int i = 0;
+                            for each(auto iter in Sounds)
+                            {
+                                ComboBoxItems[i] = new char[64];
+                                strcpy(ComboBoxItems[i], iter.c_str());
+                                i++;
+                            }
+
+                            static int CurItem = 0;
+                            ImGui::Combo("Sounds", &CurItem, ComboBoxItems, Size);
+
+                            static bool Loop;
+                            static float MinDist;
+                            static float MaxDist;
+                            static bool StartPaused;
+                            static float Volume;
+                            
+                            ImGui::Checkbox("Loop", &Loop);
+                            ImGui::Checkbox("StartPaused", &StartPaused);
+                            ImGui::DragFloat("MinDist", &MinDist);
+                            ImGui::DragFloat("MaxDist", &MaxDist);
+                            ImGui::DragFloat("Volume", &Volume);
+
+                            if (ImGui::Button("Add New Clip"))
+                                ((SoundClip*)item->second)->AddClip(ComboBoxItems[CurItem], Volume, Loop, StartPaused, MinDist, MaxDist);
+
+                            for (int i = 0; i < Size; i++)
+                                delete ComboBoxItems[i];
+                            delete[] ComboBoxItems;
+
+                            ImGui::TreePop();
+                        }
+                    }
 
                     ImGui::TreePop();
                 }
@@ -888,7 +1018,7 @@ void BoneEditor::UpdateFrame()
         
     if (showMainEditor)
     {
-        if (!ImGui::Begin(" Scene GameObject List", &showMainEditor, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
+        if (!ImGui::Begin(" Scene GameObject List", &showMainEditor, ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
         {
             ImGui::End();
             return;
@@ -1174,11 +1304,28 @@ void BoneEditor::UpdateFrame()
         if (ImGui::CollapsingHeader("[Graph Menu]", ImGuiTreeNodeFlags_DefaultOpen))
         {
             auto GraphNodes = CUR_SCENE->GetGraphNodes();
+            ImGui::Text("[New Node]");
+            static char Name[20] = "";
+            ImGui::InputText("Name", Name, 20);
+
+            if (ImGui::Button("Create"))
+            {
+                GraphNode* Node = new GraphNode();
+                Node->Init();
+                Node->Reference();
+                Node->LoadContents();
+                Node->SetName(Name);
+
+                CUR_SCENE->AddGraphNode(Node);
+            }
+
+            ImGui::Separator();
+            ImGui::Text("[GraphNodes]");
 
             for each(auto var in GraphNodes)
             {
+                ShowGraphNodeInfo(var);
             }
-
         }
 
         if (ImGui::CollapsingHeader("[Light Menu]", ImGuiTreeNodeFlags_DefaultOpen))
@@ -1329,7 +1476,7 @@ void BoneEditor::UpdateFrame()
                     CUR_SCENE->SetSkybox(ListBoxItems[CurItem], TypeName);
 
                 for (int i = 0; i<Size; i++)
-                    delete[] ListBoxItems[i];
+                    delete ListBoxItems[i];
                 delete[] ListBoxItems;
 
                 ImGui::TreePop();
@@ -1427,7 +1574,7 @@ void BoneEditor::UpdateFrame()
         if (ImGui::IsRootWindowOrAnyChildFocused())
             isFocusedWindow = true;
 
-        const char* listbox_items[] = { "StaticMesh", "Collision", "RigidBody", "SkinnedMesh", "Sound", "Material", "Script", "Camera", "TrailRenderer", "BillBoard", "SpriteBillBoard" };
+        const char* listbox_items[] = { "StaticMesh", "Collision", "RigidBody", "SkinnedMesh", "SoundClip", "Material", "Script", "Camera", "TrailRenderer", "BillBoard", "SpriteBillBoard" };
         static int listbox_item_current = 0;
 
         if (ImGui::CollapsingHeader("[Select Component]"), ImGuiTreeNodeFlags_DefaultOpen)
@@ -1499,6 +1646,10 @@ void BoneEditor::UpdateFrame()
 
                     showAddComponent = false;
                 }
+
+                for (int i = 0; i < Size; i++)
+                    delete ComboBoxItems[i];
+                delete[] ComboBoxItems;
             }
             break;
 
@@ -1661,12 +1812,25 @@ void BoneEditor::UpdateFrame()
 
                     showAddComponent = false;
                 }
+
+                for (int i = 0; i < Size; i++)
+                    delete ComboBoxItems[i];
+                delete[] ComboBoxItems;
             }
             break;
 
-            // Sound
+            // SoundClip
             case 4:
             {
+                if (ImGui::Button("Add Component"))
+                {
+                    SoundClip* soundClip = new SoundClip();
+                    auto Object = CUR_SCENE->FindObjectByName(currentShowInfoObject);
+                    soundClip->AttachObject(Object);
+                    Object->AddComponent(soundClip);
+
+                    showAddComponent = false;
+                }
             }
             break;
 
@@ -1731,6 +1895,10 @@ void BoneEditor::UpdateFrame()
                     else
                         showAddComponent = true;
                 }
+
+                for (int i = 0; i < Size; i++)
+                    delete ComboBoxItems[i];
+                delete[] ComboBoxItems;
             }
             break;
 

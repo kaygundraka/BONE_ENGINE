@@ -16,6 +16,37 @@
             1.0
         ]
     },
+    "3.Collision": {
+        "HalfExtens": [
+            9.27442932128906,
+            32.1231307983398,
+            9.37680816650391
+        ],
+        "Pivot": [
+            0.0326809883117676,
+            32.0344161987305,
+            -0.0254883766174316
+        ],
+        "Type": 0
+    },
+    "4.RigidBody": {
+        "Bounciness": 0.400000005960464,
+        "EnableGravity": false,
+        "FricitionCoefficient": 0.200000002980232,
+        "IsAllowedToSleep": false,
+        "LockRotation": [
+            false,
+            false,
+            false
+        ],
+        "Mass": 1.0,
+        "Pivot": [
+            2.1806434071631e-33,
+            0.0,
+            0.0
+        ],
+        "Type": 0
+    },
     "5.Material": {
         "Ambient": [
             1.0,

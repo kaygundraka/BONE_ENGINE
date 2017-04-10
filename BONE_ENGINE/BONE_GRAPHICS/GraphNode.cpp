@@ -53,6 +53,8 @@ namespace BONE_GRAPHICS
 
     void GraphNode::SetIcon(bool show)
     {
+        ((BillBoard*)GetComponent("BillBoard"))->SetShow(show);
+
         showIcon = show;
     }
     
@@ -83,7 +85,7 @@ namespace BONE_GRAPHICS
         };
 
         for each (auto var in nodes)
-            j["GraphNode"][name]["Connections"].push_back(var->GetName());
+            j["GraphNode"][name]["Connections"].push_back(var);
 
         if (!isNewMap)
             file.close();
@@ -109,5 +111,10 @@ namespace BONE_GRAPHICS
                 break;
             }
         }
+    }
+
+    std::list<std::string> GraphNode::GetConnections()
+    {
+        return nodes;
     }
 }

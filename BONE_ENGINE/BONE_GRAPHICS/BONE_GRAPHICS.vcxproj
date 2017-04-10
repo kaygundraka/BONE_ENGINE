@@ -79,8 +79,8 @@
     <ExecutablePath>$(DXSDK_DIR)\Utilities\bin\x64;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ExecutablePath>$(DXSDK_DIR)\Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>..\Library\RuntimeObjectSystem\;..\Library\reactphysics3d\;..\Library\RuntimeCompiler\;$(DXSDK_DIR)\Include\;..\BONE_SYSTEM\;$(IncludePath)</IncludePath>
+    <ExecutablePath>..\Library\bin;$(DXSDK_DIR)\Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>..\Library\irrKlang\;..\Library\RuntimeObjectSystem\;..\Library\reactphysics3d\;..\Library\RuntimeCompiler\;$(DXSDK_DIR)\Include\;..\BONE_SYSTEM\;$(IncludePath)</IncludePath>
     <LibraryPath>..\Library\Lib\x86;$(DXSDK_DIR)\Lib\x86;..\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -99,7 +99,7 @@
       <UseFullPaths>true</UseFullPaths>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>BONE_SYSTEM.lib;RuntimeCompiler_Debug.lib;reactphysics3d_Debug.lib;RuntimeObjectSystem_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BONE_SYSTEM.lib;RuntimeCompiler_Debug.lib;reactphysics3d_Debug.lib;RuntimeObjectSystem_Debug.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

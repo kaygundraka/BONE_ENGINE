@@ -22,6 +22,7 @@ namespace BONE_GRAPHICS
 
         void ConnectNode(std::string node);
         void DisconnectNode(std::string node);
+        std::list<std::string> GetConnections();
 
         void SetIcon(bool show);
         bool ShowIcon();

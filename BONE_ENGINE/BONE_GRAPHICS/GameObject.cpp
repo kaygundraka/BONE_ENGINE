@@ -532,6 +532,19 @@ namespace BONE_GRAPHICS
             {
                 j["7.SkinnedMesh"]["FileName"] = ((SkinnedMesh*)(item.second))->GetFile();
             }
+            else if (item.first == "SoundClip")
+            {
+                auto Clips = ((SoundClip*)(item.second))->GetClips();
+                
+                for each(auto var in *Clips)
+                {
+                    j["9.SoundClip"]["Clips"][var.first]["Loop"] = var.second.loop;
+                    j["9.SoundClip"]["Clips"][var.first]["MinDist"] = var.second.minDist;
+                    j["9.SoundClip"]["Clips"][var.first]["MaxDist"] = var.second.maxDist;
+                    j["9.SoundClip"]["Clips"][var.first]["StartPaused"] = var.second.startPaused;
+                    j["9.SoundClip"]["Clips"][var.first]["Volume"] = var.second.volume;
+                }
+            }
         }
 
         std::string fullPath = ".\\Engine\\Prefabs\\" + prefab + ".json";
@@ -791,6 +804,42 @@ namespace BONE_GRAPHICS
                 for each(auto item in Scripts)
                     SceneMgr->AddScript(this, item);
             }
+            else if (TypeName == "9.SoundClip")
+            {
+                SoundClip* soundClip = new SoundClip();
+                soundClip->AttachObject(this);
+
+                if (j["9.SoundClip"]["Clips"].is_array())
+                {
+                    auto Clips = j["9.SoundClip"]["Clips"].get<std::vector<std::string>>();
+
+                    for (auto iter = Clips.begin(); iter != Clips.end(); iter++)
+                    {
+                        auto Loop = j["9.SoundClip"]["Clips"][*iter]["Loop"];
+                        auto MinDist = j["9.SoundClip"]["Clips"][*iter]["MinDist"];
+                        auto MaxDist = j["9.SoundClip"]["Clips"][*iter]["MaxDist"];
+                        auto StartPaused = j["9.SoundClip"]["Clips"][*iter]["StartPaused"];
+                        auto Volume = j["9.SoundClip"]["Clips"][*iter]["Volume"];
+
+                        soundClip->AddClip(*iter, Volume, Loop, StartPaused, MinDist, MaxDist);
+                    }
+                }
+                else
+                {
+                    json::iterator it = j["9.SoundClip"]["Clips"].begin();
+
+                    auto Loop = j["9.SoundClip"]["Clips"][it.key()]["Loop"];
+                    auto MinDist = j["9.SoundClip"]["Clips"][it.key()]["MinDist"];
+                    auto MaxDist = j["9.SoundClip"]["Clips"][it.key()]["MaxDist"];
+                    auto StartPaused = j["9.SoundClip"]["Clips"][it.key()]["StartPaused"];
+                    auto Volume = j["9.SoundClip"]["Clips"][it.key()]["Volume"];
+
+                    soundClip->AddClip(it.key(), Volume, Loop, StartPaused, MinDist, MaxDist);
+
+                }
+
+                AddComponent(soundClip);
+            }
         }
 
         file.close();
@@ -882,6 +931,10 @@ namespace BONE_GRAPHICS
         if (skinnedMesh != nullptr)
             ((SkinnedMesh*)skinnedMesh)->UpdateAnimation();
 
+        auto soundClip = this->GetComponent("SoundClip");
+        if (soundClip != nullptr)
+            ((SoundClip*)soundClip)->Update();
+
         if (!enableScript)
             return;
 
@@ -891,8 +944,6 @@ namespace BONE_GRAPHICS
                 ((Script*)var.second)->Update();
             else if (var.first == "RigidBody")
                 ((RigidBody*)var.second)->UpdateTransform();
-            else if (var.first == "SoundClip")
-                ((SoundClip*)var.second)->Update();
         }
 
         UpdateFunc(this);

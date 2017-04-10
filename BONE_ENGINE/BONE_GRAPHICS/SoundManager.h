@@ -26,6 +26,8 @@ namespace BONE_GRAPHICS
         void ListenerUpdate(Vec3 pos, Vec3 lookDir, Vec3 upVector);
         void StopAllSound();
 
+        void Play2D(std::string file, float Volume);
+
         void RemoveSound(ISoundSource* source);
         void RemoveAllSound();
     };

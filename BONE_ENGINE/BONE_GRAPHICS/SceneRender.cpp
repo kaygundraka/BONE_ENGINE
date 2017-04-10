@@ -648,6 +648,12 @@ namespace BONE_GRAPHICS
             if (var->GetPipeLine() != GameObject::PIPE_LINE::DEFAULT_SHADER)
                 var->Render();
         }
+
+        for each(auto var in graphNodeList)
+        {
+            if (var->GetPipeLine() != GameObject::PIPE_LINE::DEFAULT_SHADER)
+                var->Render();
+        }
     }
 
     void Scene::SetRenderMatrial(GameObject* object, ID3DXEffect* effect) 

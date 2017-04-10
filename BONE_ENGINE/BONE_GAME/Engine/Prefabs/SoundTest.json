@@ -1,0 +1,35 @@
+{
+    "1.Transform3D": {
+        "Position": [
+            0.0,
+            33.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "9.SoundClip": {
+        "Clips": {
+            "BGM_SOUND.mp3": {
+                "Loop": true,
+                "MaxDist": 150.0,
+                "MinDist": 0.0,
+                "StartPaused": false,
+                "Volume": 1.0
+            }
+        }
+    },
+    "IsActive": true,
+    "IsEditorLock": false,
+    "IsStatic": false,
+    "Priority": 1,
+    "Tag": ""
+}

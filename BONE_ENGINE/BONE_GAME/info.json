@@ -13,6 +13,7 @@
         ".\\Engine\\Maps\\*",
         ".\\Engine\\Prefabs\\*",
         ".\\Resource\\Skybox\\*",
+        ".\\Resource\\Sound\\*",
         ".\\Resource\\Mesh\\*",
         ".\\Resource\\Mesh\\Preview\\*",
         ".\\Resource\\SkinnedMesh\\*",

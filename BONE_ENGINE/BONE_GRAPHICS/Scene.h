@@ -131,6 +131,7 @@ namespace BONE_GRAPHICS
 
         std::list<GraphNode*> GetGraphNodes();
         void AddGraphNode(GraphNode* node);
+        void RemoveGraphNode(GraphNode* node);
 
         Vec3 FindNodeByDistance(Vec3 pos);
         

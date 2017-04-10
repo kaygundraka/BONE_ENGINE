@@ -35,6 +35,11 @@ namespace BONE_GRAPHICS
         engine->removeSoundSource(source);
     }
 
+    void SoundManager::Play2D(std::string file, float Volume)
+    {
+
+    }
+
     void SoundManager::RemoveAllSound()
     {
         ThreadSync sync;

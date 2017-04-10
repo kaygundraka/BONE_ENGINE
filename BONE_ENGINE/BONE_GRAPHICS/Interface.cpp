@@ -7,6 +7,7 @@
 #include "InputManager.h"
 #include "ConfigManager.h"
 #include "RuntimeCompiler.h"
+#include "SoundManager.h"
 
 extern LRESULT ImGui_ImplDX9_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -171,6 +172,7 @@ namespace BONE_GRAPHICS
 		SceneMgr->InitializeMembers();
 		ResourceMgr->InitializeMembers();
         RuntimeMgr->InitializeMembers();
+        SoundMgr->InitializeMembers();
 
         if (useImGUI)
         {
@@ -331,6 +333,7 @@ namespace BONE_GRAPHICS
         if (RenderMgr->UseImGUI())
             ImGui_ImplDX9_Shutdown();
 
+        SoundMgr->ReleaseMembers();
         RuntimeMgr->ReleaseMembers();
 		SceneMgr->ReleaseMembers();
         InputMgr->ReleaseMembers();

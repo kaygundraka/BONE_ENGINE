@@ -5,6 +5,7 @@
 #include "Transform3D.h"
 #include "SceneManager.h"
 #include "LogManager.h"
+#include "SoundManager.h"
 
 namespace BONE_GRAPHICS
 {
@@ -77,19 +78,21 @@ namespace BONE_GRAPHICS
 		if (SceneMgr->CurrentScene()->GetCameraIndex() == ID)
 		{
 			Transform3D* Tr = ((Transform3D*)owner->GetComponent("Transform3D"));
-            
+                        
 			Vec3 Position(0, 0, 0);
 
 			if (Tr != nullptr)
 				Position = Tr->GetPosition();
 			else
 				LogMgr->Error("Camera %d - Don't Exist Transform3D Component.", ID);
-
+                        
             D3DXVec3Normalize(&viewVector, &(targetPosition - Tr->GetPosition()));//->GetWorldPositon()));
             D3DXVec3Cross(&crossVector, &cameraUp, &viewVector);
 
 			D3DXMatrixLookAtLH(&viewMatrix, &Position, &targetPosition, &cameraUp);
 			RenderMgr->GetDevice()->SetTransform(D3DTS_VIEW, &viewMatrix);
+
+            SoundMgr->ListenerUpdate(Position, viewVector, cameraUp);
 
 			if (type == PRJOJECTION_PERSPACTIVE)
 				D3DXMatrixPerspectiveFovLH(&projectionMatrix, fov, width / height, nearDistance, farDistance);
