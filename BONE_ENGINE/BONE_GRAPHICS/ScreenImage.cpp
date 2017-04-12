@@ -52,33 +52,36 @@ namespace BONE_GRAPHICS
 	
 	void ScreenImage::Render(GameObject* owner)
 	{
-		Matrix matrix = ((Transform2D*)owner->GetComponent("Transform2D"))->GetTransform();
-		Vec3 position = ((Transform2D*)owner->GetComponent("Transform2D"))->GetPosition();
+        if (owner->GetActive())
+        {
+            Matrix matrix = ((Transform2D*)owner->GetComponent("Transform2D"))->GetTransform();
+            Vec3 position = ((Transform2D*)owner->GetComponent("Transform2D"))->GetPosition();
 
-		RECT rect;
-		rect.left = originRect.LeftTop.x;
-		rect.top = originRect.LeftTop.y;
-		rect.right = originRect.RightBottom.x;
-		rect.bottom = originRect.RightBottom.y;
+            RECT rect;
+            rect.left = originRect.LeftTop.x;
+            rect.top = originRect.LeftTop.y;
+            rect.right = originRect.RightBottom.x;
+            rect.bottom = originRect.RightBottom.y;
 
-		LPDIRECT3DTEXTURE9 texture = ResourceMgr->LoadTexture(fileName);
+            LPDIRECT3DTEXTURE9 texture = ResourceMgr->LoadTexture(fileName);
 
-		sprite->SetTransform(&matrix);
+            sprite->SetTransform(&matrix);
 
-		RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-		RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
-		RenderMgr->GetDevice()->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-		RenderMgr->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		RenderMgr->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
-		sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
-		
-		D3DCOLOR RGB = D3DCOLOR_ARGB((int)(myalpha), 255, 255, 255);
-		sprite->Draw(texture, &rect, nullptr, &Vec3(0, 0, 0), RGB);
-		sprite->End();
+            sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
 
-		RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+            D3DCOLOR RGB = D3DCOLOR_ARGB((int)(myalpha), 255, 255, 255);
+            sprite->Draw(texture, &rect, nullptr, &Vec3(0, 0, 0), RGB);
+            sprite->End();
+
+            RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+        }
 	}
 	
 	float ScreenImage::GetAlpha()

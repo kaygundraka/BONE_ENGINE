@@ -411,7 +411,9 @@ namespace BONE_GRAPHICS
         }
 
         if (name == bone->Name)
+        {
             return result = &(bone->CombinedTransformationMatrix);
+        }
 
         if (bone->pFrameSibling != nullptr)
             GetBoneMatrix(name, (Bone*)bone->pFrameSibling, &bone->CombinedTransformationMatrix);

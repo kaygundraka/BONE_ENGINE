@@ -39,6 +39,9 @@
     <ClCompile Include="GameManager.cpp">
       <Filter>소스 파일\Script\GameManager</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerGUI.cpp">
+      <Filter>소스 파일\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestScript2.h">
@@ -52,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="GameManager.h">
       <Filter>소스 파일\Script\GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerGUI.h">
+      <Filter>소스 파일\Script</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

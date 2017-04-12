@@ -1,7 +1,7 @@
 {
     "0.Transform3D": {
         "Position": [
-            190.000015258789,
+            190.0,
             5.0,
             39.0
         ],
@@ -33,7 +33,7 @@
         "Bounciness": 0.400000005960464,
         "EnableGravity": false,
         "FricitionCoefficient": 0.200000002980232,
-        "IsAllowedToSleep": false,
+        "IsAllowedToSleep": true,
         "LockRotation": [
             false,
             false,
@@ -41,9 +41,9 @@
         ],
         "Mass": 1.0,
         "Pivot": [
-            7.87651526602679e-37,
+            1.54994660690879e-33,
             0.0,
-            7.46614691651517e-37
+            8.23568974601357e-34
         ],
         "Type": 0
     },

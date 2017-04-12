@@ -27,8 +27,8 @@ namespace BONE_GRAPHICS
         
         transform = (Transform3D*)this->owner->transform3D;
         
-        rp3d::Vector3 InitPosition(transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z);
-        rp3d::Quaternion InitOrientation(transform->GetRotateAngle().x, transform->GetRotateAngle().z, transform->GetRotateAngle().z);
+        rp3d::Vector3 InitPosition(transform->GetWorldPositon().x, transform->GetWorldPositon().y, transform->GetWorldPositon().z);
+        rp3d::Quaternion InitOrientation(transform->GetWorldRotateAngle().x, transform->GetWorldRotateAngle().z, transform->GetWorldRotateAngle().z);
         rp3d::Transform InitTransform(InitPosition, InitOrientation);
 
         rigidBody = SceneMgr->CurrentScene()->GetPhysicsWorld()->createRigidBody(InitTransform);
@@ -210,7 +210,8 @@ namespace BONE_GRAPHICS
             rp3d::Quaternion Rot = rp3dTransform.getOrientation();
             rp3d::Vector3 Pos = rp3dTransform.getPosition();
 
-            transform->SetPosition(Pos.x - pos.x, Pos.y - pos.y, (-Pos.z) - pos.z);
+            auto CurPos = transform->GetWorldPositon() - transform->GetPosition();
+            transform->SetPosition(Pos.x - pos.x - CurPos.x, Pos.y - pos.y - CurPos.y, (-Pos.z) - pos.z - CurPos.z);
 
             Quater quater;
             quater.x = Rot.x;
@@ -218,6 +219,8 @@ namespace BONE_GRAPHICS
             quater.z = Rot.z;
             quater.w = -Rot.w;
 
+            auto CurQuater = transform->GetWorldRotateQuater() - transform->GetRotateQuater();
+            quater -= CurQuater;
             transform->SetRotate(quater);
         }
         else

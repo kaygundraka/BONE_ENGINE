@@ -165,12 +165,14 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlayerCharacter.cpp" />
+    <ClCompile Include="PlayerGUI.cpp" />
     <ClCompile Include="SetScript.cpp" />
     <ClCompile Include="TestScript2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="PlayerCharacter.h" />
+    <ClInclude Include="PlayerGUI.h" />
     <ClInclude Include="SetScript.h" />
     <ClInclude Include="TestScript2.h" />
   </ItemGroup>

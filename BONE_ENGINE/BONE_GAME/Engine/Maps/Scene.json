@@ -1,6 +1,26 @@
 {
     "GameObject": {
-        "GameObject0": {
+        "GameObject1": {
+            "IsChild": false,
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "PrefabName": "FirstRoom_Floor1",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                5.0,
+                1.0,
+                5.0
+            ],
+            "TreeDepth": 0
+        },
+        "TestCharacter": {
             "IsChild": false,
             "Position": [
                 0.0,
@@ -9,7 +29,7 @@
             ],
             "PrefabName": "Player",
             "Rotation": [
-                0.00113828270696104,
+                0.00113827351015061,
                 3.14000010490417,
                 -0.000389064545743167
             ],
@@ -288,9 +308,9 @@
         ],
         "EnableFog": true,
         "FogColor": [
-            0.243137255311012,
-            0.243137255311012,
-            0.243137255311012,
+            1.0,
+            1.0,
+            0.0,
             1.0
         ],
         "FogDensity": 1.0,

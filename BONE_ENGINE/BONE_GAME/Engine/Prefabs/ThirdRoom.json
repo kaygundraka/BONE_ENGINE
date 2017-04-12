@@ -1,0 +1,80 @@
+{
+    "0.Transform3D": {
+        "Position": [
+            211.000015258789,
+            5.0,
+            303.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "4.Material": {
+        "Ambient": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Diffuse": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Emissive": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Shininess": 1.0,
+        "Specular": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "ChildObjects": [
+        "ThirdRoom_Floor1",
+        "ThirdRoom_Floor2",
+        "ThirdRoom_Floor3",
+        "ThirdRoom_Floor4",
+        "ThirdRoom_Floor5",
+        "ThirdRoom_Floor6",
+        "ThirdRoom_Floor7",
+        "ThirdRoom_Floor8",
+        "ThirdRoom_Floor9",
+        "ThirdRoom_Floor10",
+        "ThirdRoom_Wall0",
+        "ThirdRoom_Wall1",
+        "ThirdRoom_Wall2",
+        "ThirdRoom_Wall3",
+        "ThirdRoom_Wall4",
+        "ThirdRoom_Wall5",
+        "ThirdRoom_Wall6",
+        "ThirdRoom_Wall7",
+        "ThirdRoom_Wall8",
+        "ThirdRoom_Wall9",
+        "ThirdRoom_Wall10",
+        "ThirdRoom_Wall11",
+        "ThirdRoom_Wall12",
+        "ThirdRoom_Wall13",
+        "ThirdRoom_Wall14",
+        "ThirdRoom_Wall15"
+    ],
+    "IsActive": true,
+    "IsEditorLock": false,
+    "IsStatic": false,
+    "PipeLine": 1,
+    "Priority": 1,
+    "Tag": ""
+}

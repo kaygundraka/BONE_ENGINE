@@ -2,6 +2,7 @@
 #include "PlayerCharacter.h"
 #include <InputManager.h>
 #include <SceneManager.h>
+#include <SoundManager.h>
 
 void GameManager::Init()
 {
@@ -21,13 +22,15 @@ void GameManager::Init()
         gameObject->AddComponent(screenImage);
 
         Transform2D* tr2d = new Transform2D();
-        tr2d->SetPosition(Vec3(0, 0, 0));
+        tr2d->SetPosition(Vec3(0, 0, 1));
         gameObject->AddComponent(tr2d);
     }
 }
 
 void GameManager::Reference()
 {
+    SoundMgr->Play2D("Quiet.mp3", 0.5f, true);
+
     player = CUR_SCENE->FindObjectByTag("Player");
 
 #pragma region Camera SetUp

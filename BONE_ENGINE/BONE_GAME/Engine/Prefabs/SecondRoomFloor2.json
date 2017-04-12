@@ -33,7 +33,7 @@
         "Bounciness": 0.400000005960464,
         "EnableGravity": false,
         "FricitionCoefficient": 0.200000002980232,
-        "IsAllowedToSleep": false,
+        "IsAllowedToSleep": true,
         "LockRotation": [
             false,
             false,
@@ -41,9 +41,9 @@
         ],
         "Mass": 1.0,
         "Pivot": [
-            7.87406153636381e-37,
+            1.07335344262743e-33,
             0.0,
-            7.46614691651517e-37
+            8.23568974601357e-34
         ],
         "Type": 0
     },

@@ -218,6 +218,8 @@ namespace BONE_GRAPHICS
 
                 RenderMgr->GetDevice()->BeginScene();
 
+                sceneList[name]->SkyboxRender();
+                
                 sceneList[name]->Update();
                 sceneList[name]->LateUpdate();
                 sceneList[name]->Render();

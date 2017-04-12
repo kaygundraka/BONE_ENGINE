@@ -1,5 +1,6 @@
 #include "Common.h"
 #include "SoundManager.h"
+#include "ResourceManager.h"
 
 namespace BONE_GRAPHICS
 {
@@ -35,15 +36,52 @@ namespace BONE_GRAPHICS
         engine->removeSoundSource(source);
     }
 
-    void SoundManager::Play2D(std::string file, float Volume)
+    void SoundManager::Play2D(std::string file, float volume, bool loop)
     {
+        ThreadSync sync;
 
+        std::string FullPath;
+
+        if (bgms.find(file) == bgms.end())
+        {
+            if (!ResourceMgr->ExistFile(file, &FullPath))
+                return;
+
+            ISound* sound = engine->play2D(FullPath.c_str(), loop, false, true);
+            sound->setVolume(volume);
+
+            bgms.insert(std::pair<std::string, ISound*>(file, sound));
+        }
+        else
+        {
+            if (bgms[file]->isFinished())
+            {
+                bgms[file]->drop();
+            
+                if (!ResourceMgr->ExistFile(file, &FullPath))
+                    return;
+
+                bgms[file] = engine->play2D(FullPath.c_str(), loop, false, true);
+                bgms[file]->setVolume(volume);
+            }
+
+            bgms[file]->setIsLooped(loop);
+            bgms[file]->setVolume(volume);
+        }
     }
 
     void SoundManager::RemoveAllSound()
     {
         ThreadSync sync;
 
+        for(auto iter = bgms.begin(); iter != bgms.end(); )
+        {
+            if ((*iter).second != nullptr)
+                (*iter).second->drop();
+
+            iter = bgms.erase(iter);
+        }
+        
         engine->removeAllSoundSources();
     }
 

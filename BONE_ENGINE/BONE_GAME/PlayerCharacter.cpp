@@ -1,6 +1,8 @@
-#include "PlayerCharacter.h"
 #include <StaticMesh.h>
 #include <InputManager.h>
+
+#include "PlayerCharacter.h"
+#include "PlayerGUI.h"
 
 void PlayerCharacter::Init()
 {
@@ -25,29 +27,88 @@ void PlayerCharacter::Reference()
     mainCamera = camera;
 
     skinnedMesh = ((SkinnedMesh*)gameObject->GetComponent("SkinnedMesh"));
-    SceneMgr->CurrentScene()->AddObject(cameraObject, "MainCamera");
+    CUR_SCENE->AddObject(cameraObject, "MainCamera");
 
     GameObject* Sword = new GameObject();
+    Sword->SetPriority(1);
 
     Transform3D* SwordTransform = new Transform3D();
-    skinnedMesh->GetBoneMatrix("hand_r");
+    auto BoneMatrix = skinnedMesh->GetBoneMatrix("hand_r");
+    SwordTransform->CombineMatrix(BoneMatrix);
+    SwordTransform->SetPosition(-19.0f, 5.0f, 17.0f);
+    SwordTransform->SetRotate(-0.45f, 0.96f, 1.85f);
+    SwordTransform->SetScale(2.0f, 2.0f, 2.0f);
+    Sword->AddComponent(SwordTransform);
+    swordTr = SwordTransform;
 
     StaticMesh* SwordMesh = new StaticMesh();
     SwordMesh->SetFile("Sword.X");
+    Sword->AddComponent(SwordMesh);
+
+    Sword->AttachParent(this->gameObject);
+
+    CUR_SCENE->AddObject(Sword, "Sword");
+
+    gui = (PlayerGUI*)(CUR_SCENE->FindObjectByName("GameManager")->GetComponent("PlayerGUI"));
 }
 
 void PlayerCharacter::Update()
 {
     if (isEvent)
     {
+        gui->ShowGUI(false);
+
         GET_RIGIDBODY(gameObject)->SetLinearVelocity(0, 0, 0);
         return;
     }
 
-    bool Input = false;
+    gui->ShowGUI(true);
+    
+    cout << swordTr->GetPosition().x << ", " << swordTr->GetPosition().y << ", " << swordTr->GetPosition().z << endl;
 
+    bool Input = false;
+        
+    static bool W_Key = false;
+    static bool S_Key = false;
     static bool A_Key = false;
-    if (InputMgr->KeyDown('A', false))
+    static bool D_Key = false;
+    static bool Attack_Key = false;
+
+    if (InputMgr->KeyDown('W', false) && !Attack_Key)
+    {
+        Input = true;
+        skinnedMesh->SetAnimation("Skeleton_1H_walk");
+
+        Vec3 Forward = GET_TRANSFORM_3D(gameObject)->GetForward() * SceneMgr->GetTimeDelta() * 1000;
+
+        GET_RIGIDBODY(gameObject)->SetLinearVelocity(Forward.x, Forward.y, -Forward.z);
+
+        W_Key = true;
+    }
+    else if (W_Key)
+    {
+        GET_RIGIDBODY(gameObject)->SetLinearVelocity(0, 0, 0);
+        W_Key = false;
+    }
+
+    if (InputMgr->KeyDown('S', false) && !Attack_Key)
+    {
+        Input = true;
+        skinnedMesh->SetAnimation("Skeleton_walking_back");
+
+        Vec3 Backword = -GET_TRANSFORM_3D(gameObject)->GetForward() * SceneMgr->GetTimeDelta() * 1000;
+
+        GET_RIGIDBODY(gameObject)->SetLinearVelocity(Backword.x, Backword.y, -Backword.z);
+
+        S_Key = true;
+    }
+    else if (S_Key)
+    {
+        GET_RIGIDBODY(gameObject)->SetLinearVelocity(0, 0, 0);
+        S_Key = false;
+    }
+
+    if (InputMgr->KeyDown('A', false) && !Attack_Key)
     {
         Input = true;
         A_Key = true;
@@ -59,9 +120,8 @@ void PlayerCharacter::Update()
         GET_RIGIDBODY(gameObject)->SetAngularVelocity(0, 0, 0);
         A_Key = false;
     }
-
-    static bool D_Key = false;
-    if (InputMgr->KeyDown('D', false))
+        
+    if (InputMgr->KeyDown('D', false) && !Attack_Key)
     {
         Input = true;
         D_Key = true;
@@ -74,56 +134,27 @@ void PlayerCharacter::Update()
         D_Key = false;
     }
 
-    static bool W_Key = false;
-    if (InputMgr->KeyDown('W', false))
+    if (InputMgr->GetMouseLBButtonStatus() == MOUSE_LBDOWN)
     {
         Input = true;
-        skinnedMesh->SetAnimation("Skeleton_1H_walk");
+        Attack_Key = true;
 
-        Vec3 Forward = GET_TRANSFORM_3D(gameObject)->GetForward();
-
-        if (GET_RIGIDBODY(gameObject)->GetLinearVelocity().length() < 20)
-        {
-            GET_RIGIDBODY(gameObject)->AddForce(
-                Vec3(Forward.x, Forward.y, -Forward.z) * 50,
-                Vec3(0, 0, 0)
-            );
-        }
-
-        W_Key = true;
+        skinnedMesh->SetAnimation("Skeleton_1H_swing_left");
+        skinnedMesh->SetAnimationLoop(false);
     }
-    else if (W_Key)
+    else if (Attack_Key == true)
     {
-        GET_RIGIDBODY(gameObject)->SetLinearVelocity(0, 0, 0);
-        W_Key = false;
-    }
-
-    static bool S_Key = false;
-    if (InputMgr->KeyDown('S', false))
-    {
-        Input = true;
-        skinnedMesh->SetAnimation("Skeleton_walking_back");
-
-        if (GET_RIGIDBODY(gameObject)->GetLinearVelocity().length() < 20)
-        {
-            Vec3 Forward = GET_TRANSFORM_3D(gameObject)->GetForward();
-
-            GET_RIGIDBODY(gameObject)->AddForce(
-                -Vec3(Forward.x, Forward.y, -Forward.z) * 40,
-                Vec3(0, 0, 0)
-            );
-        }
-
-        S_Key = true;
-    }
-    else if (S_Key)
-    {
-        GET_RIGIDBODY(gameObject)->SetLinearVelocity(0, 0, 0);
-        S_Key = false;
+        if (skinnedMesh->GetAnimationRate() >= 0.99f)
+            Attack_Key = false;
+        else
+            Input = true;
     }
 
     if (Input == false)
+    {
+        skinnedMesh->SetAnimationLoop(true);
         skinnedMesh->SetAnimation("Skeleton_Idle");
+    }
 }
 
 void PlayerCharacter::LateUpdate()

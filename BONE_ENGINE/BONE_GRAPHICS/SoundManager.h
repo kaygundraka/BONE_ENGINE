@@ -10,6 +10,7 @@ namespace BONE_GRAPHICS
     {
     private:
         ISoundEngine* engine;
+        std::map<std::string, ISound*> bgms;
 
     public:
         void InitializeMembers();
@@ -26,7 +27,7 @@ namespace BONE_GRAPHICS
         void ListenerUpdate(Vec3 pos, Vec3 lookDir, Vec3 upVector);
         void StopAllSound();
 
-        void Play2D(std::string file, float Volume);
+        void Play2D(std::string file, float volume, bool loop);
 
         void RemoveSound(ISoundSource* source);
         void RemoveAllSound();

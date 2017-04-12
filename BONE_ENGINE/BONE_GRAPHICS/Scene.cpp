@@ -11,6 +11,7 @@
 #include "etuImage.h"
 #include "Rp3dRigidBody.h"
 #include "StaticMesh.h"
+#include "SoundManager.h"
 
 #pragma warning(disable:4996)
 
@@ -81,7 +82,7 @@ namespace BONE_GRAPHICS
             else
                 Iter++;
         }
-        
+
         delete physicsWorld;
         physicsWorld = nullptr;
 
@@ -199,9 +200,6 @@ namespace BONE_GRAPHICS
 
     void Scene::Update()
     {
-        skybox.Render();
-        skybox.Update(GetCurrentCamera());
-
         for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
             if ((*Iter)->GetActive())
                 (*Iter)->Update();

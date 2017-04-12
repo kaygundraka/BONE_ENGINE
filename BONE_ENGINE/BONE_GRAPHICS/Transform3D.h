@@ -53,6 +53,7 @@ namespace BONE_GRAPHICS
 
         Vec3 GetRotateAngle();
         Quater GetRotateQuater();
+        Quater GetWorldRotateQuater();
 		Vec3 GetWorldRotateAngle();
 
 		Matrix GetTransform();

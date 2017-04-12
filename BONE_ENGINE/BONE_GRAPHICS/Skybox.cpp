@@ -3,6 +3,7 @@
 #include "RenderManager.h"
 #include "ResourceManager.h"
 #include "Transform3D.h"
+#include "SceneManager.h"
 
 namespace BONE_GRAPHICS
 {
@@ -132,10 +133,7 @@ namespace BONE_GRAPHICS
     {
         if (Is_Init)
         {
-            D3DXVECTOR3 vPos = ((Transform3D*)cameraObject->GetComponent("Transform3D"))->GetPosition();
 
-            D3DXMatrixIdentity(&matWrd);
-            D3DXMatrixTranslation(&matWrd, vPos.x, vPos.y, vPos.z);
         }
     }
 
@@ -143,6 +141,13 @@ namespace BONE_GRAPHICS
 	{
 		if (Is_Init)
 		{
+            GameObject* cameraObject = CUR_SCENE->GetCurrentCamera();
+
+            D3DXVECTOR3 vPos = ((Transform3D*)cameraObject->GetComponent("Transform3D"))->GetPosition();
+
+            D3DXMatrixIdentity(&matWrd);
+            D3DXMatrixTranslation(&matWrd, vPos.x, vPos.y, vPos.z);
+
 			RenderMgr->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 			RenderMgr->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			RenderMgr->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);

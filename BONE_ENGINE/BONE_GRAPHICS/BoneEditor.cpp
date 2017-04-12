@@ -1656,8 +1656,8 @@ void BoneEditor::UpdateFrame()
                     showAddComponent = false;
                 }
 
-                for (int i = 0; i < Size; i++)
-                    delete ComboBoxItems[i];
+                for (int j = 0; j < Size - 1; j++)
+                    delete ComboBoxItems[j];
                 delete[] ComboBoxItems;
             }
             break;

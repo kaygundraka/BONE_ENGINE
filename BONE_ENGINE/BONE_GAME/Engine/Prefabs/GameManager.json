@@ -17,7 +17,8 @@
         ]
     },
     "7.Script": [
-        "GameManager"
+        "GameManager",
+        "PlayerGUI"
     ],
     "IsActive": true,
     "IsEditorLock": false,

@@ -1,0 +1,65 @@
+{
+    "0.Transform3D": {
+        "Position": [
+            452.000030517578,
+            2.0,
+            192.426315307617
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "ChildObjects": [
+        "FourthFloor0",
+        "FourthFloor1",
+        "FourthFloor3",
+        "FourthFloor4",
+        "FourthFloor5",
+        "FourthFloor6",
+        "FourthFloor7",
+        "FurthWall0",
+        "FurthWall1",
+        "FurthWall2",
+        "FurthFloor8",
+        "FurthWall3",
+        "FurthWall4",
+        "FurthWall5",
+        "FurthWall6",
+        "FurthWall7",
+        "FurthWall8",
+        "FurthWall9",
+        "FurthWall10",
+        "FurthWall11",
+        "FurthWall12",
+        "FurthWall13",
+        "FurthWall14",
+        "FurthWall15",
+        "FurthWall16",
+        "FurthWall17",
+        "FurthWall18",
+        "FurthWall19",
+        "FurthWall20",
+        "FurthWall21",
+        "FurthWall22",
+        "FurthWall23",
+        "FurthWall24",
+        "FurthPillar0",
+        "FurthPillar1",
+        "FurthPillar2",
+        "FurthCelling",
+        "FurthCelling2"
+    ],
+    "IsActive": true,
+    "IsEditorLock": false,
+    "IsStatic": false,
+    "PipeLine": 1,
+    "Priority": 1,
+    "Tag": ""
+}

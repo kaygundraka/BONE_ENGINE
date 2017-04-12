@@ -258,6 +258,22 @@ namespace BONE_GRAPHICS
         return rotAngle;
     }
 
+    Quater Transform3D::GetWorldRotateQuater()
+    {
+        GameObject* parentPtr = parent;
+
+        Quater result = rotAngle;
+
+        while (parentPtr != nullptr)
+        {
+            result *= ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetRotateQuater();
+
+            parentPtr = parentPtr->GetParent();
+        }
+
+        return result;
+    }
+
 	void Transform3D::AttachObject(GameObject* parent)
 	{
 		this->parent = parent;
@@ -290,8 +306,16 @@ namespace BONE_GRAPHICS
 		}
 
         if (combineMatrix != nullptr)
-            transform *= *combineMatrix;
+        {            
+            Matrix mat;
+            D3DXMatrixRotationY(&mat, 3.14f);
+            D3DXMatrixMultiply(&transform, &transform, &mat);
+            
+            Matrix matBone = *combineMatrix;
 
+            D3DXMatrixMultiply(&matBone, &matBone, &mat);
+            D3DXMatrixMultiply(&transform, &transform, &matBone);
+        }
 		return transform;
 	}
 }

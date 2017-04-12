@@ -333,9 +333,9 @@ namespace BONE_GRAPHICS
         if (RenderMgr->UseImGUI())
             ImGui_ImplDX9_Shutdown();
 
-        SoundMgr->ReleaseMembers();
         RuntimeMgr->ReleaseMembers();
 		SceneMgr->ReleaseMembers();
+        SoundMgr->ReleaseMembers();
         InputMgr->ReleaseMembers();
 		RenderMgr->ReleaseMembers();
 		ResourceMgr->ReleaseMembers();
