@@ -651,8 +651,8 @@ namespace BONE_GRAPHICS
 
         for each(auto var in graphNodeList)
         {
-            if (var->GetPipeLine() != GameObject::PIPE_LINE::DEFAULT_SHADER)
-                var->Render();
+            if (var.second->GetPipeLine() != GameObject::PIPE_LINE::DEFAULT_SHADER)
+                var.second->Render();
         }
     }
 

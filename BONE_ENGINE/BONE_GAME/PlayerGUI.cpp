@@ -1,7 +1,6 @@
 #include "PlayerGUI.h"
 #include <InputManager.h>
 #include <ScreenImage.h>
-#include <Transform2D.h>
 
 void PlayerGUI::Init()
 {
@@ -86,7 +85,7 @@ void PlayerGUI::Reference()
     CUR_SCENE->AddObject(statusCombat_Inactive, "GUI_STATUS_COMBAT_I");
     CUR_SCENE->AddObject(statusSneaking_Active, "GUI_STATUS_SNEAKING_A");
     CUR_SCENE->AddObject(statusSneaking_Inactive, "GUI_STATUS_SNEAKING_I");
-
+    
 
     statusFrame = new GameObject();
 
@@ -101,6 +100,35 @@ void PlayerGUI::Reference()
 
     CUR_SCENE->AddObject(statusFrame, "GUI_STATUS_FRAME");
 
+
+    hpBar = new GameObject();
+
+    hpBarTr = new Transform2D();
+    hpBarTr->SetPosition(8, 35, 0);
+    hpBar->AddComponent(hpBarTr);
+
+    ScreenImage* ImageHpBar = new ScreenImage();
+    ImageHpBar->SetImageFile("HP_Bar.png");
+    ImageHpBar->SetOriginRect(Vec2(0, 0), Vec2(193, 2));
+    hpBar->AddComponent(ImageHpBar);
+
+    CUR_SCENE->AddObject(hpBar, "GUI_HP_BAR");
+
+
+    steminaBar = new GameObject();
+
+    steminaBarTr = new Transform2D();
+    steminaBarTr->SetPosition(8, 40, 0);
+    steminaBar->AddComponent(steminaBarTr);
+
+    ScreenImage* ImageSteminaBar = new ScreenImage();
+    ImageSteminaBar->SetImageFile("Status_Bar.png");
+    ImageSteminaBar->SetOriginRect(Vec2(0, 0), Vec2(193, 2));
+    steminaBar->AddComponent(ImageSteminaBar);
+
+    CUR_SCENE->AddObject(steminaBar, "GUI_STEMINA_BAR");
+
+
     ShowGUI(false);
 }
 
@@ -114,7 +142,11 @@ void PlayerGUI::ShowGUI(bool show)
         statusCombat_Inactive->SetActive(false);
         statusSneaking_Active->SetActive(false);
         statusSneaking_Inactive->SetActive(false);
+ 
         statusFrame->SetActive(false);
+        hpBar->SetActive(false);
+        steminaBar->SetActive(false);
+
     }
     else
     {
@@ -152,15 +184,60 @@ void PlayerGUI::ShowGUI(bool show)
         }
 
         statusFrame->SetActive(true);
+        hpBar->SetActive(true);
+        steminaBar->SetActive(true);
     }
 }
 
-void PlayerGUI::Update()
+void PlayerGUI::SetStatus(PLAYER_STATUS status)
 {
+    this->status = status;
 
+    if (status == PLAYER_STATUS::NORMAL)
+    {
+        statusNormal_Active->SetActive(true);
+        statusNormal_Inactive->SetActive(false);
+    }
+    else
+    {
+        statusNormal_Active->SetActive(false);
+        statusNormal_Inactive->SetActive(true);
+    }
+
+    if (status == PLAYER_STATUS::COMBAT)
+    {
+        statusCombat_Active->SetActive(true);
+        statusCombat_Inactive->SetActive(false);
+    }
+    else
+    {
+        statusCombat_Active->SetActive(false);
+        statusCombat_Inactive->SetActive(true);
+    }
+
+    if (status == PLAYER_STATUS::SNEAKING)
+    {
+        statusSneaking_Active->SetActive(true);
+        statusSneaking_Inactive->SetActive(false);
+    }
+    else
+    {
+        statusSneaking_Active->SetActive(false);
+        statusSneaking_Inactive->SetActive(true);
+    }
 }
 
-void PlayerGUI::LateUpdate()
+PlayerGUI::PLAYER_STATUS PlayerGUI::GetStatus()
 {
+    return status;
+}
 
+void PlayerGUI::SetStemina(int stemina)
+{
+    stemina = stemina;
+}
+
+void PlayerGUI::SetHP(int hp)
+{
+    hp = hp;
 }

@@ -10,7 +10,7 @@
             "PrefabName": "FireSprite",
             "Rotation": [
                 0.0,
-                1.17014014720917,
+                -2.28221392631531,
                 -0.0
             ],
             "Scale": [
@@ -30,7 +30,7 @@
             "PrefabName": "FireSprite",
             "Rotation": [
                 0.0,
-                1.17014014720917,
+                -2.28221392631531,
                 -0.0
             ],
             "Scale": [
@@ -89,7 +89,7 @@
             ],
             "PrefabName": "Crate_B",
             "Rotation": [
-                0.0263920295983553,
+                0.0263920780271292,
                 -0.0344733484089375,
                 -0.0114934463053942
             ],
@@ -1840,6 +1840,26 @@
             ],
             "TreeDepth": 0
         },
+        "Monster0": {
+            "IsChild": false,
+            "Position": [
+                226.000015258789,
+                14.0000009536743,
+                233.000015258789
+            ],
+            "PrefabName": "Monster",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.20000004768372,
+                1.20000004768372,
+                1.20000004768372
+            ],
+            "TreeDepth": 0
+        },
         "Player": {
             "IsChild": false,
             "Position": [
@@ -2309,9 +2329,9 @@
             ],
             "PrefabName": "Crate_C",
             "Rotation": [
-                0.0311765260994434,
+                0.0311765894293785,
                 -0.99999737739563,
-                8.52770026540384e-05
+                8.52695520734414e-05
             ],
             "Scale": [
                 1.0,
@@ -2939,6 +2959,74 @@
                 1.0
             ],
             "TreeDepth": 1
+        }
+    },
+    "GraphNode": {
+        "MonsterPathNode0": {
+            "Connections": [
+                "MonsterPathNode1",
+                "MonsterPathNode5"
+            ],
+            "Position": [
+                227.000015258789,
+                50.0000038146973,
+                304.0
+            ]
+        },
+        "MonsterPathNode1": {
+            "Connections": [
+                "MonsterPathNode2",
+                "MonsterPathNode0"
+            ],
+            "Position": [
+                377.000030517578,
+                50.0,
+                308.0
+            ]
+        },
+        "MonsterPathNode2": {
+            "Connections": [
+                "MonsterPathNode3",
+                "MonsterPathNode1"
+            ],
+            "Position": [
+                378.000030517578,
+                50.0,
+                69.0
+            ]
+        },
+        "MonsterPathNode3": {
+            "Connections": [
+                "MonsterPathNode4",
+                "MonsterPathNode2"
+            ],
+            "Position": [
+                308.0,
+                50.0,
+                75.0
+            ]
+        },
+        "MonsterPathNode4": {
+            "Connections": [
+                "MonsterPathNode5",
+                "MonsterPathNode3"
+            ],
+            "Position": [
+                306.0,
+                50.0,
+                -79.0
+            ]
+        },
+        "MonsterPathNode5": {
+            "Connections": [
+                "MonsterPathNode0",
+                "MonsterPathNode4"
+            ],
+            "Position": [
+                229.000015258789,
+                50.0,
+                -76.0
+            ]
         }
     },
     "Light": {

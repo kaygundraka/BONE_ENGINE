@@ -84,13 +84,11 @@ namespace BONE_GRAPHICS
         rigidBody->setMass(mass);
     }
 
-    void RigidBody::AddForce(Vec3 force, Vec3 point)
+    void RigidBody::AddForce(Vec3 force)
     {
         rp3d::Vector3 Force(force.x, force.y, force.z);
-        rp3d::Vector3 Point(point.x, point.y, point.z);
-
+        
         rigidBody->applyForceToCenterOfMass(Force);
-        //rigidBody->applyForce(Force, Point);
     }
     
     void RigidBody::ADDForce(rp3d::Vector3 force, rp3d::Vector3 point)

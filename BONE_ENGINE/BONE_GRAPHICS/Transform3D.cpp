@@ -298,24 +298,25 @@ namespace BONE_GRAPHICS
 
         transform = scaleTransform * rotateTransform * translateTransform;
 
+        if (combineMatrix != nullptr)
+        {
+            Matrix mat;
+            //D3DXMatrixRotationY(&mat, 3.14f);
+            //D3DXMatrixMultiply(&transform, &transform, &mat);
+
+            //Matrix matBone = *combineMatrix;
+
+            //D3DXMatrixMultiply(&matBone, &matBone, &mat);
+            transform *= *combineMatrix;
+        }
+
 		while (parentPtr != nullptr)
 		{
             transform *= ((Transform3D*)parentPtr->transform3D)->GetTransform();
 
             parentPtr = parentPtr->GetParent();
 		}
-
-        if (combineMatrix != nullptr)
-        {            
-            Matrix mat;
-            D3DXMatrixRotationY(&mat, 3.14f);
-            D3DXMatrixMultiply(&transform, &transform, &mat);
-            
-            Matrix matBone = *combineMatrix;
-
-            D3DXMatrixMultiply(&matBone, &matBone, &mat);
-            D3DXMatrixMultiply(&transform, &transform, &matBone);
-        }
+        
 		return transform;
 	}
 }

@@ -22,6 +22,12 @@
     <Filter Include="소스 파일\Script\GameManager">
       <UniqueIdentifier>{cb6f3960-f03a-4698-a31b-0a52988003bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Script\Player">
+      <UniqueIdentifier>{2f80f661-881d-4298-8759-0780916d9eec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Script\Monster">
+      <UniqueIdentifier>{a1ffd02b-bdf7-41b8-a7f3-b477606fe428}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -33,14 +39,17 @@
     <ClCompile Include="SetScript.cpp">
       <Filter>소스 파일\Script</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerCharacter.cpp">
-      <Filter>소스 파일\Script</Filter>
-    </ClCompile>
     <ClCompile Include="GameManager.cpp">
       <Filter>소스 파일\Script\GameManager</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerCharacter.cpp">
+      <Filter>소스 파일\Script\Player</Filter>
+    </ClCompile>
     <ClCompile Include="PlayerGUI.cpp">
-      <Filter>소스 파일\Script</Filter>
+      <Filter>소스 파일\Script\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>소스 파일\Script\Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -50,14 +59,17 @@
     <ClInclude Include="SetScript.h">
       <Filter>소스 파일\Script</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerCharacter.h">
-      <Filter>소스 파일\Script</Filter>
-    </ClInclude>
     <ClInclude Include="GameManager.h">
       <Filter>소스 파일\Script\GameManager</Filter>
     </ClInclude>
     <ClInclude Include="PlayerGUI.h">
-      <Filter>소스 파일\Script</Filter>
+      <Filter>소스 파일\Script\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCharacter.h">
+      <Filter>소스 파일\Script\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>소스 파일\Script\Monster</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

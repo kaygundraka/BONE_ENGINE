@@ -18,7 +18,7 @@ namespace BONE_GRAPHICS
 		std::list<GameObject*> staticObjectList;
 
         std::vector<PointLight*> pointLightList;
-        std::list<GraphNode*> graphNodeList;
+        std::map<std::string, GraphNode*> graphNodeList;
 
         etuImage image_LoadingBackground;
 		int cameraIndex;
@@ -129,7 +129,7 @@ namespace BONE_GRAPHICS
 		void SetCameraIndex(int index);
 		int GetCameraIndex();
 
-        std::list<GraphNode*> GetGraphNodes();
+        std::map<std::string, GraphNode*>* GetGraphNodes();
         void AddGraphNode(GraphNode* node);
         void RemoveGraphNode(GraphNode* node);
 

@@ -17,8 +17,7 @@ private:
     
     GameObject* player;
     ScreenImage* screenImage;
-
-
+    
     int totalSceneFlow;
 
     int sceneFlow[5];

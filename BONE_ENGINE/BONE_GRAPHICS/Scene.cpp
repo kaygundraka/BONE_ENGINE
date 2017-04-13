@@ -188,13 +188,13 @@ namespace BONE_GRAPHICS
 
     void Scene::Reference()
     {
+        for (auto Iter = graphNodeList.begin(); Iter != graphNodeList.end(); Iter++)
+            (*Iter).second->Reference();
+
         for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
             (*Iter)->Reference();
 
         for (auto Iter = pointLightList.begin(); Iter != pointLightList.end(); Iter++)
-            (*Iter)->Reference();
-
-        for (auto Iter = graphNodeList.begin(); Iter != graphNodeList.end(); Iter++)
             (*Iter)->Reference();
     }
 
@@ -462,7 +462,7 @@ namespace BONE_GRAPHICS
 
         for each(auto var in graphNodeList)
         {
-            ((GraphNode*)var)->SaveInMaps();
+            ((GraphNode*)var.second)->SaveInMaps();
         }
     }
 
@@ -560,7 +560,7 @@ namespace BONE_GRAPHICS
             }
 
             node->SetName(it.key());
-            graphNodeList.push_back(node);
+            graphNodeList.insert(std::pair<std::string, GraphNode*>(it.key(), node));
         }
 
         for (json::iterator it = j["GameObject"].begin(); it != j["GameObject"].end(); ++it) {
@@ -615,21 +615,21 @@ namespace BONE_GRAPHICS
         file.close();
     }
 
-    std::list<GraphNode*> Scene::GetGraphNodes()
+    std::map<std::string, GraphNode*>* Scene::GetGraphNodes()
     {
-        return graphNodeList;
+        return &graphNodeList;
     }
     
     void Scene::AddGraphNode(GraphNode* node)
     {
-        graphNodeList.push_back(node);
+        graphNodeList.insert(std::pair<std::string, GraphNode*>(node->GetName(), node));
     }
 
     void Scene::RemoveGraphNode(GraphNode* node)
     {
         for (auto iter = graphNodeList.begin(); iter != graphNodeList.end(); iter++)
         {
-            if (*iter == node)
+            if ((*iter).second == node)
             {
                 graphNodeList.erase(iter);
                 break;

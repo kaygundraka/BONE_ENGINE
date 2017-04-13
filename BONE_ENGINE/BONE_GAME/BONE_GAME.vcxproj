@@ -164,6 +164,7 @@
   <ItemGroup>
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="PlayerCharacter.cpp" />
     <ClCompile Include="PlayerGUI.cpp" />
     <ClCompile Include="SetScript.cpp" />
@@ -171,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Monster.h" />
     <ClInclude Include="PlayerCharacter.h" />
     <ClInclude Include="PlayerGUI.h" />
     <ClInclude Include="SetScript.h" />

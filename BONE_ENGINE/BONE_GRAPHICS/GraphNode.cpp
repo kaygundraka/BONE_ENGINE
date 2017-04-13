@@ -23,7 +23,7 @@ namespace BONE_GRAPHICS
         rect.LeftTop = Vec2(0, 0);
         rect.RightBottom = Vec2(512, 512);
         billBoard->SetOriginRect(rect);
-        billBoard->SetRectSize(20, 20);
+        billBoard->SetRectSize(10, 10);
         billBoard->SetTexture("GraphNode.png", 512, 512);
         billBoard->SetRenderMode(BillBoard::RENDER_ALPHA);
         this->AddComponent(billBoard);

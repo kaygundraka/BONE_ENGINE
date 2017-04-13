@@ -297,8 +297,8 @@ void BoneEditor::ShowViewMenu()
         else
             show = true;
 
-        for each(auto var in NodeList)
-            ((GraphNode*)var)->SetIcon(show);
+        for each(auto var in *NodeList)
+            ((GraphNode*)var.second)->SetIcon(show);
     }
 
     if (ImGui::MenuItem("Show Main Editor"))
@@ -411,19 +411,19 @@ void BoneEditor::ShowGraphNodeInfo(GraphNode* node)
 
             auto GraphNodes = CUR_SCENE->GetGraphNodes();
             
-            const int Size = GraphNodes.size() - 1;
+            const int Size = (*GraphNodes).size() - 1;
             char** ComboBoxItems = new char*[Size];
 
-            int CurItem = 0;
+            static int CurItem = 0;
 
             int i = 0;
-            for each(auto item in GraphNodes)
+            for each(auto item in *GraphNodes)
             {
-                if (item->GetName() == node->GetName())
+                if (item.second->GetName() == node->GetName())
                     continue;
 
                 ComboBoxItems[i] = new char[64];
-                strcpy(ComboBoxItems[i], item->GetName().c_str());
+                strcpy(ComboBoxItems[i], item.second->GetName().c_str());
                 
                 i++;
             }
@@ -1331,9 +1331,9 @@ void BoneEditor::UpdateFrame()
             ImGui::Separator();
             ImGui::Text("[GraphNodes]");
 
-            for each(auto var in GraphNodes)
+            for each(auto var in *GraphNodes)
             {
-                ShowGraphNodeInfo(var);
+                ShowGraphNodeInfo(var.second);
             }
         }
 

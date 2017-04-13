@@ -1,13 +1,20 @@
-#include <StaticMesh.h>
-#include <InputManager.h>
-
 #include "PlayerCharacter.h"
-#include "PlayerGUI.h"
 
 void PlayerCharacter::Init()
 {
     gameObject->SetPriority(1);
     gameObject->SetTag("Player");
+
+    W_Key = false;
+    S_Key = false;
+    A_Key = false;
+    D_Key = false;
+    
+    Sneaking_Key = false;
+    Attack_Key = false;
+    isSneaking = false;
+
+    speed = 1000;
 }
 
 void PlayerCharacter::Reference()
@@ -21,7 +28,7 @@ void PlayerCharacter::Reference()
     cameraTr = tr;
 
     Camera *camera = new Camera(0, PROJECTION_TYPE::PRJOJECTION_PERSPACTIVE,
-        Vec3(0, 1, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), 1000, 0.1f, D3DX_PI * 0.6f);
+        Vec3(0, 1, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), 1000, 0.1f, D3DX_PI * 0.5f);
     camera->SetTargetPosition(((Transform3D*)gameObject->transform3D)->GetPosition() + Vec3(0, 30, 0));
     cameraObject->AddComponent(camera);
     mainCamera = camera;
@@ -35,7 +42,7 @@ void PlayerCharacter::Reference()
     Transform3D* SwordTransform = new Transform3D();
     auto BoneMatrix = skinnedMesh->GetBoneMatrix("hand_r");
     SwordTransform->CombineMatrix(BoneMatrix);
-    SwordTransform->SetPosition(-19.0f, 5.0f, 17.0f);
+    //SwordTransform->SetPosition(-19.0f, 5.0f, 17.0f);
     SwordTransform->SetRotate(-0.45f, 0.96f, 1.85f);
     SwordTransform->SetScale(2.0f, 2.0f, 2.0f);
     Sword->AddComponent(SwordTransform);
@@ -64,22 +71,47 @@ void PlayerCharacter::Update()
 
     gui->ShowGUI(true);
     
-    cout << swordTr->GetPosition().x << ", " << swordTr->GetPosition().y << ", " << swordTr->GetPosition().z << endl;
-
     bool Input = false;
-        
-    static bool W_Key = false;
-    static bool S_Key = false;
-    static bool A_Key = false;
-    static bool D_Key = false;
-    static bool Attack_Key = false;
+
+    if (InputMgr->KeyDown(VK_CONTROL, false) && !isRun)
+    {
+        gui->SetStatus(PlayerGUI::PLAYER_STATUS::SNEAKING);
+        isSneaking = true;
+        speed = 500;
+    }
+    else
+    {
+        gui->SetStatus(PlayerGUI::PLAYER_STATUS::NORMAL);
+        speed = 1000;
+        isSneaking = false;
+    }
+
+    if (InputMgr->KeyDown(VK_SHIFT, false))
+    {
+        gui->SetStatus(PlayerGUI::PLAYER_STATUS::NORMAL);
+
+        isRun = true;
+        isSneaking = false;
+        speed = 2000;
+    }
+    else if (!isSneaking)
+    {
+        isRun = false;
+        speed = 1000;
+    }
 
     if (InputMgr->KeyDown('W', false) && !Attack_Key)
     {
         Input = true;
-        skinnedMesh->SetAnimation("Skeleton_1H_walk");
 
-        Vec3 Forward = GET_TRANSFORM_3D(gameObject)->GetForward() * SceneMgr->GetTimeDelta() * 1000;
+        if (isRun)
+            skinnedMesh->SetAnimation("Skeleton_Run");
+        else if (isSneaking)
+            skinnedMesh->SetAnimation("Skeleton_Sneaking");
+        else
+            skinnedMesh->SetAnimation("Skeleton_1H_walk");
+
+        Vec3 Forward = GET_TRANSFORM_3D(gameObject)->GetForward() * SceneMgr->GetTimeDelta() * speed;
 
         GET_RIGIDBODY(gameObject)->SetLinearVelocity(Forward.x, Forward.y, -Forward.z);
 
@@ -91,12 +123,13 @@ void PlayerCharacter::Update()
         W_Key = false;
     }
 
-    if (InputMgr->KeyDown('S', false) && !Attack_Key)
+    if (InputMgr->KeyDown('S', false) && !Attack_Key &&!isSneaking)
     {
         Input = true;
+
         skinnedMesh->SetAnimation("Skeleton_walking_back");
 
-        Vec3 Backword = -GET_TRANSFORM_3D(gameObject)->GetForward() * SceneMgr->GetTimeDelta() * 1000;
+        Vec3 Backword = -GET_TRANSFORM_3D(gameObject)->GetForward() * SceneMgr->GetTimeDelta() * 500;
 
         GET_RIGIDBODY(gameObject)->SetLinearVelocity(Backword.x, Backword.y, -Backword.z);
 
@@ -134,7 +167,7 @@ void PlayerCharacter::Update()
         D_Key = false;
     }
 
-    if (InputMgr->GetMouseLBButtonStatus() == MOUSE_LBDOWN)
+    if (InputMgr->GetMouseLBButtonStatus() == MOUSE_LBDOWN && !Sneaking_Key)
     {
         Input = true;
         Attack_Key = true;

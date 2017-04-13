@@ -2,6 +2,7 @@
 #include <InterfaceIds.h>
 #include <Script.h>
 #include <SceneManager.h>
+#include <Transform2D.h>
 
 using namespace BONE_GRAPHICS;
 
@@ -25,11 +26,25 @@ private:
 
     GameObject* statusFrame;
 
+    GameObject* hpBar;
+    Transform2D* hpBarTr;
+
+    GameObject* steminaBar;
+    Transform2D* steminaBarTr;
+
+
+    int hp;
+    int stemina;
+
 public:
     void ShowGUI(bool show);
         
     virtual void Init();
     virtual void Reference();
-    virtual void Update();
-    virtual void LateUpdate();
+
+    void SetStatus(PLAYER_STATUS status);
+    PLAYER_STATUS GetStatus();
+
+    void SetStemina(int stemina);
+    void SetHP(int hp);
 };

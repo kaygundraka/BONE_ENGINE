@@ -3,8 +3,11 @@
 #include <Script.h>
 #include <Transform3D.h>
 #include <Camera.h>
-#include <SkinnedMesh.h>
+#include <InputManager.h>
 #include <SceneManager.h>
+#include <RenderManager.h>
+#include <StaticMesh.h>
+#include <SkinnedMesh.h>
 #include <Rp3dRigidBody.h>
 #include "PlayerGUI.h"
 
@@ -25,6 +28,19 @@ private:
 
     float mouseX;
     float mouseY;
+
+    float speed;
+
+    bool W_Key;
+    bool S_Key;
+    bool A_Key;
+    bool D_Key;
+
+    bool isSneaking;
+    bool isRun;
+
+    bool Sneaking_Key;
+    bool Attack_Key;
 
 public:
     bool isEvent;
