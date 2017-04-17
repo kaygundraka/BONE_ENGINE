@@ -3,6 +3,8 @@
 #include <Transform3D.h>
 #include <GraphNode.h>
 #include <Rp3dRigidBody.h>
+#include <SkinnedMesh.h>
+#include <StaticMesh.h>
 using namespace BONE_GRAPHICS;
 
 class Monster : public Script {
@@ -15,7 +17,15 @@ private:
     std::map<std::string, GraphNode*>* nodes;
 
     Transform3D* nextNodeTr;
+    Transform3D* transform;
+
+    float sleepTimer;
     Vec3 moveDir;
+    Vec3 preDir;
+    Vec3 CurPos;
+    Vec3 NextPos;
+
+    float rotateYAngle;
 
     std::string currentNode;
     std::string nextNode;
@@ -24,7 +34,8 @@ private:
 
     MONSTER_STATUS status;
 
-    bool IsArrived();
+    BONE_GRAPHICS::RigidBody* rigidBody;
+    SkinnedMesh* skinnedMesh;
 
     void Patrol();
     void Search();

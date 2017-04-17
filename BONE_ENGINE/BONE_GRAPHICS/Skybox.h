@@ -13,13 +13,17 @@ namespace BONE_GRAPHICS
 		LPDIRECT3DTEXTURE9 meshTextures[6];
 		D3DXMATRIX matWrd;
 		bool Is_Init;
+        std::string folder;
+        std::string fileType;
 
 	public:
 		Skybox();
 
-        void Update(GameObject* cameraObject);
 		bool SetSkybox(char* name, std::string fileType);
-		void Render();
+        std::string GetFolderName();
+        std::string GetFileType();
+		
+        void Render();
 		void Release();
 	};
 }

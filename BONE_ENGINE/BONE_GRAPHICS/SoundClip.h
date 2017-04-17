@@ -43,9 +43,10 @@ namespace BONE_GRAPHICS
         void AddClip(std::string file, float volume, bool loop, bool startPaused, float minDist, float maxDist);
         void ChangeInfo(std::string file, float volume, bool loop, bool startPaused, float minDist, float maxDist);
         void RemoveClip(std::string file);
-        
+        bool IsPlaying(std::string clip);
+
         void Update();
-        void PlaySound(std::string clip);
-        void StopSound(std::string clip);
+        void Play(std::string clip);
+        void Stop(std::string clip);
     };
 }

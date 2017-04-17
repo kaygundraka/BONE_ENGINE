@@ -55,9 +55,10 @@ namespace BONE_GRAPHICS
         Vec3 GetPosOnPivot();
 
         void AddForce(Vec3 force);
-        void ADDForce(rp3d::Vector3 force, rp3d::Vector3 point);
+        void AddForce(rp3d::Vector3 force, rp3d::Vector3 point);
         void ApplyTorque(rp3d::Vector3 torque);
         void ApplyTorque(Vec3 torque);
+        void SetTransform(Vec3 Translate, Vec3 Rotate);
 
         void UpdateTransform();
     };

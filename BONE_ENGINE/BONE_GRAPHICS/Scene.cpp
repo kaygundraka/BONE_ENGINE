@@ -427,6 +427,9 @@ namespace BONE_GRAPHICS
             globalAmbient.a
         };
 
+        j["Scene"]["Skybox"]["Folder"] = skybox.GetFolderName();
+        j["Scene"]["Skybox"]["Type"] = skybox.GetFileType();
+
         j["Scene"]["EnableFog"] = enableFog;
 
         if (enableFog)
@@ -497,6 +500,14 @@ namespace BONE_GRAPHICS
         globalAmbient.b = GlobalAmbient[2];
         globalAmbient.a = GlobalAmbient[3];
         
+        if (j["Scene"]["Skybox"]["Folder"] != "None")
+        {
+            char SkyboxFolder[MAX_PATH] = "";
+            strcpy(SkyboxFolder, j["Scene"]["Skybox"]["Folder"].get<std::string>().c_str());
+
+            skybox.SetSkybox(SkyboxFolder, j["Scene"]["Skybox"]["Type"].get<std::string>());
+        }
+
         auto EnableFog = j["Scene"]["EnableFog"].get<bool>();
         enableFog = EnableFog;
 

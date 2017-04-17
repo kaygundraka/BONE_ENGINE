@@ -26,16 +26,18 @@ private:
 
     GameObject* statusFrame;
 
+    GameObject* getItemGUI;
+
     GameObject* hpBar;
     Transform2D* hpBarTr;
 
     GameObject* steminaBar;
     Transform2D* steminaBarTr;
 
-
     int hp;
     int stemina;
-
+    bool showGetItem;
+        
 public:
     void ShowGUI(bool show);
         
@@ -43,7 +45,10 @@ public:
     virtual void Reference();
 
     void SetStatus(PLAYER_STATUS status);
+    
     PLAYER_STATUS GetStatus();
+
+    void ShowGetItem(bool show);
 
     void SetStemina(int stemina);
     void SetHP(int hp);

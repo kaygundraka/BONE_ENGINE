@@ -9,23 +9,32 @@
 #include <StaticMesh.h>
 #include <SkinnedMesh.h>
 #include <Rp3dRigidBody.h>
+#include <SoundClip.h>
 #include "PlayerGUI.h"
 
 using namespace BONE_GRAPHICS;
 
 class PlayerCharacter : public Script {
 private:
-    Camera* mainCamera;
-    
     GameObject* cameraObject;
-    
+    Camera* mainCamera;
     Transform3D* cameraTr;
-    Transform3D* swordTr;
     
+    GameObject* sword;
+    Transform3D* swordTr;
+
+    GameObject* shield;
+    Transform3D* shieldTr;
+
+    SoundClip* soundClips;
+
+
+    BONE_GRAPHICS::RigidBody* rigidBody;
+    Transform3D* transform;
     SkinnedMesh* skinnedMesh;
     
     PlayerGUI* gui;
-
+    
     float mouseX;
     float mouseY;
 
@@ -38,12 +47,19 @@ private:
 
     bool isSneaking;
     bool isRun;
+    bool isCombat;
+    bool wearItem;
 
     bool Sneaking_Key;
     bool Attack_Key;
 
 public:
     bool isEvent;
+
+    void CombatMode();
+    void NormalMode();
+    void WearItem();
+    bool IsWoreItem();
     
     virtual void Init();
     virtual void Reference();

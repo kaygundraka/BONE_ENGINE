@@ -811,10 +811,10 @@ void BoneEditor::ShowObjectInfo(std::string name)
                                     ((SoundClip*)item->second)->ChangeInfo(var.first, Volume, Loop, StartPaused, MinDist, MaxDist);
 
                                     if (ImGui::Button("Play"))
-                                        ((SoundClip*)item->second)->PlaySoundA(var.first);
+                                        ((SoundClip*)item->second)->Play(var.first);
 
                                     if (ImGui::Button("Stop"))
-                                        ((SoundClip*)item->second)->StopSound(var.first);
+                                        ((SoundClip*)item->second)->Stop(var.first);
 
                                     if (ImGui::Button("Remove"))
                                     {

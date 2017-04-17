@@ -91,9 +91,21 @@ namespace BONE_GRAPHICS
         rigidBody->applyForceToCenterOfMass(Force);
     }
     
-    void RigidBody::ADDForce(rp3d::Vector3 force, rp3d::Vector3 point)
+    void RigidBody::AddForce(rp3d::Vector3 force, rp3d::Vector3 point)
     {
         rigidBody->applyForce(force, point);
+    }
+
+    void RigidBody::SetTransform(Vec3 Translate, Vec3 Rotate)
+    {
+        reactphysics3d::Transform transform;
+
+        transform.setPosition(reactphysics3d::Vector3(Translate.x, Translate.y, -Translate.z));
+
+        reactphysics3d::Quaternion NewQuater(Rotate.x, Rotate.y, Rotate.z);
+        transform.setOrientation(NewQuater);
+
+        rigidBody->setTransform(transform);
     }
 
     void RigidBody::ApplyTorque(Vec3 torque)

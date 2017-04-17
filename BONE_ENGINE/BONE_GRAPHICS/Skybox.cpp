@@ -9,12 +9,15 @@ namespace BONE_GRAPHICS
 {
 	Skybox::Skybox()
 	{
+        folder = "None";
 		Is_Init = false;
 	}
 
 	bool Skybox::SetSkybox(char* name, std::string fileType)
 	{
 		char TextureAddress[6][100] = { {} };
+        folder = name;
+        this->fileType = fileType;
 
         std::string FullPath;
         ResourceMgr->ExistFile(name, &FullPath);
@@ -129,12 +132,14 @@ namespace BONE_GRAPHICS
 		return Is_Init;
 	}
 
-    void Skybox::Update(GameObject* cameraObject)
+    std::string Skybox::GetFolderName()
     {
-        if (Is_Init)
-        {
+        return folder;
+    }
 
-        }
+    std::string Skybox::GetFileType()
+    {
+        return fileType;
     }
 
 	void Skybox::Render()

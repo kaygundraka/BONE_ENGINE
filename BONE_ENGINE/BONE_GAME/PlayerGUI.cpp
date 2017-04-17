@@ -16,13 +16,14 @@ void PlayerGUI::Reference()
     statusNormal_Inactive   = new GameObject();
     statusNormal_Inactive->SetActive(false);
 
+    statusSneaking_Active = new GameObject();
+    statusSneaking_Inactive = new GameObject();
+    statusSneaking_Active->SetActive(false);
+
     statusCombat_Active     = new GameObject();
     statusCombat_Inactive   = new GameObject();
     statusCombat_Active->SetActive(false);
-    
-    statusSneaking_Active   = new GameObject();
-    statusSneaking_Inactive = new GameObject();
-    statusSneaking_Active->SetActive(false);
+    statusCombat_Inactive->SetActive(false);
 
     Transform2D* tr[6];
     
@@ -40,10 +41,10 @@ void PlayerGUI::Reference()
 
     statusNormal_Active->AddComponent(tr[0]);
     statusNormal_Inactive->AddComponent(tr[1]);
-    statusCombat_Active->AddComponent(tr[2]);
-    statusCombat_Inactive->AddComponent(tr[3]);
-    statusSneaking_Active->AddComponent(tr[4]);
-    statusSneaking_Inactive->AddComponent(tr[5]);
+    statusSneaking_Active->AddComponent(tr[2]);
+    statusSneaking_Inactive->AddComponent(tr[3]);
+    statusCombat_Active->AddComponent(tr[4]);
+    statusCombat_Inactive->AddComponent(tr[5]);
 
     Rect originRect;
     originRect.LeftTop = Vec2(0, 0);
@@ -59,16 +60,6 @@ void PlayerGUI::Reference()
     ImageNormal_Inactive->SetOriginRect(originRect);
     statusNormal_Inactive->AddComponent(ImageNormal_Inactive);
 
-    ScreenImage* ImageCombat_Active = new ScreenImage();
-    ImageCombat_Active->SetImageFile("Combat_Active.png");
-    ImageCombat_Active->SetOriginRect(originRect);
-    statusCombat_Active->AddComponent(ImageCombat_Active);
-
-    ScreenImage* ImageCombat_Inactive = new ScreenImage();
-    ImageCombat_Inactive->SetImageFile("Combat_Inactive.png");
-    ImageCombat_Inactive->SetOriginRect(originRect);
-    statusCombat_Inactive->AddComponent(ImageCombat_Inactive);
-
     ScreenImage* ImageSneaking_Active = new ScreenImage();
     ImageSneaking_Active->SetImageFile("Sneaking_Active.png");
     ImageSneaking_Active->SetOriginRect(originRect);
@@ -79,14 +70,23 @@ void PlayerGUI::Reference()
     ImageSneaking_Inactive->SetOriginRect(originRect);
     statusSneaking_Inactive->AddComponent(ImageSneaking_Inactive);
 
+    ScreenImage* ImageCombat_Active = new ScreenImage();
+    ImageCombat_Active->SetImageFile("Combat_Active.png");
+    ImageCombat_Active->SetOriginRect(originRect);
+    statusCombat_Active->AddComponent(ImageCombat_Active);
+
+    ScreenImage* ImageCombat_Inactive = new ScreenImage();
+    ImageCombat_Inactive->SetImageFile("Combat_Inactive.png");
+    ImageCombat_Inactive->SetOriginRect(originRect);
+    statusCombat_Inactive->AddComponent(ImageCombat_Inactive);
+
     CUR_SCENE->AddObject(statusNormal_Active, "GUI_STATUS_NORMAL_A");
     CUR_SCENE->AddObject(statusNormal_Inactive, "GUI_STATUS_NORMAL_I");
-    CUR_SCENE->AddObject(statusCombat_Active, "GUI_STATUS_COMBAT_A");
-    CUR_SCENE->AddObject(statusCombat_Inactive, "GUI_STATUS_COMBAT_I");
     CUR_SCENE->AddObject(statusSneaking_Active, "GUI_STATUS_SNEAKING_A");
     CUR_SCENE->AddObject(statusSneaking_Inactive, "GUI_STATUS_SNEAKING_I");
+    CUR_SCENE->AddObject(statusCombat_Active, "GUI_STATUS_COMBAT_A");
+    CUR_SCENE->AddObject(statusCombat_Inactive, "GUI_STATUS_COMBAT_I");
     
-
     statusFrame = new GameObject();
 
     Transform2D* StatusFrameTr = new Transform2D();
@@ -113,8 +113,7 @@ void PlayerGUI::Reference()
     hpBar->AddComponent(ImageHpBar);
 
     CUR_SCENE->AddObject(hpBar, "GUI_HP_BAR");
-
-
+    
     steminaBar = new GameObject();
 
     steminaBarTr = new Transform2D();
@@ -129,7 +128,26 @@ void PlayerGUI::Reference()
     CUR_SCENE->AddObject(steminaBar, "GUI_STEMINA_BAR");
 
 
+    getItemGUI = new GameObject();
+
+    Transform2D* showGetItemTr = new Transform2D();
+    showGetItemTr->SetPosition(0, RenderMgr->GetHeight() - 100, 0);
+    getItemGUI->AddComponent(showGetItemTr);
+
+    ScreenImage* ImageGetItems = new ScreenImage();
+    ImageGetItems->SetImageFile("GetItems.png");
+    ImageGetItems->SetOriginRect(Vec2(0, 0), Vec2(392, 35));
+    getItemGUI->AddComponent(ImageGetItems);
+
+    CUR_SCENE->AddObject(getItemGUI, "GUI_SHOW_ITEM");
+    getItemGUI->SetActive(false);
+
     ShowGUI(false);
+}
+
+void PlayerGUI::ShowGetItem(bool show)
+{
+    getItemGUI->SetActive(show);
 }
 
 void PlayerGUI::ShowGUI(bool show)

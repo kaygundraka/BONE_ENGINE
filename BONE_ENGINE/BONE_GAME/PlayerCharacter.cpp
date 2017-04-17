@@ -14,6 +14,12 @@ void PlayerCharacter::Init()
     Attack_Key = false;
     isSneaking = false;
 
+    soundClips = new SoundClip();
+    soundClips->AttachObject(this->gameObject);
+    soundClips->AddClip("footstep.ogg", 1.0f, true, false, 0.0f, 150.0f);
+    soundClips->AddClip("GetItem.mp3", 1.0f, true, false, 0.0f, 150.0f);
+    this->gameObject->AddComponent(soundClips);
+
     speed = 1000;
 }
 
@@ -36,27 +42,55 @@ void PlayerCharacter::Reference()
     skinnedMesh = ((SkinnedMesh*)gameObject->GetComponent("SkinnedMesh"));
     CUR_SCENE->AddObject(cameraObject, "MainCamera");
 
-    GameObject* Sword = new GameObject();
-    Sword->SetPriority(1);
+    sword = new GameObject();
+    sword->SetPriority(1);
 
     Transform3D* SwordTransform = new Transform3D();
-    auto BoneMatrix = skinnedMesh->GetBoneMatrix("hand_r");
-    SwordTransform->CombineMatrix(BoneMatrix);
-    //SwordTransform->SetPosition(-19.0f, 5.0f, 17.0f);
-    SwordTransform->SetRotate(-0.45f, 0.96f, 1.85f);
+    auto SwordMatrix = skinnedMesh->GetBoneMatrix("spine_03"); //hand_r
+    SwordTransform->CombineMatrix(SwordMatrix);
+    SwordTransform->SetPosition(25, -4, 8); 
+    SwordTransform->SetRotate(-1.29f, 1.55f, 1.81f); // -0.45f, 0.96f, 1.85f;
     SwordTransform->SetScale(2.0f, 2.0f, 2.0f);
-    Sword->AddComponent(SwordTransform);
+    sword->AddComponent(SwordTransform);
     swordTr = SwordTransform;
 
     StaticMesh* SwordMesh = new StaticMesh();
     SwordMesh->SetFile("Sword.X");
-    Sword->AddComponent(SwordMesh);
+    sword->AddComponent(SwordMesh);
 
-    Sword->AttachParent(this->gameObject);
+    sword->AttachParent(this->gameObject);
 
-    CUR_SCENE->AddObject(Sword, "Sword");
+    CUR_SCENE->AddObject(sword, "PlayerSword");
+    sword->SetActive(false);
+
+    shield = new GameObject();
+    shield->SetPriority(1);
+
+    Transform3D* ShieldTransform = new Transform3D();
+    auto ShieldMatrix = skinnedMesh->GetBoneMatrix("spine_03");
+    ShieldTransform->CombineMatrix(ShieldMatrix);
+    ShieldTransform->SetPosition(-12.0f, 0, 18.0f);
+    ShieldTransform->SetRotate(0.02f , -1.44f, -0.37f);
+    ShieldTransform->SetScale(2.0f, 2.0f, 2.0f);
+    shield->AddComponent(ShieldTransform);
+    shieldTr = ShieldTransform;
+    
+    StaticMesh* ShieldMesh = new StaticMesh();
+    ShieldMesh->SetFile("Shield.X");
+    shield->AddComponent(ShieldMesh);
+
+    shield->AttachParent(this->gameObject);
+
+    CUR_SCENE->AddObject(shield, "PlayerShield");
+    shield->SetActive(false);
 
     gui = (PlayerGUI*)(CUR_SCENE->FindObjectByName("GameManager")->GetComponent("PlayerGUI"));
+
+    rigidBody = GET_RIGIDBODY(this->gameObject);
+    transform = GET_TRANSFORM_3D(this->gameObject);
+
+    isCombat = false;
+    wearItem = false;
 }
 
 void PlayerCharacter::Update()
@@ -65,13 +99,57 @@ void PlayerCharacter::Update()
     {
         gui->ShowGUI(false);
 
-        GET_RIGIDBODY(gameObject)->SetLinearVelocity(0, 0, 0);
+        rigidBody->SetLinearVelocity(0, 0, 0);
         return;
     }
+    
+    float rotateYAngle = transform->GetRotateAngle().y;
+    rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
 
     gui->ShowGUI(true);
+
+
+    if (wearItem == false)
+    {
+        auto Item = CUR_SCENE->FindObjectByName("Sword");
+
+        auto ItemPos = GET_TRANSFORM_3D(Item)->GetPosition();
+        auto Pos = transform->GetPosition();
+
+        if (Pos.x >= ItemPos.x - 30 && Pos.x <= ItemPos.x + 30
+            && Pos.z >= ItemPos.z - 30 && Pos.z <= ItemPos.z + 30)
+        {
+            gui->ShowGetItem(true);
+
+            if (InputMgr->KeyDown('F', true))
+            {
+                wearItem = true;
+                WearItem();
+                gui->ShowGetItem(false);
+            }
+        }
+        else
+            gui->ShowGetItem(false);
+    }
+
     
     bool Input = false;
+
+    if (InputMgr->KeyDown(VK_TAB, true) && wearItem)
+    {
+        if (isCombat)
+        {
+            isCombat = false;
+            gui->SetStatus(PlayerGUI::PLAYER_STATUS::NORMAL);
+            NormalMode();
+        }
+        else
+        {
+            isCombat = true;
+            gui->SetStatus(PlayerGUI::PLAYER_STATUS::COMBAT);
+            CombatMode();
+        }
+    }
 
     if (InputMgr->KeyDown(VK_CONTROL, false) && !isRun)
     {
@@ -81,7 +159,11 @@ void PlayerCharacter::Update()
     }
     else
     {
-        gui->SetStatus(PlayerGUI::PLAYER_STATUS::NORMAL);
+        if (isCombat)
+            gui->SetStatus(PlayerGUI::PLAYER_STATUS::COMBAT);
+        else
+            gui->SetStatus(PlayerGUI::PLAYER_STATUS::NORMAL);
+
         speed = 1000;
         isSneaking = false;
     }
@@ -89,6 +171,8 @@ void PlayerCharacter::Update()
     if (InputMgr->KeyDown(VK_SHIFT, false))
     {
         gui->SetStatus(PlayerGUI::PLAYER_STATUS::NORMAL);
+        NormalMode();
+        isCombat = false;
 
         isRun = true;
         isSneaking = false;
@@ -102,6 +186,9 @@ void PlayerCharacter::Update()
 
     if (InputMgr->KeyDown('W', false) && !Attack_Key)
     {
+        if (!soundClips->IsPlaying("footstep.ogg"))
+            soundClips->Play("footstep.ogg");
+
         Input = true;
 
         if (isRun)
@@ -110,34 +197,37 @@ void PlayerCharacter::Update()
             skinnedMesh->SetAnimation("Skeleton_Sneaking");
         else
             skinnedMesh->SetAnimation("Skeleton_1H_walk");
-
+        
         Vec3 Forward = GET_TRANSFORM_3D(gameObject)->GetForward() * SceneMgr->GetTimeDelta() * speed;
 
-        GET_RIGIDBODY(gameObject)->SetLinearVelocity(Forward.x, Forward.y, -Forward.z);
+        rigidBody->SetLinearVelocity(Forward.x, Forward.y, -Forward.z);
 
         W_Key = true;
     }
     else if (W_Key)
     {
-        GET_RIGIDBODY(gameObject)->SetLinearVelocity(0, 0, 0);
+        rigidBody->SetLinearVelocity(0, 0, 0);
         W_Key = false;
     }
 
     if (InputMgr->KeyDown('S', false) && !Attack_Key &&!isSneaking)
     {
+        if (!soundClips->IsPlaying("footstep.ogg"))
+            soundClips->Play("footstep.ogg");
+
         Input = true;
 
         skinnedMesh->SetAnimation("Skeleton_walking_back");
 
         Vec3 Backword = -GET_TRANSFORM_3D(gameObject)->GetForward() * SceneMgr->GetTimeDelta() * 500;
 
-        GET_RIGIDBODY(gameObject)->SetLinearVelocity(Backword.x, Backword.y, -Backword.z);
+        rigidBody->SetLinearVelocity(Backword.x, Backword.y, -Backword.z);
 
         S_Key = true;
     }
     else if (S_Key)
     {
-        GET_RIGIDBODY(gameObject)->SetLinearVelocity(0, 0, 0);
+        rigidBody->SetLinearVelocity(0, 0, 0);
         S_Key = false;
     }
 
@@ -146,11 +236,11 @@ void PlayerCharacter::Update()
         Input = true;
         A_Key = true;
 
-        GET_RIGIDBODY(gameObject)->SetAngularVelocity(0, -1.5f, 0);
+        rigidBody->SetAngularVelocity(0, -1.5f, 0);
     }
     else if (A_Key == true)
     {
-        GET_RIGIDBODY(gameObject)->SetAngularVelocity(0, 0, 0);
+        rigidBody->SetAngularVelocity(0, 0, 0);
         A_Key = false;
     }
         
@@ -159,16 +249,23 @@ void PlayerCharacter::Update()
         Input = true;
         D_Key = true;
 
-        GET_RIGIDBODY(gameObject)->SetAngularVelocity(0, 1.5f, 0);
+        rigidBody->SetAngularVelocity(0, 1.5f, 0);
     }
     else if (D_Key == true)
     {
-        GET_RIGIDBODY(gameObject)->SetAngularVelocity(0, 0, 0);
+        rigidBody->SetAngularVelocity(0, 0, 0);
         D_Key = false;
     }
 
-    if (InputMgr->GetMouseLBButtonStatus() == MOUSE_LBDOWN && !Sneaking_Key)
+    if (InputMgr->GetMouseLBButtonStatus() == MOUSE_LBDOWN && !Sneaking_Key && wearItem)
     {
+        if (gui->GetStatus() == PlayerGUI::PLAYER_STATUS::NORMAL)
+        {
+            isCombat = true;
+            CombatMode();
+            gui->SetStatus(PlayerGUI::PLAYER_STATUS::COMBAT);
+        }
+
         Input = true;
         Attack_Key = true;
 
@@ -185,9 +282,50 @@ void PlayerCharacter::Update()
 
     if (Input == false)
     {
+        soundClips->Stop("footstep.ogg");
+
         skinnedMesh->SetAnimationLoop(true);
-        skinnedMesh->SetAnimation("Skeleton_Idle");
+
+        if (isCombat)
+            skinnedMesh->SetAnimation("Skeleton_1H_combat_mode");
+        else
+            skinnedMesh->SetAnimation("Skeleton_Idle");
     }
+}
+
+void PlayerCharacter::WearItem()
+{
+    wearItem = true;
+
+    sword->SetActive(true);
+    shield->SetActive(true);
+}
+
+bool PlayerCharacter::IsWoreItem()
+{
+    return wearItem;
+}
+
+void PlayerCharacter::CombatMode()
+{
+    auto SwordMatrix = skinnedMesh->GetBoneMatrix("hand_r");
+    swordTr->CombineMatrix(SwordMatrix);
+    swordTr->SetPosition(0, 0, 0);
+    swordTr->SetRotate(-0.45f, 0.96f, 1.85f);
+
+    //auto ShieldMatrix = skinnedMesh->GetBoneMatrix("spine_03");
+    //shieldTr->CombineMatrix(ShieldMatrix);
+    //shieldTr->SetPosition(-12.0f, 0, 18.0f);
+    //shieldTr->SetRotate(0.02f, -1.44f, -0.37f);
+    //shieldTr->SetScale(2.0f, 2.0f, 2.0f);
+}
+
+void PlayerCharacter::NormalMode()
+{
+    auto SwordMatrix = skinnedMesh->GetBoneMatrix("spine_03"); //hand_r
+    swordTr->CombineMatrix(SwordMatrix);
+    swordTr->SetPosition(25, -4, 8);
+    swordTr->SetRotate(-1.29f, 1.55f, 1.81f); // -0.45f, 0.96f, 1.85f;
 }
 
 void PlayerCharacter::LateUpdate()

@@ -104,6 +104,7 @@ namespace BONE_GRAPHICS
             result.y += ((*combineMatrix)._42);
             result.z += ((*combineMatrix)._43);
         }
+
 		return result;
 	}
 

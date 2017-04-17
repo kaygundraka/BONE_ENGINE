@@ -5,7 +5,7 @@
 void Monster::Init()
 {
     status = PATROL;
-    speed = 300;
+    speed = 600;
 }
 
 void Monster::Reference()
@@ -26,17 +26,45 @@ void Monster::Reference()
     Tr->SetPosition(Pos);
 
     nextNodeTr = (Transform3D*)(*nodes)[*node->GetConnections().begin()]->transform3D;
+
+    skinnedMesh = GET_SKINNED_MESH(this->gameObject);
+
+    GameObject* Sword = new GameObject();
+    Sword->SetPriority(1);
+
+    Transform3D* SwordTransform = new Transform3D();
+    auto BoneMatrix = skinnedMesh->GetBoneMatrix("hand_r");
+    SwordTransform->CombineMatrix(BoneMatrix);
+    //SwordTransform->SetPosition(-19.0f, 5.0f, 17.0f);
+    SwordTransform->SetRotate(-0.45f, 0.96f, 1.85f);
+    SwordTransform->SetScale(2.0f, 2.0f, 2.0f);
+    Sword->AddComponent(SwordTransform);
+    
+    StaticMesh* SwordMesh = new StaticMesh();
+    SwordMesh->SetFile("Sword.X");
+    Sword->AddComponent(SwordMesh);
+
+    Sword->AttachParent(this->gameObject);
+
+    CUR_SCENE->AddObject(Sword, "MonsterSword");
+
+    transform = (Transform3D*)this->gameObject->transform3D;
+    rigidBody = GET_RIGIDBODY(this->gameObject);
+ 
+    rotateYAngle = 0;
+    sleepTimer = 0;
 }
 
 void Monster::Update()
 {
-    static bool updates = false;
-
-    if (InputMgr->KeyDown('U', true))
-        updates = true;
-
-    if (!updates)
+    if (CUR_SCENE->IsEnablePhysics() == false)
         return;
+
+    if (sleepTimer < 5.0f)
+    {
+        sleepTimer += SceneMgr->GetTimeDelta();
+        return;
+    }
 
     switch (status) {
     case PATROL: Patrol(); break;
@@ -45,23 +73,52 @@ void Monster::Update()
     }
 }
 
+float GetAngle(const Vec3& a, const Vec3& b)
+{
+    float cosAngle = D3DXVec3Dot(&a, &b);
+
+    return (a.z*b.x + a.x*b.z > 0.0f) ? (float)(acos(cosAngle)) : -(float)(acos(cosAngle));
+}
+
 void Monster::Patrol()
 {
-    if (IsArrived())
+    skinnedMesh->SetAnimation("Skeleton_1H_walk");
+
+    CurPos = transform->GetPosition();
+    NextPos = nextNodeTr->GetPosition();
+
+    CurPos.y = 0;
+    NextPos.y = 0;
+
+    moveDir = NextPos - CurPos;
+    D3DXVec3Normalize(&moveDir, &moveDir);
+    preDir = moveDir;
+
+    if (CurPos.x >= NextPos.x - 10 && CurPos.x <= NextPos.x + 10 
+        && CurPos.z >= NextPos.z - 10 && CurPos.z <= NextPos.z + 10)
     {
-        auto node = nodes->find("MonsterPathNode1")->second;
+        auto node = nodes->find(nextNode)->second;
 
         currentNode = node->GetName();
         nextNode = *node->GetConnections().begin();
 
         nextNodeTr = (Transform3D*)(*nodes)[*node->GetConnections().begin()]->transform3D;
+
+        NextPos = nextNodeTr->GetPosition();
+        NextPos.y = 0;
+
+        moveDir = NextPos - CurPos;
+        D3DXVec3Normalize(&moveDir, &moveDir);
+
+        rotateYAngle = GetAngle(Vec3(0, 0, -1), moveDir);
+        rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
     }
     else
     {
-        GET_RIGIDBODY(this->gameObject)->SetLinearVelocity(
+        rigidBody->SetLinearVelocity(
             moveDir.x * speed * SceneMgr->GetTimeDelta(),
             moveDir.y * speed * SceneMgr->GetTimeDelta(),
-            moveDir.z * speed * SceneMgr->GetTimeDelta()
+            -moveDir.z * speed * SceneMgr->GetTimeDelta()
         );
     }
 }
@@ -74,24 +131,4 @@ void Monster::Search()
 void Monster::Combat()
 {
 
-}
-
-bool Monster::IsArrived()
-{
-    auto Tr = ((Transform3D*)this->gameObject->transform3D);
-
-    auto CurPos = Tr->GetPosition();
-    auto NextPos = nextNodeTr->GetPosition();
-
-    moveDir = NextPos - CurPos;
-    D3DXVec3Normalize(&moveDir, &moveDir);
-
-    CurPos.y = 0;
-    NextPos.y = 0;
-
-    if (CurPos.x >= NextPos.x - 10 && CurPos.x <= NextPos.x + 10)
-        if (CurPos.z >= NextPos.z - 10 && CurPos.z <= NextPos.z + 10)
-            return true;
-
-    return false;
 }

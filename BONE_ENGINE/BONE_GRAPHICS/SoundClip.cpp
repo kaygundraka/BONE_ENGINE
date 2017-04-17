@@ -40,7 +40,7 @@ namespace BONE_GRAPHICS
 
         list.insert(std::pair<std::string, Sound>(file, clip));
 
-        std::string fullpath = "";
+        /*std::string fullpath = "";
         ResourceMgr->ExistFile(file, &fullpath);
 
         Vec3 pos = GET_TRANSFORM_3D(owner)->GetPosition();
@@ -51,7 +51,7 @@ namespace BONE_GRAPHICS
             list[file].loop,
             list[file].startPaused,
             true
-        );
+        );*/
     }
 
     void SoundClip::ChangeInfo(std::string file, float volume, bool loop, bool startPaused, float minDist, float maxDist)
@@ -102,7 +102,22 @@ namespace BONE_GRAPHICS
         }
     }
 
-    void SoundClip::PlaySound(std::string clip)
+    bool SoundClip::IsPlaying(std::string clip)
+    {
+        auto item = list.find(clip);
+        if (item == list.end())
+            return false;
+
+        if (item->second.sound == nullptr)
+            return false;
+
+        if (item->second.sound->isFinished())
+            return false;
+
+        return true;
+    }
+
+    void SoundClip::Play(std::string clip)
     {
         auto item = list.find(clip);
         if (item == list.end())
@@ -113,13 +128,14 @@ namespace BONE_GRAPHICS
         std::string fullpath = "";
         ResourceMgr->ExistFile(clip, &fullpath);
 
-        item->second.sound->stop();
+        if (item->second.sound != nullptr)
+            item->second.sound->stop();
 
         item->second.sound = SoundMgr->GetEngine()->play3D(
             fullpath.c_str(),
             vec3df(pos.x, pos.y, pos.z),
             item->second.loop, 
-            item->second.startPaused,
+            false,
             true
         );
 
@@ -131,14 +147,15 @@ namespace BONE_GRAPHICS
         }
     }
     
-    void SoundClip::StopSound(std::string clip)
+    void SoundClip::Stop(std::string clip)
     {
         auto item = list.find(clip);
         
         if (item == list.end())
             return;
 
-        item->second.sound->stop();
+        if (item->second.sound != nullptr)
+            item->second.sound->stop();
     }
 
     std::map<std::string, Sound>* SoundClip::GetClips()

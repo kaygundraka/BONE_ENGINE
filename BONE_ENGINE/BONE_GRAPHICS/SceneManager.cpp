@@ -181,7 +181,8 @@ namespace BONE_GRAPHICS
 		LoadingThread.join();
         isPhysicsUpdate = false;
         
-		sceneList[name]->SortPriorityObject();
+		//sceneList[name]->SortPriorityObject();
+        sceneList[name]->SortRenderOptimizeObject();
 
 		MSG msg;
 		::ZeroMemory(&msg, sizeof(MSG));
