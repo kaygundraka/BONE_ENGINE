@@ -6,6 +6,7 @@
 #include <InputManager.h>
 #include <SceneManager.h>
 #include <RenderManager.h>
+#include <SoundManager.h>
 #include <StaticMesh.h>
 #include <SkinnedMesh.h>
 #include <Rp3dRigidBody.h>

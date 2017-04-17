@@ -13,11 +13,6 @@ namespace BONE_GRAPHICS
 
     SoundClip::~SoundClip()
     {
-        for each(auto item in list)
-        {
-            if (item.second.sound)
-                item.second.sound->drop();
-        }
     }
 
     void SoundClip::LoadContent()
@@ -129,7 +124,7 @@ namespace BONE_GRAPHICS
         ResourceMgr->ExistFile(clip, &fullpath);
 
         if (item->second.sound != nullptr)
-            item->second.sound->stop();
+            item->second.sound->drop();
 
         item->second.sound = SoundMgr->GetEngine()->play3D(
             fullpath.c_str(),

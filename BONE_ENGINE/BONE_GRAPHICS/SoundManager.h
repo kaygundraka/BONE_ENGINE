@@ -28,6 +28,8 @@ namespace BONE_GRAPHICS
         void StopAllSound();
 
         void Play2D(std::string file, float volume, bool loop);
+        void Stop2D(std::string file);
+        bool IsPlaying2D(std::string file);
 
         void RemoveSound(ISoundSource* source);
         void RemoveAllSound();

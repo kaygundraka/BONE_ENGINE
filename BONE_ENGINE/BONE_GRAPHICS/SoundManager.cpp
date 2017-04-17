@@ -54,20 +54,41 @@ namespace BONE_GRAPHICS
         }
         else
         {
-            if (bgms[file]->isFinished())
-            {
+            if (bgms[file] != nullptr)
                 bgms[file]->drop();
             
-                if (!ResourceMgr->ExistFile(file, &FullPath))
-                    return;
+            if (!ResourceMgr->ExistFile(file, &FullPath))
+                return;
 
-                bgms[file] = engine->play2D(FullPath.c_str(), loop, false, true);
-                bgms[file]->setVolume(volume);
-            }
-
+            bgms[file] = engine->play2D(FullPath.c_str(), loop, false, true);
+            bgms[file]->setVolume(volume);
+            
             bgms[file]->setIsLooped(loop);
             bgms[file]->setVolume(volume);
         }
+    }
+
+    void SoundManager::Stop2D(std::string file)
+    {
+        if (bgms.find(file) == bgms.end())
+            return;
+
+        if (bgms[file] != nullptr)
+            bgms[file]->stop();
+    }
+
+    bool SoundManager::IsPlaying2D(std::string file)
+    {
+        if (bgms.find(file) == bgms.end())
+            return false;
+
+        if (bgms[file] == nullptr)
+            return false;
+
+        if (bgms[file]->isFinished())
+            return false;
+
+        return true;
     }
 
     void SoundManager::RemoveAllSound()

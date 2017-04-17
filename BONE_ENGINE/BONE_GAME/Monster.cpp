@@ -6,13 +6,18 @@ void Monster::Init()
 {
     status = PATROL;
     speed = 600;
+
+    soundClips = new SoundClip();
+    soundClips->AttachObject(this->gameObject);
+    soundClips->AddClip("footstep.mp3", 0.4f, true, false, 50.0f, 0.0f);
+    this->gameObject->AddComponent(soundClips);
 }
 
 void Monster::Reference()
 {
     nodes = CUR_SCENE->GetGraphNodes();
  
-    auto node = nodes->find("MonsterPathNode1")->second;
+    auto node = nodes->find("MonsterPathNode3")->second;
 
     currentNode = node->GetName();
     nextNode = *node->GetConnections().begin();
@@ -82,6 +87,9 @@ float GetAngle(const Vec3& a, const Vec3& b)
 
 void Monster::Patrol()
 {
+    if (!soundClips->IsPlaying("footstep.mp3"))
+        soundClips->Play("footstep.mp3");
+
     skinnedMesh->SetAnimation("Skeleton_1H_walk");
 
     CurPos = transform->GetPosition();

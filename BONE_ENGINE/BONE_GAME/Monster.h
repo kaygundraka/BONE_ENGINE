@@ -5,6 +5,7 @@
 #include <Rp3dRigidBody.h>
 #include <SkinnedMesh.h>
 #include <StaticMesh.h>
+#include <SoundClip.h>
 using namespace BONE_GRAPHICS;
 
 class Monster : public Script {
@@ -18,6 +19,7 @@ private:
 
     Transform3D* nextNodeTr;
     Transform3D* transform;
+    SoundClip* soundClips;
 
     float sleepTimer;
     Vec3 moveDir;

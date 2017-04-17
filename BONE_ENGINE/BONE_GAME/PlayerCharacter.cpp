@@ -14,12 +14,6 @@ void PlayerCharacter::Init()
     Attack_Key = false;
     isSneaking = false;
 
-    soundClips = new SoundClip();
-    soundClips->AttachObject(this->gameObject);
-    soundClips->AddClip("footstep.ogg", 1.0f, true, false, 0.0f, 150.0f);
-    soundClips->AddClip("GetItem.mp3", 1.0f, true, false, 0.0f, 150.0f);
-    this->gameObject->AddComponent(soundClips);
-
     speed = 1000;
 }
 
@@ -123,6 +117,7 @@ void PlayerCharacter::Update()
 
             if (InputMgr->KeyDown('F', true))
             {
+                SoundMgr->Play2D("GetItem.mp3", 0.1f, false);
                 wearItem = true;
                 WearItem();
                 gui->ShowGetItem(false);
@@ -135,7 +130,7 @@ void PlayerCharacter::Update()
     
     bool Input = false;
 
-    if (InputMgr->KeyDown(VK_TAB, true) && wearItem)
+    if (InputMgr->KeyDown('R', true) && wearItem)
     {
         if (isCombat)
         {
@@ -151,21 +146,24 @@ void PlayerCharacter::Update()
         }
     }
 
-    if (InputMgr->KeyDown(VK_CONTROL, false) && !isRun)
+    if (InputMgr->KeyDown(VK_CONTROL, true) && !isRun)
     {
-        gui->SetStatus(PlayerGUI::PLAYER_STATUS::SNEAKING);
-        isSneaking = true;
-        speed = 500;
-    }
-    else
-    {
-        if (isCombat)
-            gui->SetStatus(PlayerGUI::PLAYER_STATUS::COMBAT);
+        if (isSneaking == false)
+        {
+            gui->SetStatus(PlayerGUI::PLAYER_STATUS::SNEAKING);
+            isSneaking = true;
+            speed = 500;
+        }
         else
-            gui->SetStatus(PlayerGUI::PLAYER_STATUS::NORMAL);
+        {
+            if (isCombat)
+                gui->SetStatus(PlayerGUI::PLAYER_STATUS::COMBAT);
+            else
+                gui->SetStatus(PlayerGUI::PLAYER_STATUS::NORMAL);
 
-        speed = 1000;
-        isSneaking = false;
+            speed = 1000;
+            isSneaking = false;
+        }
     }
 
     if (InputMgr->KeyDown(VK_SHIFT, false))
@@ -186,8 +184,8 @@ void PlayerCharacter::Update()
 
     if (InputMgr->KeyDown('W', false) && !Attack_Key)
     {
-        if (!soundClips->IsPlaying("footstep.ogg"))
-            soundClips->Play("footstep.ogg");
+        if (!SoundMgr->IsPlaying2D("footstep.mp3"))
+            SoundMgr->Play2D("footstep.mp3", 0.05f, true);
 
         Input = true;
 
@@ -212,13 +210,16 @@ void PlayerCharacter::Update()
 
     if (InputMgr->KeyDown('S', false) && !Attack_Key &&!isSneaking)
     {
-        if (!soundClips->IsPlaying("footstep.ogg"))
-            soundClips->Play("footstep.ogg");
+        if (!SoundMgr->IsPlaying2D("footstep.mp3"))
+            SoundMgr->Play2D("footstep.mp3", 0.05f, true);
 
         Input = true;
 
-        skinnedMesh->SetAnimation("Skeleton_walking_back");
-
+        if (isSneaking)
+            skinnedMesh->SetAnimation("Skeleton_Sneaking");
+        else
+            skinnedMesh->SetAnimation("Skeleton_walking_back");
+        
         Vec3 Backword = -GET_TRANSFORM_3D(gameObject)->GetForward() * SceneMgr->GetTimeDelta() * 500;
 
         rigidBody->SetLinearVelocity(Backword.x, Backword.y, -Backword.z);
@@ -282,12 +283,14 @@ void PlayerCharacter::Update()
 
     if (Input == false)
     {
-        soundClips->Stop("footstep.ogg");
+        SoundMgr->Stop2D("footstep.mp3");
 
         skinnedMesh->SetAnimationLoop(true);
 
         if (isCombat)
             skinnedMesh->SetAnimation("Skeleton_1H_combat_mode");
+        else if (isSneaking)
+            skinnedMesh->SetAnimation("Skeleton_Crouching");
         else
             skinnedMesh->SetAnimation("Skeleton_Idle");
     }
