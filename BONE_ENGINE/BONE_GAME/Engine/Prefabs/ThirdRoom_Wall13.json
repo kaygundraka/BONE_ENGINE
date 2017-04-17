@@ -33,7 +33,7 @@
         "Bounciness": 0.400000005960464,
         "EnableGravity": false,
         "FricitionCoefficient": 0.200000002980232,
-        "IsAllowedToSleep": false,
+        "IsAllowedToSleep": true,
         "LockRotation": [
             false,
             false,
