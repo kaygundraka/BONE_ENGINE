@@ -9,7 +9,7 @@ void Monster::Init()
 
     soundClips = new SoundClip();
     soundClips->AttachObject(this->gameObject);
-    soundClips->AddClip("footstep.mp3", 0.4f, true, false, 50.0f, 0.0f);
+    soundClips->AddClip("footstep.mp3", 0.6f, true, false, 50.0f, 0.0f);
     this->gameObject->AddComponent(soundClips);
 }
 

@@ -117,7 +117,7 @@ void PlayerCharacter::Update()
 
             if (InputMgr->KeyDown('F', true))
             {
-                SoundMgr->Play2D("GetItem.mp3", 0.1f, false);
+                SoundMgr->Play2D("GetItem.mp3", 0.2f, false);
                 wearItem = true;
                 WearItem();
                 gui->ShowGetItem(false);
@@ -185,7 +185,7 @@ void PlayerCharacter::Update()
     if (InputMgr->KeyDown('W', false) && !Attack_Key)
     {
         if (!SoundMgr->IsPlaying2D("footstep.mp3"))
-            SoundMgr->Play2D("footstep.mp3", 0.05f, true);
+            SoundMgr->Play2D("footstep.mp3", 0.07f, true);
 
         Input = true;
 
@@ -211,7 +211,7 @@ void PlayerCharacter::Update()
     if (InputMgr->KeyDown('S', false) && !Attack_Key &&!isSneaking)
     {
         if (!SoundMgr->IsPlaying2D("footstep.mp3"))
-            SoundMgr->Play2D("footstep.mp3", 0.05f, true);
+            SoundMgr->Play2D("footstep.mp3", 0.07f, true);
 
         Input = true;
 

@@ -26,6 +26,7 @@ namespace BONE_GRAPHICS
         bool CompleateLoading;
         Skybox skybox;
         bool onLoadScene;
+        bool createShadowMap;
         
         RGBA globalAmbient;
         std::string name;

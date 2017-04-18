@@ -50,9 +50,9 @@ namespace BONE_GRAPHICS
 
         DWORD g_msaaSamples;
 
-        ChooseBestMSAAMode(d3dpp.BackBufferFormat, d3dpp.AutoDepthStencilFormat,
-            d3dpp.Windowed, d3dpp.MultiSampleType, d3dpp.MultiSampleQuality,
-            g_msaaSamples);
+        //ChooseBestMSAAMode(d3dpp.BackBufferFormat, d3dpp.AutoDepthStencilFormat,
+        //    d3dpp.Windowed, d3dpp.MultiSampleType, d3dpp.MultiSampleQuality,
+        //    g_msaaSamples);
                
         vp = d3d9->CreateDevice(
             D3DADAPTER_DEFAULT,

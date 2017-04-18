@@ -54,7 +54,6 @@ void GetGaussianOffsets(bool bHorizontal, D3DXVECTOR2 vViewportTexelSize,
             fSampleWeights[i + 1] = 2.0f * GetGaussianDistribution(float(i + 1), 0.0f, 3.0f);
         }
     }
-
     else {
         for (int i = 1; i < 15; i += 2) {
             vSampleOffsets[i + 0] = D3DXVECTOR2(0.0f, i * vViewportTexelSize.y);
@@ -161,6 +160,8 @@ namespace BONE_GRAPHICS
 
             pointLightList.push_back(light);
         }
+
+        createShadowMap = false;
     }
 
     bool Scene::RelShader()
@@ -335,74 +336,81 @@ namespace BONE_GRAPHICS
         RenderMgr->GetDevice()->GetRenderTarget(0, &oldColorRT);
         RenderMgr->GetDevice()->GetDepthStencilSurface(&oldDepthRT);
 
-        i = 0;
-        for each (auto var in pointLightList)
+        static D3DXMATRIX matTexture[8];
+
+        if (!createShadowMap)
         {
-            D3DXMatrixLookAtLH(&matView, &var->GetPosition(), &var->GetShadowAimPos(), &g_vUp);
-            D3DXMatrixOrthoLH(&matProj, 1024.0f, 1024.0f, 1.0f, 1024.0f);
-            matLightViewProj[i] = matWorld * matView * matProj;
-
-            RGBA diffuse = var->GetDiffuse();
-
-            // Setup the effect variables
-            DefaultEffect->SetMatrix("matLightViewProj", &matLightViewProj[i]);
-            DefaultEffect->CommitChanges();
-
-            // Render the scene depth to the shadow map
-            RenderMgr->GetDevice()->SetRenderTarget(0, shadowSurf[i]);
-            RenderMgr->GetDevice()->SetDepthStencilSurface(shadowDepth[i]);
-
-            // Clear the viewport
-            RenderMgr->GetDevice()->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xFFFFFFFF, 1.0f, 0);
-
-            // Set the technique
-            DefaultEffect->SetTechnique("techShadow");
-
-            // Render the effect
-            DefaultEffect->Begin(&uPasses, 0);
-
-            for (UINT uPass = 0; uPass < uPasses; uPass++)
+            i = 0;
+            for each (auto var in pointLightList)
             {
-                DefaultEffect->BeginPass(uPass);
+                D3DXMatrixLookAtLH(&matView, &var->GetPosition(), &var->GetShadowAimPos(), &g_vUp);
+                D3DXMatrixOrthoLH(&matProj, 1024.0f, 1024.0f, 1.0f, 1024.0f);
+                matLightViewProj[i] = matWorld * matView * matProj;
 
-                for each (auto Iter in DefaultShaderObjects)
+                RGBA diffuse = var->GetDiffuse();
+
+                // Setup the effect variables
+                DefaultEffect->SetMatrix("matLightViewProj", &matLightViewProj[i]);
+                DefaultEffect->CommitChanges();
+
+                // Render the scene depth to the shadow map
+                RenderMgr->GetDevice()->SetRenderTarget(0, shadowSurf[i]);
+                RenderMgr->GetDevice()->SetDepthStencilSurface(shadowDepth[i]);
+
+                // Clear the viewport
+                RenderMgr->GetDevice()->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xFFFFFFFF, 1.0f, 0);
+
+                // Set the technique
+                DefaultEffect->SetTechnique("techShadow");
+
+                // Render the effect
+                DefaultEffect->Begin(&uPasses, 0);
+
+                for (UINT uPass = 0; uPass < uPasses; uPass++)
                 {
-                    if (Iter->GetActive())
+                    DefaultEffect->BeginPass(uPass);
+
+                    for each (auto Iter in DefaultShaderObjects)
                     {
-                        auto staticMesh = ((StaticMesh*)Iter->GetComponent("StaticMesh"));
-                        if (staticMesh != nullptr)
+                        if (Iter->GetActive())
                         {
-                            auto Mesh = ResourceMgr->FindMesh(staticMesh->GetFile());
+                            auto staticMesh = ((StaticMesh*)Iter->GetComponent("StaticMesh"));
+                            if (staticMesh != nullptr)
+                            {
+                                auto Mesh = ResourceMgr->FindMesh(staticMesh->GetFile());
 
-                            D3DXMATRIX matWorld, matWorldIT;
-                            matWorld = ((Transform3D*)Iter->transform3D)->GetTransform();
-                            D3DXMatrixInverse(&matWorldIT, NULL, &matWorld);
-                            D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
-                            DefaultEffect->SetMatrix("matWorld", &matWorld);
-                            DefaultEffect->SetMatrix("matWorldIT", &matWorldIT);
-                            DefaultEffect->CommitChanges();
+                                D3DXMATRIX matWorld, matWorldIT;
+                                matWorld = ((Transform3D*)Iter->transform3D)->GetTransform();
+                                D3DXMatrixInverse(&matWorldIT, NULL, &matWorld);
+                                D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
+                                DefaultEffect->SetMatrix("matWorld", &matWorld);
+                                DefaultEffect->SetMatrix("matWorldIT", &matWorldIT);
+                                DefaultEffect->CommitChanges();
 
-                            for (int j = 0; j < Mesh->numMaterials; j++)
-                                Mesh->mesh->DrawSubset(j);
+                                for (int j = 0; j < Mesh->numMaterials; j++)
+                                    Mesh->mesh->DrawSubset(j);
+                            }
+
+                            /*auto skinnedMesh = ((SkinnedMesh*)Iter->GetComponent("SkinnedMesh"));
+                            if (skinnedMesh != nullptr)
+                                skinnedMesh->Render(DefaultEffect, Iter);*/
                         }
-
-                        auto skinnedMesh = ((SkinnedMesh*)Iter->GetComponent("SkinnedMesh"));
-                        if (skinnedMesh != nullptr)
-                            skinnedMesh->Render(DefaultEffect, Iter);
                     }
+
+                    DefaultEffect->EndPass();
                 }
-                
-                DefaultEffect->EndPass();
+
+                DefaultEffect->End();
+
+                i++;
             }
 
-            DefaultEffect->End();
-            
-            i++;
-        }
+            for (int i = 0; i < 8; i++)
+                matTexture[i] = matLightViewProj[i] * matTexAdj;
 
-        D3DXMATRIX matTexture[8];
-        for (int i = 0; i < 8; i++)
-            matTexture[i] = matLightViewProj[i] * matTexAdj;
+            createShadowMap = true;
+        }
+       
 
 #pragma endregion
 
