@@ -1,6 +1,7 @@
 #include "Common.h"
 #include "SceneManager.h"
 #include "InputManager.h"
+#include "SoundManager.h"
 
 namespace BONE_GRAPHICS
 {
@@ -265,6 +266,9 @@ namespace BONE_GRAPHICS
                 break;
 		}
         
+        if (msg.message != WM_QUIT)
+            SoundMgr->RemoveAllSound();
+
         if (physicsUpdateThread != nullptr)
         {
             isPhysicsUpdate = true;
@@ -285,7 +289,7 @@ namespace BONE_GRAPHICS
 		sceneList.erase(loadScene);
 		loadScene = "";
 		sceneList.erase(name);
-
+                
 		return false;
 	}
 

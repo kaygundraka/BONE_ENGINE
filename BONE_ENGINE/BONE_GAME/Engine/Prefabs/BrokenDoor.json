@@ -1,0 +1,55 @@
+{
+    "0.Transform3D": {
+        "Position": [
+            131.0,
+            6.00000047683716,
+            -213.000015258789
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0999996736645699
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "4.Material": {
+        "Ambient": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Diffuse": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Emissive": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Shininess": 1.0,
+        "Specular": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "5.StaticMesh": {
+        "FileName": "Door_C.X"
+    },
+    "IsActive": true,
+    "IsEditorLock": false,
+    "IsStatic": false,
+    "PipeLine": 1,
+    "Priority": 1,
+    "Tag": ""
+}

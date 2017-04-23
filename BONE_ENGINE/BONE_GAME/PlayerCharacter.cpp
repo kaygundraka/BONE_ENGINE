@@ -14,7 +14,7 @@ void PlayerCharacter::Init()
     Attack_Key = false;
     isSneaking = false;
 
-    speed = 1000;
+    speed = 3000;
 }
 
 void PlayerCharacter::Reference()
@@ -152,7 +152,7 @@ void PlayerCharacter::Update()
         {
             gui->SetStatus(PlayerGUI::PLAYER_STATUS::SNEAKING);
             isSneaking = true;
-            speed = 500;
+            speed = 1500;
         }
         else
         {
@@ -161,7 +161,7 @@ void PlayerCharacter::Update()
             else
                 gui->SetStatus(PlayerGUI::PLAYER_STATUS::NORMAL);
 
-            speed = 1000;
+            speed = 3000;
             isSneaking = false;
         }
     }
@@ -174,12 +174,12 @@ void PlayerCharacter::Update()
 
         isRun = true;
         isSneaking = false;
-        speed = 2000;
+        speed = 6000;
     }
     else if (!isSneaking)
     {
         isRun = false;
-        speed = 1000;
+        speed = 3000;
     }
 
     if (InputMgr->KeyDown('W', false) && !Attack_Key)

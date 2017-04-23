@@ -21,7 +21,7 @@ private:
     Transform3D* transform;
     SoundClip* soundClips;
 
-    float sleepTimer;
+    double sleepTimer;
     Vec3 moveDir;
     Vec3 preDir;
     Vec3 CurPos;

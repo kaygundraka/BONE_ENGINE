@@ -5,7 +5,7 @@
 void Monster::Init()
 {
     status = PATROL;
-    speed = 600;
+    speed = 1500;
 
     soundClips = new SoundClip();
     soundClips->AttachObject(this->gameObject);
@@ -40,7 +40,6 @@ void Monster::Reference()
     Transform3D* SwordTransform = new Transform3D();
     auto BoneMatrix = skinnedMesh->GetBoneMatrix("hand_r");
     SwordTransform->CombineMatrix(BoneMatrix);
-    //SwordTransform->SetPosition(-19.0f, 5.0f, 17.0f);
     SwordTransform->SetRotate(-0.45f, 0.96f, 1.85f);
     SwordTransform->SetScale(2.0f, 2.0f, 2.0f);
     Sword->AddComponent(SwordTransform);

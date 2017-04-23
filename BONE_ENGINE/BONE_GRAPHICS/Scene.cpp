@@ -702,6 +702,11 @@ namespace BONE_GRAPHICS
 
         RenderMgr->SetupPixelFog(on, color, fogStart, fogEnd, fogDensity, mode);
     }
+
+    void Scene::CreateShadowMap()
+    {
+        createShadowMap = false;
+    }
     
     bool Scene::OnFog()
     {

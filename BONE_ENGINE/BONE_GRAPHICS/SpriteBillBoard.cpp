@@ -239,7 +239,7 @@ namespace BONE_GRAPHICS
 			CutTimer = 0;
 		}
 		else
-			CutTimer += SceneMgr->GetTimeDelta();
+			CutTimer += SceneMgr->GetTimeDelta() * 10;
 
 		LoadContent();
 	}
@@ -273,7 +273,7 @@ namespace BONE_GRAPHICS
 			CutTimer = 0;
 		}
 		else
-			CutTimer += SceneMgr->GetTimeDelta();
+			CutTimer += SceneMgr->GetTimeDelta() * 10;
 
 		LoadContent();
 	}

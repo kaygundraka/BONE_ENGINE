@@ -135,7 +135,8 @@ namespace BONE_GRAPHICS
         void RemoveGraphNode(GraphNode* node);
 
         Vec3 FindNodeByDistance(Vec3 pos);
-        
+
+        void CreateShadowMap();
         
         void SetName(std::string name);
         std::string GetName();

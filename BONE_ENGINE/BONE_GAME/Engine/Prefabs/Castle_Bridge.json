@@ -1,0 +1,31 @@
+{
+    "0.Transform3D": {
+        "Position": [
+            309.0,
+            5.0,
+            563.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "ChildObjects": [
+        "Castle_Bridge_Floor",
+        "Castle_Bridge_Cornice",
+        "Castle_Bridge_Cornice2",
+        "Castle_Bridge_Arch"
+    ],
+    "IsActive": true,
+    "IsEditorLock": false,
+    "IsStatic": false,
+    "PipeLine": 1,
+    "Priority": 1,
+    "Tag": ""
+}

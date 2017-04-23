@@ -94,7 +94,9 @@ namespace BONE_GRAPHICS
 
             if (Object != nullptr)
             {
-                auto Position = ((Transform3D*)Object->transform3D)->GetPosition();
+                auto Position = Vec3(0, 0, 0);//((Transform3D*)Object->transform3D)->GetPosition();
+                D3DXVec3TransformCoord(&Position, &Position, &((Transform3D*)Object->transform3D)->GetTransform());
+
                 ((Camera*)mainCamera->GetComponent("Camera"))->SetTargetPosition(Position);
                 ((Transform3D*)mainCamera->transform3D)->SetPosition(
                     Position + Vec3(20, 20, 20)
@@ -217,11 +219,9 @@ namespace BONE_GRAPHICS
         auto Object = SceneMgr->CurrentScene()->FindObjectByName(selectObject);
 
         if (selectObject != "" && Object->GetParent() != nullptr)
-        {            
-            while (Object->GetParent() != nullptr)
-                Object = Object->GetParent();
-            
-            Vec3 ObjectPos = ((Transform3D*)Object->transform3D)->GetPosition();
+        {   
+            Vec3 ObjectPos = Vec3(0, 0, 0);// = ((Transform3D*)Object->transform3D)->GetPosition();
+            D3DXVec3TransformCoord(&ObjectPos, &ObjectPos, &((Transform3D*)Object->transform3D)->GetTransform());
             Vec3 CameraPos = ((Transform3D*)mainCamera->transform3D)->GetPosition();
             Vec3 Vector = ObjectPos - CameraPos;
 
@@ -266,21 +266,14 @@ namespace BONE_GRAPHICS
             if (mesh->CheckMouseRayInMesh((Transform3D*)pivot->transform3D, &Dist))
                 moveValue = Dist;
             
-            while (Object->GetParent() != nullptr)
-            {
-                if (Object->IsLockedEditor())
-                    return;
-
-                Object = Object->GetParent();
-            }
-
             if (Object->IsLockedEditor())
                 return;
-
+            
             RAY PickingRay = RenderMgr->GetPickingRayToView(false);
             Vec3 PickingPos = PickingRay.origin + PickingRay.direction * moveValue * 2;
 
-            Vec3 MovePos = ((Transform3D*)Object->transform3D)->GetPosition();
+            Vec3 MovePos = Vec3(0, 0, 0);// ((Transform3D*)Object->transform3D)->GetPosition();
+            D3DXVec3TransformCoord(&MovePos, &MovePos, &((Transform3D*)Object->transform3D)->GetTransform());
 
             if (moveValue != 0)
             {

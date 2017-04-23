@@ -1,0 +1,86 @@
+{
+    "0.Transform3D": {
+        "Position": [
+            104.000007629395,
+            5.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            3.14000010490417,
+            0.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "2.Collision": {
+        "HalfExtens": [
+            4.62671422958374,
+            38.1118507385254,
+            38.4979705810547
+        ],
+        "Pivot": [
+            0.266560554504395,
+            38.1118507385254,
+            -1.9073486328125e-06
+        ],
+        "Type": 0
+    },
+    "3.RigidBody": {
+        "Bounciness": 0.400000005960464,
+        "EnableGravity": false,
+        "FricitionCoefficient": 0.200000002980232,
+        "IsAllowedToSleep": true,
+        "LockRotation": [
+            false,
+            false,
+            false
+        ],
+        "Mass": 1.0,
+        "Pivot": [
+            3.69470344001908e-37,
+            0.0,
+            8.05733786563506e-34
+        ],
+        "Type": 0
+    },
+    "4.Material": {
+        "Ambient": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Diffuse": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Emissive": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Shininess": 1.0,
+        "Specular": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "5.StaticMesh": {
+        "FileName": "Wall3.X"
+    },
+    "IsActive": true,
+    "IsEditorLock": false,
+    "IsStatic": false,
+    "PipeLine": 1,
+    "Priority": 1,
+    "Tag": ""
+}

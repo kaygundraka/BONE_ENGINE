@@ -1,0 +1,86 @@
+{
+    "0.Transform3D": {
+        "Position": [
+            78.0,
+            3.00000023841858,
+            -42.0000038146973
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "2.Collision": {
+        "HalfExtens": [
+            38.1062316894531,
+            3.89025378227234,
+            38.4791450500488
+        ],
+        "Pivot": [
+            -1.1444091796875e-05,
+            -3.89025187492371,
+            4.9591064453125e-05
+        ],
+        "Type": 0
+    },
+    "3.RigidBody": {
+        "Bounciness": 0.400000005960464,
+        "EnableGravity": false,
+        "FricitionCoefficient": 0.200000002980232,
+        "IsAllowedToSleep": true,
+        "LockRotation": [
+            false,
+            false,
+            false
+        ],
+        "Mass": 1.0,
+        "Pivot": [
+            1.83015066468224e-33,
+            0.0,
+            1.13257705207377e-33
+        ],
+        "Type": 0
+    },
+    "4.Material": {
+        "Ambient": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Diffuse": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Emissive": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Shininess": 1.0,
+        "Specular": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "5.StaticMesh": {
+        "FileName": "Floor2.X"
+    },
+    "IsActive": true,
+    "IsEditorLock": false,
+    "IsStatic": false,
+    "PipeLine": 1,
+    "Priority": 1,
+    "Tag": ""
+}

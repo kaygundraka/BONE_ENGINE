@@ -28,7 +28,7 @@ namespace BONE_GRAPHICS
         transform = (Transform3D*)this->owner->transform3D;
         
         rp3d::Vector3 InitPosition(transform->GetWorldPositon().x, transform->GetWorldPositon().y, transform->GetWorldPositon().z);
-        rp3d::Quaternion InitOrientation(transform->GetWorldRotateAngle().x, transform->GetWorldRotateAngle().z, transform->GetWorldRotateAngle().z);
+        rp3d::Quaternion InitOrientation(transform->GetWorldRotateAngle().x, transform->GetWorldRotateAngle().y, transform->GetWorldRotateAngle().z);
         rp3d::Transform InitTransform(InitPosition, InitOrientation);
 
         rigidBody = SceneMgr->CurrentScene()->GetPhysicsWorld()->createRigidBody(InitTransform);

@@ -1,13 +1,13 @@
 {
     "0.Transform3D": {
         "Position": [
-            452.000030517578,
+            186.000015258789,
             2.0,
-            192.426315307617
+            305.426025390625
         ],
         "Rotation": [
             0.0,
-            0.0,
+            -1.57000005245209,
             0.0
         ],
         "Scale": [
@@ -54,7 +54,13 @@
         "FurthPillar1",
         "FurthPillar2",
         "FurthCelling",
-        "FurthCelling2"
+        "FurthCelling2",
+        "FurthWall25",
+        "FurthWall26",
+        "FurthWall27",
+        "FurthArch",
+        "FurthDoor",
+        "FourthFloor9"
     ],
     "IsActive": true,
     "IsEditorLock": false,

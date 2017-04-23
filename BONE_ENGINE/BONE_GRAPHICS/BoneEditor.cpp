@@ -364,6 +364,11 @@ void BoneEditor::ShowEditorMenu()
         CUR_SCENE->EnablePhysics(Enable);
     }
 
+    if (ImGui::MenuItem("ShadowMap Build"))
+    {
+        CUR_SCENE->CreateShadowMap();
+    }
+
     if (ImGui::MenuItem("Sort Object Render"))
     {
         CUR_SCENE->SortRenderOptimizeObject();
@@ -432,7 +437,9 @@ void BoneEditor::ShowGraphNodeInfo(GraphNode* node)
 
             if (ImGui::Button("Connect"))
                 node->ConnectNode(ComboBoxItems[CurItem]);
-            
+            else if (ImGui::Button("Disconnect"))
+                node->DisconnectNode(ComboBoxItems[CurItem]);
+
             for (int i = 0; i < Size; i++)
                 delete ComboBoxItems[i];
             delete[] ComboBoxItems;
@@ -976,9 +983,27 @@ void BoneEditor::UpdateFrame()
     ImGui::SetWindowPos(ImVec2(10, 30));
 
     if (isEditMode)
-        ImGui::Text("[F1 - Change View/Select Mode]");
+    {
+        string F1String;
+
+        if (currentObjectName != "")
+            F1String = "[F1 - Change View/Select Mode] - Selected " + currentObjectName;
+        else
+            F1String = "[F1 - Change View/Select Mode]";
+
+        ImGui::Text(F1String.c_str());
+    }
     else
-        ImGui::Text("[F1 - Change Editor Mode]");
+    {
+        string F1String;
+
+        if (currentObjectName != "")
+            F1String = "[F1 - Change Editor Mode] - Selected " + currentObjectName;
+        else
+            F1String = "[F1 - Change Editor Mode]";
+
+        ImGui::Text(F1String.c_str());
+    }
 
     ImGui::End();
 

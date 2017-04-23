@@ -112,7 +112,7 @@ namespace BONE_GRAPHICS
 	{
 		GameObject* parentPtr = parent;
 
-		Vec3 Posit = position;
+		Vec3 Posit(0, 0, 0);
 
         if (combineMatrix != nullptr)
         {
@@ -122,14 +122,7 @@ namespace BONE_GRAPHICS
             //D3DXVec3TransformCoord(&Posit, &Posit, combineMatrix);
         }
 
-		while (parentPtr != nullptr)
-		{
-			Posit += ((Transform3D*)parentPtr->GetComponent("Transform3D"))->GetPosition();
-
-			parentPtr = parentPtr->GetParent();
-		}
-
-		D3DXMatrixTranslation(&translateTransform, Posit.x, Posit.y, Posit.z);
+		D3DXVec3TransformCoord(&Posit, &Posit, &GetTransform());
 
 		return Posit;
 	}
