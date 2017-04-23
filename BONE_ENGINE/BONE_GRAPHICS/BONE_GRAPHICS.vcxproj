@@ -166,6 +166,7 @@
     <ClInclude Include="PhysicsListener.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="PosPivot.h" />
+    <ClInclude Include="RandomGenerator.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Rp3dCollision.h" />
     <ClInclude Include="Rp3dRigidBody.h" />
@@ -374,6 +375,7 @@
     <ClCompile Include="PhysicsListener.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PosPivot.cpp" />
+    <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="Rp3dCollision.cpp" />
     <ClCompile Include="Rp3dRigidBody.cpp" />

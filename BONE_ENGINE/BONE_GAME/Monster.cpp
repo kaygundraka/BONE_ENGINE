@@ -1,6 +1,7 @@
 #include "Monster.h"
 #include <SceneManager.h>
 #include <InputManager.h>
+#include <RandomGenerator.h>
 
 void Monster::Init()
 {
@@ -57,6 +58,8 @@ void Monster::Reference()
  
     rotateYAngle = 0;
     sleepTimer = 0;
+
+    player = (PlayerCharacter*)(CUR_SCENE->FindObjectByName("Player")->GetComponent("PlayerCharacter"));
 }
 
 void Monster::Update()
@@ -89,6 +92,7 @@ void Monster::Patrol()
     if (!soundClips->IsPlaying("footstep.mp3"))
         soundClips->Play("footstep.mp3");
 
+    skinnedMesh->SetAnimationLoop(true);
     skinnedMesh->SetAnimation("Skeleton_1H_walk");
 
     CurPos = transform->GetPosition();
@@ -127,15 +131,99 @@ void Monster::Patrol()
             moveDir.y * speed * SceneMgr->GetTimeDelta(),
             -moveDir.z * speed * SceneMgr->GetTimeDelta()
         );
+
+        auto PlayerTr = GET_TRANSFORM_3D(player->gameObject);
+        auto PlayerPos = PlayerTr->GetWorldPositon();
+        PlayerPos.y = 0;
+
+        float Distance = D3DXVec3Length(&(PlayerPos - CurPos));
+
+        if (player->IsSneakingMode() && Distance < 60)
+        {
+            status = SEARCH;
+            rigidBody->SetLinearVelocity(0, 0, 0);
+        }
+        else if (Distance < 100)
+        {
+            status = SEARCH;
+            rigidBody->SetLinearVelocity(0, 0, 0);
+        }
     }
 }
 
 void Monster::Search()
 {
+    skinnedMesh->SetAnimation("Skeleton_Looking_around");
 
+    auto PlayerTr = GET_TRANSFORM_3D(player->gameObject);
+    auto PlayerPos = PlayerTr->GetWorldPositon();
+
+    CurPos = transform->GetPosition();
+
+    CurPos.y = 0;
+    PlayerPos.y = 0;
+
+    float Distance = D3DXVec3Length(&(PlayerPos - CurPos));
+
+    if (player->IsSneakingMode() && Distance >= 60)
+        status = PATROL;
+    else if (Distance >= 100)
+        status = PATROL;
+
+    int FindHeuristics = 0;
+
+    if (player->IsSneakingMode())
+        FindHeuristics = RandomGenerator::GetRandInt(0, 100);
+    else
+        FindHeuristics = RandomGenerator::GetRandInt(0, 80);
+
+    if (FindHeuristics < 5 || Distance <= 30)
+    {
+        status = COMBAT;
+        skinnedMesh->SetAnimationLoop(false);
+        skinnedMesh->SetAnimation("Skeleton_anger");
+    }
 }
 
 void Monster::Combat()
 {
+    if (skinnedMesh->GetAnimationRate() >= 0.99f && skinnedMesh->GetCurrentAnimation() == "Skeleton_anger")
+    {
+        skinnedMesh->SetAnimationLoop(true);
+        skinnedMesh->SetAnimation("Skeleton_1H_combat_mode");
+    }
+
+    auto PlayerTr = GET_TRANSFORM_3D(player->gameObject);
+    auto PlayerPos = PlayerTr->GetWorldPositon();
+    
+    CurPos = transform->GetPosition();
+    
+    CurPos.y = 0;
+    PlayerPos.y = 0;
+    
+    auto Dir = PlayerPos - CurPos;
+    
+    float Distance = D3DXVec3Length(&Dir);
+    D3DXVec3Normalize(&Dir, &Dir);
+
+    if (Distance >= 200)
+        status = PATROL;
+    else if (Distance <= 30)
+    {
+        rigidBody->SetLinearVelocity(0, 0, 0);
+        skinnedMesh->SetAnimationLoop(true);
+        skinnedMesh->SetAnimation("Skeleton_1H_swing_left");
+    }
+    else
+    {
+        skinnedMesh->SetAnimationLoop(true);
+        skinnedMesh->SetAnimation("Skeleton_1H_charging");
+
+        rigidBody->SetLinearVelocity(
+            Dir.x * speed * 2 * SceneMgr->GetTimeDelta(),
+            Dir.y * speed * 2 * SceneMgr->GetTimeDelta(),
+            -Dir.z * speed * 2 * SceneMgr->GetTimeDelta()
+        );
+    }
 
 }

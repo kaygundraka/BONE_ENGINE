@@ -61,6 +61,7 @@ public:
     void NormalMode();
     void WearItem();
     bool IsWoreItem();
+    bool IsSneakingMode();
     
     virtual void Init();
     virtual void Reference();

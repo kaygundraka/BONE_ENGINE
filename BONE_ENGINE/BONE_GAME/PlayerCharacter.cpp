@@ -331,6 +331,11 @@ void PlayerCharacter::NormalMode()
     swordTr->SetRotate(-1.29f, 1.55f, 1.81f); // -0.45f, 0.96f, 1.85f;
 }
 
+bool PlayerCharacter::IsSneakingMode()
+{
+    return isSneaking;
+}
+
 void PlayerCharacter::LateUpdate()
 {
     if (isEvent)

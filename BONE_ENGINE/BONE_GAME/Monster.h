@@ -6,6 +6,7 @@
 #include <SkinnedMesh.h>
 #include <StaticMesh.h>
 #include <SoundClip.h>
+#include "PlayerCharacter.h"
 using namespace BONE_GRAPHICS;
 
 class Monster : public Script {
@@ -28,6 +29,8 @@ private:
     Vec3 NextPos;
 
     float rotateYAngle;
+
+    PlayerCharacter* player;
 
     std::string currentNode;
     std::string nextNode;

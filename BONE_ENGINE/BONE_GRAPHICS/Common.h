@@ -17,6 +17,7 @@
 #include <assert.h>
 #include <vector>
 #include <CommCtrl.h>
+#include <random>
 #include <tchar.h>
 #include <mutex>
 #include <thread>

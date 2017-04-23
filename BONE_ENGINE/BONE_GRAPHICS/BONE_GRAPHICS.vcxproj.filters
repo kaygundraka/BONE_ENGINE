@@ -329,6 +329,9 @@
     <ClInclude Include="GraphNode.h">
       <Filter>소스 파일\Core\GameObject\BasicGameObject</Filter>
     </ClInclude>
+    <ClInclude Include="RandomGenerator.h">
+      <Filter>소스 파일\Core\Management\Configuration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -528,6 +531,9 @@
     </ClCompile>
     <ClCompile Include="GraphNode.cpp">
       <Filter>소스 파일\Core\GameObject\BasicGameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomGenerator.cpp">
+      <Filter>소스 파일\Core\Management\Configuration</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
