@@ -53,6 +53,25 @@ void Monster::Reference()
 
     CUR_SCENE->AddObject(Sword, "MonsterSword");
 
+    GameObject* shield = new GameObject();
+    shield->SetPriority(1);
+
+    Transform3D* ShieldTransform = new Transform3D();
+    auto ShieldMatrix = skinnedMesh->GetBoneMatrix("hand_l");
+    ShieldTransform->CombineMatrix(ShieldMatrix);
+    ShieldTransform->SetPosition(0.0f, 0.0f, 0.0f);
+    ShieldTransform->SetRotate(-0.45f, 0.96f, 1.85f);
+    ShieldTransform->SetScale(2.0f, 2.0f, 2.0f);
+    shield->AddComponent(ShieldTransform);
+    
+    StaticMesh* ShieldMesh = new StaticMesh();
+    ShieldMesh->SetFile("Shield.X");
+    shield->AddComponent(ShieldMesh);
+
+    shield->AttachParent(this->gameObject);
+
+    CUR_SCENE->AddObject(shield, "PlayerShield");
+
     transform = (Transform3D*)this->gameObject->transform3D;
     rigidBody = GET_RIGIDBODY(this->gameObject);
  
@@ -205,6 +224,11 @@ void Monster::Combat()
     
     float Distance = D3DXVec3Length(&Dir);
     D3DXVec3Normalize(&Dir, &Dir);
+
+    // 몬스터 회피기 Skeleton_1H_dodge_backwards
+    // Skeleton_Hit_from_back
+    // Skeleton_Hit_from_front
+    // Skeleton_Dying_B
 
     if (Distance >= 200)
         status = PATROL;

@@ -2,6 +2,7 @@
 #include "Rp3dCollision.h"
 #include "LogManager.h"
 #include "SceneManager.h"
+#include "Rp3dRigidBody.h"
 
 namespace BONE_GRAPHICS
 {
@@ -296,5 +297,31 @@ namespace BONE_GRAPHICS
     Collision::COLLISION_TYPE Collision::GetCollisionType()
     {
         return type;
+    }
+
+    void Collision::SetHalfExtens(Vec3 halfExtens)
+    {
+        if (collision == nullptr)
+            return;
+
+        if (type != COLL_BOX)
+            return;
+
+        if (GET_RIGIDBODY(object) == nullptr)
+            return;
+
+        GET_RIGIDBODY(object)->DetachCollision();
+
+        delete collision;
+
+        rp3d::Vector3 Half(halfExtens.x, halfExtens.y, halfExtens.z);
+
+        collision = new BoxShape(Half);
+        collision->name = object->GetName();
+
+        type = COLL_BOX;
+        this->halfExtens = Vec3(halfExtens.x, halfExtens.y, halfExtens.z);
+
+        GET_RIGIDBODY(object)->AttachCollision();
     }
 }

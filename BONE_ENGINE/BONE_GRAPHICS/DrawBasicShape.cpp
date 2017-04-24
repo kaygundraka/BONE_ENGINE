@@ -29,7 +29,7 @@ namespace BONE_GRAPHICS
         line_vertices[1].color = color;
 
         D3D_DEVICE->SetFVF(line_fvf);
-
+        D3D_DEVICE->SetRenderState(D3DRS_LIGHTING, false);
         D3D_DEVICE->SetTexture(0, NULL);
 
         D3D_DEVICE->DrawPrimitiveUP(D3DPT_LINELIST, 1, line_vertices, sizeof(line_vertex));

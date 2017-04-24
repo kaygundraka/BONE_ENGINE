@@ -1,6 +1,7 @@
 #include "Common.h"
 #include "ParticleSystem.h"
 #include "Component.h"
+#include "SceneManager.h"
 
 namespace BONE_GRAPHICS
 {
@@ -57,7 +58,7 @@ namespace BONE_GRAPHICS
 		_attribute->color = COLOR::WHITE;
 	}
 
-	void SnowParticle::Update(double _timeDelta)
+	void SnowParticle::Update()
 	{
 		BoundingBox Box;
 
@@ -68,7 +69,7 @@ namespace BONE_GRAPHICS
 		std::list<Attribute>::iterator i;
 		for (i = particles.begin(); i != particles.end(); i++)
 		{
-			i->position += i->velocity * _timeDelta;
+			i->position += i->velocity * SceneMgr->GetTimeDelta();
 
 			// is the point outside bounds?
 			if (Box.isPointInside(i->position) == false)

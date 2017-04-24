@@ -258,7 +258,7 @@ void PlayerCharacter::Update()
         D_Key = false;
     }
 
-    if (InputMgr->GetMouseLBButtonStatus() == MOUSE_LBDOWN && !Sneaking_Key && wearItem)
+    if (InputMgr->GetMouseLBButtonStatus() == MOUSE_LBDOWN && !Sneaking_Key && wearItem && !Defense_Key)
     {
         if (gui->GetStatus() == PlayerGUI::PLAYER_STATUS::NORMAL)
         {
@@ -277,6 +277,29 @@ void PlayerCharacter::Update()
     {
         if (skinnedMesh->GetAnimationRate() >= 0.99f)
             Attack_Key = false;
+        else
+            Input = true;
+    }
+
+    if (InputMgr->GetMouseRBButtonStatus() == MOUSE_RBDOWN && !Sneaking_Key && wearItem && !Attack_Key)
+    {
+        if (gui->GetStatus() == PlayerGUI::PLAYER_STATUS::NORMAL)
+        {
+            isCombat = true;
+            CombatMode();
+            gui->SetStatus(PlayerGUI::PLAYER_STATUS::COMBAT);
+        }
+
+        Input = true;
+        Defense_Key = true;
+
+        skinnedMesh->SetAnimation("Skeleton_1H_shield_block");
+        skinnedMesh->SetAnimationLoop(false);
+    }
+    else if (Defense_Key == true)
+    {
+        if (skinnedMesh->GetAnimationRate() >= 0.99f)
+            Defense_Key = false;
         else
             Input = true;
     }
@@ -316,19 +339,25 @@ void PlayerCharacter::CombatMode()
     swordTr->SetPosition(0, 0, 0);
     swordTr->SetRotate(-0.45f, 0.96f, 1.85f);
 
-    //auto ShieldMatrix = skinnedMesh->GetBoneMatrix("spine_03");
-    //shieldTr->CombineMatrix(ShieldMatrix);
-    //shieldTr->SetPosition(-12.0f, 0, 18.0f);
-    //shieldTr->SetRotate(0.02f, -1.44f, -0.37f);
-    //shieldTr->SetScale(2.0f, 2.0f, 2.0f);
+    auto ShieldMatrix = skinnedMesh->GetBoneMatrix("hand_l");
+    shieldTr->CombineMatrix(ShieldMatrix);
+    shieldTr->SetPosition(0.0f, 0.0f, 0.0f);
+    shieldTr->SetRotate(-0.45f, 0.96f, 1.85f);
+    shieldTr->SetScale(2.0f, 2.0f, 2.0f);
 }
 
 void PlayerCharacter::NormalMode()
 {
-    auto SwordMatrix = skinnedMesh->GetBoneMatrix("spine_03"); //hand_r
+    auto SwordMatrix = skinnedMesh->GetBoneMatrix("spine_03");
     swordTr->CombineMatrix(SwordMatrix);
     swordTr->SetPosition(25, -4, 8);
-    swordTr->SetRotate(-1.29f, 1.55f, 1.81f); // -0.45f, 0.96f, 1.85f;
+    swordTr->SetRotate(-1.29f, 1.55f, 1.81f);
+
+    auto ShieldMatrix = skinnedMesh->GetBoneMatrix("spine_03");
+    shieldTr->CombineMatrix(ShieldMatrix);
+    shieldTr->SetPosition(-12.0f, 0, 18.0f);
+    shieldTr->SetRotate(0.02f, -1.44f, -0.37f);
+    shieldTr->SetScale(2.0f, 2.0f, 2.0f);
 }
 
 bool PlayerCharacter::IsSneakingMode()

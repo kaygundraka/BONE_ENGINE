@@ -80,13 +80,13 @@ namespace BONE_GRAPHICS
 
 		virtual void ResetParticle(Attribute* attribute) = 0;
 
-		void SetTextreAddress(std::string _address);
+		void SetTexture(std::string address);
 
 		// 시스템에 파티클을 추가.
 		virtual void AddParticle();
 
 		// 시스템 내의 모든 파티클들을 갱신.
-		virtual void Update(double _TimeDelta) = 0;
+		virtual void Update() = 0;
 
 		// 렌더링에 앞서 지정해야 할 초기 렌더 상태를 지정.
 		// 이 메서드는 시스템에 따라 달라질 수 있으므로 가상 함수로 선언.
@@ -150,7 +150,7 @@ namespace BONE_GRAPHICS
 		void Init(GameObject* _owner, BoundingBox* _boundingBox, int _numParticles);
 		void SetParticleSize(int _particleSize);
 		void ResetParticle(Attribute* _attribute);
-		void Update(double _timeDelta);
+		void Update();
 	};
 
 	class FireworkParticle : public ParticleSystem
@@ -159,7 +159,7 @@ namespace BONE_GRAPHICS
 		FireworkParticle();
 		void Init(GameObject* _owner, int _numParticles, float _size);
 		void ResetParticle(Attribute* attribute);
-		void Update(double _timeDelta);
+		void Update();
 		void PreRender();
 		void PostRender();
 	};

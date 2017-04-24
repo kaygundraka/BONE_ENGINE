@@ -53,6 +53,7 @@ private:
 
     bool Sneaking_Key;
     bool Attack_Key;
+    bool Defense_Key;
 
 public:
     bool isEvent;

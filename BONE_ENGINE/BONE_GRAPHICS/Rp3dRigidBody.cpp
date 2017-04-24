@@ -8,6 +8,8 @@ namespace BONE_GRAPHICS
     RigidBody::RigidBody()
     {
         SetTypeName("RigidBody");
+
+        collShape = nullptr;
     }
 
     RigidBody::~RigidBody()
@@ -37,7 +39,7 @@ namespace BONE_GRAPHICS
         rp3d::Quaternion InitOrientation2(0, 0, 0);
         rp3d::Transform InitTransform2(InitPosition2, InitOrientation2);
 
-        rigidBody->addCollisionShape(
+        collShape = rigidBody->addCollisionShape(
             ((Collision*)this->owner->GetComponent("Collision"))->GetCollision(),
             InitTransform2,
             mass
@@ -50,6 +52,30 @@ namespace BONE_GRAPHICS
         lockRotateZ = false;
 
         return true;
+    }
+
+    void RigidBody::DetachCollision()
+    {
+        if (collShape != nullptr)
+        {
+            rigidBody->removeCollisionShape(collShape);
+            collShape = nullptr;
+        }
+    }
+
+    void RigidBody::AttachCollision()
+    {
+        rp3d::Vector3 InitPosition2(0, 0, 0);
+        rp3d::Quaternion InitOrientation2(0, 0, 0);
+        rp3d::Transform InitTransform2(InitPosition2, InitOrientation2);
+
+        collShape = rigidBody->addCollisionShape(
+            ((Collision*)this->owner->GetComponent("Collision"))->GetCollision(),
+            InitTransform2,
+            mass
+        );
+
+        pos = ((Collision*)this->owner)->GetModelPivot();
     }
 
     void RigidBody::SetType(reactphysics3d::BodyType type)

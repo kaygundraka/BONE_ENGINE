@@ -1,0 +1,36 @@
+{
+    "0.Transform3D": {
+        "Position": [
+            304.0,
+            -11.0000009536743,
+            309.0
+        ],
+        "Rotation": [
+            1.56995058059692,
+            1.51046108953778e-07,
+            1.51046108953778e-07
+        ],
+        "Scale": [
+            60.0,
+            60.0,
+            60.0
+        ]
+    },
+    "9.SpriteBillBoard": {
+        "Alpha": 255.0,
+        "AnimationCut": 4,
+        "AnimationScene": 4,
+        "Height": 1024,
+        "IsFullAnimation": true,
+        "IsTargetCamera": false,
+        "Speed": 0.100000001490116,
+        "Texture": "poison.png",
+        "Width": 1024
+    },
+    "IsActive": true,
+    "IsEditorLock": false,
+    "IsStatic": false,
+    "PipeLine": 0,
+    "Priority": 1,
+    "Tag": ""
+}

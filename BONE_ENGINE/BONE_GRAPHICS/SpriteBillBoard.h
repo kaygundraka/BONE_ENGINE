@@ -38,16 +38,18 @@ namespace BONE_GRAPHICS
 		int curAnimeScene;
 		RECT curRect;
 		bool rightPlay;
+        double CutTimer;
+        double speed;
 
 		IDirect3DVertexBuffer9* vertexBuffer;
 		IDirect3DIndexBuffer9*	indexBuffer;
 
 		D3DMATERIAL9 meshMaterial;
-		GameObject*	target;
-
+		
 		RENDER_MODE renderMode;
 		bool IsInit;
 
+        bool isTargetCamera;
         bool fullAnimations;
 
 	public:
@@ -69,9 +71,14 @@ namespace BONE_GRAPHICS
         void IsFullAnimation(bool isFull);
         bool IsFullAnimation();
 
+        void SetSpeed(float speed);
+        float GetSpeed();
+        float GetAlpha();
+
         void LoadContent();
         void Render(IShader* shaderOpt, GameObject* cameraObject);
-		void SetTargetCamera(GameObject* targetCamera);
+		void SetTargetCamera(bool isTargetCamera);
+        bool IsTargetCamera();
 				
 		void SetRenderMode(RENDER_MODE mode);
 

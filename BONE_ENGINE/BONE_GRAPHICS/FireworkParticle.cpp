@@ -1,5 +1,6 @@
 #include "Common.h"
 #include "ParticleSystem.h"
+#include "SceneManager.h"
 
 namespace BONE_GRAPHICS
 {
@@ -54,7 +55,7 @@ namespace BONE_GRAPHICS
 		return (float)sqrt(pow(_v2.x - _v1.x, 2) + pow(_v2.y - _v1.y, 2) + pow(_v2.z - _v1.z, 2));
 	}
 
-	void FireworkParticle::Update(double _timeDelta)
+	void FireworkParticle::Update()
 	{
 		std::list<Attribute>::iterator i, j;
 		static bool bDiffusion = true;
@@ -64,7 +65,7 @@ namespace BONE_GRAPHICS
 		//srand(time(nullptr));
 		for (i = particles.begin(); i != particles.end(); i++)
 		{
-			i->position = i->position + (i->velocity) * _timeDelta;	// p = p0 + 시간변화량*v'(속도변화량)		
+			i->position = i->position + (i->velocity) * SceneMgr->GetTimeDelta();	// p = p0 + 시간변화량*v'(속도변화량)		
 			i->acceleration *= 0;
 
 			for (j = particles.begin(); j != particles.end(); j++)
@@ -79,7 +80,7 @@ namespace BONE_GRAPHICS
 				}
 			}
 			//i->_position = i->_position + (i->_velocity) * timeDelta;	// p = p0 + 시간변화량*v'(속도변화량)		
-			i->velocity = i->velocity + i->acceleration * _timeDelta;// v' = v0 + 시간변화량*가속도
+			i->velocity = i->velocity + i->acceleration * SceneMgr->GetTimeDelta();// v' = v0 + 시간변화량*가속도
 		}
 	}
 

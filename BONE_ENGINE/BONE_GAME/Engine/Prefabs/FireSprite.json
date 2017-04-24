@@ -7,7 +7,7 @@
         ],
         "Rotation": [
             0.0,
-            -2.28221392631531,
+            1.33703696727753,
             -0.0
         ],
         "Scale": [
@@ -17,10 +17,13 @@
         ]
     },
     "9.SpriteBillBoard": {
+        "Alpha": 255.0,
         "AnimationCut": 8,
         "AnimationScene": 4,
         "Height": 512,
         "IsFullAnimation": true,
+        "IsTargetCamera": true,
+        "Speed": 1.0,
         "Texture": "fire.png",
         "Width": 512
     },

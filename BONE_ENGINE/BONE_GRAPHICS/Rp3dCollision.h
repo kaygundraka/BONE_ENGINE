@@ -68,6 +68,8 @@ namespace BONE_GRAPHICS
         float GetRadius();
         float GetHeight();
 
+        void SetHalfExtens(Vec3 halfExtens);
+        
         void ShowShape(bool show);
         bool IsShow();
         

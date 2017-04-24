@@ -19,6 +19,8 @@ namespace BONE_GRAPHICS
         bool lockRotateY;
         bool lockRotateZ;
 
+        rp3d::ProxyShape* collShape;
+
         float mass;
 
     public:
@@ -41,6 +43,9 @@ namespace BONE_GRAPHICS
         float GetFrictionCoefficient();
         float GetMass();
         Vector3 GetLinearVelocity();
+
+        void DetachCollision();
+        void AttachCollision();
 
         void LockUpdate();
         void LockRotation(bool x, bool y, bool z);

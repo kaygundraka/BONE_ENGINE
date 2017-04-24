@@ -20,6 +20,7 @@
 #include "Rp3dCollision.h"
 #include "Rp3dRigidBody.h"
 #include "SoundClip.h"
+#include "ParticleSystem.h"
 
 namespace BONE_GRAPHICS
 {
@@ -214,6 +215,12 @@ namespace BONE_GRAPHICS
 
             if (GetComponent("TrailRenderer") != nullptr)
                 ((TrailRenderer*)GetComponent("TrailRenderer"))->Render(nullptr);
+
+            if (GetComponent("SnowParticle") != nullptr)
+                ((SnowParticle*)GetComponent("SnowParticle"))->Render();
+
+            if (GetComponent("FireworkParticle") != nullptr)
+                ((FireworkParticle*)GetComponent("FireworkParticle"))->Render();
         }
 	}
 
@@ -557,6 +564,9 @@ namespace BONE_GRAPHICS
                 j["9.SpriteBillBoard"]["AnimationCut"] = Info.animationCut;
                 j["9.SpriteBillBoard"]["AnimationScene"] = Info.animationScene;
                 j["9.SpriteBillBoard"]["IsFullAnimation"] = ((SpriteBillBoard*)item.second)->IsFullAnimation();
+                j["9.SpriteBillBoard"]["Alpha"] = ((SpriteBillBoard*)item.second)->GetAlpha();
+                j["9.SpriteBillBoard"]["Speed"] = ((SpriteBillBoard*)item.second)->GetSpeed();
+                j["9.SpriteBillBoard"]["IsTargetCamera"] = ((SpriteBillBoard*)item.second)->IsTargetCamera();
             }
         }
 
@@ -867,11 +877,14 @@ namespace BONE_GRAPHICS
                     j["9.SpriteBillBoard"]["Height"],
                     j["9.SpriteBillBoard"]["AnimationCut"],
                     j["9.SpriteBillBoard"]["AnimationScene"],
-                    255
+                    j["9.SpriteBillBoard"]["Alpha"]
                 );
                 sb->IsFullAnimation(
                     j["9.SpriteBillBoard"]["IsFullAnimation"]
                 );
+                
+                sb->SetSpeed(j["9.SpriteBillBoard"]["Speed"]);
+                sb->SetTargetCamera(j["9.SpriteBillBoard"]["IsTargetCamera"]);
 
                 AddComponent(sb);
             }
@@ -976,6 +989,14 @@ namespace BONE_GRAPHICS
                 ((SpriteBillBoard*)spriteBillboard)->PlayFullAnimation(SceneMgr->GetTimeDelta());
             else
                 ((SpriteBillBoard*)spriteBillboard)->PlayCutAnimation(SceneMgr->GetTimeDelta());
+
+        auto fireworkParticle = this->GetComponent("FireworkParticle");
+        if (fireworkParticle != nullptr)
+            ((FireworkParticle*)fireworkParticle)->Update();
+
+        auto snowParticle = this->GetComponent("SnowParticle");
+        if (snowParticle != nullptr)
+            ((SnowParticle*)snowParticle)->Update();
 
         if (!enableScript)
             return;

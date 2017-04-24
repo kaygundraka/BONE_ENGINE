@@ -21,6 +21,7 @@
 #include "LogManager.h"
 #include "GraphNode.h"
 #include "SoundClip.h"
+#include "ParticleSystem.h"
 
 #pragma warning (disable:4996)
 using namespace BONE_GRAPHICS;
@@ -276,6 +277,7 @@ void BoneEditor::ShowViewMenu()
     if (ImGui::MenuItem("Show Light Icon"))
     {
         static bool show = false;
+
         auto PointLights = CUR_SCENE->GetPointLights();
 
         if (show)
@@ -498,7 +500,32 @@ void BoneEditor::ShowObjectInfo(std::string name)
             {
                 if (ImGui::TreeNode(item->first.c_str()))
                 {
-                    if (item->first == "Transform3D")
+                    if (item->first == "SpriteBillBoard")
+                    {
+                        float Width = ((SpriteBillBoard*)item->second)->GetSpriteInfo().width;
+                        float Height = ((SpriteBillBoard*)item->second)->GetSpriteInfo().height;
+                        int Cut = ((SpriteBillBoard*)item->second)->GetSpriteInfo().animationCut;
+                        int Scene = ((SpriteBillBoard*)item->second)->GetSpriteInfo().animationScene;
+                        float Speed = ((SpriteBillBoard*)item->second)->GetSpeed();
+                        float Alpha = ((SpriteBillBoard*)item->second)->GetAlpha();
+                        bool Full = ((SpriteBillBoard*)item->second)->IsFullAnimation();
+                        bool isTargetCamera = ((SpriteBillBoard*)item->second)->IsTargetCamera();
+
+                        ImGui::InputFloat("Width", &Width);
+                        ImGui::InputFloat("Height", &Height);
+                        ImGui::DragFloat("Speed", &Speed);
+                        ImGui::InputInt("Cut", &Cut);
+                        ImGui::InputInt("Scene", &Scene);
+                        ImGui::InputFloat("Alpha", &Alpha);
+                        ImGui::Checkbox("FullAnimation", &Full);
+                        ImGui::Checkbox("IsTargetCamera", &isTargetCamera);
+
+                        ((SpriteBillBoard*)item->second)->SetAnimation(Width, Height, Cut, Scene, Alpha);
+                        ((SpriteBillBoard*)item->second)->IsFullAnimation(Full);
+                        ((SpriteBillBoard*)item->second)->SetTargetCamera(isTargetCamera);
+                        ((SpriteBillBoard*)item->second)->SetSpeed(Speed);
+                    }
+                    else if (item->first == "Transform3D")
                     {
                         Vec3 oriPos = ((Transform3D*)item->second)->GetPosition();
                         Vec3 oriRot = ((Transform3D*)item->second)->GetRotateAngle();
@@ -690,14 +717,16 @@ void BoneEditor::ShowObjectInfo(std::string name)
                         case Collision::COLL_BOX:
                         {
                             ImGui::Text("Type : Box");
-                            auto HalfExtens = ((Collision*)(item->second))->GetHalfExtens();
+                            
+                            float HalfExtens[] = {
+                                ((Collision*)(item->second))->GetHalfExtens().x,
+                                ((Collision*)(item->second))->GetHalfExtens().y,
+                                ((Collision*)(item->second))->GetHalfExtens().z
+                            };
 
-                            ImGui::Text(
-                                "HalfExtens\nX : %f\nY : %f\nZ : %f",
-                                HalfExtens.x,
-                                HalfExtens.y,
-                                HalfExtens.z
-                            );
+                            ImGui::DragFloat3("HalfExtens", HalfExtens, 0.1f, 0.1f);
+
+                            ((Collision*)(item->second))->SetHalfExtens(Vec3(HalfExtens[0], HalfExtens[1], HalfExtens[2]));
                         }
                         break;
 
@@ -1608,7 +1637,7 @@ void BoneEditor::UpdateFrame()
         if (ImGui::IsRootWindowOrAnyChildFocused())
             isFocusedWindow = true;
 
-        const char* listbox_items[] = { "StaticMesh", "Collision", "RigidBody", "SkinnedMesh", "SoundClip", "Material", "Script", "BillBoard", "SpriteBillBoard", "TrailRenderer" };
+        const char* listbox_items[] = { "StaticMesh", "Collision", "RigidBody", "SkinnedMesh", "SoundClip", "Material", "Script", "BillBoard", "SpriteBillBoard", "ParticleSystem", "TrailRenderer" };
         static int listbox_item_current = 0;
 
         if (ImGui::CollapsingHeader("[Select Component]"), ImGuiTreeNodeFlags_DefaultOpen)
@@ -1966,15 +1995,19 @@ void BoneEditor::UpdateFrame()
                 static float Height = 0;
                 static int Cut = 0;
                 static int Scene = 0;
+                static float Speed = 1;
                 static float Alpha = 0;
                 static bool Full = 0;
+                static bool isTargetCamera = true;
 
                 ImGui::InputFloat("Width", &Width);
                 ImGui::InputFloat("Height", &Height);
+                ImGui::DragFloat("Speed", &Speed);
                 ImGui::InputInt("Cut", &Cut);
                 ImGui::InputInt("Scene", &Scene);
                 ImGui::InputFloat("Alpha", &Alpha);
                 ImGui::Checkbox("FullAnimation", &Full);
+                ImGui::Checkbox("IsTargetCamera", &isTargetCamera);
 
                 if (ImGui::Button("Add Component"))
                 {
@@ -1982,6 +2015,8 @@ void BoneEditor::UpdateFrame()
                     sb->SetTexture(ComboBoxItems[CurItem]);
                     sb->SetAnimation(Width, Height, Cut, Scene, Alpha);
                     sb->IsFullAnimation(Full);
+                    sb->SetTargetCamera(isTargetCamera);
+                    sb->SetSpeed(Speed);
                     sb->LoadContent();
 
                     auto Object = CUR_SCENE->FindObjectByName(currentShowInfoObject);
@@ -1996,13 +2031,53 @@ void BoneEditor::UpdateFrame()
             }
             break;
 
-            // TrailRenderer
+            // ParticleSystem
             case 9:
+            {
+                const char* Particle_items[] = { "Firework", "Snow" };
+                static int CurParticle = 0;
+
+                ImGui::ListBox("Type", &CurParticle, Particle_items, IM_ARRAYSIZE(Particle_items), 2);
+
+                static int NumOfParticle = 10;
+                static int Size = 10;
+
+                ImGui::DragInt("NumOfParticle", &NumOfParticle);
+                ImGui::DragInt("Size", &Size);
+
+                if (ImGui::Button("Add Component"))
+                {
+                    auto Object = CUR_SCENE->FindObjectByName(currentShowInfoObject);
+                    
+                    if (CurParticle == 0)
+                    {
+                        FireworkParticle* Particle = new FireworkParticle();
+                        Particle->Init(Object, NumOfParticle, Size);
+                        Particle->SetTexture("Particle.jpg");
+                        Particle->LoadContent();
+
+                        Object->AddComponent(Particle);
+                    }
+                    else if (CurParticle == 0)
+                    {
+                        //SnowParticle* Particle = new SnowParticle();
+                        //Particle->Init(Object, boud);
+                        //Particle->LoadContent();
+
+                        //Object->AddComponent(Particle);
+                    }
+
+                    showAddComponent = false;
+                }
+            }
+            break;
+
+            // TrailRenderer
+            case 10:
             {
 
             }
             break;
-
             }
         }
         ImGui::End();
