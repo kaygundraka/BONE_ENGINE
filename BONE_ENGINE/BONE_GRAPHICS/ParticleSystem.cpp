@@ -52,6 +52,11 @@ namespace BONE_GRAPHICS
 		textureAddress = address;
 	}
 
+    std::string ParticleSystem::GetTexture()
+    {
+        return textureAddress;
+    }
+
 	void ParticleSystem::LoadContent()
 	{
 		// vertex buffer's size does not equal the number of particles in our system.  We
@@ -84,6 +89,11 @@ namespace BONE_GRAPHICS
 			ResetParticle(&(*i));
 		}
 	}
+
+    void ParticleSystem::RemoveAllParticle()
+    {
+        particles.clear();
+    }
 
 	void ParticleSystem::AddParticle()
 	{

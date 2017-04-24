@@ -77,10 +77,12 @@ namespace BONE_GRAPHICS
 
 		// 시스템 내의 모든 파티클 속성을 리셋.
 		virtual void Reset();
+        virtual void RemoveAllParticle();
 
 		virtual void ResetParticle(Attribute* attribute) = 0;
 
 		void SetTexture(std::string address);
+        std::string GetTexture();
 
 		// 시스템에 파티클을 추가.
 		virtual void AddParticle();
@@ -155,9 +157,15 @@ namespace BONE_GRAPHICS
 
 	class FireworkParticle : public ParticleSystem
 	{
+    private: 
+        int numParticles;
+        double resetTimer;
+
 	public:
 		FireworkParticle();
-		void Init(GameObject* _owner, int _numParticles, float _size);
+		void Init(GameObject* owner, int numParticles, float size);
+        int GetNumOfParticles();
+        int GetSize();
 		void ResetParticle(Attribute* attribute);
 		void Update();
 		void PreRender();

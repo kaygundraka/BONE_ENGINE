@@ -117,15 +117,15 @@ void BoneEditor::Run()
     {
         if (isTestPlay)
         {
-            auto_ptr<Scene> LoadScene(new Scene);
+            shared_ptr<Scene> LoadScene(new Scene);
             SceneMgr->AddScene("EditorLoadScene", LoadScene.get());
             SceneMgr->SetLoadScene("EditorLoadScene");
 
-            auto_ptr<EditorLoadScene> EditorLoadGUI(new EditorLoadScene);
+            shared_ptr<EditorLoadScene> EditorLoadGUI(new EditorLoadScene);
             SceneMgr->SetLoadGUIScene(EditorLoadGUI.get());
 
-            auto_ptr<Scene> TestScene(new Scene);
-            auto_ptr<GUI_Scene> EmptyGUI(new GUI_Scene);
+            shared_ptr<Scene> TestScene(new Scene);
+            shared_ptr<GUI_Scene> EmptyGUI(new GUI_Scene);
             SceneMgr->SetGUIScene(EmptyGUI.get());
 
             TestScene->SetName(playScene);
@@ -138,10 +138,10 @@ void BoneEditor::Run()
         }
         else
         {
-            auto_ptr<SceneInfoUI> EditorTtitleUI(new SceneInfoUI);
+            shared_ptr<SceneInfoUI> EditorTtitleUI(new SceneInfoUI);
             SceneMgr->SetGUIScene(EditorTtitleUI.get());
 
-            auto_ptr<Scene> SceneInfo(new Scene);
+            shared_ptr<Scene> SceneInfo(new Scene);
 
             SceneMgr->AddScene("InfoScene", SceneInfo.get());
             flag = SceneMgr->StartScene("InfoScene");
@@ -152,14 +152,14 @@ void BoneEditor::Run()
 
         if (flag)
         {
-            auto_ptr<Scene> LoadScene(new Scene);
+            shared_ptr<Scene> LoadScene(new Scene);
             SceneMgr->AddScene("EditorLoadScene", LoadScene.get());
             SceneMgr->SetLoadScene("EditorLoadScene");
             
-            auto_ptr<EditorLoadScene> EditorLoadGUI(new EditorLoadScene);
+            shared_ptr<EditorLoadScene> EditorLoadGUI(new EditorLoadScene);
             SceneMgr->SetLoadGUIScene(EditorLoadGUI.get());
             
-            auto_ptr<Scene> ViewScene(new Scene);
+            shared_ptr<Scene> ViewScene(new Scene);
             SceneMgr->SetGUIScene(this);
             this->SetScriptProc(this);
 
@@ -524,6 +524,21 @@ void BoneEditor::ShowObjectInfo(std::string name)
                         ((SpriteBillBoard*)item->second)->IsFullAnimation(Full);
                         ((SpriteBillBoard*)item->second)->SetTargetCamera(isTargetCamera);
                         ((SpriteBillBoard*)item->second)->SetSpeed(Speed);
+                    }
+                    else if (item->first == "FireworkParticle")
+                    {
+                        static int NumOfParticle = ((FireworkParticle*)item->second)->GetNumOfParticles();
+                        static int Size = ((FireworkParticle*)item->second)->GetSize();
+
+                        ImGui::DragInt("NumOfParticle", &NumOfParticle);
+                        ImGui::DragInt("Size", &Size);
+
+                        if (ImGui::Button("Change"))
+                        {
+                            ((FireworkParticle*)item->second)->RemoveAllParticle();
+                            ((FireworkParticle*)item->second)->Init(object, NumOfParticle, Size);
+                            ((FireworkParticle*)item->second)->Reset();
+                        }
                     }
                     else if (item->first == "Transform3D")
                     {
@@ -2034,6 +2049,22 @@ void BoneEditor::UpdateFrame()
             // ParticleSystem
             case 9:
             {
+                auto Sprites = ResourceMgr->ExistFiles(".\\Resource\\Sprites\\*");
+
+                const int SpriteSize = Sprites.size();
+                char** ComboBoxItems = new char*[SpriteSize];
+
+                int i = 0;
+                for each(auto item in Sprites)
+                {
+                    ComboBoxItems[i] = new char[64];
+                    strcpy(ComboBoxItems[i], item.c_str());
+                    i++;
+                }
+
+                static int CurItem = 0;
+                ImGui::Combo("Sprites", &CurItem, ComboBoxItems, SpriteSize);
+                
                 const char* Particle_items[] = { "Firework", "Snow" };
                 static int CurParticle = 0;
 
@@ -2053,7 +2084,7 @@ void BoneEditor::UpdateFrame()
                     {
                         FireworkParticle* Particle = new FireworkParticle();
                         Particle->Init(Object, NumOfParticle, Size);
-                        Particle->SetTexture("Particle.jpg");
+                        Particle->SetTexture(ComboBoxItems[CurItem]);
                         Particle->LoadContent();
 
                         Object->AddComponent(Particle);
@@ -2069,6 +2100,10 @@ void BoneEditor::UpdateFrame()
 
                     showAddComponent = false;
                 }
+
+                for (int i = 0; i < SpriteSize; i++)
+                    delete ComboBoxItems[i];
+                delete[] ComboBoxItems;
             }
             break;
 

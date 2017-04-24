@@ -10,7 +10,7 @@
             "PrefabName": "FireSprite",
             "Rotation": [
                 0.0,
-                1.33703696727753,
+                0.833248436450958,
                 -0.0
             ],
             "Scale": [
@@ -30,7 +30,7 @@
             "PrefabName": "FireSprite",
             "Rotation": [
                 0.0,
-                1.33703696727753,
+                0.833248436450958,
                 -0.0
             ],
             "Scale": [
@@ -89,7 +89,7 @@
             ],
             "PrefabName": "Crate_B",
             "Rotation": [
-                0.0263922438025475,
+                0.0263922773301601,
                 -0.0344733484089375,
                 -0.011493444442749
             ],
@@ -1144,8 +1144,8 @@
             "IsChild": true,
             "Position": [
                 115.0,
-                3.00000023841858,
-                111.000007629395
+                3.0,
+                111.0
             ],
             "PrefabName": "FourthFloor6",
             "Rotation": [
@@ -1211,6 +1211,86 @@
             "Rotation": [
                 0.0,
                 -1.57000005245209,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "FourthRoomParticle": {
+            "IsChild": false,
+            "Position": [
+                305.0,
+                1.0,
+                305.0
+            ],
+            "PrefabName": "FourthRoomParticle",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "FourthRoomParticle2": {
+            "IsChild": false,
+            "Position": [
+                151.0,
+                1.0,
+                305.0
+            ],
+            "PrefabName": "FourthRoomParticle",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "FourthRoomParticle3": {
+            "IsChild": false,
+            "Position": [
+                150.0,
+                1.0,
+                381.000030517578
+            ],
+            "PrefabName": "FourthRoomParticle",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 0
+        },
+        "FourthRoomParticle4": {
+            "IsChild": false,
+            "Position": [
+                153.0,
+                1.0,
+                458.000030517578
+            ],
+            "PrefabName": "FourthRoomParticle",
+            "Rotation": [
+                0.0,
+                0.0,
                 0.0
             ],
             "Scale": [
@@ -1423,9 +1503,9 @@
         "FurthWall10": {
             "IsChild": true,
             "Position": [
-                41.0000038146973,
+                41.0,
                 0.0,
-                111.000007629395
+                111.0
             ],
             "PrefabName": "FurthWall10",
             "Rotation": [
@@ -1723,7 +1803,7 @@
         "FurthWall24": {
             "IsChild": true,
             "Position": [
-                63.0000038146973,
+                63.0,
                 1.0,
                 0.0
             ],
@@ -1825,7 +1905,7 @@
             "Position": [
                 0.0,
                 2.0,
-                -161.000015258789
+                -161.0
             ],
             "PrefabName": "FurthWall4",
             "Rotation": [
@@ -2006,6 +2086,66 @@
                 304.0,
                 -11.0000009536743,
                 309.0
+            ],
+            "PrefabName": "PoisonSprite",
+            "Rotation": [
+                1.56995058059692,
+                1.51046108953778e-07,
+                1.51046108953778e-07
+            ],
+            "Scale": [
+                60.0,
+                60.0,
+                60.0
+            ],
+            "TreeDepth": 0
+        },
+        "PoisonSprite2": {
+            "IsChild": false,
+            "Position": [
+                150.0,
+                -11.0000009536743,
+                309.0
+            ],
+            "PrefabName": "PoisonSprite",
+            "Rotation": [
+                1.56995058059692,
+                1.51046108953778e-07,
+                1.51046108953778e-07
+            ],
+            "Scale": [
+                60.0,
+                60.0,
+                60.0
+            ],
+            "TreeDepth": 0
+        },
+        "PoisonSprite3": {
+            "IsChild": false,
+            "Position": [
+                152.0,
+                -11.0000009536743,
+                383.000030517578
+            ],
+            "PrefabName": "PoisonSprite",
+            "Rotation": [
+                1.56995058059692,
+                1.51046108953778e-07,
+                1.51046108953778e-07
+            ],
+            "Scale": [
+                60.0,
+                60.0,
+                60.0
+            ],
+            "TreeDepth": 0
+        },
+        "PoisonSprite4": {
+            "IsChild": false,
+            "Position": [
+                152.0,
+                -11.0000009536743,
+                459.000030517578
             ],
             "PrefabName": "PoisonSprite",
             "Rotation": [
@@ -2750,7 +2890,7 @@
             "PrefabName": "FireSprite",
             "Rotation": [
                 0.0,
-                1.33703696727753,
+                0.833248436450958,
                 -0.0
             ],
             "Scale": [
@@ -3242,59 +3382,114 @@
         }
     },
     "GraphNode": {
-        "MonsterPathNode0": {
+        "MapPath0": {
             "Connections": [
-                "MonsterPathNode1",
-                "MonsterPathNode5"
+                "MapPath1"
             ],
             "Position": [
-                327.000030517578,
+                321.0,
+                50.0,
+                397.000030517578
+            ]
+        },
+        "MapPath1": {
+            "Connections": [
+                "MapPath0",
+                "MapPath2"
+            ],
+            "Position": [
+                209.000015258789,
+                50.0,
+                399.000030517578
+            ]
+        },
+        "MapPath2": {
+            "Connections": [
+                "MapPath1",
+                "MapPath3",
+                "MapPath8"
+            ],
+            "Position": [
+                214.000015258789,
+                50.0,
+                96.0000076293945
+            ]
+        },
+        "MapPath3": {
+            "Connections": [
+                "MapPath2",
+                "MapPath4",
+                "MapPath7"
+            ],
+            "Position": [
+                225.000015258789,
+                50.0,
+                -76.0
+            ]
+        },
+        "MapPath4": {
+            "Connections": [
+                "MapPath3",
+                "MapPath5"
+            ],
+            "Position": [
+                132.0,
                 50.0000038146973,
-                395.000030517578
+                -76.0
             ]
         },
-        "MonsterPathNode1": {
+        "MapPath5": {
             "Connections": [
-                "MonsterPathNode2",
-                "MonsterPathNode0"
+                "MapPath4",
+                "MapPath6"
             ],
             "Position": [
-                211.000015258789,
+                167.000015258789,
                 50.0,
-                395.000030517578
+                -201.000015258789
             ]
         },
-        "MonsterPathNode2": {
+        "MapPath6": {
             "Connections": [
-                "MonsterPathNode3",
-                "MonsterPathNode1"
+                "MapPath5",
+                "MapPath7"
             ],
             "Position": [
-                234.000015258789,
-                50.0,
-                -88.0000076293945
+                308.0,
+                50.0000038146973,
+                -207.000015258789
             ]
         },
-        "MonsterPathNode3": {
+        "MapPath7": {
             "Connections": [
-                "MonsterPathNode4",
-                "MonsterPathNode2"
+                "MapPath3",
+                "MapPath6"
             ],
             "Position": [
-                211.000015258789,
+                308.0,
                 50.0,
-                393.000030517578
+                -61.0000038146973
             ]
         },
-        "MonsterPathNode4": {
+        "MapPath8": {
             "Connections": [
-                "MonsterPathNode0",
-                "MonsterPathNode3"
+                "MapPath2",
+                "MapPath9"
             ],
             "Position": [
-                326.000030517578,
+                131.0,
                 50.0,
-                396.000030517578
+                96.0000076293945
+            ]
+        },
+        "MapPath9": {
+            "Connections": [
+                "MapPath8"
+            ],
+            "Position": [
+                163.000015258789,
+                50.0,
+                -15.0000009536743
             ]
         }
     },

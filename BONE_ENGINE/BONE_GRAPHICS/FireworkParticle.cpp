@@ -9,44 +9,55 @@ namespace BONE_GRAPHICS
 		SetTypeName("FireworkParticle");
 	}
 
-	void FireworkParticle::Init(GameObject* _owner, int _numParticles, float _size)
+	void FireworkParticle::Init(GameObject* owner, int numParticles, float size)
 	{
-		transform3D = (Transform3D*)(_owner->GetComponent("Transform3D"));
-		size = _size;
+		transform3D = (Transform3D*)(owner->GetComponent("Transform3D"));
+		this->size = size;
 		vbSize = 2048;
 		vbOffset = 0;
 		vbBatchSize = 512;
+        resetTimer = 0;
+        this->numParticles = numParticles;
 
-		for (int i = 0; i < _numParticles; i++)
+		for (int i = 0; i < numParticles; i++)
 			AddParticle();
 	}
 
-	void FireworkParticle::ResetParticle(Attribute* _attribute)
+    int FireworkParticle::GetNumOfParticles()
+    {
+        return numParticles;
+    }
+    
+    int FireworkParticle::GetSize()
+    {
+        return this->size;
+    }
+
+	void FireworkParticle::ResetParticle(Attribute* attribute)
 	{
-		_attribute->isAlive = true;
-		_attribute->position = Vec3(0, 0, 0);
+        attribute->isAlive = true;
+        attribute->position = Vec3(0, 0, 0);
 
 		Vec3 min = Vec3(-1.0f, -1.0f, -1.0f);
 		Vec3 max = Vec3(1.0f, 1.0f, 1.0f);
 
-
-		GetRandomVector(&_attribute->velocity, &min, &max);
+		GetRandomVector(&attribute->velocity, &min, &max);
 
 		// normalize to make spherical
 		D3DXVec3Normalize(
-			&_attribute->velocity,
-			&_attribute->velocity);
+			&attribute->velocity,
+			&attribute->velocity);
 
-		_attribute->velocity *= 9.0f;
+        attribute->velocity *= 9.0f;
 
-		_attribute->color = D3DXCOLOR(
+        attribute->color = D3DXCOLOR(
 			1.0f,//GetRandomFloat(0.0f, 1.0f),
 			1.0f,//GetRandomFloat(0.0f, 1.0f),
 			1.0f,//GetRandomFloat(0.0f, 1.0f),
 			1.0f);
 
-		_attribute->age = 0.0f;
-		_attribute->lifeTime = 2.0f; // lives for 2 seconds
+        attribute->age = 0.0f;
+        attribute->lifeTime = 2.0f; // lives for 2 seconds
 	}
 
 	// 점과 점 사이의 거리 3D
@@ -57,6 +68,12 @@ namespace BONE_GRAPHICS
 
 	void FireworkParticle::Update()
 	{
+        if (resetTimer > 2.0f)
+        {
+            resetTimer = 0;
+            this->Reset();
+        }
+
 		std::list<Attribute>::iterator i, j;
 		static bool bDiffusion = true;
 		float distance = 0;
@@ -82,6 +99,8 @@ namespace BONE_GRAPHICS
 			//i->_position = i->_position + (i->_velocity) * timeDelta;	// p = p0 + 시간변화량*v'(속도변화량)		
 			i->velocity = i->velocity + i->acceleration * SceneMgr->GetTimeDelta();// v' = v0 + 시간변화량*가속도
 		}
+
+        resetTimer += SceneMgr->GetTimeDelta();
 	}
 
 	void FireworkParticle::PreRender()

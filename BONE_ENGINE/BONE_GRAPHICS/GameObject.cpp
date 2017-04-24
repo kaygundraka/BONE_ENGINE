@@ -438,8 +438,7 @@ namespace BONE_GRAPHICS
         j["IsStatic"] = isStatic;
         j["IsEditorLock"] = isEditorLock;
         j["PipeLine"] = (int)pipeLine;
-
-        
+                
         for (auto iter = childs.begin(); iter != childs.end(); iter++)
             j["ChildObjects"].push_back((*iter)->GetPrfabName());
 
@@ -567,6 +566,12 @@ namespace BONE_GRAPHICS
                 j["9.SpriteBillBoard"]["Alpha"] = ((SpriteBillBoard*)item.second)->GetAlpha();
                 j["9.SpriteBillBoard"]["Speed"] = ((SpriteBillBoard*)item.second)->GetSpeed();
                 j["9.SpriteBillBoard"]["IsTargetCamera"] = ((SpriteBillBoard*)item.second)->IsTargetCamera();
+            }
+            else if (item.first == "FireworkParticle")
+            {
+                j["10.FireworkParticle"]["NumOfParticle"] = ((FireworkParticle*)item.second)->GetNumOfParticles();
+                j["10.FireworkParticle"]["Size"] = ((FireworkParticle*)item.second)->GetSize();
+                j["10.FireworkParticle"]["Texture"] = ((FireworkParticle*)item.second)->GetTexture();
             }
         }
 
@@ -887,6 +892,15 @@ namespace BONE_GRAPHICS
                 sb->SetTargetCamera(j["9.SpriteBillBoard"]["IsTargetCamera"]);
 
                 AddComponent(sb);
+            }
+            else if (TypeName == "10.FireworkParticle")
+            {
+                FireworkParticle* fp = new FireworkParticle();
+
+                fp->Init(this, j["10.FireworkParticle"]["NumOfParticle"], j["10.FireworkParticle"]["Size"]);
+                fp->SetTexture(j["10.FireworkParticle"]["Texture"]);
+
+                AddComponent(fp);
             }
         }
 

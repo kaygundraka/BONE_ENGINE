@@ -1,0 +1,25 @@
+{
+    "0.Transform3D": {
+        "Position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Rotation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "IsActive": true,
+    "IsEditorLock": false,
+    "IsStatic": false,
+    "PipeLine": 1,
+    "Priority": 1,
+    "Tag": ""
+}

@@ -182,8 +182,8 @@ namespace BONE_GRAPHICS
 		LoadingThread.join();
         isPhysicsUpdate = false;
         
-		//sceneList[name]->SortPriorityObject();
-        sceneList[name]->SortRenderOptimizeObject();
+		sceneList[name]->SortPriorityObject();
+        //sceneList[name]->SortRenderOptimizeObject();
 
 		MSG msg;
 		::ZeroMemory(&msg, sizeof(MSG));
@@ -221,7 +221,6 @@ namespace BONE_GRAPHICS
                 RenderMgr->GetDevice()->BeginScene();
 
                 sceneList[name]->SkyboxRender();
-                
                 sceneList[name]->Update();
                 sceneList[name]->LateUpdate();
                 sceneList[name]->Render();

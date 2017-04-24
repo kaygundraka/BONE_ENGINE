@@ -222,7 +222,6 @@ namespace BONE_GRAPHICS
             return;
 
         // ---------------- Set Shader ----------------
-
         auto DefaultEffect = ResourceMgr->LoadEffect("DefaultEffect.fx");
         auto MainCamera = GetCurrentCamera();
 
@@ -605,19 +604,24 @@ namespace BONE_GRAPHICS
                         D3DXMatrixTranspose(&matWorldIT, &matWorldIT);
                         SetRenderMatrial(Iter, DefaultEffect);
 
-                        if (RenderMgr->GetLastRenderedMesh() != staticMesh->GetFile())
-                        {
-                            DefaultEffect->SetTexture("tColorMap", ResourceMgr->LoadTexture(Diffuse[i]));
-                            DefaultEffect->SetTexture("normalMapTexture", ResourceMgr->LoadTexture(Normal[i]));
-                            RenderMgr->SetLastRenderedMesh(staticMesh->GetFile());
-                        }
-
                         DefaultEffect->SetMatrix("matWorld", &matWorld);
                         DefaultEffect->SetMatrix("matWorldIT", &matWorldIT);
+                        
+                        //if (RenderMgr->GetLastRenderedMesh() != staticMesh->GetFile())
+                        //{
+
+                        DefaultEffect->SetTexture("tColorMap", ResourceMgr->LoadTexture(Diffuse[i]));
+                        DefaultEffect->SetTexture("normalMapTexture", ResourceMgr->LoadTexture(Normal[i]));
+
+                        //    RenderMgr->SetLastRenderedMesh(staticMesh->GetFile());
+                        //}
+
                         DefaultEffect->CommitChanges();
 
                         for (int i = 0; i < Mesh->numMaterials; i++)
+                        {
                             Mesh->mesh->DrawSubset(i);
+                        }
                     }
 
                     auto skinnedMesh = ((SkinnedMesh*)Iter->GetComponent("SkinnedMesh"));
