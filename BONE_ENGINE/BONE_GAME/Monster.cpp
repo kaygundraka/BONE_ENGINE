@@ -16,22 +16,36 @@ void Monster::Init()
 
 void Monster::Reference()
 {
-    nodes = CUR_SCENE->GetGraphNodes();
- 
-    auto node = nodes->find("MapPath0")->second;
+    for each(auto var in *CUR_SCENE->GetGraphNodes())
+    {
+        AStarNode* astarNode = new AStarNode();
+        astarNode->name = var.second->GetName();
+        pathGraph->AddNode(astarNode);
+    }
 
-    currentNode = node->GetName();
-    nextNode = *node->GetConnections().begin();
+    auto NodeList = pathGraph->GetNodeList();
+
+    for each(auto var in *CUR_SCENE->GetGraphNodes())
+    {
+        for each (auto var2 in var.second->GetComponents())
+           (*NodeList)[var.first]->neighborList.push_back((*NodeList).find(var2.first)->second);
+    }
+
+    
+    //currentNode = node->GetName();
+    //nextNode = *node->GetConnections().begin();
+    //auto Pos = ((Transform3D*)node->transform3D)->GetPosition();
+    //nextNodeTr = (Transform3D*)(*nodes)[*node->GetConnections().begin()]->transform3D;
 
     moveDir.x = 0;
     moveDir.y = 0;
     moveDir.z = -1;
-
-    auto Pos = ((Transform3D*)node->transform3D)->GetPosition();
+    
     auto Tr = ((Transform3D*)this->gameObject->transform3D);
-    Tr->SetPosition(Pos);
+    auto StartNode = pathGraph->GetMinDistNode(Tr->GetPosition());
 
-    nextNodeTr = (Transform3D*)(*nodes)[*node->GetConnections().begin()]->transform3D;
+    Tr->SetPosition(StartNode->GetPos());
+
 
     skinnedMesh = GET_SKINNED_MESH(this->gameObject);
 
@@ -92,11 +106,11 @@ void Monster::Update()
         return;
     }
 
-   /* switch (status) {
+    switch (status) {
     case PATROL: Patrol(); break;
     case SEARCH: Search(); break;
     case COMBAT: Combat(); break;
-    }*/
+    }
 }
 
 float GetAngle(const Vec3& a, const Vec3& b)

@@ -7,6 +7,7 @@
 #include <StaticMesh.h>
 #include <SoundClip.h>
 #include "PlayerCharacter.h"
+#include "AStarGraph.h"
 using namespace BONE_GRAPHICS;
 
 class Monster : public Script {
@@ -16,6 +17,8 @@ public:
     };
 
 private:
+    AStarGraph* pathGraph;
+
     std::map<std::string, GraphNode*>* nodes;
 
     Transform3D* nextNodeTr;
