@@ -18,7 +18,7 @@ void Monster::Reference()
 {
     nodes = CUR_SCENE->GetGraphNodes();
  
-    auto node = nodes->find("MonsterPathNode3")->second;
+    auto node = nodes->find("MapPath0")->second;
 
     currentNode = node->GetName();
     nextNode = *node->GetConnections().begin();
@@ -92,11 +92,11 @@ void Monster::Update()
         return;
     }
 
-    switch (status) {
+   /* switch (status) {
     case PATROL: Patrol(); break;
     case SEARCH: Search(); break;
     case COMBAT: Combat(); break;
-    }
+    }*/
 }
 
 float GetAngle(const Vec3& a, const Vec3& b)

@@ -23,13 +23,13 @@ void PlayerCharacter::Reference()
     cameraObject->SetPriority(1);
     
     Transform3D* tr = new Transform3D();
-    tr->SetPosition(Vec3(0, 30, 15) + ((Transform3D*)gameObject->transform3D)->GetPosition());
+    tr->SetPosition(Vec3(0, 40, 25) + ((Transform3D*)gameObject->transform3D)->GetPosition());
     cameraObject->AddComponent(tr);
     cameraTr = tr;
 
     Camera *camera = new Camera(0, PROJECTION_TYPE::PRJOJECTION_PERSPACTIVE,
-        Vec3(0, 1, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), 1000, 0.1f, D3DX_PI * 0.5f);
-    camera->SetTargetPosition(((Transform3D*)gameObject->transform3D)->GetPosition() + Vec3(0, 30, 0));
+        Vec3(0, 1, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), 1000, 0.1f, D3DX_PI * 0.6f);
+    camera->SetTargetPosition(((Transform3D*)gameObject->transform3D)->GetPosition() + Vec3(0, 40, 0));
     cameraObject->AddComponent(camera);
     mainCamera = camera;
 
@@ -182,7 +182,7 @@ void PlayerCharacter::Update()
         speed = 3000;
     }
 
-    if (InputMgr->KeyDown('W', false) && !Attack_Key)
+    if (InputMgr->KeyDown('W', false) && !Attack_Key && !Defense_Key)
     {
         if (!SoundMgr->IsPlaying2D("footstep.mp3"))
             SoundMgr->Play2D("footstep.mp3", 0.07f, true);
@@ -208,7 +208,7 @@ void PlayerCharacter::Update()
         W_Key = false;
     }
 
-    if (InputMgr->KeyDown('S', false) && !Attack_Key &&!isSneaking)
+    if (InputMgr->KeyDown('S', false) && !Attack_Key &&!isSneaking && !Defense_Key)
     {
         if (!SoundMgr->IsPlaying2D("footstep.mp3"))
             SoundMgr->Play2D("footstep.mp3", 0.07f, true);
@@ -220,7 +220,7 @@ void PlayerCharacter::Update()
         else
             skinnedMesh->SetAnimation("Skeleton_walking_back");
         
-        Vec3 Backword = -GET_TRANSFORM_3D(gameObject)->GetForward() * SceneMgr->GetTimeDelta() * 500;
+        Vec3 Backword = -GET_TRANSFORM_3D(gameObject)->GetForward() * SceneMgr->GetTimeDelta() * speed / 2;
 
         rigidBody->SetLinearVelocity(Backword.x, Backword.y, -Backword.z);
 
@@ -232,7 +232,7 @@ void PlayerCharacter::Update()
         S_Key = false;
     }
 
-    if (InputMgr->KeyDown('A', false) && !Attack_Key)
+    if (InputMgr->KeyDown('A', false) && !Attack_Key && !Defense_Key)
     {
         Input = true;
         A_Key = true;
@@ -245,7 +245,7 @@ void PlayerCharacter::Update()
         A_Key = false;
     }
         
-    if (InputMgr->KeyDown('D', false) && !Attack_Key)
+    if (InputMgr->KeyDown('D', false) && !Attack_Key && !Defense_Key)
     {
         Input = true;
         D_Key = true;
@@ -377,6 +377,8 @@ void PlayerCharacter::LateUpdate()
     int dx = pt.x - mouseX;
     int dy = pt.y - mouseY;
                           
+    Vec3 Forward = GET_TRANSFORM_3D(gameObject)->GetForward();
+    Forward.y = 0;
     Vec3 Target = GET_TRANSFORM_3D(gameObject)->GetPosition() + Vec3(0, 40, 0);
     Vec3 Eye = GET_TRANSFORM_3D(cameraObject)->GetPosition();
 
@@ -399,7 +401,7 @@ void PlayerCharacter::LateUpdate()
     D3DXMatrixRotationAxis(&CrossMat, &Cross, dy * fDelta);
     D3DXVec3TransformCoord(&FinalPos, &YRotatePos, &CrossMat);
     D3DXVec3Normalize(&FinalPos, &FinalPos);
-    FinalPos *= 15;
+    FinalPos *= 25;
 
     pt.x = (RenderMgr->GetWidth()) / 2;
     pt.y = (RenderMgr->GetHeight()) / 2;
