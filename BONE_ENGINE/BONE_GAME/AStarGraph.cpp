@@ -34,8 +34,8 @@ bool AStarNode::IsInRange(Vec3 curPos)
 {
     auto NodePos = GetPos();
 
-    if (curPos.x >= NodePos.x - 15 && curPos.x <= NodePos.x + 15)
-        if (curPos.z >= NodePos.z - 15 && curPos.z <= NodePos.z + 15)
+    if (curPos.x >= NodePos.x - 10 && curPos.x <= NodePos.x + 10)
+        if (curPos.z >= NodePos.z - 10 && curPos.z <= NodePos.z + 10)
             return true;
 
     return false;
@@ -87,30 +87,41 @@ AStarNode* AStarGraph::GetMinDistNode(Vec3 curPos)
 
 void AStarGraph::PathFinding(Vec3 curPos)
 {
+    int Size = path.size();
+    for (int i = 0; i < Size; i++)
+        path.pop();
+
     auto Player = (PlayerCharacter*)(CUR_SCENE->FindObjectByName("Player")->GetComponent("PlayerCharacter"));
     auto PlayerPos = GET_TRANSFORM_3D(Player->gameObject)->GetPosition();
 
     auto DestNode= GetMinDistNode(PlayerPos);
-    AStarNode* CurNode = GetMinDistNode(curPos);
-    path.push(CurNode);
+    auto CurNode = GetMinDistNode(curPos);
 
+    std::set<std::string> VisitedList;
+    
     while (true)
     {
         if (CurNode == DestNode)
             break;
 
-        AStarNode* NextNode = nullptr;
+        if (CurNode->neighborList.size() == 0)
+            break;
 
+        AStarNode* NextNode = nullptr;
+        
         for each (auto var in CurNode->neighborList)
         {
+            if (VisitedList.find(var->name) != VisitedList.end())
+                continue;
+
             if (NextNode == nullptr)
                 NextNode = var;
             else
             {
-                float result1 = NextNode->GetHeuristic() + CurNode->BTDistanceFromNode(NextNode->name);
-                float result2 = var->GetHeuristic() + CurNode->BTDistanceFromNode(var->name);
+                float f1 = NextNode->GetHeuristic() + CurNode->BTDistanceFromNode(NextNode->name);
+                float f2 = var->GetHeuristic() + CurNode->BTDistanceFromNode(var->name);
 
-                if (result1 > result2)
+                if (f1 > f2)
                     NextNode = var;
             }
         }
@@ -119,13 +130,16 @@ void AStarGraph::PathFinding(Vec3 curPos)
         {
             CurNode = NextNode;
             path.push(NextNode);
+            VisitedList.insert(NextNode->name);
         }
+        else
+            break;
     }
 }
 
-std::queue<AStarNode*> AStarGraph::GetPath()
+std::queue<AStarNode*>* AStarGraph::GetPath()
 {
-    return path;
+    return &path;
 }
 
 std::map<std::string, AStarNode*>* AStarGraph::GetNodeList()

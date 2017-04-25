@@ -7,6 +7,7 @@ void Monster::Init()
 {
     status = PATROL;
     speed = 1500;
+    hp = 100;
 
     soundClips = new SoundClip();
     soundClips->AttachObject(this->gameObject);
@@ -16,35 +17,34 @@ void Monster::Init()
 
 void Monster::Reference()
 {
-    for each(auto var in *CUR_SCENE->GetGraphNodes())
+    nodes = CUR_SCENE->GetGraphNodes();
+
+    for each(auto var in *nodes)
     {
         AStarNode* astarNode = new AStarNode();
         astarNode->name = var.second->GetName();
-        pathGraph->AddNode(astarNode);
+        pathGraph.AddNode(astarNode);
     }
 
-    auto NodeList = pathGraph->GetNodeList();
+    auto NodeList = pathGraph.GetNodeList();
 
-    for each(auto var in *CUR_SCENE->GetGraphNodes())
+    for each(auto var in *nodes)
     {
-        for each (auto var2 in var.second->GetComponents())
-           (*NodeList)[var.first]->neighborList.push_back((*NodeList).find(var2.first)->second);
+        for each (auto var2 in var.second->GetConnections())
+        {
+            (*NodeList)[var.first]->neighborList.push_back((*NodeList).find(var2)->second);
+        }
     }
-
-    
-    //currentNode = node->GetName();
-    //nextNode = *node->GetConnections().begin();
-    //auto Pos = ((Transform3D*)node->transform3D)->GetPosition();
-    //nextNodeTr = (Transform3D*)(*nodes)[*node->GetConnections().begin()]->transform3D;
 
     moveDir.x = 0;
     moveDir.y = 0;
     moveDir.z = -1;
-    
+        
     auto Tr = ((Transform3D*)this->gameObject->transform3D);
-    auto StartNode = pathGraph->GetMinDistNode(Tr->GetPosition());
+    auto StartNode = pathGraph.GetMinDistNode(Tr->GetPosition());
 
     Tr->SetPosition(StartNode->GetPos());
+    patrollNode = StartNode;
 
 
     skinnedMesh = GET_SKINNED_MESH(this->gameObject);
@@ -106,10 +106,30 @@ void Monster::Update()
         return;
     }
 
-    switch (status) {
-    case PATROL: Patrol(); break;
-    case SEARCH: Search(); break;
-    case COMBAT: Combat(); break;
+    auto PlayerTr = GET_TRANSFORM_3D(player->gameObject);
+    playerPos = PlayerTr->GetWorldPositon();
+    playerPos.y = 0;
+
+    curPos = transform->GetPosition();
+    curPos.y = 0;
+
+    if (damaged)
+    {
+        // Skeleton_Hit_from_back
+        // Skeleton_Hit_from_front
+        // Skeleton_Dying_B
+
+        skinnedMesh->SetAnimationLoop(true);
+        skinnedMesh->SetAnimation("Skeleton_1H_swing_left");
+    }
+    else
+    {
+        switch (status) {
+        case PATROL: Patrol(); break;
+        case SEARCH: Search(); break;
+        case COMBAT: Combat(); break;
+        case FOLLOW: Follow(); break;
+        }
     }
 }
 
@@ -127,76 +147,54 @@ void Monster::Patrol()
 
     skinnedMesh->SetAnimationLoop(true);
     skinnedMesh->SetAnimation("Skeleton_1H_walk");
-
-    CurPos = transform->GetPosition();
-    NextPos = nextNodeTr->GetPosition();
-
-    CurPos.y = 0;
+    
+    if (patrollNode->IsInRange(curPos))
+        patrollNode = patrollNode->neighborList[RandomGenerator::GetRandInt(0, patrollNode->neighborList.size() - 1)];
+    
+    Vec3 NextPos = patrollNode->GetPos();
     NextPos.y = 0;
+    
+    CalcDirDist(NextPos);
 
-    moveDir = NextPos - CurPos;
-    D3DXVec3Normalize(&moveDir, &moveDir);
-    preDir = moveDir;
+    rotateYAngle = GetAngle(Vec3(0, 0, -1), moveDir);
+    rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
 
-    if (CurPos.x >= NextPos.x - 10 && CurPos.x <= NextPos.x + 10 
-        && CurPos.z >= NextPos.z - 10 && CurPos.z <= NextPos.z + 10)
+    rigidBody->SetLinearVelocity(
+        moveDir.x * speed * SceneMgr->GetTimeDelta(),
+        moveDir.y * speed * SceneMgr->GetTimeDelta(),
+        -moveDir.z * speed * SceneMgr->GetTimeDelta()
+    );
+
+    /// 거리에 따른 탐색 변화
+   
+    float Distance = CalcDirDist(playerPos);
+
+    if (player->IsSneakingMode() && Distance < 60)
     {
-        auto node = nodes->find(nextNode)->second;
-
-        currentNode = node->GetName();
-        nextNode = *node->GetConnections().begin();
-
-        nextNodeTr = (Transform3D*)(*nodes)[*node->GetConnections().begin()]->transform3D;
-
-        NextPos = nextNodeTr->GetPosition();
-        NextPos.y = 0;
-
-        moveDir = NextPos - CurPos;
-        D3DXVec3Normalize(&moveDir, &moveDir);
-
-        rotateYAngle = GetAngle(Vec3(0, 0, -1), moveDir);
-        rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
+        status = SEARCH;
+        rigidBody->SetLinearVelocity(0, 0, 0);
     }
-    else
+    else if (Distance < 100)
     {
-        rigidBody->SetLinearVelocity(
-            moveDir.x * speed * SceneMgr->GetTimeDelta(),
-            moveDir.y * speed * SceneMgr->GetTimeDelta(),
-            -moveDir.z * speed * SceneMgr->GetTimeDelta()
-        );
-
-        auto PlayerTr = GET_TRANSFORM_3D(player->gameObject);
-        auto PlayerPos = PlayerTr->GetWorldPositon();
-        PlayerPos.y = 0;
-
-        float Distance = D3DXVec3Length(&(PlayerPos - CurPos));
-
-        if (player->IsSneakingMode() && Distance < 60)
-        {
-            status = SEARCH;
-            rigidBody->SetLinearVelocity(0, 0, 0);
-        }
-        else if (Distance < 100)
-        {
-            status = SEARCH;
-            rigidBody->SetLinearVelocity(0, 0, 0);
-        }
+        status = SEARCH;
+        rigidBody->SetLinearVelocity(0, 0, 0);
     }
+}
+
+bool Monster::SearchAlgorithm(float range, float angle)
+{
+    bool result = true;
+
+    float Distance = CalcDirDist(playerPos);
+
+    if ()
 }
 
 void Monster::Search()
 {
     skinnedMesh->SetAnimation("Skeleton_Looking_around");
 
-    auto PlayerTr = GET_TRANSFORM_3D(player->gameObject);
-    auto PlayerPos = PlayerTr->GetWorldPositon();
-
-    CurPos = transform->GetPosition();
-
-    CurPos.y = 0;
-    PlayerPos.y = 0;
-
-    float Distance = D3DXVec3Length(&(PlayerPos - CurPos));
+    float Distance = CalcDirDist(playerPos);
 
     if (player->IsSneakingMode() && Distance >= 60)
         status = PATROL;
@@ -212,56 +210,105 @@ void Monster::Search()
 
     if (FindHeuristics < 5 || Distance <= 30)
     {
-        status = COMBAT;
-        skinnedMesh->SetAnimationLoop(false);
-        skinnedMesh->SetAnimation("Skeleton_anger");
+        status = FOLLOW;
+        pathGraph.PathFinding(curPos);
+
+        //skinnedMesh->SetAnimationLoop(false);
+        //skinnedMesh->SetAnimation("Skeleton_anger");
     }
+}
+
+void Monster::Follow()
+{
+    skinnedMesh->SetAnimationLoop(true);
+    skinnedMesh->SetAnimation("Skeleton_1H_charging");
+    
+    auto Path = pathGraph.GetPath();
+
+    if (Path->size() != 0 && Path->front()->IsInRange(curPos))
+        pathGraph.PathFinding(curPos);
+    
+    Vec3 NextPos;
+
+    if (Path->size() == 0)
+    {
+        pathGraph.PathFinding(curPos);
+
+        float Distance = CalculateDistance(playerPos, curPos);
+
+        if (Path->size() != 0 && Distance >= 100)
+            return;
+                
+        NextPos = GET_TRANSFORM_3D(player->gameObject)->GetPosition();
+            
+        if (Distance < 40)
+        {
+            rigidBody->SetLinearVelocity(0, 0, 0);
+            status = COMBAT;
+        }
+    }
+    else
+        NextPos = Path->front()->GetPos();
+    
+    NextPos.y = 0;
+    
+    CalcDirDist(NextPos);
+
+    rotateYAngle = GetAngle(Vec3(0, 0, -1), moveDir);
+    rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
+
+    rigidBody->SetLinearVelocity(
+        moveDir.x * speed * 2 * SceneMgr->GetTimeDelta(),
+        moveDir.y * speed * 2 * SceneMgr->GetTimeDelta(),
+        -moveDir.z * speed * 2 * SceneMgr->GetTimeDelta()
+    );
+}
+
+
+// return distance
+float Monster::CalcDirDist(Vec3 to)
+{
+    moveDir = to - curPos;
+
+    float Distance = D3DXVec3Length(&moveDir);
+    D3DXVec3Normalize(&moveDir, &moveDir);
+
+    return Distance;
 }
 
 void Monster::Combat()
 {
-    if (skinnedMesh->GetAnimationRate() >= 0.99f && skinnedMesh->GetCurrentAnimation() == "Skeleton_anger")
-    {
-        skinnedMesh->SetAnimationLoop(true);
-        skinnedMesh->SetAnimation("Skeleton_1H_combat_mode");
-    }
-
-    auto PlayerTr = GET_TRANSFORM_3D(player->gameObject);
-    auto PlayerPos = PlayerTr->GetWorldPositon();
-    
-    CurPos = transform->GetPosition();
-    
-    CurPos.y = 0;
-    PlayerPos.y = 0;
-    
-    auto Dir = PlayerPos - CurPos;
-    
-    float Distance = D3DXVec3Length(&Dir);
-    D3DXVec3Normalize(&Dir, &Dir);
+    skinnedMesh->SetAnimationLoop(true);
+    skinnedMesh->SetAnimation("Skeleton_1H_combat_mode");
 
     // 몬스터 회피기 Skeleton_1H_dodge_backwards
     // Skeleton_Hit_from_back
     // Skeleton_Hit_from_front
     // Skeleton_Dying_B
 
-    if (Distance >= 200)
-        status = PATROL;
-    else if (Distance <= 30)
+    auto Distance = CalcDirDist(playerPos);
+
+    if (Distance <= 40)
     {
+        rotateYAngle = GetAngle(Vec3(0, 0, -1), moveDir);
+        rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
         rigidBody->SetLinearVelocity(0, 0, 0);
-        skinnedMesh->SetAnimationLoop(true);
-        skinnedMesh->SetAnimation("Skeleton_1H_swing_left");
+        
+        if (!damaged)
+        {
+            skinnedMesh->SetAnimationLoop(true);
+            skinnedMesh->SetAnimation("Skeleton_1H_swing_left");
+        }
     }
     else
     {
-        skinnedMesh->SetAnimationLoop(true);
-        skinnedMesh->SetAnimation("Skeleton_1H_charging");
-
-        rigidBody->SetLinearVelocity(
-            Dir.x * speed * 2 * SceneMgr->GetTimeDelta(),
-            Dir.y * speed * 2 * SceneMgr->GetTimeDelta(),
-            -Dir.z * speed * 2 * SceneMgr->GetTimeDelta()
-        );
+        status = FOLLOW;
+        pathGraph.PathFinding(curPos);
     }
+}
 
+void Monster::Damaged(int damage)
+{
+    damaged = true;
+    hp -= damage;
 }

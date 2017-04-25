@@ -40,7 +40,7 @@ public:
     void PathFinding(Vec3 curPos);
 
     AStarNode* GetMinDistNode(Vec3 curPos);
-    std::queue<AStarNode*> GetPath();
+    std::queue<AStarNode*>* GetPath();
 };
 
 

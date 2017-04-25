@@ -13,34 +13,36 @@ using namespace BONE_GRAPHICS;
 class Monster : public Script {
 public:
     enum MONSTER_STATUS {
-        PATROL, SEARCH, COMBAT
+        PATROL, SEARCH, COMBAT, FOLLOW
     };
 
 private:
-    AStarGraph* pathGraph;
+    AStarGraph pathGraph;
 
     std::map<std::string, GraphNode*>* nodes;
 
-    Transform3D* nextNodeTr;
     Transform3D* transform;
     SoundClip* soundClips;
+
+    float hp;
+
+    bool damaged;
 
     double sleepTimer;
     Vec3 moveDir;
     Vec3 preDir;
-    Vec3 CurPos;
-    Vec3 NextPos;
+    Vec3 curPos;
+    Vec3 playerPos;
+    Vec3 nextPos;
 
     float rotateYAngle;
 
     PlayerCharacter* player;
 
-    std::string currentNode;
-    std::string nextNode;
-
     float speed;
 
     MONSTER_STATUS status;
+    AStarNode* patrollNode;
 
     BONE_GRAPHICS::RigidBody* rigidBody;
     SkinnedMesh* skinnedMesh;
@@ -48,8 +50,14 @@ private:
     void Patrol();
     void Search();
     void Combat();
+    void Follow();
+
+    bool SearchAlgorithm(float range, float angle);
+    float CalcDirDist(Vec3 to);
 
 public:
+    void Damaged(int damage);
+
     virtual void Init();
     virtual void Reference();
     virtual void Update();
