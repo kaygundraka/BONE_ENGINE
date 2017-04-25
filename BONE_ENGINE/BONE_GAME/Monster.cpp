@@ -1,4 +1,5 @@
 #include "Monster.h"
+#include "Function.h"
 #include <SceneManager.h>
 #include <InputManager.h>
 #include <RandomGenerator.h>
@@ -11,7 +12,7 @@ void Monster::Init()
 
     soundClips = new SoundClip();
     soundClips->AttachObject(this->gameObject);
-    soundClips->AddClip("footstep.mp3", 0.6f, true, false, 50.0f, 0.0f);
+    soundClips->AddClip("footstep.mp3", 1.0f, true, false, 50.0f, 0.0f);
     this->gameObject->AddComponent(soundClips);
 }
 
@@ -100,6 +101,14 @@ void Monster::Update()
     if (CUR_SCENE->IsEnablePhysics() == false)
         return;
 
+    if (hp <= 0)
+    {
+        skinnedMesh->SetAnimationLoop(false);
+        skinnedMesh->SetAnimation("Skeleton_Dying_B");
+
+        return;
+    }
+
     if (sleepTimer < 5.0f)
     {
         sleepTimer += SceneMgr->GetTimeDelta();
@@ -115,12 +124,30 @@ void Monster::Update()
 
     if (damaged)
     {
-        // Skeleton_Hit_from_back
-        // Skeleton_Hit_from_front
-        // Skeleton_Dying_B
+        Vec3 BetweenDir = playerPos - curPos;
+        D3DXVec3Normalize(&BetweenDir, &BetweenDir);
 
-        skinnedMesh->SetAnimationLoop(true);
-        skinnedMesh->SetAnimation("Skeleton_1H_swing_left");
+        float Angle = GetAngle(moveDir, BetweenDir);
+
+        if (Angle < 0)
+            Angle = -Angle;
+
+        rigidBody->SetLinearVelocity(0, 0, 0);
+
+        if (Angle >= 1.57f)
+        {
+            skinnedMesh->SetAnimationLoop(false);
+            skinnedMesh->SetAnimation("Skeleton_Hit_from_back");
+        }
+        else
+        {
+            skinnedMesh->SetAnimationLoop(false);
+            skinnedMesh->SetAnimation("Skeleton_Hit_from_front");
+        }
+
+        if (skinnedMesh->GetCurrentAnimation() == "Skeleton_Hit_from_back" || skinnedMesh->GetCurrentAnimation() == "Skeleton_Hit_from_front")
+            if (skinnedMesh->GetAnimationRate() >= 0.99f)
+                damaged = false;
     }
     else
     {
@@ -131,13 +158,6 @@ void Monster::Update()
         case FOLLOW: Follow(); break;
         }
     }
-}
-
-float GetAngle(const Vec3& a, const Vec3& b)
-{
-    float cosAngle = D3DXVec3Dot(&a, &b);
-
-    return (a.z*b.x + a.x*b.z > 0.0f) ? (float)(acos(cosAngle)) : -(float)(acos(cosAngle));
 }
 
 void Monster::Patrol()
@@ -166,17 +186,27 @@ void Monster::Patrol()
     );
 
     /// 거리에 따른 탐색 변화
-   
-    float Distance = CalcDirDist(playerPos);
+    float Distance = CalculateDistance(curPos, playerPos);
 
-    if (player->IsSneakingMode() && Distance < 60)
+    if (player->IsSneakingMode() && SearchAlgorithm(60, PI / 2.5f))
     {
-        status = SEARCH;
+        status = FOLLOW;
+        pathGraph.PathFinding(curPos);
+
+        //status = SEARCH;
         rigidBody->SetLinearVelocity(0, 0, 0);
     }
-    else if (Distance < 100)
+    else if (SearchAlgorithm(90, PI / 2))
+    {
+        status = FOLLOW;
+        pathGraph.PathFinding(curPos);
+        //status = SEARCH;
+        rigidBody->SetLinearVelocity(0, 0, 0);
+    }
+    else if (Distance < 40)
     {
         status = SEARCH;
+        searchTimer = RandomGenerator::GetRandInt(3, 5);
         rigidBody->SetLinearVelocity(0, 0, 0);
     }
 }
@@ -185,21 +215,38 @@ bool Monster::SearchAlgorithm(float range, float angle)
 {
     bool result = true;
 
-    float Distance = CalcDirDist(playerPos);
+    float Distance = CalculateDistance(curPos, playerPos);
 
-    if ()
+    if (Distance > range)
+        result = false;
+
+    Vec3 BetweenDir = playerPos - curPos;
+    D3DXVec3Normalize(&BetweenDir, &BetweenDir);
+
+    float Angle = GetAngle(moveDir, BetweenDir);
+
+    if (Angle < 0)
+        Angle = -Angle;
+
+    if (Angle > angle)
+        result = false;
+
+    return result;
 }
 
 void Monster::Search()
 {
     skinnedMesh->SetAnimation("Skeleton_Looking_around");
 
-    float Distance = CalcDirDist(playerPos);
-
-    if (player->IsSneakingMode() && Distance >= 60)
-        status = PATROL;
-    else if (Distance >= 100)
-        status = PATROL;
+    float Distance = CalculateDistance(curPos, playerPos);
+    
+    if (searchTimer > 0)
+    {
+        searchTimer -= SceneMgr->GetTimeDelta();
+        return;
+    }
+    else
+        searchTimer = 0;
 
     int FindHeuristics = 0;
 
@@ -208,13 +255,10 @@ void Monster::Search()
     else
         FindHeuristics = RandomGenerator::GetRandInt(0, 80);
 
-    if (FindHeuristics < 5 || Distance <= 30)
+    if (FindHeuristics < 30 || Distance <= 30)
     {
         status = FOLLOW;
         pathGraph.PathFinding(curPos);
-
-        //skinnedMesh->SetAnimationLoop(false);
-        //skinnedMesh->SetAnimation("Skeleton_anger");
     }
 }
 
@@ -264,7 +308,6 @@ void Monster::Follow()
     );
 }
 
-
 // return distance
 float Monster::CalcDirDist(Vec3 to)
 {
@@ -278,14 +321,6 @@ float Monster::CalcDirDist(Vec3 to)
 
 void Monster::Combat()
 {
-    skinnedMesh->SetAnimationLoop(true);
-    skinnedMesh->SetAnimation("Skeleton_1H_combat_mode");
-
-    // 몬스터 회피기 Skeleton_1H_dodge_backwards
-    // Skeleton_Hit_from_back
-    // Skeleton_Hit_from_front
-    // Skeleton_Dying_B
-
     auto Distance = CalcDirDist(playerPos);
 
     if (Distance <= 40)
@@ -294,11 +329,10 @@ void Monster::Combat()
         rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
         rigidBody->SetLinearVelocity(0, 0, 0);
         
-        if (!damaged)
-        {
-            skinnedMesh->SetAnimationLoop(true);
-            skinnedMesh->SetAnimation("Skeleton_1H_swing_left");
-        }
+        skinnedMesh->SetAnimationLoop(true);
+        skinnedMesh->SetAnimation("Skeleton_1H_swing_left");
+
+        // Skeleton_1H_dodge_backwards
     }
     else
     {
@@ -309,6 +343,9 @@ void Monster::Combat()
 
 void Monster::Damaged(int damage)
 {
-    damaged = true;
-    hp -= damage;
+    if (CalculateDistance(playerPos, curPos) <= 40)
+    {
+        damaged = true;
+        hp -= damage;
+    }
 }

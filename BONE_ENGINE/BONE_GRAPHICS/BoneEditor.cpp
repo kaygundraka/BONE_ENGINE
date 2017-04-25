@@ -1190,12 +1190,10 @@ void BoneEditor::UpdateFrame()
                         (*iter)->SetStatic(IsStatic);
                         (*iter)->SetPriority(Priority);
 
-                        auto Tag = (*iter)->Tag();
-                        char TagStr[64] = "";
-                        strcpy(TagStr, Tag.c_str());
+                        static char TagStr[64] = "";
                         ImGui::InputText("Tag", TagStr, 64);
                         if (ImGui::Button("Change Tag"))
-                            (*iter)->SetTag(Tag);
+                            (*iter)->SetTag(TagStr);
 
                         static char buf[64] = "";
                         ImGui::InputText("Name", buf, 64);

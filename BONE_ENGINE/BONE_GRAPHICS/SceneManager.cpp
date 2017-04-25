@@ -225,7 +225,7 @@ namespace BONE_GRAPHICS
                 sceneList[name]->LateUpdate();
                 sceneList[name]->Render();
                 sceneList[name]->LateRender();
-
+                
                 if (RenderMgr->UseImGUI())
                 {
                     RenderMgr->GetDevice()->SetRenderState(D3DRS_FOGENABLE, FALSE);

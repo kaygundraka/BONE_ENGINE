@@ -35,6 +35,8 @@ private:
     Vec3 playerPos;
     Vec3 nextPos;
 
+    double searchTimer;
+
     float rotateYAngle;
 
     PlayerCharacter* player;

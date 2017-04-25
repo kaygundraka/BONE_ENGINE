@@ -226,6 +226,8 @@ namespace BONE_GRAPHICS
             animationContainer->UnkeyAllTrackEvents(0);
             animationContainer->ResetTime();
             animationContainer->SetTrackAnimationSet(0, pAnim);
+            animationContainer->SetTrackEnable(0, TRUE);
+            animationContainer->SetTrackPosition(0, 0.0);
             curAnimation = pAnim->GetName();
             pAnim->Release();
         }

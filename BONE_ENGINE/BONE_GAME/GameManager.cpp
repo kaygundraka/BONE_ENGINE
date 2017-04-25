@@ -29,7 +29,7 @@ void GameManager::Init()
 
 void GameManager::Reference()
 {
-    SoundMgr->Play2D("Quiet.mp3", 0.03f, true);
+    SoundMgr->Play2D("Quiet.mp3", 0.8f, true);
 
     player = CUR_SCENE->FindObjectByTag("Player");
 

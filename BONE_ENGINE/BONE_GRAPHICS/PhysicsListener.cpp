@@ -6,6 +6,8 @@ namespace BONE_GRAPHICS
 {
     void PhysicsEventListener::beginContact(const ContactPointInfo& contact)
     {
+        cout << "adfgdfgdsfd" << endl;
+
         auto Object1 = SceneMgr->CurrentScene()->FindObjectByName(contact.collisionShape1->name);
         auto Object2 = SceneMgr->CurrentScene()->FindObjectByName(contact.collisionShape2->name);
 

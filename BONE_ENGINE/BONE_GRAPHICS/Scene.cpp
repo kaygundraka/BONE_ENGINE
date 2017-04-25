@@ -200,6 +200,28 @@ namespace BONE_GRAPHICS
 
     void Scene::Update()
     {
+        //// Get all the contacts of the world 
+        //auto manifolds = physicsWorld->getContactsList();
+
+        //// For each contact manifold of the body 
+        //for (auto it = manifolds.begin(); it != manifolds.end(); ++it) {
+        //    auto manifold = *it;
+
+        //    // For each contact point of the manifold 
+        //    for (int i = 0; i<manifold->getNbContactPoints(); i++) {
+
+        //        // Get the contact point 
+        //        ContactPoint* point = manifold->getContactPoint(i);
+        //        cout << manifold->getShape1()->getCollisionShape()->name << ", " << manifold->getShape2()->getCollisionShape()->name << endl;
+        //        
+        //        // Get the world-space contact point on body 1 
+        //        Vector3 pos = point->getWorldPointOnBody1();
+
+        //        // Get the world-space contact normal 
+        //        Vector3 normal = point->getNormal();
+        //    }
+        //}
+
         for (auto Iter = objectList.begin(); Iter != objectList.end(); Iter++)
             if ((*Iter)->GetActive())
                 (*Iter)->Update();

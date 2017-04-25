@@ -113,7 +113,6 @@ void PlayerGUI::Reference()
     hpBar->AddComponent(ImageHpBar);
 
     CUR_SCENE->AddObject(hpBar, "GUI_HP_BAR");
-    
     steminaBar = new GameObject();
 
     steminaBarTr = new Transform2D();

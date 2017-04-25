@@ -54,6 +54,9 @@
     <ClCompile Include="AStarGraph.cpp">
       <Filter>소스 파일\Script\Monster</Filter>
     </ClCompile>
+    <ClCompile Include="Function.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestScript2.h">
@@ -76,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="AStarGraph.h">
       <Filter>소스 파일\Script\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="Function.h">
+      <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

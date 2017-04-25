@@ -36,6 +36,10 @@ private:
     
     PlayerGUI* gui;
     
+    int hp;
+    int stemina;
+    bool damaged;
+
     float mouseX;
     float mouseY;
 
@@ -68,4 +72,6 @@ public:
     virtual void Reference();
     virtual void Update();
     virtual void LateUpdate();
+
+    void Damaged(int damage);
 };

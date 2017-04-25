@@ -1,4 +1,7 @@
 #include "PlayerCharacter.h"
+#include "Monster.h"
+#include "Function.h"
+#include <RandomGenerator.h>
 
 void PlayerCharacter::Init()
 {
@@ -14,6 +17,8 @@ void PlayerCharacter::Init()
     Attack_Key = false;
     isSneaking = false;
 
+    hp = 100;
+    stemina = 100;
     speed = 3000;
 }
 
@@ -96,12 +101,25 @@ void PlayerCharacter::Update()
         rigidBody->SetLinearVelocity(0, 0, 0);
         return;
     }
+
+    if (damaged)
+    {
+        rigidBody->SetLinearVelocity(0, 0, 0);
+
+        skinnedMesh->SetAnimationLoop(false);
+        skinnedMesh->SetAnimation("Skeleton_Hit_from_front");
     
+        if (skinnedMesh->GetCurrentAnimation() == "Skeleton_Hit_from_front")
+            if (skinnedMesh->GetAnimationRate() >= 0.99f)
+                damaged = false;
+    }
+
     float rotateYAngle = transform->GetRotateAngle().y;
     rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
 
+    gui->SetHP(hp);
+    gui->SetStemina(stemina);
     gui->ShowGUI(true);
-
 
     if (wearItem == false)
     {
@@ -117,7 +135,7 @@ void PlayerCharacter::Update()
 
             if (InputMgr->KeyDown('F', true))
             {
-                SoundMgr->Play2D("GetItem.mp3", 0.2f, false);
+                SoundMgr->Play2D("GetItem.mp3", 0.5f, false);
                 wearItem = true;
                 WearItem();
                 gui->ShowGetItem(false);
@@ -166,7 +184,7 @@ void PlayerCharacter::Update()
         }
     }
 
-    if (InputMgr->KeyDown(VK_SHIFT, false))
+    if (InputMgr->KeyDown(VK_SHIFT, false) && stemina >= 5)
     {
         gui->SetStatus(PlayerGUI::PLAYER_STATUS::NORMAL);
         NormalMode();
@@ -174,7 +192,12 @@ void PlayerCharacter::Update()
 
         isRun = true;
         isSneaking = false;
-        speed = 6000;
+        speed = 4500;
+
+        stemina -= SceneMgr->GetTimeDelta() * 50;
+
+        if (stemina < 0)
+            stemina = 0;
     }
     else if (!isSneaking)
     {
@@ -185,7 +208,7 @@ void PlayerCharacter::Update()
     if (InputMgr->KeyDown('W', false) && !Attack_Key && !Defense_Key)
     {
         if (!SoundMgr->IsPlaying2D("footstep.mp3"))
-            SoundMgr->Play2D("footstep.mp3", 0.07f, true);
+            SoundMgr->Play2D("footstep.mp3", 0.5f, true);
 
         Input = true;
 
@@ -211,7 +234,7 @@ void PlayerCharacter::Update()
     if (InputMgr->KeyDown('S', false) && !Attack_Key &&!isSneaking && !Defense_Key)
     {
         if (!SoundMgr->IsPlaying2D("footstep.mp3"))
-            SoundMgr->Play2D("footstep.mp3", 0.07f, true);
+            SoundMgr->Play2D("footstep.mp3", 0.5f, true);
 
         Input = true;
 
@@ -258,7 +281,8 @@ void PlayerCharacter::Update()
         D_Key = false;
     }
 
-    if (InputMgr->GetMouseLBButtonStatus() == MOUSE_LBDOWN && !Sneaking_Key && wearItem && !Defense_Key)
+    if (InputMgr->GetMouseLBButtonStatus() == MOUSE_LBDOWN 
+        && !Sneaking_Key && wearItem && !Defense_Key && !Attack_Key && stemina > 30)
     {
         if (gui->GetStatus() == PlayerGUI::PLAYER_STATUS::NORMAL)
         {
@@ -267,11 +291,23 @@ void PlayerCharacter::Update()
             gui->SetStatus(PlayerGUI::PLAYER_STATUS::COMBAT);
         }
 
+        stemina -= RandomGenerator::GetRandInt(20, 30);
+
+        if (stemina < 0)
+            stemina = 0;
+
         Input = true;
         Attack_Key = true;
 
         skinnedMesh->SetAnimation("Skeleton_1H_swing_left");
         skinnedMesh->SetAnimationLoop(false);
+
+        auto Monsters = CUR_SCENE->FindObjectsByTag("Monster");
+
+        for (int i = 0; i < std::get<1>(Monsters); i++)
+            ((Monster*)(std::get<0>(Monsters)[i]->GetComponent("Monster")))->Damaged(10);
+        
+        delete[] std::get<0>(Monsters);
     }
     else if (Attack_Key == true)
     {
@@ -281,7 +317,8 @@ void PlayerCharacter::Update()
             Input = true;
     }
 
-    if (InputMgr->GetMouseRBButtonStatus() == MOUSE_RBDOWN && !Sneaking_Key && wearItem && !Attack_Key)
+    if (InputMgr->GetMouseRBButtonStatus() == MOUSE_RBDOWN 
+        && !Sneaking_Key && wearItem && !Defense_Key && !Attack_Key)
     {
         if (gui->GetStatus() == PlayerGUI::PLAYER_STATUS::NORMAL)
         {
@@ -317,6 +354,11 @@ void PlayerCharacter::Update()
         else
             skinnedMesh->SetAnimation("Skeleton_Idle");
     }
+
+    if (stemina < 100)
+        stemina += SceneMgr->GetTimeDelta() * 30;
+    else
+        stemina = 100;
 }
 
 void PlayerCharacter::WearItem()
@@ -414,4 +456,10 @@ void PlayerCharacter::LateUpdate()
     cameraTr->SetPosition(FinalPos + Target);
 
     mainCamera->FixedUpdate(cameraObject);
+}
+
+void PlayerCharacter::Damaged(int damage)
+{
+    damaged = true;
+    hp -= damage;
 }
