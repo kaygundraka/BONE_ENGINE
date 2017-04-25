@@ -162,6 +162,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AStarGraph.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monster.cpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="TestScript2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AStarGraph.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="PlayerCharacter.h" />
