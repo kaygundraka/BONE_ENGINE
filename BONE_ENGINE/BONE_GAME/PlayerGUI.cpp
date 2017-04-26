@@ -102,9 +102,10 @@ void PlayerGUI::Reference()
 
 
     hpBar = new GameObject();
+    hpBar->SetPriority(1);
 
     hpBarTr = new Transform2D();
-    hpBarTr->SetPosition(8, 35, 0);
+    hpBarTr->SetPosition(StatusFrameTr->GetPosition() + Vec3(8, 25, 1));
     hpBar->AddComponent(hpBarTr);
 
     ScreenImage* ImageHpBar = new ScreenImage();
@@ -113,10 +114,12 @@ void PlayerGUI::Reference()
     hpBar->AddComponent(ImageHpBar);
 
     CUR_SCENE->AddObject(hpBar, "GUI_HP_BAR");
+
     steminaBar = new GameObject();
+    steminaBar->SetPriority(1);
 
     steminaBarTr = new Transform2D();
-    steminaBarTr->SetPosition(8, 40, 0);
+    steminaBarTr->SetPosition(StatusFrameTr->GetPosition() + Vec3(8, 30, 1));
     steminaBar->AddComponent(steminaBarTr);
 
     ScreenImage* ImageSteminaBar = new ScreenImage();
@@ -251,10 +254,17 @@ PlayerGUI::PLAYER_STATUS PlayerGUI::GetStatus()
 
 void PlayerGUI::SetStemina(int stemina)
 {
-    stemina = stemina;
+    if (stemina == 0)
+        GET_TRANSFORM_2D(steminaBar)->SetScale(0.01f, 1);
+    else
+        GET_TRANSFORM_2D(steminaBar)->SetScale((float)stemina / 100.0f, 1);
 }
 
 void PlayerGUI::SetHP(int hp)
 {
-    hp = hp;
+    if (hp == 0)
+        GET_TRANSFORM_2D(hpBar)->SetScale(0.01f, 1);
+    else
+        GET_TRANSFORM_2D(hpBar)->SetScale((float)hp / 100.0f, 1);
+
 }

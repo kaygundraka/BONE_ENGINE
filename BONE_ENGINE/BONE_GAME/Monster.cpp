@@ -7,7 +7,7 @@
 void Monster::Init()
 {
     status = PATROL;
-    speed = 1500;
+    speed = 1000;
     hp = 100;
 
     soundClips = new SoundClip();
@@ -192,15 +192,12 @@ void Monster::Patrol()
     {
         status = FOLLOW;
         pathGraph.PathFinding(curPos);
-
-        //status = SEARCH;
         rigidBody->SetLinearVelocity(0, 0, 0);
     }
     else if (SearchAlgorithm(90, PI / 2))
     {
         status = FOLLOW;
         pathGraph.PathFinding(curPos);
-        //status = SEARCH;
         rigidBody->SetLinearVelocity(0, 0, 0);
     }
     else if (Distance < 40)
@@ -302,9 +299,9 @@ void Monster::Follow()
     rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
 
     rigidBody->SetLinearVelocity(
-        moveDir.x * speed * 2 * SceneMgr->GetTimeDelta(),
-        moveDir.y * speed * 2 * SceneMgr->GetTimeDelta(),
-        -moveDir.z * speed * 2 * SceneMgr->GetTimeDelta()
+        moveDir.x * speed * 1.5f * SceneMgr->GetTimeDelta(),
+        moveDir.y * speed * 1.5f * SceneMgr->GetTimeDelta(),
+        -moveDir.z * speed * 1.5f * SceneMgr->GetTimeDelta()
     );
 }
 
@@ -331,8 +328,6 @@ void Monster::Combat()
         
         skinnedMesh->SetAnimationLoop(true);
         skinnedMesh->SetAnimation("Skeleton_1H_swing_left");
-
-        // Skeleton_1H_dodge_backwards
     }
     else
     {

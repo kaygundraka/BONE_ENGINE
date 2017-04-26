@@ -6,6 +6,8 @@
 
 void GameManager::Init()
 {
+    gameObject->SetPriority(2);
+
     screenAlpha = 255;
     sceneFlow[0] = 0;
     sceneFlow[1] = 0;
@@ -22,7 +24,7 @@ void GameManager::Init()
         gameObject->AddComponent(screenImage);
 
         Transform2D* tr2d = new Transform2D();
-        tr2d->SetPosition(Vec3(0, 0, 1));
+        tr2d->SetPosition(Vec3(0, 0, 2));
         gameObject->AddComponent(tr2d);
     }
 }

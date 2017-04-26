@@ -54,8 +54,8 @@ namespace BONE_GRAPHICS
 	{
         if (owner->GetActive())
         {
-            Matrix matrix = ((Transform2D*)owner->GetComponent("Transform2D"))->GetTransform();
-            Vec3 position = ((Transform2D*)owner->GetComponent("Transform2D"))->GetPosition();
+            Matrix matrix = GET_TRANSFORM_2D(owner)->GetTransform();
+            Vec3 position = GET_TRANSFORM_2D(owner)->GetPosition();
 
             RECT rect;
             rect.left = originRect.LeftTop.x;

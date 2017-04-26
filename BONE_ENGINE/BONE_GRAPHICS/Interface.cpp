@@ -126,7 +126,7 @@ namespace BONE_GRAPHICS
 		hWnd = CreateWindow(
             windowsName.c_str(),
             windowsName.c_str(),
-            WS_OVERLAPPEDWINDOW, 
+            WS_EX_TOPMOST | WS_POPUP,//WS_OVERLAPPEDWINDOW, 
             0, 
             0, 
             ConfigMgr->GetFloat(".\\info", "WindowsWidth"),

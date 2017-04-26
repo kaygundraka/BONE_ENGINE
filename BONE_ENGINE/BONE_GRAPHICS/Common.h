@@ -108,6 +108,7 @@ typedef struct _RGBA {
 using namespace reactphysics3d;
 
 #define GET_TRANSFORM_3D(Object) ((Transform3D*)Object->transform3D)
+#define GET_TRANSFORM_2D(Object) ((Transform2D*)Object->transform2D)
 #define GET_COLLISION(Object)    ((BONE_GRAPHICS::Collision*)Object->GetComponent("Collision"))
 #define GET_RIGIDBODY(Object)    ((BONE_GRAPHICS::RigidBody*)Object->GetComponent("RigidBody"))
 #define GET_SKINNED_MESH(Object) ((SkinnedMesh*)Object->GetComponent("SkinnedMesh"))

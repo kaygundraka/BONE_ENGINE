@@ -36,14 +36,17 @@ private:
     
     PlayerGUI* gui;
     
-    int hp;
-    int stemina;
+    float hp;
+    float stemina;
     bool damaged;
 
     float mouseX;
     float mouseY;
 
-    float speed;
+    float walkSpeed;
+    float runSpeed;
+    float backWalkSpeed;
+    float sneakSpeed;
 
     bool W_Key;
     bool S_Key;

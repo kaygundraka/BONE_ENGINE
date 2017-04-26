@@ -12,6 +12,11 @@ void PlayerCharacter::Init()
     S_Key = false;
     A_Key = false;
     D_Key = false;
+
+    walkSpeed = 2000;
+    runSpeed = 3000;
+    backWalkSpeed = 1300;
+    sneakSpeed = 1300;
     
     Sneaking_Key = false;
     Attack_Key = false;
@@ -19,7 +24,6 @@ void PlayerCharacter::Init()
 
     hp = 100;
     stemina = 100;
-    speed = 3000;
 }
 
 void PlayerCharacter::Reference()
@@ -170,7 +174,6 @@ void PlayerCharacter::Update()
         {
             gui->SetStatus(PlayerGUI::PLAYER_STATUS::SNEAKING);
             isSneaking = true;
-            speed = 1500;
         }
         else
         {
@@ -179,12 +182,11 @@ void PlayerCharacter::Update()
             else
                 gui->SetStatus(PlayerGUI::PLAYER_STATUS::NORMAL);
 
-            speed = 3000;
             isSneaking = false;
         }
     }
 
-    if (InputMgr->KeyDown(VK_SHIFT, false) && stemina >= 5)
+    if (InputMgr->KeyDown(VK_SHIFT, false) && stemina >= 30)
     {
         gui->SetStatus(PlayerGUI::PLAYER_STATUS::NORMAL);
         NormalMode();
@@ -192,18 +194,19 @@ void PlayerCharacter::Update()
 
         isRun = true;
         isSneaking = false;
-        speed = 4500;
-
-        stemina -= SceneMgr->GetTimeDelta() * 50;
+        
+        stemina -= SceneMgr->GetTimeDelta() * 30;
 
         if (stemina < 0)
             stemina = 0;
     }
     else if (!isSneaking)
-    {
         isRun = false;
-        speed = 3000;
-    }
+
+    if (stemina < 100)
+        stemina += SceneMgr->GetTimeDelta() * 10;
+    else
+        stemina = 100;
 
     if (InputMgr->KeyDown('W', false) && !Attack_Key && !Defense_Key)
     {
@@ -212,14 +215,23 @@ void PlayerCharacter::Update()
 
         Input = true;
 
-        if (isRun)
+        Vec3 Forward = GET_TRANSFORM_3D(gameObject)->GetForward() * SceneMgr->GetTimeDelta();
+
+        if (isRun) 
+        {
             skinnedMesh->SetAnimation("Skeleton_Run");
+            Forward *= runSpeed;
+        }
         else if (isSneaking)
+        {
             skinnedMesh->SetAnimation("Skeleton_Sneaking");
+            Forward *= sneakSpeed;
+        }
         else
+        {
             skinnedMesh->SetAnimation("Skeleton_1H_walk");
-        
-        Vec3 Forward = GET_TRANSFORM_3D(gameObject)->GetForward() * SceneMgr->GetTimeDelta() * speed;
+            Forward *= walkSpeed;
+        }
 
         rigidBody->SetLinearVelocity(Forward.x, Forward.y, -Forward.z);
 
@@ -243,7 +255,7 @@ void PlayerCharacter::Update()
         else
             skinnedMesh->SetAnimation("Skeleton_walking_back");
         
-        Vec3 Backword = -GET_TRANSFORM_3D(gameObject)->GetForward() * SceneMgr->GetTimeDelta() * speed / 2;
+        Vec3 Backword = -GET_TRANSFORM_3D(gameObject)->GetForward() * SceneMgr->GetTimeDelta() * backWalkSpeed;
 
         rigidBody->SetLinearVelocity(Backword.x, Backword.y, -Backword.z);
 
@@ -260,7 +272,7 @@ void PlayerCharacter::Update()
         Input = true;
         A_Key = true;
 
-        rigidBody->SetAngularVelocity(0, -1.5f, 0);
+        rigidBody->SetAngularVelocity(0, -2.0f, 0);
     }
     else if (A_Key == true)
     {
@@ -273,7 +285,7 @@ void PlayerCharacter::Update()
         Input = true;
         D_Key = true;
 
-        rigidBody->SetAngularVelocity(0, 1.5f, 0);
+        rigidBody->SetAngularVelocity(0, 2.0f, 0);
     }
     else if (D_Key == true)
     {
@@ -291,7 +303,7 @@ void PlayerCharacter::Update()
             gui->SetStatus(PlayerGUI::PLAYER_STATUS::COMBAT);
         }
 
-        stemina -= RandomGenerator::GetRandInt(20, 30);
+        stemina -= RandomGenerator::GetRandInt(30, 40);
 
         if (stemina < 0)
             stemina = 0;
@@ -355,10 +367,8 @@ void PlayerCharacter::Update()
             skinnedMesh->SetAnimation("Skeleton_Idle");
     }
 
-    if (stemina < 100)
-        stemina += SceneMgr->GetTimeDelta() * 30;
-    else
-        stemina = 100;
+    gui->SetHP(hp);
+    gui->SetStemina(stemina);
 }
 
 void PlayerCharacter::WearItem()

@@ -30,13 +30,10 @@ private:
 
     GameObject* hpBar;
     Transform2D* hpBarTr;
-    ScreenImage* ImageHpBar;
-
+    
     GameObject* steminaBar;
     Transform2D* steminaBarTr;
 
-    int hp;
-    int stemina;
     bool showGetItem;
         
 public:
