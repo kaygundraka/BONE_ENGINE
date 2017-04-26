@@ -30,12 +30,8 @@ void Monster::Reference()
     auto NodeList = pathGraph.GetNodeList();
 
     for each(auto var in *nodes)
-    {
         for each (auto var2 in var.second->GetConnections())
-        {
             (*NodeList)[var.first]->neighborList.push_back((*NodeList).find(var2)->second);
-        }
-    }
 
     moveDir.x = 0;
     moveDir.y = 0;

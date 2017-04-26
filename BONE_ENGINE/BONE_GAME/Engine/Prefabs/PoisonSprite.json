@@ -11,9 +11,9 @@
             1.51046108953778e-07
         ],
         "Scale": [
-            60.0,
-            60.0,
-            60.0
+            56.0,
+            56.0,
+            56.0
         ]
     },
     "9.SpriteBillBoard": {
@@ -23,7 +23,7 @@
         "Height": 1024,
         "IsFullAnimation": true,
         "IsTargetCamera": false,
-        "Speed": 0.100000001490116,
+        "Speed": 0.0500000007450581,
         "Texture": "poison.png",
         "Width": 1024
     },

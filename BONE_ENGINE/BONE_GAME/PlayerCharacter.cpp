@@ -37,7 +37,7 @@ void PlayerCharacter::Reference()
     cameraTr = tr;
 
     Camera *camera = new Camera(0, PROJECTION_TYPE::PRJOJECTION_PERSPACTIVE,
-        Vec3(0, 1, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), 1000, 0.1f, D3DX_PI * 0.6f);
+        Vec3(0, 1, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), 2000, 0.1f, D3DX_PI * 0.6f);
     camera->SetTargetPosition(((Transform3D*)gameObject->transform3D)->GetPosition() + Vec3(0, 40, 0));
     cameraObject->AddComponent(camera);
     mainCamera = camera;
