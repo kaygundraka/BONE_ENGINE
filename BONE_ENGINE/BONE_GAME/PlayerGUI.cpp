@@ -88,6 +88,7 @@ void PlayerGUI::Reference()
     CUR_SCENE->AddObject(statusCombat_Inactive, "GUI_STATUS_COMBAT_I");
     
     statusFrame = new GameObject();
+    statusFrame->SetPriority(2);
 
     Transform2D* StatusFrameTr = new Transform2D();
     StatusFrameTr->SetPosition(0, 10, 0);
