@@ -88,7 +88,7 @@ void PlayerGUI::Reference()
     CUR_SCENE->AddObject(statusCombat_Inactive, "GUI_STATUS_COMBAT_I");
     
     statusFrame = new GameObject();
-    statusFrame->SetPriority(2);
+    statusFrame->SetPriority(1);
 
     Transform2D* StatusFrameTr = new Transform2D();
     StatusFrameTr->SetPosition(0, 10, 0);
@@ -103,7 +103,7 @@ void PlayerGUI::Reference()
 
 
     hpBar = new GameObject();
-    hpBar->SetPriority(1);
+    hpBar->SetPriority(2);
 
     hpBarTr = new Transform2D();
     hpBarTr->SetPosition(StatusFrameTr->GetPosition() + Vec3(8, 25, 1));
@@ -117,7 +117,7 @@ void PlayerGUI::Reference()
     CUR_SCENE->AddObject(hpBar, "GUI_HP_BAR");
 
     steminaBar = new GameObject();
-    steminaBar->SetPriority(1);
+    steminaBar->SetPriority(2);
 
     steminaBarTr = new Transform2D();
     steminaBarTr->SetPosition(StatusFrameTr->GetPosition() + Vec3(8, 30, 1));
