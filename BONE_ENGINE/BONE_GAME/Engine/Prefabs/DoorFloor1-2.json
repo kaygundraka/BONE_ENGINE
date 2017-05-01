@@ -1,8 +1,8 @@
 {
     "0.Transform3D": {
         "Position": [
-            77.0,
-            2.90000009536743,
+            1.0,
+            3.0,
             34.0
         ],
         "Rotation": [
@@ -11,9 +11,9 @@
             0.0
         ],
         "Scale": [
-            1.0,
-            1.0,
-            1.0
+            1.29999995231628,
+            1.29999995231628,
+            1.29999995231628
         ]
     },
     "4.Material": {
@@ -44,7 +44,7 @@
         ]
     },
     "5.StaticMesh": {
-        "FileName": "Floor3.X"
+        "FileName": "MetalFloor.X"
     },
     "IsActive": true,
     "IsEditorLock": false,

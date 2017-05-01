@@ -117,20 +117,20 @@ void BoneEditor::Run()
     {
         if (isTestPlay)
         {
-            shared_ptr<Scene> LoadScene(new Scene);
-            SceneMgr->AddScene("EditorLoadScene", LoadScene.get());
+            Scene* LoadScene = new Scene();
+            SceneMgr->AddScene("EditorLoadScene", LoadScene);
             SceneMgr->SetLoadScene("EditorLoadScene");
 
-            shared_ptr<EditorLoadScene> EditorLoadGUI(new EditorLoadScene);
-            SceneMgr->SetLoadGUIScene(EditorLoadGUI.get());
+            EditorLoadScene* EditorLoadGUI = new EditorLoadScene();
+            SceneMgr->SetLoadGUIScene(EditorLoadGUI);
 
-            shared_ptr<Scene> TestScene(new Scene);
-            shared_ptr<GUI_Scene> EmptyGUI(new GUI_Scene);
-            SceneMgr->SetGUIScene(EmptyGUI.get());
+            Scene* TestScene = new Scene();
+            GUI_Scene* EmptyGUI = new GUI_Scene();
+            SceneMgr->SetGUIScene(EmptyGUI);
 
             TestScene->SetName(playScene);
 
-            SceneMgr->AddScene(playScene, TestScene.get());
+            SceneMgr->AddScene(playScene, TestScene);
             TestScene->OnLoadSceneData();
 
             flag = SceneMgr->StartScene(playScene);
@@ -138,12 +138,12 @@ void BoneEditor::Run()
         }
         else
         {
-            shared_ptr<SceneInfoUI> EditorTtitleUI(new SceneInfoUI);
-            SceneMgr->SetGUIScene(EditorTtitleUI.get());
+            SceneInfoUI* EditorTtitleUI = new SceneInfoUI();
+            SceneMgr->SetGUIScene(EditorTtitleUI);
 
-            shared_ptr<Scene> SceneInfo(new Scene);
+            Scene* SceneInfo = new Scene();
 
-            SceneMgr->AddScene("InfoScene", SceneInfo.get());
+            SceneMgr->AddScene("InfoScene", SceneInfo);
             flag = SceneMgr->StartScene("InfoScene");
 
             OpenSceneName = EditorTtitleUI->GetSceneName();
@@ -152,14 +152,14 @@ void BoneEditor::Run()
 
         if (flag)
         {
-            shared_ptr<Scene> LoadScene(new Scene);
-            SceneMgr->AddScene("EditorLoadScene", LoadScene.get());
+            Scene* LoadScene = new Scene();
+            SceneMgr->AddScene("EditorLoadScene", LoadScene);
             SceneMgr->SetLoadScene("EditorLoadScene");
             
-            shared_ptr<EditorLoadScene> EditorLoadGUI(new EditorLoadScene);
-            SceneMgr->SetLoadGUIScene(EditorLoadGUI.get());
+            EditorLoadScene* EditorLoadGUI = new EditorLoadScene();
+            SceneMgr->SetLoadGUIScene(EditorLoadGUI);
             
-            shared_ptr<Scene> ViewScene(new Scene);
+            Scene* ViewScene = new Scene();
             SceneMgr->SetGUIScene(this);
             this->SetScriptProc(this);
 
@@ -176,7 +176,7 @@ void BoneEditor::Run()
             ViewScene->SetAmbientColor(1.0f, 1.0f, 1.0f, 1.0f);
             ViewScene->SetName(OpenSceneName);
 
-            SceneMgr->AddScene(OpenSceneName, ViewScene.get());
+            SceneMgr->AddScene(OpenSceneName, ViewScene);
 
             if (!IsNewScene)
                 ViewScene->OnLoadSceneData();

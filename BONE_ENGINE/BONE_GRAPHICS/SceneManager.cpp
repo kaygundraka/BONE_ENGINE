@@ -277,17 +277,27 @@ namespace BONE_GRAPHICS
             physicsUpdateThread = nullptr;
         }
 
+        auto curScene = sceneList[name];
+        auto curLoadScene = sceneList[loadScene];
+
 		if (sceneList[name]->GetSceneFlag() == false)
-		{
+		{            
 			sceneList.erase(loadScene);
 			loadScene = "";
+
 			sceneList.erase(name);
+
+            delete curScene;
+            delete curLoadScene;
 			return true;
 		}
 
 		sceneList.erase(loadScene);
 		loadScene = "";
 		sceneList.erase(name);
+
+        delete curScene;
+        delete curLoadScene;
                 
 		return false;
 	}

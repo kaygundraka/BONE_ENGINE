@@ -60,7 +60,13 @@
         "FurthWall27",
         "FurthArch",
         "FurthDoor",
-        "FourthFloor9"
+        "FourthFloor9",
+        "DoorFloor1",
+        "DoorFloor2",
+        "DoorFloor3",
+        "DoorFloor4",
+        "DoorFloor4-4",
+        "FurthWall15-2"
     ],
     "IsActive": true,
     "IsEditorLock": false,

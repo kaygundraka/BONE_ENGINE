@@ -37,6 +37,9 @@ namespace BONE_GRAPHICS
         fogDensity = 1.0f;
         fogMode = D3DFOG_LINEAR;
 
+        objectList.clear();
+        staticObjectList.clear();
+
         fogColor = COLOR::YELLOW;
 
         rp3d::Vector3 gravity(0.0, -9.81, 0.0);

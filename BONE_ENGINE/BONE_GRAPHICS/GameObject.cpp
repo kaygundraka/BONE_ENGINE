@@ -854,6 +854,9 @@ namespace BONE_GRAPHICS
                         auto Volume = j["8.SoundClip"]["Clips"][*iter]["Volume"];
 
                         soundClip->AddClip(*iter, Volume, Loop, StartPaused, MinDist, MaxDist);
+
+                        if (StartPaused == false)
+                            soundClip->Play(*iter);
                     }
                 }
                 else
@@ -868,6 +871,8 @@ namespace BONE_GRAPHICS
 
                     soundClip->AddClip(it.key(), Volume, Loop, StartPaused, MinDist, MaxDist);
 
+                    if (StartPaused == false)
+                        soundClip->Play(it.key());
                 }
 
                 AddComponent(soundClip);

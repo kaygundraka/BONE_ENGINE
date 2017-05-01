@@ -14,7 +14,7 @@ void PlayerCharacter::Init()
     D_Key = false;
 
     walkSpeed = 2000;
-    runSpeed = 3000;
+    runSpeed = 3500;
     backWalkSpeed = 1300;
     sneakSpeed = 1300;
     

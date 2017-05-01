@@ -7,7 +7,7 @@
         ],
         "Rotation": [
             0.0,
-            -2.28221392631531,
+            1.52557933330536,
             -0.0
         ],
         "Scale": [
@@ -15,6 +15,17 @@
             30.0000019073486,
             7.5
         ]
+    },
+    "8.SoundClip": {
+        "Clips": {
+            "Fire.mp3": {
+                "Loop": true,
+                "MaxDist": 0.0,
+                "MinDist": 30.0,
+                "StartPaused": false,
+                "Volume": 1.0
+            }
+        }
     },
     "9.SpriteBillBoard": {
         "Alpha": 255.0,

@@ -295,9 +295,9 @@ void Monster::Follow()
     rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
 
     rigidBody->SetLinearVelocity(
-        moveDir.x * speed * 1.5f * SceneMgr->GetTimeDelta(),
-        moveDir.y * speed * 1.5f * SceneMgr->GetTimeDelta(),
-        -moveDir.z * speed * 1.5f * SceneMgr->GetTimeDelta()
+        moveDir.x * speed * 1.8f * SceneMgr->GetTimeDelta(),
+        moveDir.y * speed * 1.8f * SceneMgr->GetTimeDelta(),
+        -moveDir.z * speed * 1.8f * SceneMgr->GetTimeDelta()
     );
 }
 

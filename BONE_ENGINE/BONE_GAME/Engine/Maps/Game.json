@@ -1,5 +1,105 @@
 {
     "GameObject": {
+        "DoorFloor1": {
+            "IsChild": true,
+            "Position": [
+                1.0,
+                3.0,
+                34.0
+            ],
+            "PrefabName": "DoorFloor1",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.30000007152557,
+                1.29999995231628,
+                1.29999995231628
+            ],
+            "TreeDepth": 1
+        },
+        "DoorFloor2": {
+            "IsChild": true,
+            "Position": [
+                76.0,
+                3.0,
+                36.0
+            ],
+            "PrefabName": "DoorFloor2",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.29999995231628,
+                1.29999995231628,
+                1.29999995231628
+            ],
+            "TreeDepth": 1
+        },
+        "DoorFloor3": {
+            "IsChild": true,
+            "Position": [
+                151.0,
+                3.0,
+                35.0
+            ],
+            "PrefabName": "DoorFloor3",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.29999995231628,
+                1.29999995231628,
+                1.29999995231628
+            ],
+            "TreeDepth": 1
+        },
+        "DoorFloor4": {
+            "IsChild": true,
+            "Position": [
+                1.0,
+                3.0,
+                -118.000007629395
+            ],
+            "PrefabName": "DoorFloor4",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.29999995231628,
+                1.29999995231628,
+                1.29999995231628
+            ],
+            "TreeDepth": 1
+        },
+        "DoorFloor4-4": {
+            "IsChild": true,
+            "Position": [
+                1.0,
+                3.0,
+                -118.0
+            ],
+            "PrefabName": "DoorFloor4-4",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.30000007152557,
+                1.29999995231628,
+                1.29999995231628
+            ],
+            "TreeDepth": 1
+        },
         "FireSprite1": {
             "IsChild": false,
             "Position": [
@@ -10,7 +110,7 @@
             "PrefabName": "FireSprite",
             "Rotation": [
                 0.0,
-                -2.28221392631531,
+                1.52557933330536,
                 -0.0
             ],
             "Scale": [
@@ -30,7 +130,7 @@
             "PrefabName": "FireSprite",
             "Rotation": [
                 0.0,
-                -2.28221392631531,
+                1.52557933330536,
                 -0.0
             ],
             "Scale": [
@@ -1043,9 +1143,9 @@
         "FourthFloor0": {
             "IsChild": true,
             "Position": [
-                1.0,
-                3.00000023841858,
-                -118.000007629395
+                0.5,
+                2.0,
+                -118.050003051758
             ],
             "PrefabName": "FourthFloor0",
             "Rotation": [
@@ -1063,9 +1163,9 @@
         "FourthFloor1": {
             "IsChild": true,
             "Position": [
-                2.0,
-                3.00000023841858,
-                35.0
+                1.0,
+                2.90000009536743,
+                35.5
             ],
             "PrefabName": "FourthFloor1",
             "Rotation": [
@@ -1084,7 +1184,7 @@
             "IsChild": true,
             "Position": [
                 1.5,
-                3.00000023841858,
+                3.0,
                 -42.0000038146973
             ],
             "PrefabName": "FourthFloor3",
@@ -1103,9 +1203,9 @@
         "FourthFloor4": {
             "IsChild": true,
             "Position": [
-                78.0,
-                3.00000023841858,
-                35.0
+                77.0,
+                2.90000009536743,
+                34.0
             ],
             "PrefabName": "FourthFloor4",
             "Rotation": [
@@ -1124,7 +1224,7 @@
             "IsChild": true,
             "Position": [
                 153.0,
-                3.00000023841858,
+                2.90000009536743,
                 35.0
             ],
             "PrefabName": "FourthFloor5",
@@ -1144,7 +1244,7 @@
             "IsChild": true,
             "Position": [
                 115.0,
-                3.0,
+                2.90000009536743,
                 111.0
             ],
             "PrefabName": "FourthFloor6",
@@ -1224,7 +1324,7 @@
             "IsChild": false,
             "Position": [
                 305.0,
-                1.0,
+                -11.0000009536743,
                 305.0
             ],
             "PrefabName": "FourthRoomParticle",
@@ -1443,9 +1543,9 @@
         "FurthPillar2": {
             "IsChild": true,
             "Position": [
-                33.0,
-                2.0,
-                -86.0000076293945
+                71.8880004882813,
+                3.34700012207031,
+                -30.0000019073486
             ],
             "PrefabName": "FurthPillar2",
             "Rotation": [
@@ -1603,11 +1703,31 @@
         "FurthWall15": {
             "IsChild": true,
             "Position": [
-                186.000015258789,
+                194.000015258789,
                 0.0,
                 -42.0000038146973
             ],
             "PrefabName": "FurthWall15",
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "TreeDepth": 1
+        },
+        "FurthWall15-2": {
+            "IsChild": true,
+            "Position": [
+                194.0,
+                0.0,
+                -42.0
+            ],
+            "PrefabName": "FurthWall15-2",
             "Rotation": [
                 0.0,
                 0.0,
@@ -2084,7 +2204,7 @@
             "IsChild": false,
             "Position": [
                 304.0,
-                -11.0000009536743,
+                -31.0000019073486,
                 306.0
             ],
             "PrefabName": "PoisonSprite",
@@ -2890,7 +3010,7 @@
             "PrefabName": "FireSprite",
             "Rotation": [
                 0.0,
-                -2.28221392631531,
+                1.52557933330536,
                 -0.0
             ],
             "Scale": [
@@ -3395,12 +3515,66 @@
         "MapPath1": {
             "Connections": [
                 "MapPath0",
+                "MapPath10"
+            ],
+            "Position": [
+                264.0,
+                50.0000038146973,
+                339.000030517578
+            ]
+        },
+        "MapPath10": {
+            "Connections": [
+                "MapPath1",
                 "MapPath2"
             ],
             "Position": [
-                209.000015258789,
+                224.000015258789,
+                50.0000038146973,
+                292.0
+            ]
+        },
+        "MapPath11": {
+            "Connections": [
+                "MapPath10",
+                "MapPath12"
+            ],
+            "Position": [
+                143.0,
+                50.0000038146973,
+                300.0
+            ]
+        },
+        "MapPath12": {
+            "Connections": [
+                "MapPath11",
+                "MapPath13"
+            ],
+            "Position": [
+                134.0,
+                50.0000038146973,
+                367.000030517578
+            ]
+        },
+        "MapPath13": {
+            "Connections": [
+                "MapPath12",
+                "MapPath14"
+            ],
+            "Position": [
+                64.0,
+                50.0000038146973,
+                425.000030517578
+            ]
+        },
+        "MapPath14": {
+            "Connections": [
+                "MapPath13"
+            ],
+            "Position": [
+                199.000015258789,
                 50.0,
-                399.000030517578
+                469.000030517578
             ]
         },
         "MapPath2": {

@@ -16,6 +16,17 @@
             56.0
         ]
     },
+    "8.SoundClip": {
+        "Clips": {
+            "watersfx.mp3": {
+                "Loop": true,
+                "MaxDist": 0.0,
+                "MinDist": 40.0,
+                "StartPaused": false,
+                "Volume": 1.0
+            }
+        }
+    },
     "9.SpriteBillBoard": {
         "Alpha": 255.0,
         "AnimationCut": 4,

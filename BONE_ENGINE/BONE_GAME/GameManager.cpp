@@ -31,7 +31,7 @@ void GameManager::Init()
 
 void GameManager::Reference()
 {
-    SoundMgr->Play2D("Quiet.mp3", 0.8f, true);
+    SoundMgr->Play2D("Quiet.mp3", 0.3f, true);
 
     player = CUR_SCENE->FindObjectByTag("Player");
 
@@ -90,6 +90,7 @@ void GameManager::Update()
 
             if (InputMgr->KeyDown(VK_SPACE, true))
             {
+                CUR_SCENE->SortPriorityObject();
                 subtitleSize = 0;
                 sceneFlow[0]++;
             }

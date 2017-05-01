@@ -1,9 +1,9 @@
 {
     "0.Transform3D": {
         "Position": [
-            77.0,
-            2.90000009536743,
-            34.0
+            194.0,
+            0.0,
+            -42.0
         ],
         "Rotation": [
             0.0,
@@ -44,7 +44,7 @@
         ]
     },
     "5.StaticMesh": {
-        "FileName": "Floor3.X"
+        "FileName": "Wall.X"
     },
     "IsActive": true,
     "IsEditorLock": false,
