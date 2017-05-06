@@ -62,6 +62,9 @@ private:
     bool Attack_Key;
     bool Defense_Key;
 
+    float attackTiming;
+    float deffenseTiming;
+
 public:
     bool isEvent;
 
@@ -70,6 +73,9 @@ public:
     void WearItem();
     bool IsWoreItem();
     bool IsSneakingMode();
+
+    float GetAttackTiming();
+    float GetDeffenseTiming();
     
     virtual void Init();
     virtual void Reference();

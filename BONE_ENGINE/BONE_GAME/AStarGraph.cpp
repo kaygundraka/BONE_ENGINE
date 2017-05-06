@@ -98,6 +98,7 @@ void AStarGraph::PathFinding(Vec3 curPos)
     auto CurNode = GetMinDistNode(curPos);
 
     std::set<std::string> VisitedList;
+    VisitedList.insert(CurNode->name);
     
     while (true)
     {

@@ -3,7 +3,7 @@
     "WindowsWidth":1600,
     "WindowsHeight":900,
     "ShowLogCmd":false,
-    "Windowed":true,
+    "Windowed":false,
     "EnableLog":false,
 
     "ResourcePaths":[

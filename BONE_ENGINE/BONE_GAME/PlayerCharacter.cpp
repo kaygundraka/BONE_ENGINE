@@ -13,10 +13,10 @@ void PlayerCharacter::Init()
     A_Key = false;
     D_Key = false;
 
-    walkSpeed = 2000;
-    runSpeed = 3500;
-    backWalkSpeed = 1300;
-    sneakSpeed = 1300;
+    walkSpeed = 1000;
+    runSpeed = 2500;
+    backWalkSpeed = 800;
+    sneakSpeed = 800;
     
     Sneaking_Key = false;
     Attack_Key = false;
@@ -24,6 +24,8 @@ void PlayerCharacter::Init()
 
     hp = 100;
     stemina = 100;
+    attackTiming = 0;
+    deffenseTiming = 0;
 }
 
 void PlayerCharacter::Reference()
@@ -116,6 +118,8 @@ void PlayerCharacter::Update()
         if (skinnedMesh->GetCurrentAnimation() == "Skeleton_Hit_from_front")
             if (skinnedMesh->GetAnimationRate() >= 0.99f)
                 damaged = false;
+
+        return;
     }
 
     float rotateYAngle = transform->GetRotateAngle().y;
@@ -311,14 +315,17 @@ void PlayerCharacter::Update()
         Input = true;
         Attack_Key = true;
 
-        skinnedMesh->SetAnimation("Skeleton_1H_swing_left");
+        SoundMgr->Play2D("Sword1.mp3", 0.5f, false);
+        skinnedMesh->SetAnimation("Skeleton_1H_swing_right");
         skinnedMesh->SetAnimationLoop(false);
 
         auto Monsters = CUR_SCENE->FindObjectsByTag("Monster");
 
         for (int i = 0; i < std::get<1>(Monsters); i++)
+        {
             ((Monster*)(std::get<0>(Monsters)[i]->GetComponent("Monster")))->Damaged(10);
-        
+        }
+
         delete[] std::get<0>(Monsters);
     }
     else if (Attack_Key == true)
@@ -466,6 +473,26 @@ void PlayerCharacter::LateUpdate()
     cameraTr->SetPosition(FinalPos + Target);
 
     mainCamera->FixedUpdate(cameraObject);
+}
+
+float PlayerCharacter::GetAttackTiming()
+{
+    if (skinnedMesh->GetCurrentAnimation() == "Skeleton_1H_swing_right")
+        attackTiming = skinnedMesh->GetAnimationRate();
+    else
+        attackTiming = 0;
+
+    return attackTiming;
+}
+
+float PlayerCharacter::GetDeffenseTiming()
+{
+    if (skinnedMesh->GetCurrentAnimation() == "Skeleton_1H_shield_block")
+        deffenseTiming = skinnedMesh->GetAnimationRate();
+    else
+        deffenseTiming = 0;
+
+    return deffenseTiming;
 }
 
 void PlayerCharacter::Damaged(int damage)

@@ -48,7 +48,7 @@ void LogDialog::AddLog(const char* fmt, ...) IM_PRINTFARGS(2)
 void LogDialog::Render(const char* title, bool* p_open)
 {
     ImGui::SetNextWindowPos(ImVec2(0, RenderMgr->GetHeight() - 200));
-    ImGui::Begin(title, p_open, ImVec2(RenderMgr->GetWidth() - 400, 200), -1.0f, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
+    ImGui::Begin(title, p_open, ImVec2(RenderMgr->GetWidth() - 450, 200), -1.0f, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
     if (ImGui::Button("Clear")) Clear();
     ImGui::SameLine();
     bool copy = ImGui::Button("Copy");
@@ -266,41 +266,12 @@ void BoneEditor::ShowViewMenu()
         ImGui::EndMenu();
     }
 
-    if (ImGui::MenuItem("Show Environment"))
+    if (ImGui::MenuItem("Setting Environment"))
     {
         if (showEnvironmentSetting)
             showEnvironmentSetting = false;
         else
             showEnvironmentSetting = true;
-    }
-
-    if (ImGui::MenuItem("Show Light Icon"))
-    {
-        static bool show = false;
-
-        auto PointLights = CUR_SCENE->GetPointLights();
-
-        if (show)
-            show = false;
-        else
-            show = true;
-
-        for each(auto var in PointLights)
-            ((PointLight*)var)->SetIcon(show);
-    }
-
-    if (ImGui::MenuItem("Show Graph Node Icon"))
-    {
-        static bool show = false;
-        auto NodeList = CUR_SCENE->GetGraphNodes();
-
-        if (show)
-            show = false;
-        else
-            show = true;
-
-        for each(auto var in *NodeList)
-            ((GraphNode*)var.second)->SetIcon(show);
     }
 
     if (ImGui::MenuItem("Show Main Editor"))
@@ -309,33 +280,6 @@ void BoneEditor::ShowViewMenu()
             showMainEditor = false;
         else
             showMainEditor = true;
-    }
-
-    if (ImGui::MenuItem("Show Collision"))
-    {
-        auto DyamicObjectList = CUR_SCENE->GetObjectList();
-        auto StaticObjectList = CUR_SCENE->GetStaticObjectList();
-
-        static bool EnableMeshBox = false;
-
-        if (!EnableMeshBox)
-            EnableMeshBox = true;
-        else
-            EnableMeshBox = false;
-
-        for each(auto var in DyamicObjectList)
-        {
-            auto coll = GET_COLLISION(var);
-            if (coll != nullptr)
-                coll->ShowShape(EnableMeshBox);
-        }
-
-        for each(auto var in StaticObjectList)
-        {
-            auto coll = GET_COLLISION(var);
-            if (coll != nullptr)
-                coll->ShowShape(EnableMeshBox);
-        }
     }
 
     if (ImGui::MenuItem("Show Log"))
@@ -1082,6 +1026,47 @@ void BoneEditor::UpdateFrame()
             ImGui::EndMenu();
         }
 
+        static bool ShowLights = false;
+
+        ImGui::Checkbox("Show Lights", &ShowLights);
+
+        auto PointLights = CUR_SCENE->GetPointLights();
+
+        for each(auto var in PointLights)
+            ((PointLight*)var)->SetIcon(ShowLights);
+    
+
+        static bool ShowNodeLists = false;
+        ImGui::SameLine();
+        ImGui::Checkbox("Show Graph Nodes", &ShowNodeLists);
+        
+        auto NodeList = CUR_SCENE->GetGraphNodes();
+
+        for each(auto var in *NodeList)
+            ((GraphNode*)var.second)->SetIcon(ShowNodeLists);
+
+
+        auto DyamicObjectList = CUR_SCENE->GetObjectList();
+        auto StaticObjectList = CUR_SCENE->GetStaticObjectList();
+
+        static bool EnableMeshBox = false;
+        ImGui::SameLine();
+        ImGui::Checkbox("Show Collision", &EnableMeshBox);
+        
+        for each(auto var in DyamicObjectList)
+        {
+            auto coll = GET_COLLISION(var);
+            if (coll != nullptr)
+                coll->ShowShape(EnableMeshBox);
+        }
+
+        for each(auto var in StaticObjectList)
+        {
+            auto coll = GET_COLLISION(var);
+            if (coll != nullptr)
+                coll->ShowShape(EnableMeshBox);
+        }
+
         ImGui::EndMainMenuBar();
     }
         
@@ -1100,7 +1085,7 @@ void BoneEditor::UpdateFrame()
         
         WindowHeight = RenderMgr->GetHeight() - 18;
 
-        ImGui::SetWindowSize(ImVec2(400, WindowHeight));
+        ImGui::SetWindowSize(ImVec2(450, WindowHeight));
         ImVec2 Size = ImGui::GetWindowSize();
         ImGui::SetWindowPos(ImVec2(RenderMgr->GetWidth() - Size.x, 19));
         

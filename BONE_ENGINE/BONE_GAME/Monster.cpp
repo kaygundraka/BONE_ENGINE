@@ -13,6 +13,7 @@ void Monster::Init()
     soundClips = new SoundClip();
     soundClips->AttachObject(this->gameObject);
     soundClips->AddClip("footstep.mp3", 1.0f, true, false, 50.0f, 0.0f);
+    soundClips->AddClip("Sword1.mp3", 1.0f, false, false, 50.0f, 0.0f);
     this->gameObject->AddComponent(soundClips);
 }
 
@@ -88,6 +89,7 @@ void Monster::Reference()
  
     rotateYAngle = 0;
     sleepTimer = 0;
+    failAttack = false;
 
     player = (PlayerCharacter*)(CUR_SCENE->FindObjectByName("Player")->GetComponent("PlayerCharacter"));
 }
@@ -262,12 +264,29 @@ void Monster::Follow()
     
     auto Path = pathGraph.GetPath();
 
-    if (Path->size() != 0 && Path->front()->IsInRange(curPos))
-        pathGraph.PathFinding(curPos);
+    //if (Path->size() != 0 && Path->front()->IsInRange(curPos))
+    //    pathGraph.PathFinding(curPos);
     
+    auto MinNode = pathGraph.GetMinDistNode(curPos);
+    MinNode->GetPos();
+
     Vec3 NextPos;
 
-    if (Path->size() == 0)
+    if (CalculateDistance(curPos, MinNode->GetPos()) > CalculateDistance(playerPos, curPos))
+    {
+        NextPos = GET_TRANSFORM_3D(player->gameObject)->GetPosition();
+    
+        float Distance = CalculateDistance(playerPos, curPos);
+
+        if (Distance < 40)
+        {
+            rigidBody->SetLinearVelocity(0, 0, 0);
+            status = COMBAT;
+
+            return;
+        }
+    }
+    else if (Path->size() == 0)
     {
         pathGraph.PathFinding(curPos);
 
@@ -285,8 +304,11 @@ void Monster::Follow()
         }
     }
     else
+    {
         NextPos = Path->front()->GetPos();
-    
+        Path->pop();
+    }
+
     NextPos.y = 0;
     
     CalcDirDist(NextPos);
@@ -301,7 +323,6 @@ void Monster::Follow()
     );
 }
 
-// return distance
 float Monster::CalcDirDist(Vec3 to)
 {
     moveDir = to - curPos;
@@ -321,15 +342,62 @@ void Monster::Combat()
         rotateYAngle = GetAngle(Vec3(0, 0, -1), moveDir);
         rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
         rigidBody->SetLinearVelocity(0, 0, 0);
-        
-        skinnedMesh->SetAnimationLoop(true);
-        skinnedMesh->SetAnimation("Skeleton_1H_swing_left");
+
+        if (failAttack)
+        {
+            skinnedMesh->SetAnimation("Skeleton_1H_combat_mode");
+            skinnedMesh->SetAnimationLoop(true);
+
+            if (skinnedMesh->GetAnimationRate() >= 0.99f)
+                failAttack = false;
+        }
+        else
+        {
+            if (attackTime <= 0)
+            {
+                skinnedMesh->SetAnimationLoop(true);
+                skinnedMesh->SetAnimation("Skeleton_1H_swing_right");
+
+                isAttack = false;
+                attackTime = 2;
+            }
+
+            if (skinnedMesh->GetAnimationRate() > 0.3f && skinnedMesh->GetCurrentAnimation() == "Skeleton_1H_swing_right")
+            {
+                if (player->GetDeffenseTiming() > skinnedMesh->GetAnimationRate())
+                {
+                    SoundMgr->Play2D("Defense.wav", 0.5f, false);
+                    failAttack = true;
+                }
+                else if (player->GetAttackTiming() < skinnedMesh->GetAnimationRate())
+                {
+                    if (CalculateDistance(playerPos, curPos) <= 40 && !isAttack)
+                    {
+                        soundClips->Play("Sword1.mp3");
+                        isAttack = true;
+                        player->Damaged(5);
+                    }
+                }
+            }
+
+            attackTime -= SceneMgr->GetTimeDelta();
+        }
     }
     else
     {
         status = FOLLOW;
         pathGraph.PathFinding(curPos);
     }
+}
+
+float Monster::GetAttackTiming()
+{
+    if (skinnedMesh->GetCurrentAnimation() == "Skeleton_1H_swing_right")
+        attackTiming = skinnedMesh->GetAnimationRate();
+    else
+        attackTiming = 0;
+
+    return attackTiming;
 }
 
 void Monster::Damaged(int damage)

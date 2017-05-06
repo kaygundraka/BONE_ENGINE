@@ -27,6 +27,7 @@ private:
     float hp;
 
     bool damaged;
+    float attackTime;
 
     double sleepTimer;
     Vec3 moveDir;
@@ -37,6 +38,9 @@ private:
 
     double searchTimer;
 
+    bool failAttack;
+    bool isAttack;
+    float attackTiming;
     float rotateYAngle;
 
     PlayerCharacter* player;
@@ -59,6 +63,7 @@ private:
 
 public:
     void Damaged(int damage);
+    float GetAttackTiming();
 
     virtual void Init();
     virtual void Reference();

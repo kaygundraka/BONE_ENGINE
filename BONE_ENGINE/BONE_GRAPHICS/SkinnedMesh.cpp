@@ -157,6 +157,14 @@ namespace BONE_GRAPHICS
                 nullptr
             );
         }
+        
+        if (GetAnimationRate() >= 0.99f && !animationLoop) {
+
+            ID3DXAnimationSet* pAnim = NULL;
+            animationContainer->GetAnimationSet(animationSets[curAnimation], &pAnim);
+
+            animationContainer->SetTrackPosition(0, pAnim->GetPeriod());
+        }
     }
 
     void SkinnedMesh::SetAnimationLoop(bool loop)

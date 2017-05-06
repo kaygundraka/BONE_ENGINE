@@ -267,5 +267,4 @@ void PlayerGUI::SetHP(int hp)
         GET_TRANSFORM_2D(hpBar)->SetScale(0.01f, 1);
     else
         GET_TRANSFORM_2D(hpBar)->SetScale((float)hp / 100.0f, 1);
-
 }
