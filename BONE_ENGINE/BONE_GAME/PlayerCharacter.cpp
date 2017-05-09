@@ -190,7 +190,7 @@ void PlayerCharacter::Update()
         }
     }
 
-    if (InputMgr->KeyDown(VK_SHIFT, false) && stemina >= 30)
+    if (InputMgr->KeyDown(VK_SHIFT, false))
     {
         gui->SetStatus(PlayerGUI::PLAYER_STATUS::NORMAL);
         NormalMode();
@@ -198,11 +198,6 @@ void PlayerCharacter::Update()
 
         isRun = true;
         isSneaking = false;
-        
-        stemina -= SceneMgr->GetTimeDelta() * 30;
-
-        if (stemina < 0)
-            stemina = 0;
     }
     else if (!isSneaking)
         isRun = false;

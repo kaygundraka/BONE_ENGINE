@@ -11,20 +11,28 @@ class GameManager : public Script {
 private:
     GameObject* sceneCamera_1_1;
     GameObject* sceneCamera_1_2;
+    GameObject* sceneCamera_1_3;
+    GameObject* sceneCamera_1_4;
 
     Camera* FSCameraComponent_1_1;
     Camera* FSCameraComponent_1_2;
-    
+    Camera* FSCameraComponent_1_3;
+    Camera* FSCameraComponent_1_4;
+
     GameObject* player;
     ScreenImage* screenImage;
     
     int totalSceneFlow;
-
-    int sceneFlow[5];
+    int sceneFlow[6];
 
     int subtitleSize;
     float screenAlpha;
-    
+
+    bool inDoorRange;
+    bool inKeysRange;
+
+    bool hasKey;
+
 public:
     virtual void Init();
     virtual void Reference();

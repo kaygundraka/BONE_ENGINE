@@ -3,6 +3,7 @@
 #include <InputManager.h>
 #include <SceneManager.h>
 #include <SoundManager.h>
+#include "Monster.h"
 
 void GameManager::Init()
 {
@@ -11,8 +12,12 @@ void GameManager::Init()
     screenAlpha = 255;
     sceneFlow[0] = 0;
     sceneFlow[1] = 0;
+    sceneFlow[2] = 0;
     totalSceneFlow = 0;
+    inDoorRange = false;
+    inKeysRange = false;
     subtitleSize = 0;
+    hasKey = false;
 
     if (!CUR_SCENE->IsEditorScene())
     {
@@ -69,6 +74,40 @@ void GameManager::Reference()
     FSCameraComponent_1_2 = camera2;
 
     SceneMgr->CurrentScene()->AddObject(sceneCamera_1_2, "sceneCamera_1_2");
+
+    // 1_3
+    sceneCamera_1_3 = new GameObject();
+    sceneCamera_1_3->SetPriority(1);
+
+    Transform3D* tr3 = new Transform3D();
+    tr3->SetPosition(Vec3(-150, 50, 0) + ((Transform3D*)gameObject->transform3D)->GetPosition());
+    sceneCamera_1_3->AddComponent(tr3);
+
+    Camera *camera3 = new Camera(3, PROJECTION_TYPE::PRJOJECTION_PERSPACTIVE,
+        Vec3(0, 1, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), 1000, 0.1f, D3DX_PI * 0.6f);
+    camera3->SetTargetPosition(Vec3(-150, 10, -70));
+    sceneCamera_1_3->AddComponent(camera3);
+
+    FSCameraComponent_1_3 = camera3;
+
+    SceneMgr->CurrentScene()->AddObject(sceneCamera_1_3, "sceneCamera_1_3");
+
+    // 1_4
+    sceneCamera_1_4 = new GameObject();
+    sceneCamera_1_4->SetPriority(1);
+
+    Transform3D* tr4 = new Transform3D();
+    tr4->SetPosition(Vec3(-150, 50, 0) + ((Transform3D*)gameObject->transform3D)->GetPosition());
+    sceneCamera_1_4->AddComponent(tr4);
+
+    Camera *camera4 = new Camera(4, PROJECTION_TYPE::PRJOJECTION_PERSPACTIVE,
+        Vec3(0, 1, 0), RenderMgr->GetWidth(), RenderMgr->GetHeight(), 1000, 0.1f, D3DX_PI * 0.6f);
+    camera4->SetTargetPosition(Vec3(-150, 10, -70));
+    sceneCamera_1_4->AddComponent(camera4);
+
+    FSCameraComponent_1_4 = camera4;
+
+    SceneMgr->CurrentScene()->AddObject(sceneCamera_1_4, "sceneCamera_1_4");
 #pragma endregion
 }
 
@@ -217,6 +256,60 @@ void GameManager::Update()
         else if(sceneFlow[1] == 8)
             totalSceneFlow++;
     }
+    else if (totalSceneFlow == 3)
+    {
+        auto Position = GET_TRANSFORM_3D(player)->GetPosition();
+
+        if (Position.x >= -50 && Position.x <= 0 && sceneFlow[2] == 0)
+        {
+            if (Position.z >= -30 && Position.z <= 30)
+            {
+                FadeOut();
+
+                ((PlayerCharacter*)player->GetComponent("PlayerCharacter"))->isEvent = true;
+
+                if (screenAlpha == 255)
+                {
+                    SceneMgr->CurrentScene()->SetCameraIndex(3);
+                    sceneFlow[2]++;
+                }
+            }
+        }
+        else if (sceneFlow[2] == 1)
+        {
+            FadeIn();
+
+            if (screenAlpha == 0)
+                sceneFlow[2]++;
+        }
+        else if (sceneFlow[2] == 2)
+        {
+            if (InputMgr->KeyDown(VK_SPACE, true))
+            {
+                subtitleSize = 0;
+                sceneFlow[2]++;
+            }
+        }
+        else if (sceneFlow[2] == 3)
+        {
+            FadeOut();
+
+            if (screenAlpha == 255)
+                sceneFlow[2]++;
+        }
+        else if (sceneFlow[2] == 4)
+        {
+            ((PlayerCharacter*)player->GetComponent("PlayerCharacter"))->isEvent = false;
+            SceneMgr->CurrentScene()->SetCameraIndex(0);
+
+            FadeIn();
+
+            if (screenAlpha == 0)
+                sceneFlow[2]++;
+        }
+        else if (sceneFlow[2] == 5)
+            totalSceneFlow++;
+    }
 
     if (InputMgr->KeyDown(VK_ESCAPE, true))
     {
@@ -259,6 +352,18 @@ void GameManager::LateUpdate()
         FSCameraComponent_1_1->FixedUpdate(sceneCamera_1_1);
     else if (totalSceneFlow == 2)
         FSCameraComponent_1_2->FixedUpdate(sceneCamera_1_2);
+    else if (totalSceneFlow == 3)
+    {
+        auto Monsters = CUR_SCENE->FindObjectsByTag("Monster");
+        auto MonsterPosition = GET_TRANSFORM_3D((Monster*)(std::get<0>(Monsters)[0]))->GetPosition();
+
+        GET_TRANSFORM_3D(sceneCamera_1_3)->SetPosition(MonsterPosition + Vec3(0, 30, 30));
+
+        FSCameraComponent_1_3->SetTargetPosition(MonsterPosition + Vec3(0, 20, 0));
+        FSCameraComponent_1_3->FixedUpdate(sceneCamera_1_3);
+
+        delete[] std::get<0>(Monsters);
+    }
 }
 
 void GameManager::LateRender()
@@ -294,6 +399,63 @@ void GameManager::LateRender()
 
             ShowSubtitle(text);
         }
+    }
+    else if (totalSceneFlow == 3)
+    {
+        if (sceneFlow[2] == 2)
+        {
+            std::string text = "The enemy is patrolling.";
+
+            ShowSubtitle(text);
+        }
+    }
+    else if (totalSceneFlow == 4)
+    {
+        auto Position = GET_TRANSFORM_3D(player)->GetPosition();
+ 
+        if (Position.x >= 228 && Position.x <= 251)
+        {
+            if (Position.z >= 437 && Position.z <= 480)
+            {
+                if (inDoorRange == false)
+                {
+                    inDoorRange = true;
+                    subtitleSize = 0;
+                }
+                
+                std::string text = "Open Door [Press Space]";
+                ShowSubtitle(text);
+            }
+            else
+                inDoorRange = false;
+        }
+        else
+            inDoorRange = false;
+        
+        if (Position.x >= 200 && Position.x <= 253)
+        {
+            if (Position.z >= -233 && Position.z <= -206)
+            {
+                if (hasKey == false)
+                {
+                    if (inKeysRange == false)
+                    {
+                        inKeysRange = true;
+                        subtitleSize = 0;
+                    }
+
+                    std::string text = "Pick up the keys. [Press Space]";
+                    ShowSubtitle(text);
+
+                    if (InputMgr->KeyDown(VK_SPACE, true))
+                        hasKey = true;
+                }
+            }
+            else
+                inKeysRange = false;
+        }
+        else
+            inKeysRange = false;
     }
 }
 

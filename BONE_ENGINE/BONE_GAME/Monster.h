@@ -38,6 +38,8 @@ private:
 
     double searchTimer;
 
+    bool isCombat;
+
     bool failAttack;
     bool isAttack;
     float attackTiming;
@@ -64,7 +66,7 @@ private:
 public:
     void Damaged(int damage);
     float GetAttackTiming();
-
+    
     virtual void Init();
     virtual void Reference();
     virtual void Update();

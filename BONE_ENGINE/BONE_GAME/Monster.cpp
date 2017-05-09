@@ -15,6 +15,8 @@ void Monster::Init()
     soundClips->AddClip("footstep.mp3", 1.0f, true, false, 50.0f, 0.0f);
     soundClips->AddClip("Sword1.mp3", 1.0f, false, false, 50.0f, 0.0f);
     this->gameObject->AddComponent(soundClips);
+
+    isCombat = false;
 }
 
 void Monster::Reference()
@@ -101,9 +103,16 @@ void Monster::Update()
 
     if (hp <= 0)
     {
+        if (isCombat)
+        {
+            SoundMgr->Stop2D("Hero_In_Peril.mp3");
+            SoundMgr->Play2D("Quiet.mp3", 0.3f, true);
+        }
+
+        isCombat = false;
         skinnedMesh->SetAnimationLoop(false);
         skinnedMesh->SetAnimation("Skeleton_Dying_B");
-
+        
         return;
     }
 
@@ -130,6 +139,7 @@ void Monster::Update()
         if (Angle < 0)
             Angle = -Angle;
 
+        rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
         rigidBody->SetLinearVelocity(0, 0, 0);
 
         if (Angle >= 1.57f)
@@ -183,7 +193,6 @@ void Monster::Patrol()
         -moveDir.z * speed * SceneMgr->GetTimeDelta()
     );
 
-    /// 거리에 따른 탐색 변화
     float Distance = CalculateDistance(curPos, playerPos);
 
     if (player->IsSneakingMode() && SearchAlgorithm(60, PI / 2.5f))
@@ -335,6 +344,13 @@ float Monster::CalcDirDist(Vec3 to)
 
 void Monster::Combat()
 {
+    if (isCombat == false)
+    {
+        isCombat = true;
+        SoundMgr->Stop2D("Quiet.mp3");
+        SoundMgr->Play2D("Hero_In_Peril.mp3", 0.3f, true);
+    }
+
     auto Distance = CalcDirDist(playerPos);
 
     if (Distance <= 40)
