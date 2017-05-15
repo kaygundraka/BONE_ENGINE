@@ -103,6 +103,9 @@ void Monster::Update()
 
     if (hp <= 0)
     {
+        rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
+        rigidBody->SetLinearVelocity(0, 0, 0);
+
         if (isCombat)
         {
             SoundMgr->Stop2D("Hero_In_Peril.mp3");
