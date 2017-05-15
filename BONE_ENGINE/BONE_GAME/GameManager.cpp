@@ -423,8 +423,22 @@ void GameManager::LateRender()
                     subtitleSize = 0;
                 }
                 
-                std::string text = "Open Door [Press Space]";
-                ShowSubtitle(text);
+                if (hasKey)
+                {
+                    std::string text = "Press Space - Open the door.";
+                    ShowSubtitle(text);
+
+                    if (InputMgr->KeyDown(VK_SPACE, true))
+                    {
+                        CUR_SCENE->SetSceneFlag(true);
+                        SceneMgr->EndScene(CUR_SCENE->GetName());
+                    }
+                }
+                else
+                {
+                    std::string text = "Door is locked.";
+                    ShowSubtitle(text);
+                }
             }
             else
                 inDoorRange = false;
@@ -444,7 +458,7 @@ void GameManager::LateRender()
                         subtitleSize = 0;
                     }
 
-                    std::string text = "Pick up the keys. [Press Space]";
+                    std::string text = "Press Space - Pick up the keys.";
                     ShowSubtitle(text);
 
                     if (InputMgr->KeyDown(VK_SPACE, true))

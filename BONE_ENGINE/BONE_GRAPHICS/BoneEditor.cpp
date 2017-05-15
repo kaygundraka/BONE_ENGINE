@@ -298,7 +298,7 @@ void BoneEditor::ShowEditorMenu()
         RuntimeMgr->Compile();
     }
 
-    if (ImGui::MenuItem("Enable Physics"))
+    if (ImGui::MenuItem("Play Physics"))
     {
         auto Enable = CUR_SCENE->IsEnablePhysics();
 
@@ -310,15 +310,15 @@ void BoneEditor::ShowEditorMenu()
         CUR_SCENE->EnablePhysics(Enable);
     }
 
-    if (ImGui::MenuItem("ShadowMap Build"))
+    if (ImGui::MenuItem("Build ShadowMap"))
     {
         CUR_SCENE->CreateShadowMap();
     }
 
-    if (ImGui::MenuItem("Sort Object Render"))
+    /*if (ImGui::MenuItem("Sort Object Render"))
     {
         CUR_SCENE->SortRenderOptimizeObject();
-    }
+    }*/
 
     if (ImGui::MenuItem("Game Play"))
     {
@@ -1559,7 +1559,7 @@ void BoneEditor::UpdateFrame()
             if (ImGui::TreeNode("Clear Color"))
             {
                 auto ClearColor = SceneMgr->GetClearColor();
-                static ImVec4 clear_col(ClearColor * 255.0f, ClearColor * 255.0f, ClearColor * 255.0f, 1);
+                static ImVec4 clear_col(ClearColor.r * 255.0f, ClearColor.g * 255.0f, ClearColor.b * 255.0f, 1);
                 ImGui::ColorEdit3("clear color", (float*)&clear_col);
 
                 D3DXCOLOR color;
@@ -1615,11 +1615,6 @@ void BoneEditor::UpdateFrame()
 
                 CurScene->SetFogStatus(EnableFog, color, Start, End, Density, CurItem);
 
-                ImGui::TreePop();
-            }
-
-            if (ImGui::TreeNode("Terrain"))
-            {
                 ImGui::TreePop();
             }
         }

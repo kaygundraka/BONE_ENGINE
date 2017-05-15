@@ -318,7 +318,7 @@ void PlayerCharacter::Update()
 
         for (int i = 0; i < std::get<1>(Monsters); i++)
         {
-            ((Monster*)(std::get<0>(Monsters)[i]->GetComponent("Monster")))->Damaged(10);
+            ((Monster*)(std::get<0>(Monsters)[i]->GetComponent("Monster")))->Damaged(20);
         }
 
         delete[] std::get<0>(Monsters);

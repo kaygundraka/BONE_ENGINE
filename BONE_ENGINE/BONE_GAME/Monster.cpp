@@ -139,7 +139,9 @@ void Monster::Update()
         if (Angle < 0)
             Angle = -Angle;
 
-        rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
+        Vec3 Pos = transform->GetPosition();
+        Pos.y = 13.92f;
+        rigidBody->SetTransform(Pos, Vec3(0, rotateYAngle, 0));
         rigidBody->SetLinearVelocity(0, 0, 0);
 
         if (Angle >= 1.57f)
@@ -185,7 +187,9 @@ void Monster::Patrol()
     CalcDirDist(NextPos);
 
     rotateYAngle = GetAngle(Vec3(0, 0, -1), moveDir);
-    rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
+    Vec3 Pos = transform->GetPosition();
+    Pos.y = 13.92f;
+    rigidBody->SetTransform(Pos, Vec3(0, rotateYAngle, 0));
 
     rigidBody->SetLinearVelocity(
         moveDir.x * speed * SceneMgr->GetTimeDelta(),
@@ -323,7 +327,9 @@ void Monster::Follow()
     CalcDirDist(NextPos);
 
     rotateYAngle = GetAngle(Vec3(0, 0, -1), moveDir);
-    rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
+    Vec3 Pos = transform->GetPosition();
+    Pos.y = 13.92f;
+    rigidBody->SetTransform(Pos, Vec3(0, rotateYAngle, 0));
 
     rigidBody->SetLinearVelocity(
         moveDir.x * speed * 1.8f * SceneMgr->GetTimeDelta(),
@@ -356,7 +362,9 @@ void Monster::Combat()
     if (Distance <= 40)
     {
         rotateYAngle = GetAngle(Vec3(0, 0, -1), moveDir);
-        rigidBody->SetTransform(transform->GetPosition(), Vec3(0, rotateYAngle, 0));
+        Vec3 Pos = transform->GetPosition();
+        Pos.y = 13.92f;
+        rigidBody->SetTransform(Pos, Vec3(0, rotateYAngle, 0));
         rigidBody->SetLinearVelocity(0, 0, 0);
 
         if (failAttack)
