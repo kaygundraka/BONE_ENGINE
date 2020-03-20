@@ -1,3 +1,5 @@
+Hongik Univ. Graduation Project
+
 This project develops an engine for 3D application development 
 using 3D integrated development environment (3D Sound, World, Physics ...).
 
@@ -15,6 +17,3 @@ using 3D integrated development environment (3D Sound, World, Physics ...).
 - ImGUI
 - JSON
 - tinyXML
-
-# Main site (It is under development.)
-kainst21.ivyro.net
